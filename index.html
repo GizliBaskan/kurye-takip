@@ -426,16 +426,18 @@ tbody tr:last-child td{border-bottom:none}
 <div class="toast" id="toast"></div>
 
 <script>
-// --- FIREBASE AYARLARI (BURAYA KENDİ BİLGİLERİNİZİ GİRİN) ---
+// --- FIREBASE BAĞLANTI AYARLARI ---
 const firebaseConfig = {
-  apiKey: "BURAYA_API_KEY",
-  authDomain: "BURAYA_AUTH_DOMAIN",
-  databaseURL: "BURAYA_DATABASE_URL",
-  projectId: "BURAYA_PROJECT_ID",
-  storageBucket: "BURAYA_STORAGE_BUCKET",
-  messagingSenderId: "BURAYA_MESSAGING_SENDER_ID",
-  appId: "BURAYA_APP_ID"
+  apiKey: "AIzaSyDHBx7z13k2JiwsYYS3uqOfDWphCf9DFrM",
+  authDomain: "kurye-takip-92f66.firebaseapp.com",
+  databaseURL: "https://kurye-takip-92f66-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "kurye-takip-92f66",
+  storageBucket: "kurye-takip-92f66.firebasestorage.app",
+  messagingSenderId: "700959539368",
+  appId: "1:700959539368:web:a78e6e16b4ec82dcb0429d",
+  measurementId: "G-JMSKMZDJ03"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -451,7 +453,7 @@ function weekOf(t){const d=new Date(t+'T12:00:00'),s=new Date('2026-06-22T12:00:
 function monthKey(t){return t.slice(0,7)}
 function monthLabel(k){const[y,m]=k.split('-');return MONTHS[+m-1]+' '+y}
 function calc(r){const gider=(r.yakit||0)+(r.diger||0),net=(r.gelir||0)-gider,tlkm=r.km>0?net/r.km:0,perPkg=r.teslimat>0?net/r.teslimat:0,kmPkg=r.teslimat>0?r.km/r.teslimat:0;return{gider,net,tlkm,perPkg,kmPkg}}
-function hourStatsOf(recs){const withH=recs.filter(r=>r.saat!=null&&!isNaN(r.saat));const totalHours=withH.reduce((s,r)=>s+(+r.saat||0),0);const posH=withH.filter(r=>r.saat>0);const totalHoursPos=posH.reduce((s,r)=>s+(+r.saat||0),0);const totalNetPos=posH.reduce((s,r)=>s+calc(r).net,0);const totalPkgPos=posH.reduce((s,r)=>s+(r.teslimat||0),0);const totalKmPos=posH.reduce((s,r)=>s+(r.km||0),0);return{daysWithHours:withH.length,totalHours,avgPerHour:totalHoursPos>0?totalNetPos/totalHoursPos:null,avgPkgPerHour:totalHoursPos>0?totalPkgPos/totalHoursPos:null,avgKmPerHour:totalHoursPos>0?totalKmPos/totalHoursPos:null}}
+function hourStatsOf(recs){const withH=recs.filter(r=>r.saat!=null&&!isNaN(r.saat));const totalHours=withH.reduce((s,r)=>s+(+r.saat||0),0);const posH=withH.filter(r=>r.saat>0);const totalHoursPos=posH.reduce((s,r)=>s+(+r.saat||0),0);const totalNetPos=posH.reduce((s,r)=>s+calc(r).net,0);const totalPkgPos=posH.reduce((s,r)=>s+(r.teslimat||0),0);const totalKmPos=posH.reduce((s,r)=>s+(r.km||0),0);return{daysWithHours:withH.length,totalHours,avgPerHour:totalHoursPos>0?totalNetPos/totalHoursPos:null,avgPkgPerHour:totalHoursPos>0?totalPkgPos/totalHoursPos:null,avgKmPerHour:totalHoursPos>0?totalKmPos/totalKmPos:null}}
 function toast(msg,ok){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),2400)}
 
 // --- FIREBASE SAVE VE LOAD FONKSİYONLARI ---

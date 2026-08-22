@@ -894,7 +894,7 @@ async function sendToGemini() {
 
     chatBox.innerHTML += `<div class="chat-msg ai">${reply}</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
-  }, 500);
+  }, 400);
 }
 
 document.getElementById('btnWPrev').addEventListener('click',()=>{if(wIdx>0){wIdx--;renderWeeklyDetail()}});

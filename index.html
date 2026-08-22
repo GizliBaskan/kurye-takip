@@ -5,13 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Motokurye Takip · 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<!-- Firebase Kütüphaneleri -->
+
+<!-- === FIREBASE KÜTÜPHANELERİ === -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<!-- === STİL DOSYALARI (CSS) === -->
 <style>
 :root{
   --bg:#0a0e14;--elev:#111820;--card:#151d28;--hover:#1a2433;
@@ -29,9 +33,40 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased}
-.app{display:flex;min-height:100vh}
+
+/* GİRİŞ EKRANI STİLLERİ */
+#auth-screen {
+  position: fixed; inset: 0; background: var(--bg); z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+}
+.auth-box {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 2rem; width: 100%; max-width: 380px; text-align: center;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+.auth-box h2 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text); }
+.auth-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+.auth-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  padding: 0.75rem 1rem; border-radius: var(--rs); font-size: 0.9rem; margin-bottom: 1rem; outline: none;
+}
+.auth-input:focus { border-color: var(--accent); }
+.auth-btn {
+  width: 100%; padding: 0.8rem; border: none; border-radius: var(--rs); font-weight: 600;
+  cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-bottom: 0.7rem;
+}
+.auth-login-btn { background: var(--accent); color: #0a0e14; }
+.auth-login-btn:hover { filter: brightness(1.1); }
+.auth-reg-btn { background: transparent; border: 1px solid var(--border); color: var(--sec); }
+.auth-reg-btn:hover { background: var(--hover); color: var(--text); }
+#auth-error { color: var(--red); font-size: 0.8rem; margin-top: 1rem; display: none; }
+
+/* ANA UYGULAMA STİLLERİ */
+.app-container { display: none; min-height: 100vh; }
+.app-container.show { display: flex; }
+
 .sidebar{width:248px;background:var(--elev);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50;transition:transform .28s cubic-bezier(.4,0,.2,1)}
-.brand{padding:1.4rem 1.35rem 1.2rem;border-bottom:1px solid var(--border)}
+.brand{padding:1.4rem 1.35rem 1.2rem;border-bottom:1px solid var(--border); display: flex; justify-content: space-between; align-items: center;}
 .logo{display:flex;align-items:center;gap:.7rem;font-weight:700;font-size:1.05rem;letter-spacing:-.03em}
 .logo-i{width:36px;height:36px;background:linear-gradient(135deg,#0ea5e9,#38bdf8);border-radius:10px;display:grid;place-items:center;font-size:1.1rem;box-shadow:0 4px 12px rgba(14,165,233,.35)}
 .brand .sub{font-size:.72rem;color:var(--muted);margin-top:.35rem;margin-left:2.85rem}
@@ -47,6 +82,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .btn-reset:disabled{opacity:.35;cursor:not-allowed;color:var(--muted)!important;border-color:var(--border)!important}
 .btn-reset{width:100%;font-size:.75rem;padding:.55rem;color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s}
 .btn-reset:hover{border-color:var(--red);color:var(--red)}
+.logout-btn { border-color: var(--border2); color: var(--accent); }
+.logout-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
 .main{flex:1;margin-left:248px;padding:1.75rem 2rem 3.5rem;max-width:1280px}
 .page{display:none}.page.active{display:block;animation:rise .28s ease}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -166,50 +203,41 @@ tbody tr:last-child td{border-bottom:none}
 .empty-period{text-align:center;padding:3rem 1rem;color:var(--muted)}
 .empty-period .big-emoji{font-size:2.2rem;margin-bottom:.6rem}
 
-/* ===== Tablet ===== */
+/* ===== MOBİL MEDYA SORGULARI ===== */
 @media(max-width:1024px){
   .metrics{grid-template-columns:repeat(2,1fr)}
   .chart-grid{grid-template-columns:1fr}
   .insights{grid-template-columns:1fr 1fr}
   .best-grid{grid-template-columns:1fr 1fr}
 }
-
-/* ===== Mobile ===== */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);width:min(280px,86vw);box-shadow:8px 0 32px rgba(0,0,0,.45)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0;padding:4.4rem .85rem 2.8rem;max-width:100%}
   .menu-btn{display:flex}
   .fg-row{grid-template-columns:1fr}
-
   .page-head{margin-bottom:1.15rem}
   .page-head h1{font-size:1.28rem}
   .page-head p{font-size:.8rem}
-
   .metrics{grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1.1rem}
   .metric{padding:.9rem .95rem}
   .metric-value{font-size:1.15rem}
   .metric-label{font-size:.65rem;margin-bottom:.3rem}
   .metric-sub{font-size:.68rem}
-
   .insights{grid-template-columns:1fr;gap:.65rem;margin-bottom:1.1rem}
   .insight{padding:.95rem 1rem;gap:.75rem}
   .insight-icon{width:36px;height:36px;font-size:1rem}
   .insight .val{font-size:.98rem}
-
   .best-grid{grid-template-columns:1fr;gap:.65rem;margin-bottom:1.1rem}
   .best-card{padding:.95rem 1rem}
   .best-card .big{font-size:1.1rem}
-
   .chart-grid{gap:.65rem;margin-bottom:1.1rem}
   .chart-box{padding:1rem 1rem .85rem}
   .chart-area{height:200px}
-
   .toolbar{padding:.75rem .85rem;gap:.5rem}
   .toolbar input{min-width:0;flex:1 1 100%;font-size:16px}
   .toolbar select{flex:1 1 auto;min-width:0;font-size:16px}
   .toolbar .btn{flex:1 1 auto;justify-content:center;min-height:40px}
-
   .table-scroll{max-height:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
   table{font-size:.75rem;min-width:720px}
   thead th{padding:.55rem .5rem;font-size:.62rem}
@@ -218,20 +246,16 @@ tbody tr:last-child td{border-bottom:none}
   .editable{min-width:52px;padding:.35rem .35rem;font-size:.78rem;min-height:36px}
   .editable-text{min-width:90px}
   .btn-sm{min-width:36px;min-height:36px;padding:.35rem;display:inline-flex;align-items:center;justify-content:center}
-
   .info-block{padding:1.1rem 1.15rem}
   .info-block h3{font-size:.9rem}
   .info-block ul,.info-block ol,.info-block p{font-size:.82rem}
-
   .modal{padding:1.25rem;border-radius:16px;max-height:90vh;overflow-y:auto}
   .modal h2{font-size:1.05rem}
   .fg input{font-size:16px;padding:.6rem .8rem;min-height:42px}
   .modal-actions .btn{min-height:42px;flex:1;justify-content:center}
-
   .toast{left:1rem;right:1rem;bottom:1rem;text-align:center}
   .nav-item{padding:.8rem 1rem;min-height:44px;font-size:.9rem}
   .nav-item svg{width:20px;height:20px}
-
   .period-nav{padding:.85rem .95rem;gap:.7rem}
   .period-nav-left{gap:.6rem;width:100%}
   .period-nav-title{font-size:1rem;width:100%;justify-content:space-between}
@@ -240,8 +264,6 @@ tbody tr:last-child td{border-bottom:none}
   .nav-arrow{width:42px;height:42px}
   .section-divider{margin:1.4rem 0 .85rem}
 }
-
-/* ===== Small phones ===== */
 @media(max-width:400px){
   .metrics{grid-template-columns:1fr}
   .metric-value{font-size:1.25rem}
@@ -252,556 +274,13 @@ tbody tr:last-child td{border-bottom:none}
 </style>
 </head>
 <body>
-<button class="menu-btn" id="menuBtn" aria-label="Menü"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
-<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-<div class="app">
-<aside class="sidebar" id="sidebar">
-  <div class="brand"><div class="logo"><div class="logo-i">🏍️</div><span>Motokurye</span></div><div class="sub">Gelir · Gider · KM · 2026</div></div>
-  <nav class="nav">
-    <button class="nav-item active" data-page="dashboard"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 14a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1v-5zm10-3a1 1 0 011-1h4a1 1 0 011 1v8a1 1 0 01-1 1h-4a1 1 0 01-1-1v-8z"/></svg>Özet Panel</button>
-    <button class="nav-item" data-page="daily"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Günlük Kayıt</button>
-    <button class="nav-item" data-page="weekly"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Haftalık Özet</button>
-    <button class="nav-item" data-page="monthly"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Aylık Özet</button>
-    <button class="nav-item" data-page="instructions"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Talimatlar</button>
-  </nav>
-  <div class="foot">
-    <button class="btn-reset" id="btnUndo" disabled>↺ Geri Al</button>
-    <div class="foot-row">
-      <button class="btn-reset" id="btnBackup" title="Tüm verileri JSON olarak indir">⭳ Yedek İndir</button>
-      <button class="btn-reset" id="btnRestoreTrigger" title="JSON yedekten geri yükle">⭱ Geri Yükle</button>
-    </div>
-    <input type="file" id="fileRestore" accept="application/json" style="display:none"/>
-    <button class="btn-reset" id="btnReset">Verileri Sıfırla</button>
-  </div>
-</aside>
-<main class="main">
-<section class="page active" id="page-dashboard">
-  <div class="page-head"><h1>Özet Panel</h1><p>Performans, paket ekonomisi ve trendler</p></div>
-  <div class="metrics" id="mainMetrics"></div>
-  <div class="insights" id="insights"></div>
-  <div class="best-grid" id="bestDays"></div>
-  <div class="chart-grid">
-    <div class="chart-box"><h3>Aylık Gelir · Gider · Net</h3><div class="chart-area"><canvas id="cMonthly"></canvas></div></div>
-    <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cExpense"></canvas></div></div>
-  </div>
-  <div class="chart-grid">
-    <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cDaily"></canvas></div></div>
-    <div class="chart-box"><h3>Teslimat &amp; KM</h3><div class="chart-area"><canvas id="cDeliv"></canvas></div></div>
-  </div>
-  <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">— nota göre otomatik sınıflandırma</span></h3><div class="chart-area"><canvas id="cCategory"></canvas></div></div>
-</section>
-<section class="page" id="page-daily">
-  <div class="page-head"><h1>Günlük Kayıt</h1><p>Sarı alanlar düzenlenebilir · hesaplamalar otomatik</p></div>
-  <div class="panel">
-    <div class="toolbar">
-      <input type="text" id="searchQ" placeholder="Tarih veya not ara…"/>
-      <select id="filterMonth"><option value="">Tüm aylar</option></select>
-      <button class="btn btn-primary" id="btnAdd">+ Yeni Kayıt</button>
-      <button class="btn btn-ghost" id="btnCsv">CSV</button>
-    </div>
-    <div class="table-scroll">
-      <table>
-        <thead><tr>
-          <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Toplam</th>
-          <th class="num">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Not</th><th></th>
-        </tr></thead>
-        <tbody id="dailyBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-<section class="page" id="page-weekly">
-  <div class="page-head"><h1>Haftalık Özet</h1><p>Haftalar arasında gezinin, detaylı performans raporunu inceleyin</p></div>
-  <div class="period-nav">
-    <div class="period-nav-left">
-      <div class="period-nav-title" id="wNavTitle">—</div>
-    </div>
-    <div class="period-nav-btns">
-      <button class="nav-arrow" id="btnWPrev" title="Önceki hafta"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
-      <div class="period-jump"><select id="wJump"></select></div>
-      <button class="nav-arrow" id="btnWNext" title="Sonraki hafta"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
-    </div>
-  </div>
-  <div id="wContent">
-    <div class="metrics" id="wMetrics"></div>
-    <div class="insights" id="wInsights"></div>
-    <div class="best-grid" id="wBest"></div>
-    <div class="chart-grid">
-      <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cWDaily"></canvas></div></div>
-      <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cWExpense"></canvas></div></div>
-    </div>
-    <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri</h3><div class="chart-area"><canvas id="cWCategory"></canvas></div></div>
-  </div>
-  <div class="section-divider"><h2>Tüm Haftalar</h2></div>
-  <div class="panel"><div class="table-scroll"><table>
-    <thead><tr>
-      <th>Hafta</th><th>Başlangıç</th><th>Bitiş</th><th class="num">KM</th><th class="num">Gelir</th><th class="num">Yakıt</th><th class="num">Diğer</th>
-      <th class="num">Gider</th><th class="num">Net</th><th class="num">Paket</th><th class="num">₺/paket</th><th class="num">TL/km</th>
-    </tr></thead>
-    <tbody id="weeklyBody"></tbody>
-  </table></div></div>
-</section>
-<section class="page" id="page-monthly">
-  <div class="page-head"><h1>Aylık Özet</h1><p>Aylar arasında gezinin, detaylı performans raporunu inceleyin</p></div>
-  <div class="period-nav">
-    <div class="period-nav-left">
-      <div class="period-nav-title" id="mNavTitle">—</div>
-    </div>
-    <div class="period-nav-btns">
-      <button class="nav-arrow" id="btnMPrev" title="Önceki ay"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
-      <div class="period-jump"><select id="mJump"></select></div>
-      <button class="nav-arrow" id="btnMNext" title="Sonraki ay"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
-    </div>
-  </div>
-  <div id="mContent">
-    <div class="metrics" id="mMetrics"></div>
-    <div class="insights" id="mInsights"></div>
-    <div class="best-grid" id="mBest"></div>
-    <div class="chart-grid">
-      <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cMDaily"></canvas></div></div>
-      <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cMExpense"></canvas></div></div>
-    </div>
-    <div class="chart-box" style="margin-bottom:1.5rem"><h3>Haftalık Kırılım</h3><div class="chart-area"><canvas id="cMWeekly"></canvas></div></div>
-    <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri</h3><div class="chart-area"><canvas id="cMCategory"></canvas></div></div>
-  </div>
-  <div class="section-divider"><h2>Tüm Aylar</h2></div>
-  <div class="panel"><div class="table-scroll"><table>
-    <thead><tr>
-      <th>Ay</th><th class="num">KM</th><th class="num">Gelir</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Gider</th>
-      <th class="num">Net</th><th class="num">Gün Ort.</th><th class="num">Paket</th><th class="num">₺/paket</th><th class="num">TL/km</th><th class="num">km/paket</th>
-    </tr></thead>
-    <tbody id="monthlyBody"></tbody>
-  </table></div></div>
-</section>
-<section class="page" id="page-instructions">
-  <div class="page-head"><h1>Talimatlar</h1><p>Nasıl kullanılır?</p></div>
-  <div class="info-block"><h3>Sayfalar</h3>
-    <ol>
-      <li><strong>Özet Panel</strong> — KPI’lar, paket ekonomisi, en iyi günler ve grafikler.</li>
-      <li><strong>Günlük Kayıt</strong> — KM, saat, yakıt, diğer, gelir, teslimat. Sarı hücreler düzenlenebilir.</li>
-      <li><strong>Haftalık / Aylık</strong> — Otomatik toplamlar + paket başına metrikler.</li>
-    </ol>
-  </div>
-  <div class="info-block"><h3>Kullanım</h3>
-    <ul>
-      <li>İş bitiminde Günlük Kayıt’a gidin; satırı düzenleyin veya + Yeni Kayıt ekleyin.</li>
-      <li>Sarı alanlar anında kaydedilir; tüm özetler güncellenir.</li>
-      <li>Bir kaydın <strong>tarihini</strong> değiştirmeniz mi gerekiyor? Satırdaki ✎ (Düzenle) butonuna basın — açılan formda tarih dahil tüm alanları düzeltip kaydedebilirsiniz, kaydı silmenize gerek kalmaz.</li>
-      <li>Veriler bulutta (Firebase) saklanır. Ayrıca CSV ile dışa aktarabilirsiniz.</li>
-      <li>Haftalık / Aylık sayfalarda ← → ok tuşlarıyla önceki/sonraki döneme geçebilirsiniz.</li>
-      <li>Yanlış bir değişiklik mi yaptınız? Sol alttaki <strong>↺ Geri Al</strong> butonuyla son işlemi geri alabilirsiniz.</li>
-    </ul>
-    <div class="legend">
-      <span><i class="swatch" style="background:var(--amber-dim);border:1px solid var(--amber)"></i> Düzenlenebilir</span>
-      <span><i class="swatch" style="background:var(--hover);border:1px solid var(--border)"></i> Otomatik</span>
-      <span><i class="swatch" style="background:var(--accent)"></i> Toplam</span>
-    </div>
-  </div>
-</section>
-</main>
-</div>
-<div class="overlay" id="overlay">
-  <div class="modal">
-    <h2 id="modalTitle">Yeni Kayıt</h2>
-    <form id="form">
-      <div class="fg"><label>Tarih</label><input type="date" id="fDate" required/></div>
-      <div class="fg-row">
-        <div class="fg"><label>KM</label><input type="number" id="fKm" min="0" step="1" value="0"/></div>
-        <div class="fg"><label>Paket</label><input type="number" id="fTes" min="0" step="1" value="0"/></div>
-      </div>
-      <div class="fg"><label>Çalışılan Saat <span style="color:var(--muted);font-weight:400">(opsiyonel)</span></label><input type="number" id="fSaat" min="0" step="0.25" placeholder="Örn: 8.5"/></div>
-      <div class="fg-row">
-        <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" step="0.01" value="0"/></div>
-        <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" step="0.01" value="0"/></div>
-      </div>
-      <div class="fg"><label>Gelir (₺)</label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
-      <div class="fg"><label>Not</label><input type="text" id="fNote" placeholder="Opsiyonel"/></div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-ghost" id="btnCancel">İptal</button>
-        <button type="submit" class="btn btn-primary">Kaydet</button>
-      </div>
-    </form>
-  </div>
-</div>
-<div class="toast" id="toast"></div>
 
-<script>
-// --- FIREBASE BAĞLANTI AYARLARI ---
-const firebaseConfig = {
-  apiKey: "AIzaSyDHBx7z13k2JiwsYYS3uqOfDWphCf9DFrM",
-  authDomain: "kurye-takip-92f66.firebaseapp.com",
-  databaseURL: "https://kurye-takip-92f66-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "kurye-takip-92f66",
-  storageBucket: "kurye-takip-92f66.firebasestorage.app",
-  messagingSenderId: "700959539368",
-  appId: "1:700959539368:web:a78e6e16b4ec82dcb0429d",
-  measurementId: "G-JMSKMZDJ03"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-const INITIAL=[{"tarih":"2026-06-23","km":36,"yakit":0,"diger":3000,"gelir":570.29,"teslimat":6,"aciklama":"(POWER BANK)"},{"tarih":"2026-06-24","km":71,"yakit":0,"diger":0,"gelir":1076.1,"teslimat":12,"aciklama":""},{"tarih":"2026-06-25","km":92,"yakit":0,"diger":0,"gelir":1434.23,"teslimat":15,"aciklama":""},{"tarih":"2026-06-26","km":108,"yakit":0,"diger":0,"gelir":1673.84,"teslimat":19,"aciklama":""},{"tarih":"2026-06-27","km":150,"yakit":590,"diger":0,"gelir":2758.19,"teslimat":28,"aciklama":""},{"tarih":"2026-06-28","km":27,"yakit":0,"diger":0,"gelir":1541,"teslimat":3,"aciklama":""},{"tarih":"2026-06-30","km":16,"yakit":0,"diger":0,"gelir":500.81,"teslimat":6,"aciklama":""},{"tarih":"2026-07-01","km":69,"yakit":0,"diger":0,"gelir":1070.72,"teslimat":11,"aciklama":""},{"tarih":"2026-07-02","km":145,"yakit":665,"diger":243,"gelir":2765.53,"teslimat":29,"aciklama":""},{"tarih":"2026-07-03","km":107,"yakit":0,"diger":0,"gelir":1798.35,"teslimat":19,"aciklama":""},{"tarih":"2026-07-04","km":47,"yakit":0,"diger":0,"gelir":555.24,"teslimat":5,"aciklama":""},{"tarih":"2026-07-05","km":182,"yakit":0,"diger":0,"gelir":3511,"teslimat":33,"aciklama":""},{"tarih":"2026-07-06","km":109,"yakit":0,"diger":0,"gelir":1037.79,"teslimat":11,"aciklama":""},{"tarih":"2026-07-07","km":73,"yakit":0,"diger":0,"gelir":345.14,"teslimat":3,"aciklama":""},{"tarih":"2026-07-08","km":125,"yakit":0,"diger":0,"gelir":1240.71,"teslimat":14,"aciklama":""},{"tarih":"2026-07-09","km":0,"yakit":0,"diger":300,"gelir":0,"teslimat":0,"aciklama":""},{"tarih":"2026-07-10","km":39,"yakit":0,"diger":0,"gelir":910.16,"teslimat":10,"aciklama":""},{"tarih":"2026-07-11","km":114,"yakit":0,"diger":0,"gelir":2065.79,"teslimat":19,"aciklama":""},{"tarih":"2026-07-12","km":79,"yakit":520,"diger":0,"gelir":3248,"teslimat":18,"aciklama":""},{"tarih":"2026-07-13","km":58,"yakit":0,"diger":0,"gelir":1048.25,"teslimat":10,"aciklama":""},{"tarih":"2026-07-14","km":116,"yakit":0,"diger":0,"gelir":2231.81,"teslimat":24,"aciklama":""},{"tarih":"2026-07-15","km":102,"yakit":650,"diger":1100,"gelir":818.23,"teslimat":8,"aciklama":"(MOTOR BAKIM)"},{"tarih":"2026-07-16","km":54,"yakit":0,"diger":1241,"gelir":946.59,"teslimat":9,"aciklama":"KDV"},{"tarih":"2026-07-17","km":35,"yakit":0,"diger":0,"gelir":662.98,"teslimat":7,"aciklama":""},{"tarih":"2026-07-18","km":186,"yakit":650,"diger":0,"gelir":3404.5,"teslimat":31,"aciklama":""},{"tarih":"2026-07-19","km":180,"yakit":0,"diger":0,"gelir":4531,"teslimat":30,"aciklama":""},{"tarih":"2026-07-20","km":234,"yakit":650,"diger":2000,"gelir":3559.15,"teslimat":39,"aciklama":"(MUHASEBE + MTV)"},{"tarih":"2026-07-21","km":204,"yakit":0,"diger":0,"gelir":2912.74,"teslimat":34,"aciklama":""},{"tarih":"2026-07-22","km":66,"yakit":0,"diger":0,"gelir":999.84,"teslimat":11,"aciklama":""},{"tarih":"2026-07-23","km":162,"yakit":728.75,"diger":668,"gelir":2866.63,"teslimat":27,"aciklama":"(MOTOR ZİNCİR YAĞI)"},{"tarih":"2026-07-24","km":203,"yakit":0,"diger":0,"gelir":3450,"teslimat":34,"aciklama":""},{"tarih":"2026-07-25","km":234,"yakit":600,"diger":0,"gelir":3774,"teslimat":35,"aciklama":""},{"tarih":"2026-07-26","km":169,"yakit":750,"diger":0,"gelir":8303,"teslimat":20,"aciklama":""},{"tarih":"2026-07-27","km":187,"yakit":0,"diger":700,"gelir":3500,"teslimat":38,"aciklama":"(Zincir değişim)"},{"tarih":"2026-07-28","km":209,"yakit":690,"diger":0,"gelir":2945,"teslimat":31,"aciklama":""},{"tarih":"2026-07-29","km":218,"yakit":0,"diger":792,"gelir":3272,"teslimat":36,"aciklama":"KDV"},{"tarih":"2026-07-30","km":227,"yakit":700,"diger":150,"gelir":3250,"teslimat":33,"aciklama":"Lastik"},{"tarih":"2026-07-31","km":187,"yakit":0,"diger":1000,"gelir":3200,"teslimat":34,"aciklama":"Motor Bakım"},{"tarih":"2026-08-01","km":289,"yakit":670,"diger":150,"gelir":4300,"teslimat":42,"aciklama":""},{"tarih":"2026-08-02","km":172,"yakit":0,"diger":0,"gelir":8533,"teslimat":25,"aciklama":""},{"tarih":"2026-08-03","km":215,"yakit":700,"diger":0,"gelir":3569,"teslimat":35,"aciklama":""},{"tarih":"2026-08-04","km":118,"yakit":0,"diger":0,"gelir":2010,"teslimat":21,"aciklama":""},{"tarih":"2026-08-05","km":222,"yakit":690,"diger":0,"gelir":3300,"teslimat":35,"aciklama":""},{"tarih":"2026-08-06","km":213,"yakit":0,"diger":3750,"gelir":3236,"teslimat":35,"aciklama":"TRAFIK CEZA"},{"tarih":"2026-08-07","km":190,"yakit":800,"diger":400,"gelir":2300,"teslimat":24,"aciklama":"KAZA MASRAF"},{"tarih":"2026-08-08","km":198,"yakit":0,"diger":400,"gelir":3000,"teslimat":34,"aciklama":"KAZA MASRAF"},{"tarih":"2026-08-09","km":226,"yakit":730,"diger":0,"gelir":9451,"teslimat":38,"aciklama":""},{"tarih":"2026-08-10","km":251,"yakit":0,"diger":0,"gelir":3800,"teslimat":40,"aciklama":""},{"tarih":"2026-08-11","km":267,"yakit":780,"diger":0,"gelir":4100,"teslimat":47,"aciklama":""},{"tarih":"2026-08-12","km":260,"yakit":0,"diger":0,"gelir":4000,"teslimat":39,"aciklama":""},{"tarih":"2026-08-13","km":236,"yakit":790,"diger":2200,"gelir":3758,"teslimat":36,"aciklama":"MOTOR BAKIM"},{"tarih":"2026-08-14","km":239,"yakit":0,"diger":0,"gelir":3300,"teslimat":37,"aciklama":""},{"tarih":"2026-08-15","km":294,"yakit":770,"diger":0,"gelir":4050,"teslimat":39,"aciklama":""},{"tarih":"2026-08-16","km":195,"yakit":760,"diger":0,"gelir":9711,"teslimat":29,"aciklama":""},{"tarih":"2026-08-17","km":253,"yakit":0,"diger":0,"gelir":3900,"teslimat":39,"aciklama":""},{"tarih":"2026-08-18","km":270,"yakit":720,"diger":550,"gelir":4600,"teslimat":43,"aciklama":"Motor parça "},{"tarih":"2026-08-19","km":286,"yakit":760,"diger":0,"gelir":3700,"teslimat":37,"aciklama":""},{"tarih":"2026-08-20","km":211,"yakit":0,"diger":1500,"gelir":3750,"teslimat":39,"aciklama":"Muhasebe"},{"tarih":"2026-08-21","km":251,"yakit":730,"diger":1090,"gelir":3900,"teslimat":42,"aciklama":"Gelir vergisi"}];
-
-const DAYS=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
-const MONTHS=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-let records=[],charts={};
-function fmt(n,d=2){if(n==null||isNaN(n))return'0';return Number(n).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
-function fmtInt(n){return Number(n||0).toLocaleString('tr-TR')}
-function dayName(t){return DAYS[new Date(t+'T12:00:00').getDay()]}
-function weekOf(t){const d=new Date(t+'T12:00:00'),s=new Date('2026-06-22T12:00:00');return Math.floor((d-s)/86400000/7)+1}
-function monthKey(t){return t.slice(0,7)}
-function monthLabel(k){const[y,m]=k.split('-');return MONTHS[+m-1]+' '+y}
-function calc(r){const gider=(r.yakit||0)+(r.diger||0),net=(r.gelir||0)-gider,tlkm=r.km>0?net/r.km:0,perPkg=r.teslimat>0?net/r.teslimat:0,kmPkg=r.teslimat>0?r.km/r.teslimat:0;return{gider,net,tlkm,perPkg,kmPkg}}
-function hourStatsOf(recs){const withH=recs.filter(r=>r.saat!=null&&!isNaN(r.saat));const totalHours=withH.reduce((s,r)=>s+(+r.saat||0),0);const posH=withH.filter(r=>r.saat>0);const totalHoursPos=posH.reduce((s,r)=>s+(+r.saat||0),0);const totalNetPos=posH.reduce((s,r)=>s+calc(r).net,0);const totalPkgPos=posH.reduce((s,r)=>s+(r.teslimat||0),0);const totalKmPos=posH.reduce((s,r)=>s+(r.km||0),0);return{daysWithHours:withH.length,totalHours,avgPerHour:totalHoursPos>0?totalNetPos/totalHoursPos:null,avgPkgPerHour:totalHoursPos>0?totalPkgPos/totalHoursPos:null,avgKmPerHour:totalHoursPos>0?totalKmPos/totalKmPos:null}}
-function toast(msg,ok){const el=document.getElementById('toast');el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),2400)}
-
-// --- FIREBASE SAVE VE LOAD FONKSİYONLARI ---
-function save() {
-  localStorage.setItem('mk_v2', JSON.stringify(records));
-  db.ref('kayitlar').set(records)
-    .catch(err => toast('Buluta kaydedilemedi: ' + err.message, false));
-}
-
-function loadLocalFallback() {
-  try {
-    const r = localStorage.getItem('mk_v2');
-    if (r) { records = JSON.parse(r); return; }
-  } catch(_){}
-  records = JSON.parse(JSON.stringify(INITIAL));
-  save();
-}
-
-function load() {
-  toast("Buluttan veriler çekiliyor...", true);
-  db.ref('kayitlar').once('value')
-    .then(snapshot => {
-      if (snapshot.exists()) {
-        records = snapshot.val();
-        if (!Array.isArray(records)) records = Object.values(records);
-        localStorage.setItem('mk_v2', JSON.stringify(records));
-        toast("Bulut verileri yüklendi", true);
-      } else {
-        loadLocalFallback();
-      }
-      renderDash();
-    })
-    .catch(err => {
-      console.error(err);
-      toast("Bağlantı hatası, lokal veriler kullanılıyor", false);
-      loadLocalFallback();
-      renderDash();
-    });
-}
-
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('show')}
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarBackdrop').classList.add('show')}
-function toggleSidebar(){const s=document.getElementById('sidebar');if(s.classList.contains('open'))closeSidebar();else openSidebar()}
-document.querySelectorAll('.nav-item').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+btn.dataset.page).classList.add('active');closeSidebar();if(btn.dataset.page==='dashboard')renderDash();if(btn.dataset.page==='daily')renderDaily();if(btn.dataset.page==='weekly'){renderWeekly();renderWeeklyDetail()}if(btn.dataset.page==='monthly'){renderMonthly();renderMonthlyDetail()}})});
-document.getElementById('menuBtn').addEventListener('click',toggleSidebar);
-document.getElementById('sidebarBackdrop').addEventListener('click',closeSidebar);
-
-function totals(){let km=0,gelir=0,yakit=0,diger=0,tes=0;records.forEach(r=>{km+=r.km||0;gelir+=r.gelir||0;yakit+=r.yakit||0;diger+=r.diger||0;tes+=r.teslimat||0});const gider=yakit+diger,net=gelir-gider,workDays=records.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0}}
-function bestOf(){if(!records.length)return{};let bestNet=records[0],bestTlkm=records[0],bestTes=records[0];records.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
-function totalsOf(recs){let km=0,gelir=0,yakit=0,diger=0,tes=0;recs.forEach(r=>{km+=r.km||0;gelir+=r.gelir||0;yakit+=r.yakit||0;diger+=r.diger||0;tes+=r.teslimat||0});const gider=yakit+diger,net=gelir-gider,workDays=recs.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0}}
-function bestOfRecs(recs){if(!recs.length)return{};let bestNet=recs[0],bestTlkm=recs[0],bestTes=recs[0];recs.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
-
-const EXPENSE_CATEGORIES=[
-  {key:'Bakım',color:'#38bdf8',kw:['BAKIM','BAKıM','YAĞ','YAG','ZİNCİR','ZINCIR','LASTİK','LASTIK','BALATA','AKÜ','AKU']},
-  {key:'Ceza / Kaza',color:'#f87171',kw:['CEZA','TRAFİK','TRAFIK','KAZA']},
-  {key:'Vergi / Muhasebe',color:'#fbbf24',kw:['KDV','MTV','VERGİ','VERGI','MUHASEBE']},
-  {key:'Ekipman',color:'#a78bfa',kw:['POWER BANK','EKİPMAN','EKIPMAN','KASK','ÇANTA','CANTA']}
-];
-function categorize(aciklama){const text=(aciklama||'').toUpperCase();for(const c of EXPENSE_CATEGORIES){if(c.kw.some(k=>text.includes(k)))return c.key}return 'Diğer'}
-function categoryBreakdown(recs){const map={};recs.forEach(r=>{if(!(r.diger>0))return;const k=categorize(r.aciklama);map[k]=(map[k]||0)+r.diger});return map}
-function categoryColor(key){const c=EXPENSE_CATEGORIES.find(c=>c.key===key);return c?c.color:'#64748b'}
-function renderCategoryChart(chartKey,canvasId,recs){
-  const map=categoryBreakdown(recs),keys=Object.keys(map).sort((a,b)=>map[b]-map[a]);
-  destroyChart(chartKey);
-  const canvas=document.getElementById(canvasId);if(!canvas)return;
-  if(!keys.length){const box=canvas.closest('.chart-box');if(box){let e=box.querySelector('.empty-inline');if(!e){e=document.createElement('div');e.className='empty-inline empty';e.style.padding='2.2rem 0';e.textContent='Bu dönemde kategorilenebilir gider yok';box.querySelector('.chart-area').appendChild(e)}canvas.style.display='none'}return}
-  const box=canvas.closest('.chart-box');if(box){const e=box.querySelector('.empty-inline');if(e)e.remove();canvas.style.display=''}
-  charts[chartKey]=new Chart(canvas,{type:'bar',data:{labels:keys,datasets:[{label:'Tutar',data:keys.map(k=>map[k]),backgroundColor:keys.map(categoryColor),borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(30,42,58,.6)'}},y:{ticks:{color:'#94a3b8',font:{size:11}},grid:{display:false}}}}});
-}
-function weeksList(){const map={};records.forEach(r=>{const w=weekOf(r.tarih);if(!map[w])map[w]={w,recs:[]};map[w].recs.push(r)});return Object.values(map).sort((a,b)=>a.w-b.w)}
-function monthsList(){const map={};records.forEach(r=>{const k=monthKey(r.tarih);if(!map[k])map[k]={key:k,recs:[]};map[k].recs.push(r)});return Object.values(map).sort((a,b)=>a.key.localeCompare(b.key))}
-function deltaBadge(cur,prev,unit){if(prev==null)return'';const diff=cur-prev;if(Math.abs(diff)<0.005&&Math.abs(prev)<0.005)return'<span class="delta flat">= önceki dönem</span>';const up=diff>=0;const pct=Math.abs(prev)>0.005?fmt(Math.abs(diff/prev*100),1)+'%':(unit||'');const arrow=up?'▲':'▼';return `<span class="delta ${up?'up':'down'}">${arrow} ${pct} önceki döneme göre</span>`}
-
-let wIdx=null,mIdx=null;
-function renderWeeklyDetail(){
-  const weeks=weeksList();
-  const content=document.getElementById('wContent'),nav=document.querySelector('#page-weekly .period-nav');
-  if(!weeks.length){content.innerHTML='<div class="empty-period"><div class="big-emoji">📅</div>Henüz kayıt yok</div>';document.getElementById('wNavTitle').textContent='Haftalık Özet';nav.style.display='none';return}
-  nav.style.display='';
-  if(wIdx===null)wIdx=weeks.length-1;
-  wIdx=Math.max(0,Math.min(wIdx,weeks.length-1));
-  const cur=weeks[wIdx],recs=cur.recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  const start=recs[0].tarih,end=recs[recs.length-1].tarih;
-  const t=totalsOf(recs),b=bestOfRecs(recs),hs=hourStatsOf(recs);
-  const prev=wIdx>0?totalsOf(weeks[wIdx-1].recs):null;
-  document.getElementById('wNavTitle').innerHTML=`Hafta ${cur.w} <span class="period-range">${start} → ${end}</span> <span class="period-badge">${recs.length} gün kayıtlı</span>`;
-  document.getElementById('btnWPrev').disabled=wIdx===0;
-  document.getElementById('btnWNext').disabled=wIdx===weeks.length-1;
-  const jump=document.getElementById('wJump');
-  jump.innerHTML=weeks.map((w,i)=>`<option value="${i}" ${i===wIdx?'selected':''}>Hafta ${w.w}</option>`).join('');
-  content.style.display='';
-  document.getElementById('wMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü${prev?deltaBadge(t.km,prev.km):''}</div></div>
-<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün${prev?deltaBadge(t.tes,prev.tes):''}</div></div>
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value">${fmt(t.gelir)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gelir,prev.gelir):''}</div></div>
-<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt ${fmt(t.yakit)} · Diğer ${fmt(t.diger)}${prev?deltaBadge(t.gider,prev.gider):''}</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.net,prev.net):''}</div></div>
-<div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${prev?deltaBadge(t.tlkm,prev.tlkm):''}</div></div>
-<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gunOrt,prev.gunOrt):''}</div></div>
-<div class="metric orange"><div class="metric-label">Ort. Gider / km</div><div class="metric-value">${fmt(t.giderKm)}</div><div class="metric-sub">${prev?deltaBadge(t.giderKm,prev.giderKm):''}</div></div>`;
-  document.getElementById('wInsights').innerHTML=`
-<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Gider sonrası · Brüt ${fmt(t.gelirPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Bu haftaki ortalama yol</div></div></div>
-<div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Sadece yakıt maliyeti</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">${hs.daysWithHours}/${recs.length} günün saat verisi var</div></div></div>`;
-  const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
-  document.getElementById('wBest').innerHTML=`
-<div class="best-card"><div class="tag">Haftanın en yüksek neti</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div><div class="meta">${b.bestNet?(b.bestNet.teslimat||0)+' paket · '+(b.bestNet.km||0)+' km':''}</div></div>
-<div class="best-card"><div class="tag">Haftanın en verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(bt.net)+' ₺ net · '+(b.bestTlkm.km||0)+' km':''}</div></div>
-<div class="best-card"><div class="tag">Haftanın en çok paketi</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km · '+fmt(calc(b.bestTes).net)+' ₺ net':''}</div></div>`;
-  destroyChart('wdaily');
-  charts.wdaily=new Chart(document.getElementById('cWDaily'),{type:'line',data:{labels:recs.map(r=>dayName(r.tarih).slice(0,3)+' '+r.tarih.slice(8,10)),datasets:[{label:'Net',data:recs.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.14)',fill:true,tension:.3,pointRadius:3,pointHoverRadius:6,borderWidth:2}]},options:chartOpts(false)});
-  destroyChart('wexp');
-  charts.wexp=new Chart(document.getElementById('cWExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
-  renderCategoryChart('wcat','cWCategory',recs);
-}
-
-function renderMonthlyDetail(){
-  const months=monthsList();
-  const content=document.getElementById('mContent'),nav=document.querySelector('#page-monthly .period-nav');
-  if(!months.length){content.innerHTML='<div class="empty-period"><div class="big-emoji">📅</div>Henüz kayıt yok</div>';document.getElementById('mNavTitle').textContent='Aylık Özet';nav.style.display='none';return}
-  nav.style.display='';
-  if(mIdx===null)mIdx=months.length-1;
-  mIdx=Math.max(0,Math.min(mIdx,months.length-1));
-  const cur=months[mIdx],recs=cur.recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  const t=totalsOf(recs),b=bestOfRecs(recs),hs=hourStatsOf(recs);
-  const prev=mIdx>0?totalsOf(months[mIdx-1].recs):null;
-  document.getElementById('mNavTitle').innerHTML=`${monthLabel(cur.key)} <span class="period-badge">${recs.length} gün kayıtlı</span>`;
-  document.getElementById('btnMPrev').disabled=mIdx===0;
-  document.getElementById('btnMNext').disabled=mIdx===months.length-1;
-  const jump=document.getElementById('mJump');
-  jump.innerHTML=months.map((m,i)=>`<option value="${i}" ${i===mIdx?'selected':''}>${monthLabel(m.key)}</option>`).join('');
-  content.style.display='';
-  document.getElementById('mMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü${prev?deltaBadge(t.km,prev.km):''}</div></div>
-<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün${prev?deltaBadge(t.tes,prev.tes):''}</div></div>
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value">${fmt(t.gelir)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gelir,prev.gelir):''}</div></div>
-<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt ${fmt(t.yakit)} · Diğer ${fmt(t.diger)}${prev?deltaBadge(t.gider,prev.gider):''}</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.net,prev.net):''}</div></div>
-<div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${prev?deltaBadge(t.tlkm,prev.tlkm):''}</div></div>
-<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gunOrt,prev.gunOrt):''}</div></div>
-<div class="metric orange"><div class="metric-label">Ort. Gider / km</div><div class="metric-value">${fmt(t.giderKm)}</div><div class="metric-sub">${prev?deltaBadge(t.giderKm,prev.giderKm):''}</div></div>`;
-  document.getElementById('mInsights').innerHTML=`
-<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Gider sonrası · Brüt ${fmt(t.gelirPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Bu ayki ortalama yol</div></div></div>
-<div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Sadece yakıt maliyeti</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">${hs.daysWithHours}/${recs.length} günün saat verisi var</div></div></div>`;
-  const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
-  document.getElementById('mBest').innerHTML=`
-<div class="best-card"><div class="tag">Ayın en yüksek neti</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div><div class="meta">${b.bestNet?(b.bestNet.teslimat||0)+' paket · '+(b.bestNet.km||0)+' km':''}</div></div>
-<div class="best-card"><div class="tag">Ayın en verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(bt.net)+' ₺ net · '+(b.bestTlkm.km||0)+' km':''}</div></div>
-<div class="best-card"><div class="tag">Ayın en çok paketi</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km · '+fmt(calc(b.bestTes).net)+' ₺ net':''}</div></div>`;
-  destroyChart('mdaily');
-  charts.mdaily=new Chart(document.getElementById('cMDaily'),{type:'line',data:{labels:recs.map(r=>r.tarih.slice(8,10)+'.'+r.tarih.slice(5,7)),datasets:[{label:'Net',data:recs.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.14)',fill:true,tension:.3,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:chartOpts(false)});
-  destroyChart('mexp');
-  charts.mexp=new Chart(document.getElementById('cMExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
-  const wMap={};recs.forEach(r=>{const w=weekOf(r.tarih);if(!wMap[w])wMap[w]={gelir:0,gider:0,net:0};const c=calc(r);wMap[w].gelir+=r.gelir||0;wMap[w].gider+=c.gider;wMap[w].net+=c.net});
-  const wKeys=Object.keys(wMap).sort((a,b)=>a-b);
-  destroyChart('mweekly');
-  charts.mweekly=new Chart(document.getElementById('cMWeekly'),{type:'bar',data:{labels:wKeys.map(k=>'Hafta '+k),datasets:[
-{label:'Gelir',data:wKeys.map(k=>wMap[k].gelir),backgroundColor:'rgba(52,211,153,.75)',borderRadius:5},
-{label:'Gider',data:wKeys.map(k=>wMap[k].gider),backgroundColor:'rgba(248,113,113,.7)',borderRadius:5},
-{label:'Net',data:wKeys.map(k=>wMap[k].net),backgroundColor:'rgba(56,189,248,.75)',borderRadius:5}
-]},options:chartOpts()});
-  renderCategoryChart('mcat','cMCategory',recs);
-}
-
-document.getElementById('btnWPrev').addEventListener('click',()=>{if(wIdx>0){wIdx--;renderWeeklyDetail()}});
-document.getElementById('btnWNext').addEventListener('click',()=>{const n=weeksList().length;if(wIdx<n-1){wIdx++;renderWeeklyDetail()}});
-document.getElementById('wJump').addEventListener('change',e=>{wIdx=+e.target.value;renderWeeklyDetail()});
-document.getElementById('btnMPrev').addEventListener('click',()=>{if(mIdx>0){mIdx--;renderMonthlyDetail()}});
-document.getElementById('btnMNext').addEventListener('click',()=>{const n=monthsList().length;if(mIdx<n-1){mIdx++;renderMonthlyDetail()}});
-document.getElementById('mJump').addEventListener('change',e=>{mIdx=+e.target.value;renderMonthlyDetail()});
-
-document.addEventListener('keydown',e=>{
-  const tag=(document.activeElement&&document.activeElement.tagName)||'';
-  if(['INPUT','SELECT','TEXTAREA'].includes(tag))return;
-  if(document.getElementById('overlay').classList.contains('show'))return;
-  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
-    const active=document.querySelector('.page.active');if(!active)return;
-    if(active.id==='page-weekly'){const n=weeksList().length;if(!n)return;if(e.key==='ArrowLeft'&&wIdx>0){wIdx--;renderWeeklyDetail()}else if(e.key==='ArrowRight'&&wIdx<n-1){wIdx++;renderWeeklyDetail()}}
-    else if(active.id==='page-monthly'){const n=monthsList().length;if(!n)return;if(e.key==='ArrowLeft'&&mIdx>0){mIdx--;renderMonthlyDetail()}else if(e.key==='ArrowRight'&&mIdx<n-1){mIdx++;renderMonthlyDetail()}}
-  }
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();doUndo()}
-});
-
-function renderDash(){
-  const t=totals(),b=bestOf(),hs=hourStatsOf(records);
-  document.getElementById('mainMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü</div></div>
-<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün</div></div>
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value">${fmt(t.gelir)} ₺</div></div>
-<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt ${fmt(t.yakit)} · Diğer ${fmt(t.diger)}</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
-<div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div></div>
-<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div></div>
-<div class="metric orange"><div class="metric-label">Ort. Gider / km</div><div class="metric-value">${fmt(t.giderKm)}</div></div>`;
-  document.getElementById('insights').innerHTML=`
-<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Gider sonrası · Brüt ${fmt(t.gelirPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Bir teslimat için ortalama yol</div></div></div>
-<div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Sadece yakıt maliyeti</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">${hs.daysWithHours}/${records.length} günün saat verisi var${hs.totalHours?' · Toplam '+fmt(hs.totalHours,1)+' sa':''}</div></div></div>`;
-  const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
-  document.getElementById('bestDays').innerHTML=`
-<div class="best-card"><div class="tag">En yüksek net</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div><div class="meta">${b.bestNet?(b.bestNet.teslimat||0)+' paket · '+(b.bestNet.km||0)+' km':''}</div></div>
-<div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(bt.net)+' ₺ net · '+(b.bestTlkm.km||0)+' km':''}</div></div>
-<div class="best-card"><div class="tag">En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km · '+fmt(calc(b.bestTes).net)+' ₺ net':''}</div></div>`;
-  const byM={};records.forEach(r=>{const k=monthKey(r.tarih);if(!byM[k])byM[k]={gelir:0,gider:0};byM[k].gelir+=r.gelir||0;byM[k].gider+=(r.yakit||0)+(r.diger||0)});
-  const mKeys=Object.keys(byM).sort(),mLab=mKeys.map(monthLabel);
-  destroyChart('monthly');
-  charts.monthly=new Chart(document.getElementById('cMonthly'),{type:'bar',data:{labels:mLab,datasets:[
-{label:'Gelir',data:mKeys.map(k=>byM[k].gelir),backgroundColor:'rgba(52,211,153,.75)',borderRadius:5},
-{label:'Gider',data:mKeys.map(k=>byM[k].gider),backgroundColor:'rgba(248,113,113,.7)',borderRadius:5},
-{label:'Net',data:mKeys.map(k=>byM[k].gelir-byM[k].gider),backgroundColor:'rgba(56,189,248,.75)',borderRadius:5}
-]},options:chartOpts()});
-  destroyChart('expense');
-  charts.expense=new Chart(document.getElementById('cExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
-  const sorted=[...records].sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  destroyChart('daily');
-  charts.daily=new Chart(document.getElementById('cDaily'),{type:'line',data:{labels:sorted.map(r=>r.tarih.slice(5)),datasets:[{label:'Net',data:sorted.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.12)',fill:true,tension:.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:chartOpts(false)});
-  destroyChart('deliv');
-  charts.deliv=new Chart(document.getElementById('cDeliv'),{type:'bar',data:{labels:sorted.map(r=>r.tarih.slice(5)),datasets:[
-{label:'Paket',data:sorted.map(r=>r.teslimat||0),backgroundColor:'rgba(52,211,153,.65)',borderRadius:3,yAxisID:'y'},
-{label:'KM',data:sorted.map(r=>r.km||0),type:'line',borderColor:'#fbbf24',backgroundColor:'transparent',tension:.3,pointRadius:1.5,borderWidth:2,yAxisID:'y1'}
-]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#94a3b8',boxWidth:12,font:{size:11}}}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:10,font:{size:10}},grid:{display:false}},y:{position:'left',ticks:{color:'#94a3b8'},grid:{color:'rgba(30,42,58,.8)'}},y1:{position:'right',ticks:{color:'#fbbf24'},grid:{display:false}}}}});
-  renderCategoryChart('cat','cCategory',records);
-}
-
-function chartOpts(legend=true){return{responsive:true,maintainAspectRatio:false,plugins:{legend:legend?{labels:{color:'#94a3b8',boxWidth:12,font:{size:11}}}:{display:false}},scales:{x:{ticks:{color:'#64748b',maxTicksLimit:12,font:{size:10}},grid:{color:'rgba(30,42,58,.6)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(30,42,58,.6)'}}}}}
-function destroyChart(key){if(charts[key]){charts[key].destroy();charts[key]=null}}
-
-function renderDaily(){
-  const q=(document.getElementById('searchQ').value||'').toLowerCase(),month=document.getElementById('filterMonth').value,tbody=document.getElementById('dailyBody');
-  const months=[...new Set(records.map(r=>r.tarih.slice(0,7)))].sort();const sel=document.getElementById('filterMonth'),cur=sel.value;
-  sel.innerHTML='<option value="">Tüm aylar</option>'+months.map(m=>`<option value="${m}" ${m===cur?'selected':''}>${monthLabel(m)}</option>`).join('');
-  let list=records.map((r,i)=>({...r,_i:i})).filter(r=>{if(month&&!r.tarih.startsWith(month))return false;if(q&&!r.tarih.includes(q)&&!(r.aciklama||'').toLowerCase().includes(q))return false;return true}).sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  if(!list.length){tbody.innerHTML='<tr><td colspan="14" class="empty">Kayıt yok</td></tr>';return}
-  let sKm=0,sY=0,sD=0,sG=0,sT=0,sNet=0,sSaat=0,sSaatDays=0;
-  tbody.innerHTML=list.map(r=>{const c=calc(r);sKm+=r.km||0;sY+=r.yakit||0;sD+=r.diger||0;sG+=r.gelir||0;sT+=r.teslimat||0;sNet+=c.net;if(r.saat!=null&&!isNaN(r.saat)){sSaat+=+r.saat;sSaatDays++}
-  return`<tr data-i="${r._i}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
-  <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
-  <td class="num"><input class="editable" type="number" data-f="saat" value="${r.saat!=null?r.saat:''}" min="0" step="0.25" placeholder="—"/></td>
-  <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
-  <td class="num"><input class="editable" type="number" data-f="diger" value="${r.diger||0}" min="0" step="0.01"/></td>
-  <td class="num computed">${fmt(c.gider)}</td>
-  <td class="num"><input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/></td>
-  <td class="num computed ${c.net<0?'neg':'pos'}">${fmt(c.net)}</td>
-  <td class="num"><input class="editable" type="number" data-f="teslimat" value="${r.teslimat||0}" min="0" step="1"/></td>
-  <td class="num computed">${fmt(c.tlkm)}</td>
-  <td class="num computed ${c.perPkg<0?'neg':'pos'}">${fmt(c.perPkg)}</td>
-  <td><input class="editable editable-text" type="text" data-f="aciklama" value="${(r.aciklama||'').replace(/"/g,'&quot;')}"/></td>
-  <td class="actions"><button class="btn btn-ghost btn-sm btn-edit" title="Düzenle">✎</button><button class="btn btn-danger btn-sm btn-del" title="Sil">✕</button></td></tr>`}).join('')+`<tr class="total-row"><td colspan="2"><strong>TOPLAM (${list.length})</strong></td>
-  <td class="num">${fmtInt(sKm)}</td><td class="num">${sSaatDays>0?fmt(sSaat,1):'—'}</td><td class="num">${fmt(sY)}</td><td class="num">${fmt(sD)}</td><td class="num">${fmt(sY+sD)}</td>
-  <td class="num">${fmt(sG)}</td><td class="num ${sNet<0?'neg':'pos'}">${fmt(sNet)}</td><td class="num">${fmtInt(sT)}</td>
-  <td class="num">${sKm>0?fmt(sNet/sKm):'—'}</td><td class="num">${sT>0?fmt(sNet/sT):'—'}</td><td colspan="2"></td></tr>`;
-  tbody.querySelectorAll('.editable').forEach(inp=>{inp.addEventListener('change',e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;let v=e.target.value;if(f==='saat'){v=v===''?null:(parseFloat(v)||0)}else if(f!=='aciklama'){v=parseFloat(v)||0}pushUndo();records[i][f]=v;save();renderDaily();toast('Güncellendi',true)})});
-  tbody.querySelectorAll('.btn-del').forEach(btn=>{btn.addEventListener('click',e=>{const i=+e.target.closest('tr').dataset.i;if(confirm(records[i].tarih+' silinsin mi?')){pushUndo();records.splice(i,1);save();renderDaily();toast('Silindi',true)}})})
-  tbody.querySelectorAll('.btn-edit').forEach(btn=>{btn.addEventListener('click',e=>{const i=+e.target.closest('tr').dataset.i;openEditModal(i)})})}
-
-document.getElementById('searchQ').addEventListener('input',renderDaily);
-document.getElementById('filterMonth').addEventListener('change',renderDaily);
-let editingIndex=null;
-document.getElementById('btnAdd').addEventListener('click',()=>{editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';document.getElementById('fDate').value=new Date().toISOString().slice(0,10);['fKm','fYakit','fDiger','fGelir','fTes'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fSaat').value='';document.getElementById('fNote').value='';document.getElementById('overlay').classList.add('show')});
-function openEditModal(i){const r=records[i];if(!r)return;editingIndex=i;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fSaat').value=r.saat!=null?r.saat:'';document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';document.getElementById('overlay').classList.add('show')}
-document.getElementById('btnCancel').addEventListener('click',()=>{editingIndex=null;document.getElementById('overlay').classList.remove('show')});
-
-document.getElementById('form').addEventListener('submit',e=>{
-  e.preventDefault();
-  const saatVal=document.getElementById('fSaat').value;
-  const rec={tarih:document.getElementById('fDate').value,km:parseFloat(document.getElementById('fKm').value)||0,saat:saatVal===''?null:(parseFloat(saatVal)||0),yakit:parseFloat(document.getElementById('fYakit').value)||0,diger:parseFloat(document.getElementById('fDiger').value)||0,gelir:parseFloat(document.getElementById('fGelir').value)||0,teslimat:parseInt(document.getElementById('fTes').value)||0,aciklama:document.getElementById('fNote').value.trim()};
-  if(editingIndex!==null){
-    const conflictIdx=records.findIndex((r,idx)=>r.tarih===rec.tarih&&idx!==editingIndex);
-    if(conflictIdx>=0){
-      if(!confirm(rec.tarih+' tarihinde zaten başka bir kayıt var. Bu kaydın üzerine yazılsın mı?'))return;
-      pushUndo();
-      records.splice(conflictIdx,1);
-      const adjIdx=conflictIdx<editingIndex?editingIndex-1:editingIndex;
-      records[adjIdx]=rec;
-    }else{
-      pushUndo();
-      records[editingIndex]=rec;
-    }
-  }else{
-    const ex=records.findIndex(r=>r.tarih===rec.tarih);
-    if(ex>=0){if(!confirm(rec.tarih+' mevcut. Üzerine yazılsın mı?'))return;pushUndo();records[ex]=rec}else{pushUndo();records.push(rec)}
-  }
-  records.sort((a,b)=>a.tarih.localeCompare(b.tarih));save();editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi',true)
-});
-
-function renderWeekly(){
-  const map={};records.forEach(r=>{const w=weekOf(r.tarih);if(!map[w])map[w]={w,start:r.tarih,end:r.tarih,km:0,gelir:0,yakit:0,diger:0,tes:0};const g=map[w];if(r.tarih<g.start)g.start=r.tarih;if(r.tarih>g.end)g.end=r.tarih;g.km+=r.km||0;g.gelir+=r.gelir||0;g.yakit+=r.yakit||0;g.diger+=r.diger||0;g.tes+=r.teslimat||0});
-  const rows=Object.values(map).sort((a,b)=>a.w-b.w),tb=document.getElementById('weeklyBody');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="12" class="empty">Veri yok</td></tr>';return}
-  let tK=0,tG=0,tY=0,tD=0,tT=0,tN=0;
-  tb.innerHTML=rows.map(r=>{const gider=r.yakit+r.diger,net=r.gelir-gider,tlkm=r.km>0?net/r.km:0,pp=r.tes>0?net/r.tes:0;tK+=r.km;tG+=r.gelir;tY+=r.yakit;tD+=r.diger;tT+=r.tes;tN+=net;
-  return `<tr><td>${r.w}</td><td>${r.start}</td><td>${r.end}</td><td class="num">${fmtInt(r.km)}</td><td class="num">${fmt(r.gelir)}</td><td class="num">${fmt(r.yakit)}</td><td class="num">${fmt(r.diger)}</td><td class="num">${fmt(gider)}</td><td class="num ${net<0?'neg':'pos'}">${fmt(net)}</td><td class="num">${fmtInt(r.tes)}</td><td class="num ${pp<0?'neg':'pos'}">${fmt(pp)}</td><td class="num">${fmt(tlkm)}</td></tr>`}).join('')+`<tr class="total-row"><td colspan="3"><strong>TOPLAM</strong></td><td class="num">${fmtInt(tK)}</td><td class="num">${fmt(tG)}</td><td class="num">${fmt(tY)}</td><td class="num">${fmt(tD)}</td><td class="num">${fmt(tY+tD)}</td><td class="num ${tN<0?'neg':'pos'}">${fmt(tN)}</td><td class="num">${fmtInt(tT)}</td><td class="num">${tT>0?fmt(tN/tT):'—'}</td><td class="num">${tK>0?fmt(tN/tK):'—'}</td></tr>`
-}
-
-function renderMonthly(){
-  const map={};records.forEach(r=>{const m=monthKey(r.tarih);if(!map[m])map[m]={key:m,days:0,km:0,gelir:0,yakit:0,diger:0,tes:0};const g=map[m];g.days++;g.km+=r.km||0;g.gelir+=r.gelir||0;g.yakit+=r.yakit||0;g.diger+=r.diger||0;g.tes+=r.teslimat||0});
-  const rows=Object.values(map).sort((a,b)=>a.key.localeCompare(b.key)),tb=document.getElementById('monthlyBody');
-  if(!rows.length){tb.innerHTML='<tr><td colspan="12" class="empty">Veri yok</td></tr>';return}
-  let tK=0,tG=0,tY=0,tD=0,tT=0,tN=0,tDays=0;
-  tb.innerHTML=rows.map(r=>{const gider=r.yakit+r.diger,net=r.gelir-gider,tlkm=r.km>0?net/r.km:0,gun=r.days>0?net/r.days:0,pp=r.tes>0?net/r.tes:0,kp=r.tes>0?r.km/r.tes:0;tK+=r.km;tG+=r.gelir;tY+=r.yakit;tD+=r.diger;tT+=r.tes;tN+=net;tDays+=r.days;
-  return `<tr><td>${monthLabel(r.key)}</td><td class="num">${fmtInt(r.km)}</td><td class="num">${fmt(r.gelir)}</td><td class="num">${fmt(r.yakit)}</td><td class="num">${fmt(r.diger)}</td><td class="num">${fmt(gider)}</td><td class="num ${net<0?'neg':'pos'}">${fmt(net)}</td><td class="num">${fmt(gun)}</td><td class="num">${fmtInt(r.tes)}</td><td class="num ${pp<0?'neg':'pos'}">${fmt(pp)}</td><td class="num">${fmt(tlkm)}</td><td class="num">${fmt(kp,1)}</td></tr>`}).join('')+`<tr class="total-row"><td><strong>YIL TOPLAMI</strong></td><td class="num">${fmtInt(tK)}</td><td class="num">${fmt(tG)}</td><td class="num">${fmt(tY)}</td><td class="num">${fmt(tD)}</td><td class="num">${fmt(tY+tD)}</td><td class="num ${tN<0?'neg':'pos'}">${fmt(tN)}</td><td class="num">${tDays>0?fmt(tN/tDays):'—'}</td><td class="num">${fmtInt(tT)}</td><td class="num">${tT>0?fmt(tN/tT):'—'}</td><td class="num">${tK>0?fmt(tN/tK):'—'}</td><td class="num">${tT>0?fmt(tK/tT,1):'—'}</td></tr>`
-}
-
-document.getElementById('btnCsv').addEventListener('click',()=>{
-  const h=['Tarih','Gün','KM','Saat','Yakıt','Diğer','Gider','Gelir','Net','Paket','TL/km','₺/paket','Not'];
-  const rows=[...records].sort((a,b)=>a.tarih.localeCompare(b.tarih)).map(r=>{const c=calc(r);return[r.tarih,dayName(r.tarih),r.km,r.saat!=null?r.saat:'',r.yakit,r.diger,c.gider,r.gelir,c.net,r.teslimat,c.tlkm.toFixed(4),c.perPkg.toFixed(2),r.aciklama||'']});
-  const csv=[h,...rows].map(row=>row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='motokurye_kayit.csv';a.click();toast('CSV indirildi',true)
-});
-
-document.getElementById('btnReset').addEventListener('click',()=>{
-  if(confirm('Tüm veriler başlangıç haline sıfırlansın mı?')){pushUndo();records=JSON.parse(JSON.stringify(INITIAL));wIdx=null;mIdx=null;save();renderDash();toast('Sıfırlandı',true)}
-});
-
-let undoStack=[];
-function pushUndo(){undoStack.push(JSON.stringify(records));if(undoStack.length>25)undoStack.shift();updateUndoBtn()}
-function updateUndoBtn(){const b=document.getElementById('btnUndo');if(b)b.disabled=undoStack.length===0}
-function doUndo(){if(!undoStack.length)return;records=JSON.parse(undoStack.pop());save();updateUndoBtn();renderDash();toast('Geri alındı',true)}
-document.getElementById('btnUndo').addEventListener('click',doUndo);
-
-document.getElementById('btnBackup').addEventListener('click',()=>{
-  const data=JSON.stringify(records,null,2);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='motokurye_yedek_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Yedek indirildi',true)
-});
-
-document.getElementById('btnRestoreTrigger').addEventListener('click',()=>document.getElementById('fileRestore').click());
-document.getElementById('fileRestore').addEventListener('change',e=>{
-  const file=e.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=()=>{
-    try{
-      const data=JSON.parse(reader.result);
-      if(!Array.isArray(data)||!data.length)throw new Error('format');
-      pushUndo();
-      records=data.map(r=>({tarih:r.tarih,km:+r.km||0,saat:(r.saat===undefined||r.saat===null||r.saat==='')?null:(+r.saat||0),yakit:+r.yakit||0,diger:+r.diger||0,gelir:+r.gelir||0,teslimat:+r.teslimat||0,aciklama:r.aciklama||''}));
-      records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
-      wIdx=null;mIdx=null;save();renderDash();toast('Yedek yüklendi',true);
-    }catch(err){toast('Geçersiz yedek dosyası',false)}
-  };
-  reader.readAsText(file);
-    e.target.value='';
-});
-
-// Uygulamayı başlat ve verileri Firebase'den çek
-load();
-</script>
-</body>
-</html>
+<!-- === GİRİŞ EKRANI (AUTH) === -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="logo-i" style="margin: 0 auto 1rem;">🏍️</div>
+    <h2>Kurye Takip</h2>
+    <p>Verilerine erişmek için giriş yap</p>
+    
+    <input type="email" id="authEmail" class="auth-input" placeholder="E-posta adresi" required />
+    <input type="password" id="authPassword" class="auth-input" placeholder="Şifre (En az 6 ha

@@ -542,7 +542,6 @@ const firebaseConfig = {
   measurementId: "G-JMSKMZDJ03"
 };
 
-// Güvenli Firebase Başlatma Kontrolü
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -560,7 +559,6 @@ function showAuthError(msg) {
   toast(msg, false);
 }
 
-// Buton dinleyicilerini güvenli şekilde ekleme
 document.addEventListener('DOMContentLoaded', () => {
   const btnLogin = document.getElementById('btnLogin');
   const btnRegister = document.getElementById('btnRegister');
@@ -860,6 +858,7 @@ async function sendToGemini() {
     const t = totals();
     const summaryText = `Toplam Kayıt: ${records.length} gün. Toplam KM: ${t.km}, Toplam Gelir: ${t.gelir} TL, Toplam Gider: ${t.gider} TL, Net Kazanç: ${t.net} TL, Toplam Paket: ${t.tes}.`;
 
+    // Güncel ve stabil Gemini 1.5 Flash endpoint kullanımı
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDHBx7z13k2JiwsYYS3uqOfDWphCf9DFrM`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -876,14 +875,20 @@ async function sendToGemini() {
     });
 
     const data = await response.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Şu anda yanıt üretilemedi, lütfen tekrar dene.";
-    
     document.getElementById(loadingId).remove();
-    chatBox.innerHTML += `<div class="chat-msg ai">${reply}</div>`;
+
+    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+      const reply = data.candidates[0].content.parts[0].text;
+      chatBox.innerHTML += `<div class="chat-msg ai">${reply}</div>`;
+    } else if (data.error) {
+      chatBox.innerHTML += `<div class="chat-msg ai">API Hatası: ${data.error.message || 'Bilinmeyen hata'}</div>`;
+    } else {
+      chatBox.innerHTML += `<div class="chat-msg ai">Şu anda yanıt üretilemedi, lütfen tekrar dene.</div>`;
+    }
   } catch (err) {
     console.error(err);
     document.getElementById(loadingId).remove();
-    chatBox.innerHTML += `<div class="chat-msg ai">Bağlantı hatası oluştu, lütfen tekrar dene.</div>`;
+    chatBox.innerHTML += `<div class="chat-msg ai">Bağlantı hatası oluştu: ${err.message}</div>`;
   }
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -937,7 +942,7 @@ function renderDash(){
 {label:'Net',data:mKeys.map(k=>byM[k].gelir-byM[k].gider),backgroundColor:'rgba(56,189,248,.75)',borderRadius:5}
 ]},options:chartOpts()});
   destroyChart('expense');
-  charts.expense=new Chart(document.getElementById('cExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
+  charts.expense=new Chart(document.getElementById('cExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c',' #a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
   const sorted=[...records].sort((a,b)=>a.tarih.localeCompare(b.tarih));
   destroyChart('daily');
   charts.daily=new Chart(document.getElementById('cDaily'),{type:'line',data:{labels:sorted.map(r=>r.tarih.slice(5)),datasets:[{label:'Net',data:sorted.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.12)',fill:true,tension:.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:chartOpts(false)});
@@ -996,7 +1001,7 @@ document.querySelectorAll('.q-tag').forEach(btn=>{
   });
 });
 
-// --- CANLI GPS & KRONOMETRE TAKİP MANTIĞI ---
+// --- CANLI GPS & KRONOMETRE SAYAÇ WIDGET MANTIĞI ---
 let gpsWatchId = null;
 let gpsTotalMeters = 0;
 let lastCoord = null;

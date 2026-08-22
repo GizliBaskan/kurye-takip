@@ -34,32 +34,33 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased}
 
-/* GİRİŞ EKRANI STİLLERİ */
+/* GİRİŞ EKRANI STİLLERİ (DÜZELTİLDİ) */
 #auth-screen {
   position: fixed; inset: 0; background: var(--bg); z-index: 1000;
-  display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+  overflow-y: auto;
 }
 .auth-box {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
-  padding: 2rem; width: 100%; max-width: 380px; text-align: center;
+  padding: 1.5rem; width: 100%; max-width: 360px; text-align: center;
   box-shadow: 0 12px 32px rgba(0,0,0,0.4);
 }
-.auth-box h2 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text); }
-.auth-box p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+.auth-box h2 { font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text); }
+.auth-box p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
 .auth-input {
   width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  padding: 0.75rem 1rem; border-radius: var(--rs); font-size: 0.9rem; margin-bottom: 1rem; outline: none;
+  padding: 0.7rem 0.9rem; border-radius: var(--rs); font-size: 16px; margin-bottom: 0.8rem; outline: none;
 }
 .auth-input:focus { border-color: var(--accent); }
 .auth-btn {
-  width: 100%; padding: 0.8rem; border: none; border-radius: var(--rs); font-weight: 600;
-  cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-bottom: 0.7rem;
+  width: 100%; padding: 0.75rem; border: none; border-radius: var(--rs); font-weight: 600;
+  cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-bottom: 0.6rem;
 }
 .auth-login-btn { background: var(--accent); color: #0a0e14; }
 .auth-login-btn:hover { filter: brightness(1.1); }
 .auth-reg-btn { background: transparent; border: 1px solid var(--border); color: var(--sec); }
 .auth-reg-btn:hover { background: var(--hover); color: var(--text); }
-#auth-error { color: var(--red); font-size: 0.8rem; margin-top: 1rem; display: none; }
+#auth-error { color: var(--red); font-size: 0.75rem; margin-top: 0.8rem; display: none; }
 
 /* ANA UYGULAMA STİLLERİ */
 .app-container { display: none; min-height: 100vh; }
@@ -278,9 +279,9 @@ tbody tr:last-child td{border-bottom:none}
 <!-- === GİRİŞ EKRANI (AUTH) === -->
 <div id="auth-screen">
   <div class="auth-box">
-    <div class="logo-i" style="margin: 0 auto 1rem;">🏍️</div>
+    <div class="logo-i" style="margin: 0 auto 0.8rem;">🏍️</div>
     <h2>Kurye Takip</h2>
     <p>Verilerine erişmek için giriş yap</p>
     
     <input type="email" id="authEmail" class="auth-input" placeholder="E-posta adresi" required />
-    <input type="password" id="authPassword" class="auth-input" placeholder="Şifre (En az 6 ha
+    <input type="password" id="authPassword" class="aut

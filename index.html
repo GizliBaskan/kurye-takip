@@ -228,6 +228,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     <input type="password" id="authPassword" class="auth-input" placeholder="Şifre" required />
     <button id="btnLogin" class="auth-btn auth-login-btn" type="button">Giriş Yap</button>
     <button id="btnRegister" class="auth-btn auth-reg-btn" type="button">Hesap Oluştur</button>
+    <button id="btnForgotPassword" type="button" style="background:none;border:none;color:var(--accent);font-size:0.75rem;cursor:pointer;padding:0.3rem;text-decoration:underline;font-family:inherit;">Şifremi Unuttum</button>
     <div id="auth-error"></div>
   </div>
 </div>
@@ -340,7 +341,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
       <div class="table-scroll">
         <table>
           <thead><tr>
-            <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Toplam</th>
+            <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num">Litre</th><th class="num">km/L</th><th class="num">Diğer</th><th class="num">Toplam</th>
             <th class="num" style="min-width:90px;">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Diğer Gider Notu</th><th></th>
           </tr></thead>
           <tbody id="dailyBody"></tbody>
@@ -446,12 +447,29 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
         <div class="metric-value" id="totalMotorKmVal">0 km</div>
         <div class="metric-sub">Günlük kayıtlardan otomatik hesaplanır</div>
       </div>
+      <div class="metric green">
+        <div class="metric-label">Ort. Yakıt Verimliliği</div>
+        <div class="metric-value" id="fuelEfficiencyVal">Veri yok</div>
+        <div class="metric-sub">Litre girilen kayıtlardan hesaplanır</div>
+      </div>
+      <div class="metric amber">
+        <div class="metric-label">Ort. Yakıt Fiyatı</div>
+        <div class="metric-value" id="fuelPriceVal">Veri yok</div>
+        <div class="metric-sub">Toplam ₺ / Toplam Litre</div>
+      </div>
+    </div>
+
+    <div class="chart-box" style="margin-bottom:1.5rem">
+      <h3>Yakıt Verimliliği Trendi (km/L)</h3>
+      <p style="font-size:0.75rem; color:var(--muted); margin-bottom:0.5rem">Kayıt eklerken "Yakıt (Litre)" alanını doldurduğunuz günler grafiğe yansır.</p>
+      <div class="chart-area"><canvas id="cFuelEff"></canvas></div>
     </div>
 
     <div class="section-divider"><h2>Yaklaşan Bakımlar</h2></div>
     
-    <div class="toolbar" style="margin-bottom: 1.5rem; background: transparent; border: none; padding: 0;">
+    <div class="toolbar" style="margin-bottom: 1.5rem; background: transparent; border: none; padding: 0; gap:0.6rem; flex-wrap:wrap;">
       <button class="btn btn-primary" id="btnAddMaintenance">+ Yeni Bakım Hedefi Ekle</button>
+      <button class="btn btn-ghost" id="btnEnableNotif">🔔 Bildirimleri Etkinleştir</button>
     </div>
     
     <div class="best-grid" id="maintenanceList"></div>
@@ -473,7 +491,23 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     </div>
     <div class="info-block">
       <h3>Uygulamayı Telefona Kurma (PWA)</h3>
-      <p>Bu siteyi telefonunuzun ana ekranına bir mobil uygulama gibi ekleyebilirsiniz. Tarayıcı menüsünden <strong>"Ana Ekrana Ekle"</strong> (Add to Home Screen) seçeneğine dokunmanız yeterlidir. Çevrimdışı çalışabilmesi için arka planda gerekli altyapı kodlanmıştır.</p>
+      <p>Bu siteyi telefonunuzun ana ekranına bir mobil uygulama gibi ekleyebilirsiniz. Tarayıcı menüsünden <strong>"Ana Ekrana Ekle"</strong> (Add to Home Screen) seçeneğine dokunmanız yeterlidir. Uygulamayı bir kez internetteyken açtıktan sonra, ziyaret ettiğiniz sayfalar tarayıcı önbelleğine alınır ve zayıf/olmayan çekimde tekrar açılabilir.</p>
+    </div>
+    <div class="info-block">
+      <h3>Yedekleme & Geri Yükleme</h3>
+      <p>Soldaki menüden <strong>"Yedek İndir"</strong> ile tüm kayıtlarınızı ve garaj verinizi bir .json dosyası olarak indirebilir, <strong>"Geri Yükle"</strong> ile daha önce indirdiğiniz bir yedeği geri yükleyebilirsiniz. Geri yükleme, mevcut verilerin üzerine yazar. <strong>CSV</strong> butonu ise Günlük Kayıt sayfasındaki tüm verileri Excel'de açılabilecek bir dosya olarak indirir.</p>
+    </div>
+    <div class="info-block">
+      <h3>Şifremi Unuttum</h3>
+      <p>Giriş ekranında e-posta adresinizi girip <strong>"Şifremi Unuttum"</strong> bağlantısına tıklarsanız, şifre sıfırlama bağlantısı e-postanıza gönderilir.</p>
+    </div>
+    <div class="info-block">
+      <h3>Yakıt Verimliliği Takibi</h3>
+      <p>Günlük kayıt eklerken "Yakıt (Litre)" alanını doldurursanız, sistem otomatik olarak km/L verimliliğinizi hesaplar ve Garaj & Bakım sayfasında ortalama verimlilik, ortalama yakıt fiyatı ve zaman içindeki trend grafiğini gösterir. Bu alan opsiyoneldir; boş bırakırsanız sadece ₺ bazlı gider takibi devam eder.</p>
+    </div>
+    <div class="info-block">
+      <h3>Bakım Hatırlatma Bildirimleri</h3>
+      <p>Garaj & Bakım sayfasındaki <strong>"Bildirimleri Etkinleştir"</strong> butonuna dokunup tarayıcı izni verirseniz, bir bakım periyoduna 300 km veya daha az kaldığında ya da süresi geçtiğinde tarayıcı bildirimi alırsınız. Bildirimler günde bir kez, bakım başına gönderilir.</p>
     </div>
   </section>
   </main>
@@ -497,6 +531,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
         <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" step="0.01" value="0"/></div>
         <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" step="0.01" value="0"/></div>
       </div>
+      <div class="fg"><label>Yakıt (Litre) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Opsiyonel — verimlilik hesaplaması için</span></label><input type="number" id="fYakitLitre" min="0" step="0.01" value="0"/></div>
       <div class="fg"><label>Saf Gelir (₺) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Bonus hariç</span></label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
       <div class="fg">
         <label>Diğer Gider Notu</label>
@@ -553,10 +588,34 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
 <!-- === PWA SERVICE WORKER === -->
 <script>
   const swCode = `
-    const CACHE_NAME = 'kurye-v1';
-    self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE_NAME)));
+    const CACHE_NAME = 'kurye-v2';
+    const SHELL_URL = self.registration.scope;
+
+    self.addEventListener('install', (e) => {
+      self.skipWaiting();
+      e.waitUntil(
+        caches.open(CACHE_NAME).then(cache => cache.addAll([SHELL_URL, SHELL_URL + 'manifest.json']).catch(() => {}))
+      );
+    });
+
+    self.addEventListener('activate', (e) => {
+      e.waitUntil(
+        caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+          .then(() => self.clients.claim())
+      );
+    });
+
     self.addEventListener('fetch', (e) => {
-      e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+      if (e.request.method !== 'GET') return;
+      e.respondWith(
+        fetch(e.request).then(res => {
+          const resClone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, resClone)).catch(() => {});
+          return res;
+        }).catch(() =>
+          caches.match(e.request).then(cached => cached || caches.match(SHELL_URL))
+        )
+      );
     });
   `;
   const blob = new Blob([swCode], {type: 'application/javascript'});
@@ -606,6 +665,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if(!e || !p) return showAuthError('Lütfen e-posta ve şifre girin.');
       toast('Hesap oluşturuluyor...', true);
       auth.createUserWithEmailAndPassword(e, p).catch(err => showAuthError('Kayıt Hatası: ' + err.message));
+    });
+  }
+  const btnForgotPassword = document.getElementById('btnForgotPassword');
+  if(btnForgotPassword) {
+    btnForgotPassword.addEventListener('click', () => {
+      const e = document.getElementById('authEmail').value.trim();
+      if(!e) return showAuthError('Şifre sıfırlama bağlantısı için önce e-posta adresinizi girin.');
+      auth.sendPasswordResetEmail(e).then(() => {
+        errorMsg.style.display = 'none';
+        toast('Şifre sıfırlama bağlantısı e-postanıza gönderildi.', true);
+      }).catch(err => showAuthError('Hata: ' + err.message));
     });
   }
 });
@@ -677,7 +747,8 @@ function calc(r){
   const perPkg = r.teslimat>0 ? net/r.teslimat : 0;
   const kmPkg = r.teslimat>0 ? r.km/r.teslimat : 0;
   const yakitPkg = r.teslimat>0 ? (r.yakit||0)/r.teslimat : 0;
-  return { gider, net, tlkm, perPkg, kmPkg, yakitPkg, bonus, toplamGelir };
+  const kmPerLitre = (r.yakitLitre>0 && r.km>0) ? r.km/r.yakitLitre : null;
+  return { gider, net, tlkm, perPkg, kmPkg, yakitPkg, bonus, toplamGelir, kmPerLitre };
 }
 
 function hourStatsOf(recs){
@@ -736,20 +807,22 @@ document.getElementById('menuBtn').addEventListener('click',toggleSidebar);
 document.getElementById('sidebarBackdrop').addEventListener('click',closeSidebar);
 
 function totals(){
-  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0;
+  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0,litre=0,kmLitre=0;
   records.forEach(r=>{
     const c=calc(r); km+=r.km||0; gelir+=c.toplamGelir; yakit+=r.yakit||0; diger+=r.diger||0; tes+=r.teslimat||0; net+=c.net; totalBonus+=c.bonus;
+    if(r.yakitLitre>0){ litre+=r.yakitLitre; kmLitre+=r.km||0; }
   });
   const gider=yakit+diger,workDays=records.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;
-  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus}
+  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus,totalLitre:litre,avgKmPerLitre:litre>0?kmLitre/litre:null,avgFuelPrice:litre>0?yakit/litre:null}
 }
 function totalsOf(recs){
-  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0;
+  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0,litre=0,kmLitre=0;
   recs.forEach(r=>{
     const c=calc(r); km+=r.km||0; gelir+=c.toplamGelir; yakit+=r.yakit||0; diger+=r.diger||0; tes+=r.teslimat||0; net+=c.net; totalBonus+=c.bonus;
+    if(r.yakitLitre>0){ litre+=r.yakitLitre; kmLitre+=r.km||0; }
   });
   const gider=yakit+diger,workDays=recs.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;
-  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus}
+  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus,totalLitre:litre,avgKmPerLitre:litre>0?kmLitre/litre:null,avgFuelPrice:litre>0?yakit/litre:null}
 }
 function bestOf(){if(!records.length)return{};let bestNet=records[0],bestTlkm=records[0],bestTes=records[0];records.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
 function bestOfRecs(recs){if(!recs.length)return{};let bestNet=recs[0],bestTlkm=recs[0],bestTes=recs[0];recs.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
@@ -1122,7 +1195,7 @@ function renderDaily(){
   const months=[...new Set(records.map(r=>r.tarih.slice(0,7)))].sort();const sel=document.getElementById('filterMonth'),cur=sel.value;
   sel.innerHTML='<option value="">Tüm aylar</option>'+months.map(m=>`<option value="${m}" ${m===cur?'selected':''}>${monthLabel(m)}</option>`).join('');
   let list=records.map((r,i)=>({...r,_i:i})).filter(r=>{if(month&&!r.tarih.startsWith(month))return false;if(q&&!r.tarih.includes(q)&&!(r.aciklama||'').toLowerCase().includes(q))return false;return true}).sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  if(!list.length){tbody.innerHTML='<tr><td colspan="14" class="empty">Kayıt yok</td></tr>';return}
+  if(!list.length){tbody.innerHTML='<tr><td colspan="16" class="empty">Kayıt yok</td></tr>';return}
   let sKm=0,sY=0,sD=0,sG=0,sT=0,sNet=0,sSaat=0,sSaatDays=0;
   tbody.innerHTML=list.map(r=>{
     const c=calc(r);
@@ -1134,6 +1207,8 @@ function renderDaily(){
   <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
   <td class="num">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}</td>
   <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
+  <td class="num"><input class="editable" type="number" data-f="yakitLitre" value="${r.yakitLitre||0}" min="0" step="0.01"/></td>
+  <td class="num computed">${c.kmPerLitre!=null?fmt(c.kmPerLitre,1):'—'}</td>
   <td class="num"><input class="editable" type="number" data-f="diger" value="${r.diger||0}" min="0" step="0.01"/></td>
   <td class="num computed">${fmt(c.gider)}</td>
   <td class="num"><input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/>${bonusTag}</td>
@@ -1161,11 +1236,11 @@ document.querySelectorAll('.q-tag').forEach(btn=>{ btn.addEventListener('click',
 
 let editingIndex=null;
 document.getElementById('btnAdd').addEventListener('click',()=>{
-  editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';document.getElementById('fDate').value=new Date().toISOString().slice(0,10);['fKm','fYakit','fDiger','fGelir','fTes'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fBaslangic').value='';document.getElementById('fBitis').value='';document.getElementById('fNote').value='';document.getElementById('overlay').classList.add('show')
+  editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';document.getElementById('fDate').value=new Date().toISOString().slice(0,10);['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fBaslangic').value='';document.getElementById('fBitis').value='';document.getElementById('fNote').value='';document.getElementById('overlay').classList.add('show')
 });
 
 function openEditModal(i){
-  const r=records[i];if(!r)return;editingIndex=i;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fBaslangic').value=r.baslangic||'';document.getElementById('fBitis').value=r.bitis||'';document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';document.getElementById('overlay').classList.add('show')
+  const r=records[i];if(!r)return;editingIndex=i;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fBaslangic').value=r.baslangic||'';document.getElementById('fBitis').value=r.bitis||'';document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fYakitLitre').value=r.yakitLitre||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';document.getElementById('overlay').classList.add('show')
 }
 document.getElementById('btnCancel').addEventListener('click',()=>{ editingIndex=null;document.getElementById('overlay').classList.remove('show') });
 
@@ -1180,7 +1255,7 @@ document.getElementById('form').addEventListener('submit',e=>{
     computedSaat = end - start;
   }
   
-  const rec={tarih:document.getElementById('fDate').value,km:parseFloat(document.getElementById('fKm').value)||0, baslangic: bas, bitis: bit, saat: computedSaat, yakit:parseFloat(document.getElementById('fYakit').value)||0,diger:parseFloat(document.getElementById('fDiger').value)||0,gelir:parseFloat(document.getElementById('fGelir').value)||0,teslimat:parseInt(document.getElementById('fTes').value)||0,aciklama:document.getElementById('fNote').value.trim()};
+  const rec={tarih:document.getElementById('fDate').value,km:parseFloat(document.getElementById('fKm').value)||0, baslangic: bas, bitis: bit, saat: computedSaat, yakit:parseFloat(document.getElementById('fYakit').value)||0,yakitLitre:parseFloat(document.getElementById('fYakitLitre').value)||0,diger:parseFloat(document.getElementById('fDiger').value)||0,gelir:parseFloat(document.getElementById('fGelir').value)||0,teslimat:parseInt(document.getElementById('fTes').value)||0,aciklama:document.getElementById('fNote').value.trim()};
   
   if(editingIndex!==null) { pushUndo(); records[editingIndex]=rec; }
   else {
@@ -1194,11 +1269,88 @@ let undoStack=[];
 function pushUndo(){undoStack.push(JSON.stringify(records));if(undoStack.length>25)undoStack.shift();}
 document.getElementById('btnUndo').addEventListener('click',() => {if(undoStack.length) { records=JSON.parse(undoStack.pop()); commitRecords(); renderDash(); toast('Geri alındı',true) }});
 
+// YEDEK İNDİRME / GERİ YÜKLEME / CSV DIŞA AKTARMA
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+document.getElementById('btnBackup').addEventListener('click', () => {
+  if(!records.length && !(garageData.bakimlar||[]).length) { toast('Yedeklenecek veri yok', false); return; }
+  const payload = { app: 'Motokurye Takip', exportedAt: new Date().toISOString(), kayitlar: records, garaj: garageData };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  downloadBlob(blob, `motokurye-yedek-${new Date().toISOString().slice(0,10)}.json`);
+  toast('Yedek indirildi', true);
+});
+
+document.getElementById('btnRestoreTrigger').addEventListener('click', () => {
+  document.getElementById('fileRestore').click();
+});
+
+document.getElementById('fileRestore').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const importedRecords = Array.isArray(data.kayitlar) ? data.kayitlar : (Array.isArray(data) ? data : null);
+      if(!importedRecords) throw new Error('Geçersiz yedek dosyası formatı');
+      if(!confirm(`Yedekte ${importedRecords.length} kayıt bulundu. Mevcut tüm veriler bunun üzerine yazılacak, emin misiniz?`)) return;
+      pushUndo();
+      records = importedRecords;
+      if(data.garaj) garageData = data.garaj;
+      if(!garageData.bakimlar) garageData.bakimlar = [];
+      if(!garageData.dailyGoal) garageData.dailyGoal = 1500;
+      commitRecords(); saveGarage();
+      renderDash(); renderGarage(); renderDaily();
+      toast('Yedek başarıyla geri yüklendi', true);
+    } catch(err) {
+      toast('Geri yükleme hatası: ' + err.message, false);
+    } finally {
+      e.target.value = '';
+    }
+  };
+  reader.onerror = () => toast('Dosya okunamadı', false);
+  reader.readAsText(file);
+});
+
+document.getElementById('btnCsv').addEventListener('click', () => {
+  if(!records.length) { toast('Aktarılacak kayıt yok', false); return; }
+  const headers = ['Tarih','Gün','KM','Mesai Başlangıç','Mesai Bitiş','Saat','Yakıt (₺)','Yakıt (Litre)','Diğer (₺)','Toplam Gider (₺)','Gelir (₺)','Bonus (₺)','Net (₺)','Paket','TL/km','₺/paket','Not'];
+  const sorted = records.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
+  const rows = sorted.map(r => {
+    const c = calc(r);
+    return [
+      r.tarih, dayName(r.tarih), r.km||0, r.baslangic||'', r.bitis||'',
+      r.saat!=null?fmt(r.saat,2):'', fmt(r.yakit||0), fmt(r.yakitLitre||0), fmt(r.diger||0),
+      fmt(c.gider), fmt(r.gelir||0), fmt(c.bonus), fmt(c.net), r.teslimat||0,
+      fmt(c.tlkm), fmt(c.perPkg), (r.aciklama||'').replace(/;/g,',')
+    ];
+  });
+  const csv = '\uFEFF' + [headers, ...rows].map(row => row.map(v => `"${String(v).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  downloadBlob(blob, `motokurye-gunluk-${new Date().toISOString().slice(0,10)}.csv`);
+  toast('CSV indirildi', true);
+});
+
 // GARAJ VE BAKIM
 function renderGarage() {
   document.getElementById('garageModel').value = garageData.model || '';
   let totalKm = 0; records.forEach(r => { totalKm += (+r.km || 0); });
   if(document.getElementById('totalMotorKmVal')) document.getElementById('totalMotorKmVal').textContent = fmtInt(totalKm) + ' km';
+
+  const t = totals();
+  const effEl = document.getElementById('fuelEfficiencyVal');
+  const priceEl = document.getElementById('fuelPriceVal');
+  if(effEl) effEl.textContent = t.avgKmPerLitre!=null ? fmt(t.avgKmPerLitre,1) + ' km/L' : 'Veri yok';
+  if(priceEl) priceEl.textContent = t.avgFuelPrice!=null ? fmt(t.avgFuelPrice,2) + ' ₺/L' : 'Veri yok';
+  renderFuelEfficiencyChart();
+  updateNotifBtnLabel();
+  checkMaintenanceNotifications();
 
   const list = document.getElementById('maintenanceList');
   if(!garageData.bakimlar || garageData.bakimlar.length === 0) {
@@ -1219,6 +1371,67 @@ function renderGarage() {
       <div class="meta" style="display:flex; justify-content:space-between;"><span>Son İşlem: <strong>${fmtInt(b.sonKm)} km</strong></span><span>Periyot: <strong>${fmtInt(b.periyot)} km</strong></span></div>
     </div>`;
   }).join('');
+}
+
+function renderFuelEfficiencyChart(){
+  const recs = records.filter(r => r.yakitLitre > 0 && r.km > 0).sort((a,b) => a.tarih.localeCompare(b.tarih));
+  destroyChart('fueleff');
+  const canvas = document.getElementById('cFuelEff'); if(!canvas) return;
+  const box = canvas.closest('.chart-box');
+  if(!recs.length){
+    if(box){
+      let e = box.querySelector('.empty-inline');
+      if(!e){ e = document.createElement('div'); e.className = 'empty-inline empty'; e.style.padding = '2.2rem 0'; e.textContent = 'Litre bazlı yakıt kaydı yok'; box.querySelector('.chart-area').appendChild(e); }
+    }
+    canvas.style.display = 'none'; return;
+  }
+  if(box){ const e = box.querySelector('.empty-inline'); if(e) e.remove(); }
+  canvas.style.display = '';
+  charts.fueleff = new Chart(canvas, {
+    type: 'line',
+    data: { labels: recs.map(r => r.tarih.slice(5)), datasets: [{ label: 'km/L', data: recs.map(r => r.km / r.yakitLitre), borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,.14)', fill: true, tension: .3, borderWidth: 2, pointRadius: 3, pointHoverRadius: 5 }] },
+    options: chartOpts(false)
+  });
+}
+
+// BAKIM HATIRLATMA BİLDİRİMLERİ
+const btnEnableNotif = document.getElementById('btnEnableNotif');
+function updateNotifBtnLabel(){
+  if(!btnEnableNotif) return;
+  if(!('Notification' in window)) { btnEnableNotif.textContent = '🔕 Bildirimler Desteklenmiyor'; btnEnableNotif.disabled = true; return; }
+  if(Notification.permission === 'granted') btnEnableNotif.textContent = '🔔 Bildirimler Açık';
+  else if(Notification.permission === 'denied') btnEnableNotif.textContent = '🔕 Bildirimler Engellendi (Tarayıcı Ayarlarından Açın)';
+  else btnEnableNotif.textContent = '🔔 Bildirimleri Etkinleştir';
+}
+if(btnEnableNotif){
+  btnEnableNotif.addEventListener('click', () => {
+    if(!('Notification' in window)) return;
+    Notification.requestPermission().then(perm => {
+      updateNotifBtnLabel();
+      if(perm === 'granted'){ toast('Bildirimler etkinleştirildi', true); checkMaintenanceNotifications(); }
+      else if(perm === 'denied') toast('Bildirim izni reddedildi', false);
+    });
+  });
+}
+
+function checkMaintenanceNotifications(){
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  if(!garageData.bakimlar || !garageData.bakimlar.length) return;
+  let totalKm = 0; records.forEach(r => { totalKm += (+r.km || 0); });
+  const today = new Date().toISOString().slice(0,10);
+  let notifiedToday = {};
+  try { notifiedToday = JSON.parse(localStorage.getItem('kurye_notif_' + today) || '{}'); } catch(e) {}
+  let changed = false;
+  garageData.bakimlar.forEach((b, i) => {
+    const remaining = (b.sonKm + b.periyot) - totalKm;
+    const key = b.ad + '_' + i;
+    if(remaining <= 300 && !notifiedToday[key]){
+      const body = remaining <= 0 ? `${b.ad}: ${Math.abs(remaining)} km GEÇTİ! Bakım zamanı geldi.` : `${b.ad}: ${remaining} km kaldı, yaklaşıyor.`;
+      try { new Notification('🔧 Bakım Hatırlatması', { body, icon: 'https://cdn-icons-png.flaticon.com/512/3063/3063822.png' }); } catch(e) {}
+      notifiedToday[key] = true; changed = true;
+    }
+  });
+  if(changed){ try { localStorage.setItem('kurye_notif_' + today, JSON.stringify(notifiedToday)); } catch(e) {} }
 }
 
 document.getElementById('btnSaveGarageInfo').addEventListener('click', () => { garageData.model = document.getElementById('garageModel').value; saveGarage(); toast('Garaj kaydedildi', true); });

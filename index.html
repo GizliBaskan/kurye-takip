@@ -36,6 +36,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased}
+
 #auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
 .auth-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.5rem; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
 .auth-box h2 { font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text); }
@@ -48,6 +49,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .auth-reg-btn { background: transparent; border: 1px solid var(--border); color: var(--sec); }
 .auth-reg-btn:hover { background: var(--hover); color: var(--text); }
 #auth-error { color: var(--red); font-size: 0.75rem; margin-top: 0.8rem; display: none; }
+
+/* === HAVALI AÇILIŞ (SPLASH) EKRANI === */
+#splash-screen {
+  position: fixed; inset: 0; background: radial-gradient(circle at center, #111820 0%, #0a0e14 100%);
+  z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 1.5rem; text-align: center; opacity: 0; transition: opacity 0.6s ease;
+}
+#splash-screen.show { display: flex; opacity: 1; }
+.splash-logo-wrap {
+  width: 80px; height: 80px; background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  border-radius: 22px; display: grid; place-items: center; font-size: 2.2rem;
+  box-shadow: 0 0 35px rgba(56,189,248,0.4); margin-bottom: 1.5rem;
+  animation: pulseLogo 2s infinite ease-in-out;
+}
+@keyframes pulseLogo { 0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(56,189,248,0.3); } 50% { transform: scale(1.06); box-shadow: 0 0 45px rgba(56,189,248,0.6); } }
+.splash-title { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.4rem; color: #fff; }
+.splash-subtitle { font-size: 0.850rem; color: var(--muted); margin-bottom: 2rem; }
+.splash-loader { width: 140px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; position: relative; margin-bottom: 2.5rem; }
+.splash-loader-bar { position: absolute; inset: 0; background: var(--accent); width: 40%; border-radius: 2px; animation: loadingSlide 1.2s infinite ease-in-out; }
+@keyframes loadingSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
+.splash-dev { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); background: var(--accent-dim); padding: 0.4rem 0.9rem; border-radius: 20px; border: 1px solid rgba(56,189,248,0.3); letter-spacing: 0.05em; }
+
 .app-container { display: none; min-height: 100vh; }
 .app-container.show { display: flex; }
 .sidebar{width:248px;background:var(--elev);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50;transition:transform .28s cubic-bezier(.4,0,.2,1)}
@@ -130,18 +153,21 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
 .day-name{color:var(--muted);font-size:.75rem}
 .total-row{background:var(--elev)!important;font-weight:600}
 .info-block{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.35rem 1.5rem;margin-bottom:1rem}
-.overlay{position:fixed;inset:0;background:rgba(5,8,12,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:1rem}
+
+/* MOBİL İÇİN OPTİMİZE EDİLMİŞ MODAL */
+.overlay{position:fixed;inset:0;background:rgba(5,8,12,.78);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:100;padding:0.75rem;overflow-y:auto}
 .overlay.show{display:flex}
-.modal{background:var(--elev);border:1px solid var(--border2);border-radius:18px;padding:1.6rem;width:100%;max-width:440px;box-shadow:0 24px 64px rgba(0,0,0,.55);animation:rise .25s ease}
-.modal h2{font-size:1.1rem;font-weight:700;margin-bottom:1.2rem;letter-spacing:-.02em}
-.fg{margin-bottom:.9rem}
-.fg label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
-.fg input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.55rem .8rem;border-radius:var(--rs);font-size:.875rem;font-family:inherit;outline:none}
+.modal{background:var(--elev);border:1px solid var(--border2);border-radius:18px;padding:1.4rem;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 24px 64px rgba(0,0,0,.6);animation:rise .25s ease}
+.modal h2{font-size:1.1rem;font-weight:700;margin-bottom:1rem;letter-spacing:-.02em}
+.fg{margin-bottom:.8rem}
+.fg label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
+.fg input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.55rem .8rem;border-radius:var(--rs);font-size:16px;font-family:inherit;outline:none}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
 .quick-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
 .q-tag { background: var(--hover); border: 1px solid var(--border); color: var(--sec); font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 6px; cursor: pointer; transition: 0.15s; font-family: inherit; }
 .q-tag:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
-.modal-actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.35rem}
+.modal-actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.2rem;padding-bottom:0.5rem}
+
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:.75rem 1.15rem;border-radius:10px;font-size:.85rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.35);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);z-index:200}
 .toast.show{transform:none;opacity:1}.toast.ok{border-color:var(--green)}
 .menu-btn{display:none;position:fixed;top:.85rem;left:.85rem;z-index:70;width:42px;height:42px;background:var(--card);border:1px solid var(--border);border-radius:11px;color:var(--text);cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.35)}
@@ -180,6 +206,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
 </head>
 <body>
 
+<!-- GİRİŞ EKRANI -->
 <div id="auth-screen">
   <div class="auth-box">
     <div class="logo-i" style="margin: 0 auto 0.8rem;">🏍️</div>
@@ -191,6 +218,15 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     <button id="btnRegister" class="auth-btn auth-reg-btn" type="button">Hesap Oluştur</button>
     <div id="auth-error"></div>
   </div>
+</div>
+
+<!-- HAVALI AÇILIŞ (SPLASH) EKRANI -->
+<div id="splash-screen">
+  <div class="splash-logo-wrap">🏍️</div>
+  <div class="splash-title">Motokurye OS</div>
+  <div class="splash-subtitle">Operasyonel Veriler ve Garaj Senkronize Ediliyor...</div>
+  <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  <div class="splash-dev">developed by @furkann.sb</div>
 </div>
 
 <div class="app-container" id="app-container">
@@ -534,6 +570,7 @@ const auth = firebase.auth();
 let currentUser = null;
 
 const authScreen = document.getElementById('auth-screen');
+const splashScreen = document.getElementById('splash-screen');
 const appContainer = document.getElementById('app-container');
 const errorMsg = document.getElementById('auth-error');
 
@@ -564,10 +601,24 @@ document.getElementById('btnLogout').addEventListener('click', () => auth.signOu
 
 auth.onAuthStateChanged(user => {
   if(user) {
-    currentUser = user; document.getElementById('userEmailDisplay').textContent = user.email;
-    authScreen.style.display = 'none'; appContainer.classList.add('show'); load();
+    currentUser = user; 
+    document.getElementById('userEmailDisplay').textContent = user.email;
+    authScreen.style.display = 'none';
+    
+    // Havalı Açılış (Splash) Ekranını Göster ve Sonra Uygulamaya Geç
+    splashScreen.classList.add('show');
+    
+    load().then(() => {
+      setTimeout(() => {
+        splashScreen.classList.remove('show');
+        appContainer.classList.add('show');
+      }, 1600);
+    });
   } else {
-    currentUser = null; authScreen.style.display = 'flex'; appContainer.classList.remove('show');
+    currentUser = null; 
+    splashScreen.classList.remove('show');
+    authScreen.style.display = 'flex'; 
+    appContainer.classList.remove('show');
     records = []; garageData = { model: '', bakimlar: [], dailyGoal: 1500 };
   }
 });
@@ -634,9 +685,8 @@ function saveRecords() { if(currentUser) db.ref('kullanicilar/' + currentUser.ui
 function saveGarage() { if(currentUser) db.ref('kullanicilar/' + currentUser.uid + '/garaj').set(garageData).catch(e => toast('Hata: '+e.message, false)); }
 
 function load() {
-  if(!currentUser) return;
-  toast("Verileriniz yükleniyor...", true);
-  db.ref('kullanicilar/' + currentUser.uid).once('value').then(snapshot => {
+  if(!currentUser) return Promise.resolve();
+  return db.ref('kullanicilar/' + currentUser.uid).once('value').then(snapshot => {
     if (snapshot.exists()) {
       const data = snapshot.val();
       records = data.kayitlar || [];
@@ -644,13 +694,13 @@ function load() {
       garageData = data.garaj || { model: '', bakimlar: [], dailyGoal: 1500 };
       if(!garageData.bakimlar) garageData.bakimlar = [];
       if(!garageData.dailyGoal) garageData.dailyGoal = 1500;
-      wIdx = null; mIdx = null; // Veri yüklendiğinde indeksleri sıfırla ki en son döneme odaklansın
+      wIdx = null; mIdx = null;
       updateBonuses(); renderDash(); renderGarage();
     } else {
       records = []; garageData = { model: '', bakimlar: [], dailyGoal: 1500 };
       renderDash(); renderGarage();
     }
-  }).catch(e => toast("Bağlantı hatası", false));
+  }).catch(e => { toast("Bağlantı hatası", false); });
 }
 
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('show')}
@@ -889,7 +939,6 @@ function renderMonthlyDetail(){
   }
 }
 
-// EKSİK OLAN HAFTALIK VE AYLIK NAVİGASYON DİNLEYİCİLERİ EKLENDİ
 document.addEventListener('DOMContentLoaded', () => {
   const btnWPrev = document.getElementById('btnWPrev');
   const btnWNext = document.getElementById('btnWNext');
@@ -954,7 +1003,6 @@ function renderProjections() {
   }
 }
 
-// GÜNLÜK HEDEF WIDGET GÜNCELLEME FONKSİYONU
 function renderDailyGoalWidget() {
   const todayStr = new Date().toISOString().slice(0, 10);
   const todayRec = records.find(r => r.tarih === todayStr);

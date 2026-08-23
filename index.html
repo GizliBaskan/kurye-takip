@@ -402,7 +402,7 @@ tbody tr:last-child td{border-bottom:none}
   </section>
   
   <section class="page" id="page-daily">
-    <div class="page-head"><h1>Günlük Kayıt</h1><p>Sarı alanlar düzenlenebilir · hesaplamalar otomatik</p></div>
+    <div class="page-head"><h1>Günlük Kayıt</h1><p>Sarı alanlar düzenlenebilir · haftalık bonuslar otomatik hesaplanır</p></div>
     <div class="panel">
       <div class="toolbar">
         <input type="text" id="searchQ" placeholder="Tarih veya not ara…"/>
@@ -414,7 +414,7 @@ tbody tr:last-child td{border-bottom:none}
         <table>
           <thead><tr>
             <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Toplam</th>
-            <th class="num">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Not</th><th></th>
+            <th class="num" style="min-width:90px;">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Not</th><th></th>
           </tr></thead>
           <tbody id="dailyBody"></tbody>
         </table>
@@ -546,8 +546,8 @@ tbody tr:last-child td{border-bottom:none}
   <section class="page" id="page-instructions">
     <div class="page-head"><h1>Talimatlar</h1></div>
     <div class="info-block">
-      <h3>Garaj ve Otomatik Bakım Takibi</h3>
-      <p>Garaj modülü, günlük kayıt ekranına girdiğin kilometreleri otomatik olarak toplayarak bakım sayaçlarını günceller. Bakım yaptığında hedefi güncelleyebilir veya periyodu sıfırlayabilirsin.</p>
+      <h3>Yemeksepeti Bonus Sistemi</h3>
+      <p>Sistem, haftalık attığınız toplam paketi arka planda hesaplar. Eğer haftalık hedeflere ulaşırsanız (örn. 160, 200, 360 paket), hak ettiğiniz bonus miktarı o haftanın çalıştığınız son gününe otomatik olarak eklenir.</p>
     </div>
   </section>
   </main>
@@ -578,7 +578,7 @@ tbody tr:last-child td{border-bottom:none}
         <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" step="0.01" value="0"/></div>
         <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" step="0.01" value="0"/></div>
       </div>
-      <div class="fg"><label>Gelir (₺)</label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
+      <div class="fg"><label>Saf Gelir (₺) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Bonus hariç</span></label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
       <div class="fg">
         <label>Not</label>
         <input type="text" id="fNote" placeholder="Opsiyonel"/>
@@ -709,6 +709,7 @@ auth.onAuthStateChanged(user => {
 
 let records=[], charts={};
 let garageData = { model: '', bakimlar: [] };
+let dateBonusMap = {};
 
 function toast(msg,ok){const el=document.getElementById('toast');if(!el)return;el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),3000)}
 const DAYS=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
@@ -719,8 +720,69 @@ function dayName(t){return DAYS[new Date(t+'T12:00:00').getDay()]}
 function weekOf(t){const d=new Date(t+'T12:00:00'),s=new Date('2026-06-22T12:00:00');return Math.floor((d-s)/86400000/7)+1}
 function monthKey(t){return t.slice(0,7)}
 function monthLabel(k){const[y,m]=k.split('-');return MONTHS[+m-1]+' '+y}
-function calc(r){const gider=(r.yakit||0)+(r.diger||0),net=(r.gelir||0)-gider,tlkm=r.km>0?net/r.km:0,perPkg=r.teslimat>0?net/r.teslimat:0,kmPkg=r.teslimat>0?r.km/r.teslimat:0;return{gider,net,tlkm,perPkg,kmPkg}}
-function hourStatsOf(recs){const withH=recs.filter(r=>r.saat!=null&&!isNaN(r.saat));const totalHours=withH.reduce((s,r)=>s+(+r.saat||0),0);const posH=withH.filter(r=>r.saat>0);const totalHoursPos=posH.reduce((s,r)=>s+(+r.saat||0),0);const totalNetPos=posH.reduce((s,r)=>s+calc(r).net,0);return{daysWithHours:withH.length,totalHours,avgPerHour:totalHoursPos>0?totalNetPos/totalHoursPos:null}}
+
+// --- YEMEKSEPETİ BONUS SİSTEMİ ---
+const YS_BONUS_TIERS = [
+  {p: 400, b: 7500}, {p: 360, b: 6016}, {p: 325, b: 5208},
+  {p: 290, b: 4700}, {p: 255, b: 3625}, {p: 220, b: 3183},
+  {p: 200, b: 2570}, {p: 180, b: 1325}, {p: 160, b: 937}
+];
+
+function getPackageBonus(teslimatSayisi) {
+  for(let i=0; i<YS_BONUS_TIERS.length; i++) {
+    if(teslimatSayisi >= YS_BONUS_TIERS[i].p) return YS_BONUS_TIERS[i].b;
+  }
+  return 0;
+}
+
+function updateBonuses() {
+  dateBonusMap = {};
+  const wMap = {};
+  
+  // 1. Her hafta için toplam paketi ve o haftanın son girilen gününü bul
+  records.forEach(r => {
+    const w = weekOf(r.tarih);
+    if(!wMap[w]) wMap[w] = { tes: 0, lastDate: r.tarih };
+    wMap[w].tes += (r.teslimat || 0);
+    // Tarih metni (YYYY-MM-DD) alfabesel ve kronolojik sıralanabildiği için büyüktür mantığı son günü bulur.
+    if(r.tarih > wMap[w].lastDate) wMap[w].lastDate = r.tarih; 
+  });
+
+  // 2. Bonus baremini hesapla ve o haftanın son tarihine (Pazar vb.) ata
+  for(let w in wMap) {
+    const bns = getPackageBonus(wMap[w].tes);
+    if(bns > 0) {
+      dateBonusMap[wMap[w].lastDate] = bns;
+    }
+  }
+}
+
+// 3. Calculation fonksiyonu güncellendi - Otomatik bonus ekler!
+function calc(r){
+  const bonus = dateBonusMap[r.tarih] || 0;
+  const gider = (r.yakit||0) + (r.diger||0);
+  const toplamGelir = (r.gelir||0) + bonus; // Bonus otomatik olarak son günün gelirine dahil ediliyor.
+  const net = toplamGelir - gider;
+  const tlkm = r.km>0 ? net/r.km : 0;
+  const perPkg = r.teslimat>0 ? net/r.teslimat : 0;
+  const kmPkg = r.teslimat>0 ? r.km/r.teslimat : 0;
+  return { gider, net, tlkm, perPkg, kmPkg, bonus, toplamGelir };
+}
+
+function hourStatsOf(recs){
+  const withH=recs.filter(r=>r.saat!=null&&!isNaN(r.saat));
+  const totalHours=withH.reduce((s,r)=>s+(+r.saat||0),0);
+  const posH=withH.filter(r=>r.saat>0);
+  const totalHoursPos=posH.reduce((s,r)=>s+(+r.saat||0),0);
+  const totalNetPos=posH.reduce((s,r)=>s+calc(r).net,0);
+  return{daysWithHours:withH.length,totalHours,avgPerHour:totalHoursPos>0?totalNetPos/totalHoursPos:null}
+}
+
+function commitRecords() {
+  records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
+  updateBonuses();
+  saveRecords();
+}
 
 function saveAll() {
   if(!currentUser) return;
@@ -760,6 +822,7 @@ function load() {
         garageData = { model: '', bakimlar: [] };
       }
       
+      updateBonuses();
       toast("Verileriniz yüklendi", true);
       renderDash();
       renderGarage();
@@ -770,7 +833,7 @@ function load() {
           if (oldSnap.exists()) {
             records = oldSnap.val();
             if (!Array.isArray(records)) records = Object.values(records);
-            saveAll();
+            commitRecords();
             toast("Eski veriler kurucu hesabınıza aktarıldı!", true);
             renderDash();
             renderGarage();
@@ -778,7 +841,7 @@ function load() {
             const r = localStorage.getItem('mk_v2');
             if (r) { 
               records = JSON.parse(r); 
-              saveAll(); 
+              commitRecords(); 
               toast("Cihazdaki eski veriler kurtarıldı!", true); 
             } else { 
               records = []; 
@@ -823,9 +886,25 @@ document.querySelectorAll('.nav-item').forEach(btn=>{
 document.getElementById('menuBtn').addEventListener('click',toggleSidebar);
 document.getElementById('sidebarBackdrop').addEventListener('click',closeSidebar);
 
-function totals(){let km=0,gelir=0,yakit=0,diger=0,tes=0;records.forEach(r=>{km+=r.km||0;gelir+=r.gelir||0;yakit+=r.yakit||0;diger+=r.diger||0;tes+=r.teslimat||0});const gider=yakit+diger,net=gelir-gider,workDays=records.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0}}
+function totals(){
+  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0;
+  records.forEach(r=>{
+    const c=calc(r);
+    km+=r.km||0; gelir+=c.toplamGelir; yakit+=r.yakit||0; diger+=r.diger||0; tes+=r.teslimat||0; net+=c.net; totalBonus+=c.bonus;
+  });
+  const gider=yakit+diger,workDays=records.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;
+  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus}
+}
+function totalsOf(recs){
+  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0;
+  recs.forEach(r=>{
+    const c=calc(r);
+    km+=r.km||0; gelir+=c.toplamGelir; yakit+=r.yakit||0; diger+=r.diger||0; tes+=r.teslimat||0; net+=c.net; totalBonus+=c.bonus;
+  });
+  const gider=yakit+diger,workDays=recs.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;
+  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus}
+}
 function bestOf(){if(!records.length)return{};let bestNet=records[0],bestTlkm=records[0],bestTes=records[0];records.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
-function totalsOf(recs){let km=0,gelir=0,yakit=0,diger=0,tes=0;recs.forEach(r=>{km+=r.km||0;gelir+=r.gelir||0;yakit+=r.yakit||0;diger+=r.diger||0;tes+=r.teslimat||0});const gider=yakit+diger,net=gelir-gider,workDays=recs.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0}}
 function bestOfRecs(recs){if(!recs.length)return{};let bestNet=recs[0],bestTlkm=recs[0],bestTes=recs[0];recs.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
 
 const EXPENSE_CATEGORIES=[
@@ -867,10 +946,13 @@ function renderWeeklyDetail(){
   const jump=document.getElementById('wJump');
   jump.innerHTML=weeks.map((w,i)=>`<option value="${i}" ${i===wIdx?'selected':''}>Hafta ${w.w}</option>`).join('');
   content.style.display='';
+  
+  let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
+  
   document.getElementById('wMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü${prev?deltaBadge(t.km,prev.km):''}</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün${prev?deltaBadge(t.tes,prev.tes):''}</div></div>
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value">${fmt(t.gelir)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gelir,prev.gelir):''}</div></div>
+<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gelir,prev.gelir):''}${bonusHTML}</div></div>
 <div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt ${fmt(t.yakit)} · Diğer ${fmt(t.diger)}${prev?deltaBadge(t.gider,prev.gider):''}</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.net,prev.net):''}</div></div>
 <div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${prev?deltaBadge(t.tlkm,prev.tlkm):''}</div></div>
@@ -909,10 +991,13 @@ function renderMonthlyDetail(){
   const jump=document.getElementById('mJump');
   jump.innerHTML=months.map((m,i)=>`<option value="${i}" ${i===mIdx?'selected':''}>${monthLabel(m.key)}</option>`).join('');
   content.style.display='';
+  
+  let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
+
   document.getElementById('mMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü${prev?deltaBadge(t.km,prev.km):''}</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün${prev?deltaBadge(t.tes,prev.tes):''}</div></div>
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value">${fmt(t.gelir)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gelir,prev.gelir):''}</div></div>
+<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.gelir,prev.gelir):''}${bonusHTML}</div></div>
 <div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt ${fmt(t.yakit)} · Diğer ${fmt(t.diger)}${prev?deltaBadge(t.gider,prev.gider):''}</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${prev?deltaBadge(t.net,prev.net):''}</div></div>
 <div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${prev?deltaBadge(t.tlkm,prev.tlkm):''}</div></div>
@@ -932,7 +1017,12 @@ function renderMonthlyDetail(){
   charts.mdaily=new Chart(document.getElementById('cMDaily'),{type:'line',data:{labels:recs.map(r=>r.tarih.slice(8,10)+'.'+r.tarih.slice(5,7)),datasets:[{label:'Net',data:recs.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.14)',fill:true,tension:.3,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:chartOpts(false)});
   destroyChart('mexp');
   charts.mexp=new Chart(document.getElementById('cMExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
-  const wMap={};recs.forEach(r=>{const w=weekOf(r.tarih);if(!wMap[w])wMap[w]={gelir:0,gider:0,net:0};const c=calc(r);wMap[w].gelir+=r.gelir||0;wMap[w].gider+=c.gider;wMap[w].net+=c.net});
+  
+  const wMap={};recs.forEach(r=>{
+    const c=calc(r); const w=weekOf(r.tarih);
+    if(!wMap[w])wMap[w]={gelir:0,gider:0,net:0};
+    wMap[w].gelir+=c.toplamGelir; wMap[w].gider+=c.gider; wMap[w].net+=c.net;
+  });
   const wKeys=Object.keys(wMap).sort((a,b)=>a-b);
   destroyChart('mweekly');
   charts.mweekly=new Chart(document.getElementById('cMWeekly'),{type:'bar',data:{labels:wKeys.map(k=>'Hafta '+k),datasets:[
@@ -943,287 +1033,7 @@ function renderMonthlyDetail(){
   renderCategoryChart('mcat','cMCategory',recs);
 }
 
-// --- GARAJ VE BAKIM MODÜLÜ ---
-function renderGarage() {
-  document.getElementById('garageModel').value = garageData.model || '';
-  
-  let totalKm = 0;
-  records.forEach(r => { totalKm += (+r.km || 0); });
-  
-  const totalKmEl = document.getElementById('totalMotorKmVal');
-  if(totalKmEl) totalKmEl.textContent = fmtInt(totalKm) + ' km';
-
-  const list = document.getElementById('maintenanceList');
-  if(!garageData.bakimlar || garageData.bakimlar.length === 0) {
-    list.innerHTML = '<div class="empty-period" style="grid-column: 1/-1"><div class="big-emoji">🔧</div>Henüz bakım kaydı yok</div>';
-    return;
-  }
-  
-  list.innerHTML = garageData.bakimlar.map((b, i) => {
-    const targetKm = b.sonKm + b.periyot;
-    const remaining = targetKm - totalKm;
-    let statusClass = 'green';
-    let statusText = remaining + ' km kaldı';
-    
-    if(remaining <= 0) {
-      statusClass = 'red';
-      statusText = Math.abs(remaining) + ' km GEÇTİ!';
-    } else if (remaining <= 300) {
-      statusClass = 'amber';
-    }
-    
-    const usedSinceLast = totalKm - b.sonKm;
-    const pct = Math.min(100, Math.max(0, (usedSinceLast / b.periyot) * 100));
-    
-    return `
-    <div class="best-card">
-      <div style="display:flex; justify-content:space-between; margin-bottom:0.7rem; align-items: flex-start;">
-        <div class="tag" style="margin:0">${b.ad}</div>
-        <div style="display:flex; gap:0.3rem;">
-          <button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="padding: 0.15rem 0.4rem; color: var(--green); border-color: transparent;" title="Bakım yapıldı olarak sıfırla">🔄 Sıfırla</button>
-          <button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="padding: 0.15rem 0.4rem; color: var(--red); border-color: transparent;">✕ Sil</button>
-        </div>
-      </div>
-      <div class="big ${statusClass}" style="font-size:1.3rem; margin-bottom:0.6rem">${statusText}</div>
-      <div style="background:var(--elev); height:6px; border-radius:3px; margin-bottom:0.8rem; overflow:hidden;">
-        <div style="background:var(--${statusClass}); height:100%; width:${pct}%"></div>
-      </div>
-      <div class="meta" style="display:flex; justify-content:space-between;">
-        <span>Son İşlem: <strong>${fmtInt(b.sonKm)} km</strong></span>
-        <span>Periyot: <strong>${fmtInt(b.periyot)} km</strong></span>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-document.getElementById('btnSaveGarageInfo').addEventListener('click', () => {
-  garageData.model = document.getElementById('garageModel').value;
-  saveGarage();
-  renderGarage();
-  toast('Garaj bilgileri kaydedildi', true);
-});
-
-document.getElementById('btnAddMaintenance').addEventListener('click', () => {
-  let totalKm = 0;
-  records.forEach(r => { totalKm += (+r.km || 0); });
-
-  document.getElementById('mName').value = '';
-  document.getElementById('mLastKm').value = totalKm;
-  document.getElementById('mInterval').value = '';
-  document.getElementById('maintenanceOverlay').classList.add('show');
-});
-
-document.getElementById('btnMaintCancel').addEventListener('click', () => {
-  document.getElementById('maintenanceOverlay').classList.remove('show');
-});
-
-document.getElementById('maintForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const ad = document.getElementById('mName').value;
-  const sonKm = parseInt(document.getElementById('mLastKm').value) || 0;
-  const periyot = parseInt(document.getElementById('mInterval').value) || 0;
-  
-  if(!garageData.bakimlar) garageData.bakimlar = [];
-  garageData.bakimlar.push({ad, sonKm, periyot});
-  saveGarage();
-  renderGarage();
-  document.getElementById('maintenanceOverlay').classList.remove('show');
-  toast('Bakım hedefi eklendi', true);
-});
-
-window.deleteMaint = function(i) {
-  if(confirm('Bu bakım hedefini silmek istediğinize emin misiniz?')) {
-    garageData.bakimlar.splice(i, 1);
-    saveGarage();
-    renderGarage();
-    toast('Bakım silindi', true);
-  }
-};
-
-window.resetMaint = function(i, currentTotalKm) {
-  if(confirm(`"${garageData.bakimlar[i].ad}" bakımı şu anki toplam km (${currentTotalKm} km) üzerinden sıfırlansın mı?`)) {
-    garageData.bakimlar[i].sonKm = currentTotalKm;
-    saveGarage();
-    renderGarage();
-    toast('Bakım sıfırlandı ve güncellendi', true);
-  }
-};
-
-
-// --- AKILLI ASİSTAN & GEMİNİ ANALİZİ ---
-function renderAI() {
-  const listEl = document.getElementById('aiInsightsList');
-  if(!records.length) {
-    listEl.innerHTML = '<div class="ai-insight-item">Henüz yeterli kayıt bulunmuyor. Kayıt ekledikçe akıllı analizler burada görünecek.</div>';
-    return;
-  }
-
-  const t = totals();
-  const hs = hourStatsOf(records);
-  
-  const dayMap = {};
-  records.forEach(r => {
-    const dName = dayName(r.tarih);
-    if(!dayMap[dName]) dayMap[dName] = {net:0, count:0};
-    dayMap[dName].net += calc(r).net;
-    dayMap[dName].count++;
-  });
-  let bestDayName = '—', maxDayNet = -999999;
-  for(const [d, obj] of Object.entries(dayMap)) {
-    const avg = obj.net / obj.count;
-    if(avg > maxDayNet) { maxDayNet = avg; bestDayName = d; }
-  }
-
-  let html = '';
-  html += `<div class="ai-insight-item"><span>🚀</span><div><strong>Genel Verimlilik:</strong> Kilometre başına ortalama <strong>${fmt(t.tlkm)} ₺</strong> net kazanç sağlıyorsun.</div></div>`;
-  html += `<div class="ai-insight-item"><span>📅</span><div><strong>En Karlı Gün:</strong> Analizlere göre ortalamada en yüksek net kazancı <strong>${bestDayName}</strong> günleri elde ediyorsun.</div></div>`;
-  html += `<div class="ai-insight-item"><span>⛽</span><div><strong>Maliyet Dağılımı:</strong> Toplam giderlerinin %${t.gider > 0 ? fmt((t.yakit / t.gider) * 100, 0) : 0}'ini yakıt masrafları oluşturuyor.</div></div>`;
-  if(hs.avgPerHour != null) {
-    html += `<div class="ai-insight-item"><span>⏱️</span><div><strong>Saatlik Kazanç:</strong> Çalıştığın saatler baz alındığında saat başı ortalama <strong>${fmt(hs.avgPerHour)} ₺</strong> net bırakıyorsun.</div></div>`;
-  }
-  listEl.innerHTML = html;
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const aiSendBtn = document.getElementById('aiSendBtn');
-  const aiChatInput = document.getElementById('aiChatInput');
-
-  if(aiSendBtn) { aiSendBtn.addEventListener('click', sendToGeminiApi); }
-  if(aiChatInput) {
-    aiChatInput.addEventListener('keydown', e => { 
-      if(e.key === 'Enter') { e.preventDefault(); sendToGeminiApi(); }
-    });
-  }
-});
-
-async function sendToGeminiApi() {
-  const inputEl = document.getElementById('aiChatInput');
-  const query = inputEl.value.trim();
-  if(!query) return;
-
-  const chatBox = document.getElementById('aiChatBox');
-  
-  chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg user">${query}</div>`);
-  inputEl.value = '';
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  const loadingId = 'ai-load-' + Date.now();
-  chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai" id="${loadingId}">Asistan değerlendiriyor...</div>`);
-  chatBox.scrollTop = chatBox.scrollHeight;
-
-  try {
-    const t = totals();
-    const contextSummary = `Veri Özeti: KM: ${t.km}, Gelir: ${t.gelir}₺, Gider: ${t.gider}₺, Net: ${t.net}₺, Paket: ${t.tes}, KM Başı Net: ${t.tlkm.toFixed(2)}₺. Toplam kayıtlı gün: ${records.length}.`;
-
-    const apiKey = "AIzaSyDHBx7z13k2JiwsYYS3uqOfDWphCf9DFrM";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-    const payload = {
-      contents: [{
-        role: "user",
-        parts: [{ text: `Sen profesyonel, samimi bir motokurye asistanısın. Şu an kullanıcının güncel verileri şunlar: ${contextSummary}. Buna göre kullanıcının şu sorusuna kısa, net ve doğrudan bilgi içeren Türkçe bir yanıt ver (Kalın metinler için **kullan**): ${query}` }]
-      }]
-    };
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    const loadEl = document.getElementById(loadingId);
-    if (loadEl) loadEl.remove();
-
-    if (!response.ok) {
-      throw new Error(`API Hatası (Kod: ${response.status})`);
-    }
-
-    const data = await response.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maalesef yanıt oluşturulamadı.";
-    
-    const formattedReply = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai">${formattedReply}</div>`);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-  } catch (err) {
-    console.warn("API engellendi veya cevap vermedi, yerel motora aktarılıyor:", err);
-    const loadEl = document.getElementById(loadingId);
-    if (loadEl) loadEl.remove();
-    fallbackLocalGemini(query, chatBox);
-  }
-}
-
-function fallbackLocalGemini(query, chatBox) {
-  try {
-    const t = totals();
-    const qLower = query.toLowerCase();
-    let reply = "";
-
-    if (qLower.includes('en karı') || qLower.includes('en karlı') || qLower.includes('en çok kazand') || qLower.includes('hangi gün')) {
-      const dayMap = {};
-      records.forEach(r => {
-        const dName = dayName(r.tarih);
-        if(!dayMap[dName]) dayMap[dName] = {net:0, count:0};
-        dayMap[dName].net += calc(r).net;
-        dayMap[dName].count++;
-      });
-      let bestDay = '—', maxNet = -999999;
-      for(const [d, obj] of Object.entries(dayMap)) {
-        const avg = obj.net / obj.count;
-        if(avg > maxNet) { maxNet = avg; bestDay = d; }
-      }
-      if(records.length === 0) reply = "Henüz sistemde en karlı günü hesaplayacak kadar kayıt yok.";
-      else reply = `Kayıtlarına göre ortalamada en yüksek net kazancı <strong>${bestDay}</strong> günleri elde ediyorsun (Günlük ortalama ~${fmt(maxNet)} ₺).`;
-    } 
-    else if (qLower.includes('net') || qLower.includes('kazanç') || qLower.includes('para') || qLower.includes('gelir')) {
-      reply = `Şu ana kadar toplam <strong>${fmt(t.net)} ₺</strong> net kazancın var. Brüt gelirin ${fmt(t.gelir)} ₺, toplam giderin ise ${fmt(t.gider)} ₺.`;
-    } 
-    else if (qLower.includes('km') || qLower.includes('yol') || qLower.includes('kilometre') || qLower.includes('mesafe')) {
-      reply = `Toplamda <strong>${fmtInt(t.km)} km</strong> yol yaptın. Kilometre başına net kazancın <strong>${fmt(t.tlkm)} ₺</strong> seviyesinde.`;
-    } 
-    else if (qLower.includes('paket') || qLower.includes('teslimat')) {
-      reply = `Toplam <strong>${fmtInt(t.tes)}</strong> paket attın. Paket başına ortalama <strong>${fmt(t.perPkg)} ₺</strong> net kazanıyorsun.`;
-    } 
-    else if (qLower.includes('gider') || qLower.includes('yakıt') || qLower.includes('masraf') || qLower.includes('harcama')) {
-      const yuzde = t.gider > 0 ? (t.yakit / t.gider) * 100 : 0;
-      reply = `Toplam giderlerinin <strong>%${fmt(yuzde, 0)}</strong> kadarı yakıttan oluşuyor. Yakıt masrafın ${fmt(t.yakit)} ₺, diğer giderlerin ise ${fmt(t.diger)} ₺.`;
-    } 
-    else if (qLower.includes('merhaba') || qLower.includes('selam') || qLower.includes('naber')) {
-      reply = `Merhaba! Sisteme işlenmiş toplam ${records.length} günlük kaydın var. Bana "En çok hangi gün kazandım?", "Yakıt masrafım ne kadar?" veya "Paket başı kazancım ne?" gibi sorular sorabilirsin.`;
-    } 
-    else {
-      reply = `Tarayıcı güvenlik kısıtlaması (CORS) nedeniyle sana şu an yerel motordan cevap veriyorum. Net kazancın <strong>${fmt(t.net)} ₺</strong>. Bana giderlerin, paketlerin veya en karlı günün hakkında daha net sorular sorabilirsin!`;
-    }
-
-    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai">${reply}</div>`);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  } catch(e) {
-    console.error("Yerel Asistan Hatası:", e);
-    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai">Beklenmeyen bir sorun oluştu. Sayfayı yenileyip tekrar dene.</div>`);
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
-}
-
-document.getElementById('btnWPrev').addEventListener('click',()=>{if(wIdx>0){wIdx--;renderWeeklyDetail()}});
-document.getElementById('btnWNext').addEventListener('click',()=>{const n=weeksList().length;if(wIdx<n-1){wIdx++;renderWeeklyDetail()}});
-document.getElementById('wJump').addEventListener('change',e=>{wIdx=+e.target.value;renderWeeklyDetail()});
-document.getElementById('btnMPrev').addEventListener('click',()=>{if(mIdx>0){mIdx--;renderMonthlyDetail()}});
-document.getElementById('btnMNext').addEventListener('click',()=>{const n=monthsList().length;if(mIdx<n-1){mIdx++;renderMonthlyDetail()}});
-document.getElementById('mJump').addEventListener('change',e=>{mIdx=+e.target.value;renderMonthlyDetail()});
-
-document.addEventListener('keydown',e=>{
-  const tag=(document.activeElement&&document.activeElement.tagName)||'';
-  if(['INPUT','SELECT','TEXTAREA'].includes(tag))return;
-  if(document.getElementById('overlay').classList.contains('show'))return;
-  if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
-    const active=document.querySelector('.page.active');if(!active)return;
-    if(active.id==='page-weekly'){const n=weeksList().length;if(!n)return;if(e.key==='ArrowLeft'&&wIdx>0){wIdx--;renderWeeklyDetail()}else if(e.key==='ArrowRight'&&wIdx<n-1){wIdx++;renderWeeklyDetail()}}
-    else if(active.id==='page-monthly'){const n=monthsList().length;if(!n)return;if(e.key==='ArrowLeft'&&mIdx>0){mIdx--;renderMonthlyDetail()}else if(e.key==='ArrowRight'&&mIdx<n-1){mIdx++;renderMonthlyDetail()}}
-  }
-  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();doUndo()}
-});
-
+// --- GELECEĞİ GÖRME VE HEDEF TAHMİNLERİ (BONUS EKLENTİLİ) ---
 function renderProjections() {
   const weeks = weeksList();
   const weekValEl = document.getElementById('weekProjectionVal');
@@ -1239,14 +1049,28 @@ function renderProjections() {
   const wTotals = totalsOf(wRecs);
   const daysLoggedThisWeek = wRecs.length;
   
-  // Haftalık tahmin: Günlük ortalama net kazanç * 7 gün (veya standart 7 günlük döngü)
-  const dailyAvgNet = daysLoggedThisWeek > 0 ? (wTotals.net / daysLoggedThisWeek) : 0;
-  const projectedWeekNet = dailyAvgNet * 7;
+  // Saf Net'i (O ana kadar kazanılan bonus hariç) bul
+  let currentAppliedBonus = 0;
+  wRecs.forEach(r => { currentAppliedBonus += calc(r).bonus; });
+  const baseNetTotal = wTotals.net - currentAppliedBonus;
 
-  weekValEl.textContent = fmt(projectedWeekNet) + ' ₺';
-  weekDescEl.textContent = `Bu hafta şu ana kadar ${daysLoggedThisWeek} gün çalıştın (Günlük ort. ${fmt(dailyAvgNet)} ₺)`;
+  // Hafta sonuna (7 gün) Saf Net tahmini
+  const dailyAvgBaseNet = daysLoggedThisWeek > 0 ? (baseNetTotal / daysLoggedThisWeek) : 0;
+  const projectedBaseNet = dailyAvgBaseNet * 7;
 
-  // Aylık tahmin (Mevcut ayın verileri)
+  // Hafta sonu Paket Tahmini ve Olası Bonus Hesabı
+  const dailyAvgPkg = daysLoggedThisWeek > 0 ? (wTotals.tes / daysLoggedThisWeek) : 0;
+  const projectedPkg = Math.round(dailyAvgPkg * 7);
+  const projectedBonus = getPackageBonus(projectedPkg);
+
+  const finalProjectedNet = projectedBaseNet + projectedBonus;
+
+  weekValEl.textContent = fmt(finalProjectedNet) + ' ₺';
+  
+  let extraDesc = projectedBonus > 0 ? ` (+${fmtInt(projectedBonus)} ₺ Bonus Dahil)` : '';
+  weekDescEl.textContent = `Tahmini ${projectedPkg} paket ile hafta sonu kapanışı${extraDesc}`;
+
+  // Aylık tahmin (Mevcut ayın verileri - Bonuslar oranlandığı için direkt net üzerinden)
   const months = monthsList();
   if(months.length > 0) {
     const curMonthObj = months[months.length - 1];
@@ -1269,10 +1093,12 @@ function renderDash(){
   const t=totals(),b=bestOf(),hs=hourStatsOf(records);
   renderProjections(); // Tahmin kartlarını güncelle
   
+  let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(Toplam +${fmtInt(t.totalBonus)}₺ Bonus Dahil)</span>` : '';
+
   document.getElementById('mainMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün</div></div>
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value">${fmt(t.gelir)} ₺</div></div>
+<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub" style="margin-top:0">${bonusHTML}</div></div>
 <div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt ${fmt(t.yakit)} · Diğer ${fmt(t.diger)}</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
 <div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div></div>
@@ -1288,7 +1114,12 @@ function renderDash(){
 <div class="best-card"><div class="tag">En yüksek net</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div><div class="meta">${b.bestNet?(b.bestNet.teslimat||0)+' paket · '+(b.bestNet.km||0)+' km':''}</div></div>
 <div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(bt.net)+' ₺ net · '+(b.bestTlkm.km||0)+' km':''}</div></div>
 <div class="best-card"><div class="tag">En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km · '+fmt(calc(b.bestTes).net)+' ₺ net':''}</div></div>`;
-  const byM={};records.forEach(r=>{const k=monthKey(r.tarih);if(!byM[k])byM[k]={gelir:0,gider:0};byM[k].gelir+=r.gelir||0;byM[k].gider+=(r.yakit||0)+(r.diger||0)});
+  
+  const byM={};records.forEach(r=>{
+    const c=calc(r); const k=monthKey(r.tarih);
+    if(!byM[k])byM[k]={gelir:0,gider:0};
+    byM[k].gelir+=c.toplamGelir; byM[k].gider+=(r.yakit||0)+(r.diger||0);
+  });
   const mKeys=Object.keys(byM).sort(),mLab=mKeys.map(monthLabel);
   destroyChart('monthly');
   charts.monthly=new Chart(document.getElementById('cMonthly'),{type:'bar',data:{labels:mLab,datasets:[
@@ -1319,14 +1150,24 @@ function renderDaily(){
   let list=records.map((r,i)=>({...r,_i:i})).filter(r=>{if(month&&!r.tarih.startsWith(month))return false;if(q&&!r.tarih.includes(q)&&!(r.aciklama||'').toLowerCase().includes(q))return false;return true}).sort((a,b)=>a.tarih.localeCompare(b.tarih));
   if(!list.length){tbody.innerHTML='<tr><td colspan="14" class="empty">Kayıt yok</td></tr>';return}
   let sKm=0,sY=0,sD=0,sG=0,sT=0,sNet=0,sSaat=0,sSaatDays=0;
-  tbody.innerHTML=list.map(r=>{const c=calc(r);sKm+=r.km||0;sY+=r.yakit||0;sD+=r.diger||0;sG+=r.gelir||0;sT+=r.teslimat||0;sNet+=c.net;if(r.saat!=null&&!isNaN(r.saat)){sSaat+=+r.saat;sSaatDays++}
+  tbody.innerHTML=list.map(r=>{
+    const c=calc(r);
+    sKm+=r.km||0;sY+=r.yakit||0;sD+=r.diger||0;sG+=c.toplamGelir;sT+=r.teslimat||0;sNet+=c.net;
+    if(r.saat!=null&&!isNaN(r.saat)){sSaat+=+r.saat;sSaatDays++}
+    
+    // Gelir alanında, eğer o gün bonus eklenmişse bunu kullanıcıya belirten HTML bloğu
+    let bonusTag = c.bonus > 0 ? `<div style="font-size:0.65rem; color:var(--accent); margin-top:3px; font-weight:700;">+${fmtInt(c.bonus)} ₺ Bns</div>` : '';
+
   return`<tr data-i="${r._i}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
   <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
   <td class="num"><input class="editable" type="number" data-f="saat" value="${r.saat!=null?r.saat:''}" min="0" step="0.25" placeholder="—"/></td>
   <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
   <td class="num"><input class="editable" type="number" data-f="diger" value="${r.diger||0}" min="0" step="0.01"/></td>
   <td class="num computed">${fmt(c.gider)}</td>
-  <td class="num"><input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/></td>
+  <td class="num">
+    <input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/>
+    ${bonusTag}
+  </td>
   <td class="num computed ${c.net<0?'neg':'pos'}">${fmt(c.net)}</td>
   <td class="num"><input class="editable" type="number" data-f="teslimat" value="${r.teslimat||0}" min="0" step="1"/></td>
   <td class="num computed">${fmt(c.tlkm)}</td>
@@ -1336,8 +1177,17 @@ function renderDaily(){
   <td class="num">${fmtInt(sKm)}</td><td class="num">${sSaatDays>0?fmt(sSaat,1):'—'}</td><td class="num">${fmt(sY)}</td><td class="num">${fmt(sD)}</td><td class="num">${fmt(sY+sD)}</td>
   <td class="num">${fmt(sG)}</td><td class="num ${sNet<0?'neg':'pos'}">${fmt(sNet)}</td><td class="num">${fmtInt(sT)}</td>
   <td class="num">${sKm>0?fmt(sNet/sKm):'—'}</td><td class="num">${sT>0?fmt(sNet/sT):'—'}</td><td colspan="2"></td></tr>`;
-  tbody.querySelectorAll('.editable').forEach(inp=>{inp.addEventListener('change',e=>{const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;let v=e.target.value;if(f==='saat'){v=v===''?null:(parseFloat(v)||0)}else if(f!=='aciklama'){v=parseFloat(v)||0}pushUndo();records[i][f]=v;saveRecords();renderDaily();toast('Güncellendi',true)})});
-  tbody.querySelectorAll('.btn-del').forEach(btn=>{btn.addEventListener('click',e=>{const i=+e.target.closest('tr').dataset.i;if(confirm(records[i].tarih+' silinsin mi?')){pushUndo();records.splice(i,1);saveRecords();renderDaily();toast('Silindi',true)}})})
+  
+  tbody.querySelectorAll('.editable').forEach(inp=>{inp.addEventListener('change',e=>{
+    const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f;
+    let v=e.target.value;
+    if(f==='saat'){v=v===''?null:(parseFloat(v)||0)}else if(f!=='aciklama'){v=parseFloat(v)||0}
+    pushUndo(); records[i][f]=v; commitRecords(); renderDaily(); toast('Güncellendi (Bonuslar Kontrol Edildi)',true)
+  })});
+  tbody.querySelectorAll('.btn-del').forEach(btn=>{btn.addEventListener('click',e=>{
+    const i=+e.target.closest('tr').dataset.i;
+    if(confirm(records[i].tarih+' silinsin mi?')){pushUndo();records.splice(i,1); commitRecords(); renderDaily();toast('Silindi',true)}
+  })})
   tbody.querySelectorAll('.btn-edit').forEach(btn=>{btn.addEventListener('click',e=>{const i=+e.target.closest('tr').dataset.i;openEditModal(i)})})}
 
 document.getElementById('searchQ').addEventListener('input',renderDaily);
@@ -1490,13 +1340,20 @@ document.getElementById('form').addEventListener('submit',e=>{
     const ex=records.findIndex(r=>r.tarih===rec.tarih);
     if(ex>=0){if(!confirm(rec.tarih+' mevcut. Üzerine yazılsın mı?'))return;pushUndo();records[ex]=rec}else{pushUndo();records.push(rec)}
   }
-  records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  saveRecords();
-  editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi',true)
+  
+  commitRecords();
+  editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi ve Bonuslar Kontrol Edildi',true)
 });
 
 function renderWeekly(){
-  const map={};records.forEach(r=>{const w=weekOf(r.tarih);if(!map[w])map[w]={w,start:r.tarih,end:r.tarih,km:0,gelir:0,yakit:0,diger:0,tes:0};const g=map[w];if(r.tarih<g.start)g.start=r.tarih;if(r.tarih>g.end)g.end=r.tarih;g.km+=r.km||0;g.gelir+=r.gelir||0;g.yakit+=r.yakit||0;g.diger+=r.diger||0;g.tes+=r.teslimat||0});
+  const map={};
+  records.forEach(r=>{
+    const c=calc(r);
+    const w=weekOf(r.tarih);
+    if(!map[w])map[w]={w,start:r.tarih,end:r.tarih,km:0,gelir:0,yakit:0,diger:0,tes:0};
+    const g=map[w];if(r.tarih<g.start)g.start=r.tarih;if(r.tarih>g.end)g.end=r.tarih;
+    g.km+=r.km||0; g.gelir+=c.toplamGelir; g.yakit+=r.yakit||0; g.diger+=r.diger||0; g.tes+=r.teslimat||0
+  });
   const rows=Object.values(map).sort((a,b)=>a.w-b.w),tb=document.getElementById('weeklyBody');
   if(!rows.length){tb.innerHTML='<tr><td colspan="12" class="empty">Veri yok</td></tr>';return}
   let tK=0,tG=0,tY=0,tD=0,tT=0,tN=0;
@@ -1505,7 +1362,14 @@ function renderWeekly(){
 }
 
 function renderMonthly(){
-  const map={};records.forEach(r=>{const m=monthKey(r.tarih);if(!map[m])map[m]={key:m,days:0,km:0,gelir:0,yakit:0,diger:0,tes:0};const g=map[m];g.days++;g.km+=r.km||0;g.gelir+=r.gelir||0;g.yakit+=r.yakit||0;g.diger+=r.diger||0;g.tes+=r.teslimat||0});
+  const map={};
+  records.forEach(r=>{
+    const c=calc(r);
+    const m=monthKey(r.tarih);
+    if(!map[m])map[m]={key:m,days:0,km:0,gelir:0,yakit:0,diger:0,tes:0};
+    const g=map[m];g.days++;
+    g.km+=r.km||0; g.gelir+=c.toplamGelir; g.yakit+=r.yakit||0; g.diger+=r.diger||0; g.tes+=r.teslimat||0
+  });
   const rows=Object.values(map).sort((a,b)=>a.key.localeCompare(b.key)),tb=document.getElementById('monthlyBody');
   if(!rows.length){tb.innerHTML='<tr><td colspan="12" class="empty">Veri yok</td></tr>';return}
   let tK=0,tG=0,tY=0,tD=0,tT=0,tN=0,tDays=0;
@@ -1514,8 +1378,8 @@ function renderMonthly(){
 }
 
 document.getElementById('btnCsv').addEventListener('click',()=>{
-  const h=['Tarih','Gün','KM','Saat','Yakıt','Diğer','Gider','Gelir','Net','Paket','TL/km','₺/paket','Not'];
-  const rows=[...records].sort((a,b)=>a.tarih.localeCompare(b.tarih)).map(r=>{const c=calc(r);return[r.tarih,dayName(r.tarih),r.km,r.saat!=null?r.saat:'',r.yakit,r.diger,c.gider,r.gelir,c.net,r.teslimat,c.tlkm.toFixed(4),c.perPkg.toFixed(2),r.aciklama||'']});
+  const h=['Tarih','Gün','KM','Saat','Yakıt','Diğer','Gider','Gelir (Bonus Dahil)','Net','Paket','TL/km','₺/paket','Not'];
+  const rows=[...records].sort((a,b)=>a.tarih.localeCompare(b.tarih)).map(r=>{const c=calc(r);return[r.tarih,dayName(r.tarih),r.km,r.saat!=null?r.saat:'',r.yakit,r.diger,c.gider,c.toplamGelir,c.net,r.teslimat,c.tlkm.toFixed(4),c.perPkg.toFixed(2),r.aciklama||'']});
   const csv=[h,...rows].map(row=>row.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='motokurye_kayit.csv';a.click();toast('CSV indirildi',true)
 });
@@ -1523,7 +1387,7 @@ document.getElementById('btnCsv').addEventListener('click',()=>{
 let undoStack=[];
 function pushUndo(){undoStack.push(JSON.stringify(records));if(undoStack.length>25)undoStack.shift();updateUndoBtn()}
 function updateUndoBtn(){const b=document.getElementById('btnUndo');if(b)b.disabled=undoStack.length===0}
-function doUndo(){if(!undoStack.length)return;records=JSON.parse(undoStack.pop());saveRecords();updateUndoBtn();renderDash();toast('Geri alındı',true)}
+function doUndo(){if(!undoStack.length)return;records=JSON.parse(undoStack.pop()); commitRecords(); updateUndoBtn();renderDash();toast('Geri alındı',true)}
 document.getElementById('btnUndo').addEventListener('click',doUndo);
 
 document.getElementById('btnBackup').addEventListener('click',()=>{
@@ -1540,13 +1404,275 @@ document.getElementById('fileRestore').addEventListener('change',e=>{
       if(!Array.isArray(data)||!data.length)throw new Error('format');
       pushUndo();
       records=data.map(r=>({tarih:r.tarih,km:+r.km||0,saat:(r.saat===undefined||r.saat===null||r.saat==='')?null:(+r.saat||0),yakit:+r.yakit||0,diger:+r.diger||0,gelir:+r.gelir||0,teslimat:+r.teslimat||0,aciklama:r.aciklama||''}));
-      records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
-      wIdx=null;mIdx=null;saveRecords();renderDash();toast('Yedek yüklendi',true);
+      wIdx=null;mIdx=null;
+      commitRecords(); 
+      renderDash();toast('Yedek yüklendi',true);
     }catch(err){toast('Geçersiz yedek dosyası',false)}
   };
   reader.readAsText(file);
   e.target.value='';
 });
+
+// --- GARAJ VE BAKIM MODÜLÜ ---
+function renderGarage() {
+  document.getElementById('garageModel').value = garageData.model || '';
+  
+  let totalKm = 0;
+  records.forEach(r => { totalKm += (+r.km || 0); });
+  
+  const totalKmEl = document.getElementById('totalMotorKmVal');
+  if(totalKmEl) totalKmEl.textContent = fmtInt(totalKm) + ' km';
+
+  const list = document.getElementById('maintenanceList');
+  if(!garageData.bakimlar || garageData.bakimlar.length === 0) {
+    list.innerHTML = '<div class="empty-period" style="grid-column: 1/-1"><div class="big-emoji">🔧</div>Henüz bakım kaydı yok</div>';
+    return;
+  }
+  
+  list.innerHTML = garageData.bakimlar.map((b, i) => {
+    const targetKm = b.sonKm + b.periyot;
+    const remaining = targetKm - totalKm;
+    let statusClass = 'green';
+    let statusText = remaining + ' km kaldı';
+    
+    if(remaining <= 0) {
+      statusClass = 'red';
+      statusText = Math.abs(remaining) + ' km GEÇTİ!';
+    } else if (remaining <= 300) {
+      statusClass = 'amber';
+    }
+    
+    const usedSinceLast = totalKm - b.sonKm;
+    const pct = Math.min(100, Math.max(0, (usedSinceLast / b.periyot) * 100));
+    
+    return `
+    <div class="best-card">
+      <div style="display:flex; justify-content:space-between; margin-bottom:0.7rem; align-items: flex-start;">
+        <div class="tag" style="margin:0">${b.ad}</div>
+        <div style="display:flex; gap:0.3rem;">
+          <button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="padding: 0.15rem 0.4rem; color: var(--green); border-color: transparent;" title="Bakım yapıldı olarak sıfırla">🔄 Sıfırla</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="padding: 0.15rem 0.4rem; color: var(--red); border-color: transparent;">✕ Sil</button>
+        </div>
+      </div>
+      <div class="big ${statusClass}" style="font-size:1.3rem; margin-bottom:0.6rem">${statusText}</div>
+      <div style="background:var(--elev); height:6px; border-radius:3px; margin-bottom:0.8rem; overflow:hidden;">
+        <div style="background:var(--${statusClass}); height:100%; width:${pct}%"></div>
+      </div>
+      <div class="meta" style="display:flex; justify-content:space-between;">
+        <span>Son İşlem: <strong>${fmtInt(b.sonKm)} km</strong></span>
+        <span>Periyot: <strong>${fmtInt(b.periyot)} km</strong></span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('btnSaveGarageInfo').addEventListener('click', () => {
+  garageData.model = document.getElementById('garageModel').value;
+  saveGarage();
+  renderGarage();
+  toast('Garaj bilgileri kaydedildi', true);
+});
+
+document.getElementById('btnAddMaintenance').addEventListener('click', () => {
+  let totalKm = 0;
+  records.forEach(r => { totalKm += (+r.km || 0); });
+
+  document.getElementById('mName').value = '';
+  document.getElementById('mLastKm').value = totalKm;
+  document.getElementById('mInterval').value = '';
+  document.getElementById('maintenanceOverlay').classList.add('show');
+});
+
+document.getElementById('btnMaintCancel').addEventListener('click', () => {
+  document.getElementById('maintenanceOverlay').classList.remove('show');
+});
+
+document.getElementById('maintForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const ad = document.getElementById('mName').value;
+  const sonKm = parseInt(document.getElementById('mLastKm').value) || 0;
+  const periyot = parseInt(document.getElementById('mInterval').value) || 0;
+  
+  if(!garageData.bakimlar) garageData.bakimlar = [];
+  garageData.bakimlar.push({ad, sonKm, periyot});
+  saveGarage();
+  renderGarage();
+  document.getElementById('maintenanceOverlay').classList.remove('show');
+  toast('Bakım hedefi eklendi', true);
+});
+
+window.deleteMaint = function(i) {
+  if(confirm('Bu bakım hedefini silmek istediğinize emin misiniz?')) {
+    garageData.bakimlar.splice(i, 1);
+    saveGarage();
+    renderGarage();
+    toast('Bakım silindi', true);
+  }
+};
+
+window.resetMaint = function(i, currentTotalKm) {
+  if(confirm(`"${garageData.bakimlar[i].ad}" bakımı şu anki toplam km (${currentTotalKm} km) üzerinden sıfırlansın mı?`)) {
+    garageData.bakimlar[i].sonKm = currentTotalKm;
+    saveGarage();
+    renderGarage();
+    toast('Bakım sıfırlandı ve güncellendi', true);
+  }
+};
+
+// --- AKILLI ASİSTAN & GEMİNİ ANALİZİ ---
+function renderAI() {
+  const listEl = document.getElementById('aiInsightsList');
+  if(!records.length) {
+    listEl.innerHTML = '<div class="ai-insight-item">Henüz yeterli kayıt bulunmuyor. Kayıt ekledikçe akıllı analizler burada görünecek.</div>';
+    return;
+  }
+
+  const t = totals();
+  const hs = hourStatsOf(records);
+  
+  const dayMap = {};
+  records.forEach(r => {
+    const dName = dayName(r.tarih);
+    if(!dayMap[dName]) dayMap[dName] = {net:0, count:0};
+    dayMap[dName].net += calc(r).net;
+    dayMap[dName].count++;
+  });
+  let bestDayName = '—', maxDayNet = -999999;
+  for(const [d, obj] of Object.entries(dayMap)) {
+    const avg = obj.net / obj.count;
+    if(avg > maxDayNet) { maxDayNet = avg; bestDayName = d; }
+  }
+
+  let html = '';
+  html += `<div class="ai-insight-item"><span>🚀</span><div><strong>Genel Verimlilik:</strong> Kilometre başına ortalama <strong>${fmt(t.tlkm)} ₺</strong> net kazanç sağlıyorsun.</div></div>`;
+  html += `<div class="ai-insight-item"><span>📅</span><div><strong>En Karlı Gün:</strong> Analizlere göre ortalamada en yüksek net kazancı <strong>${bestDayName}</strong> günleri elde ediyorsun. (Bunda aldığın haftalık bonusların pazar gününe eklenmesi de etkili olabilir!)</div></div>`;
+  html += `<div class="ai-insight-item"><span>⛽</span><div><strong>Maliyet Dağılımı:</strong> Toplam giderlerinin %${t.gider > 0 ? fmt((t.yakit / t.gider) * 100, 0) : 0}'ini yakıt masrafları oluşturuyor.</div></div>`;
+  if(hs.avgPerHour != null) {
+    html += `<div class="ai-insight-item"><span>⏱️</span><div><strong>Saatlik Kazanç:</strong> Çalıştığın saatler baz alındığında saat başı ortalama <strong>${fmt(hs.avgPerHour)} ₺</strong> net bırakıyorsun.</div></div>`;
+  }
+  listEl.innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const aiSendBtn = document.getElementById('aiSendBtn');
+  const aiChatInput = document.getElementById('aiChatInput');
+
+  if(aiSendBtn) { aiSendBtn.addEventListener('click', sendToGeminiApi); }
+  if(aiChatInput) {
+    aiChatInput.addEventListener('keydown', e => { 
+      if(e.key === 'Enter') { e.preventDefault(); sendToGeminiApi(); }
+    });
+  }
+});
+
+async function sendToGeminiApi() {
+  const inputEl = document.getElementById('aiChatInput');
+  const query = inputEl.value.trim();
+  if(!query) return;
+
+  const chatBox = document.getElementById('aiChatBox');
+  
+  chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg user">${query}</div>`);
+  inputEl.value = '';
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  const loadingId = 'ai-load-' + Date.now();
+  chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai" id="${loadingId}">Asistan değerlendiriyor...</div>`);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  try {
+    const t = totals();
+    const contextSummary = `Veri Özeti: KM: ${t.km}, Toplam Gelir: ${t.gelir}₺ (Kazanılan toplam bonus: ${t.totalBonus}₺), Gider: ${t.gider}₺, Net: ${t.net}₺, Paket: ${t.tes}, KM Başı Net: ${t.tlkm.toFixed(2)}₺. Toplam kayıtlı gün: ${records.length}.`;
+
+    const apiKey = "AIzaSyDHBx7z13k2JiwsYYS3uqOfDWphCf9DFrM";
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const payload = {
+      contents: [{
+        role: "user",
+        parts: [{ text: `Sen profesyonel, samimi bir motokurye asistanısın. Şu an kullanıcının güncel verileri şunlar: ${contextSummary}. Buna göre kullanıcının şu sorusuna kısa, net ve doğrudan bilgi içeren Türkçe bir yanıt ver (Kalın metinler için **kullan**): ${query}` }]
+      }]
+    };
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const loadEl = document.getElementById(loadingId);
+    if (loadEl) loadEl.remove();
+
+    if (!response.ok) {
+      throw new Error(`API Hatası (Kod: ${response.status})`);
+    }
+
+    const data = await response.json();
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Maalesef yanıt oluşturulamadı.";
+    
+    const formattedReply = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai">${formattedReply}</div>`);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+  } catch (err) {
+    console.warn("API engellendi veya cevap vermedi, yerel motora aktarılıyor:", err);
+    const loadEl = document.getElementById(loadingId);
+    if (loadEl) loadEl.remove();
+    fallbackLocalGemini(query, chatBox);
+  }
+}
+
+function fallbackLocalGemini(query, chatBox) {
+  try {
+    const t = totals();
+    const qLower = query.toLowerCase();
+    let reply = "";
+
+    if (qLower.includes('en karı') || qLower.includes('en karlı') || qLower.includes('en çok kazand') || qLower.includes('hangi gün')) {
+      const dayMap = {};
+      records.forEach(r => {
+        const dName = dayName(r.tarih);
+        if(!dayMap[dName]) dayMap[dName] = {net:0, count:0};
+        dayMap[dName].net += calc(r).net;
+        dayMap[dName].count++;
+      });
+      let bestDay = '—', maxNet = -999999;
+      for(const [d, obj] of Object.entries(dayMap)) {
+        const avg = obj.net / obj.count;
+        if(avg > maxNet) { maxNet = avg; bestDay = d; }
+      }
+      if(records.length === 0) reply = "Henüz sistemde en karlı günü hesaplayacak kadar kayıt yok.";
+      else reply = `Kayıtlarına göre ortalamada en yüksek net kazancı <strong>${bestDay}</strong> günleri elde ediyorsun (Günlük ortalama ~${fmt(maxNet)} ₺). Bonusların bu güne yansıyor olması muhtemel!`;
+    } 
+    else if (qLower.includes('net') || qLower.includes('kazanç') || qLower.includes('para') || qLower.includes('gelir')) {
+      reply = `Şu ana kadar toplam <strong>${fmt(t.net)} ₺</strong> net kazancın var. Bonuslar dahil brüt gelirin ${fmt(t.gelir)} ₺, toplam giderin ise ${fmt(t.gider)} ₺.`;
+    } 
+    else if (qLower.includes('km') || qLower.includes('yol') || qLower.includes('kilometre') || qLower.includes('mesafe')) {
+      reply = `Toplamda <strong>${fmtInt(t.km)} km</strong> yol yaptın. Kilometre başına net kazancın <strong>${fmt(t.tlkm)} ₺</strong> seviyesinde.`;
+    } 
+    else if (qLower.includes('paket') || qLower.includes('teslimat')) {
+      reply = `Toplam <strong>${fmtInt(t.tes)}</strong> paket attın. Paket başına ortalama <strong>${fmt(t.perPkg)} ₺</strong> net kazanıyorsun.`;
+    } 
+    else if (qLower.includes('gider') || qLower.includes('yakıt') || qLower.includes('masraf') || qLower.includes('harcama')) {
+      const yuzde = t.gider > 0 ? (t.yakit / t.gider) * 100 : 0;
+      reply = `Toplam giderlerinin <strong>%${fmt(yuzde, 0)}</strong> kadarı yakıttan oluşuyor. Yakıt masrafın ${fmt(t.yakit)} ₺, diğer giderlerin ise ${fmt(t.diger)} ₺.`;
+    } 
+    else if (qLower.includes('merhaba') || qLower.includes('selam') || qLower.includes('naber')) {
+      reply = `Merhaba! Sisteme işlenmiş toplam ${records.length} günlük kaydın var. Bana "En çok hangi gün kazandım?", "Yakıt masrafım ne kadar?" veya "Paket başı kazancım ne?" gibi sorular sorabilirsin.`;
+    } 
+    else {
+      reply = `Tarayıcı güvenlik kısıtlaması (CORS) nedeniyle sana şu an yerel motordan cevap veriyorum. Net kazancın <strong>${fmt(t.net)} ₺</strong>. Bana giderlerin, paketlerin veya en karlı günün hakkında daha net sorular sorabilirsin!`;
+    }
+
+    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai">${reply}</div>`);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  } catch(e) {
+    console.error("Yerel Asistan Hatası:", e);
+    chatBox.insertAdjacentHTML('beforeend', `<div class="chat-msg ai">Beklenmeyen bir sorun oluştu. Sayfayı yenileyip tekrar dene.</div>`);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+}
 </script>
 </body>
 </html>

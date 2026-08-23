@@ -299,9 +299,8 @@ tbody tr:last-child td{border-bottom:none}
   .nav-arrow{width:42px;height:42px}
   .section-divider{margin:1.4rem 0 .85rem}
   .garage-info-flex { flex-direction: column; align-items: stretch; }
-  .garage-inputs { display: grid; grid-template-columns: 1fr 1fr; }
-  .garage-inputs .auth-input { width: 100% !important; }
-  .garage-inputs .btn { grid-column: 1 / -1; min-height: 42px; justify-content: center; }
+  .garage-inputs { display: grid; grid-template-columns: 1fr; }
+  .garage-inputs .auth-input, .garage-inputs .btn { width: 100% !important; }
 }
 @media(max-width:400px){
   .metrics{grid-template-columns:1fr}
@@ -467,18 +466,26 @@ tbody tr:last-child td{border-bottom:none}
   <section class="page" id="page-garage">
     <div class="page-head">
       <h1>Garaj & Bakım</h1>
-      <p>Motorunun sağlığını, periyodik sarf malzemelerini ve servis aralıklarını takip et</p>
+      <p>Günlük kayıtlarındaki toplam kilometreye göre otomatik bakım takibi</p>
     </div>
     
     <div class="info-block garage-info-flex">
       <div>
-        <h3 style="margin-bottom:0.2rem">Mevcut Araç & Güncel Kilometre</h3>
-        <p style="font-size:0.8rem">Kadrandaki veya hesapladığın en son kilometreyi girerek bakım sayaçlarını güncelle.</p>
+        <h3 style="margin-bottom:0.2rem">Araç Bilgisi & Toplam Kilometre</h3>
+        <p style="font-size:0.8rem">Toplam KM, günlük kayıt tablosuna girdiğin kilometrelerin toplamından otomatik hesaplanır.</p>
       </div>
       <div class="garage-inputs">
         <input type="text" id="garageModel" class="auth-input" style="margin:0; width:190px;" placeholder="Örn: Mondial 125 Drift L" />
-        <input type="number" id="garageKm" class="auth-input" style="margin:0; width:130px;" placeholder="Güncel KM" min="0" />
-        <button class="btn btn-primary" id="btnSaveGarageInfo">Kaydet</button>
+        <button class="btn btn-primary" id="btnSaveGarageInfo">Modeli Kaydet</button>
+      </div>
+    </div>
+
+    <!-- Özet Bilgi Kutusu -->
+    <div class="metrics" style="margin-bottom: 1.5rem;">
+      <div class="metric cyan">
+        <div class="metric-label">Toplam Motor KM</div>
+        <div class="metric-value" id="totalMotorKmVal">0 km</div>
+        <div class="metric-sub">Günlük kayıtlardan otomatik hesaplanır</div>
       </div>
     </div>
 
@@ -488,9 +495,7 @@ tbody tr:last-child td{border-bottom:none}
       <button class="btn btn-primary" id="btnAddMaintenance">+ Yeni Bakım Hedefi Ekle</button>
     </div>
     
-    <div class="best-grid" id="maintenanceList">
-      <!-- Bakım kartları JavaScript ile buraya eklenecek -->
-    </div>
+    <div class="best-grid" id="maintenanceList"></div>
   </section>
 
   <!-- AKILLI ASİSTAN & GEMİNİ SAYFASI -->
@@ -520,8 +525,8 @@ tbody tr:last-child td{border-bottom:none}
   <section class="page" id="page-instructions">
     <div class="page-head"><h1>Talimatlar</h1></div>
     <div class="info-block">
-      <h3>Akıllı Asistan ve Garaj Modülü</h3>
-      <p>Yeni eklenen <strong>Garaj & Bakım</strong> sekmesinden motorunun zincir, yağ, balata değişimlerini takip edebilir; <strong>Akıllı Asistan</strong> sekmesinden de kurye performansına özel analizlerini okuyarak Gemini'ye sorular sorabilirsin.</p>
+      <h3>Garaj ve Otomatik Bakım Takibi</h3>
+      <p>Garaj modülü, günlük kayıt ekranına girdiğin kilometreleri otomatik olarak toplayarak bakım sayaçlarını günceller. Bakım yaptığında hedefi güncelleyebilir veya periyodu sıfırlayabilirsin.</p>
     </div>
   </section>
   </main>
@@ -580,11 +585,11 @@ tbody tr:last-child td{border-bottom:none}
     <form id="maintForm">
       <div class="fg">
         <label>Bakım veya Sarf Malzemesi Adı</label>
-        <input type="text" id="mName" required placeholder="Örn: O-ringsiz Zincir Yağlama, Motor Yağı" />
+        <input type="text" id="mName" required placeholder="Örn: Motor Yağı, Zincir Yağlama" />
       </div>
       <div class="fg-row">
         <div class="fg">
-          <label>Yapıldığı KM</label>
+          <label>Son Yapıldığı KM</label>
           <input type="number" id="mLastKm" required min="0" placeholder="İşlem yapılan km" />
         </div>
         <div class="fg">
@@ -677,12 +682,12 @@ auth.onAuthStateChanged(user => {
     authScreen.style.display = 'flex';
     appContainer.classList.remove('show');
     records = [];
-    garageData = { model: '', guncelKm: 0, bakimlar: [] };
+    garageData = { model: '', bakimlar: [] };
   }
 });
 
 let records=[], charts={};
-let garageData = { model: '', guncelKm: 0, bakimlar: [] };
+let garageData = { model: '', bakimlar: [] };
 
 function toast(msg,ok){const el=document.getElementById('toast');if(!el)return;el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),3000)}
 const DAYS=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
@@ -715,7 +720,6 @@ function saveGarage() {
   db.ref('kullanicilar/' + currentUser.uid + '/garaj').set(garageData).catch(err => toast('Garaj kaydedilemedi: ' + err.message, false));
 }
 
-// YENİ LOAD FONKSİYONU: VERİ İZOLASYONU EKLENDİ
 function load() {
   if(!currentUser) return;
   toast("Verileriniz kontrol ediliyor...", true);
@@ -724,7 +728,6 @@ function load() {
 
   userRef.once('value').then(snapshot => {
     if (snapshot.exists() && snapshot.val().kayitlar) {
-      // Kullanıcının kendi UID'sinde veri varsa
       const data = snapshot.val();
       records = data.kayitlar || [];
       if (!Array.isArray(records)) records = Object.values(records);
@@ -733,14 +736,13 @@ function load() {
         garageData = data.garaj;
         if(!garageData.bakimlar) garageData.bakimlar = [];
       } else {
-        garageData = { model: '', guncelKm: 0, bakimlar: [] };
+        garageData = { model: '', bakimlar: [] };
       }
       
       toast("Verileriniz yüklendi", true);
       renderDash();
       renderGarage();
     } else {
-      // Kendi verisi YOK. Kurucu hesap kontrolü:
       if (currentUser.email === 'furkansb1040@gmail.com') {
         const oldRef = db.ref('kayitlar');
         oldRef.once('value').then(oldSnap => {
@@ -765,9 +767,8 @@ function load() {
           }
         });
       } else {
-        // Yeni bir kullanıcı, sıfırdan başlıyor
         records = [];
-        garageData = { model: '', guncelKm: 0, bakimlar: [] };
+        garageData = { model: '', bakimlar: [] };
         toast("Yeni hesabınıza hoş geldiniz! Veritabanınız temiz.", true);
         renderDash();
         renderGarage();
@@ -921,22 +922,26 @@ function renderMonthlyDetail(){
   renderCategoryChart('mcat','cMCategory',recs);
 }
 
-// --- GARAJ VE BAKIM MODÜLÜ ---
+// --- GARAJ VE BAKIM MODÜLÜ (OTOMATİK KM ENTEGRELİ) ---
 function renderGarage() {
   document.getElementById('garageModel').value = garageData.model || '';
-  document.getElementById('garageKm').value = garageData.guncelKm || '';
   
+  // Toplam motor kilometresini günlük kayıtlardan otomatik hesapla
+  let totalKm = 0;
+  records.forEach(r => { totalKm += (+r.km || 0); });
+  
+  const totalKmEl = document.getElementById('totalMotorKmVal');
+  if(totalKmEl) totalKmEl.textContent = fmtInt(totalKm) + ' km';
+
   const list = document.getElementById('maintenanceList');
   if(!garageData.bakimlar || garageData.bakimlar.length === 0) {
     list.innerHTML = '<div class="empty-period" style="grid-column: 1/-1"><div class="big-emoji">🔧</div>Henüz bakım kaydı yok</div>';
     return;
   }
   
-  const current = parseInt(garageData.guncelKm) || 0;
-  
   list.innerHTML = garageData.bakimlar.map((b, i) => {
     const targetKm = b.sonKm + b.periyot;
-    const remaining = targetKm - current;
+    const remaining = targetKm - totalKm;
     let statusClass = 'green';
     let statusText = remaining + ' km kaldı';
     
@@ -947,15 +952,19 @@ function renderGarage() {
       statusClass = 'amber';
     }
     
-    const pct = Math.min(100, Math.max(0, ((current - b.sonKm) / b.periyot) * 100));
+    const usedSinceLast = totalKm - b.sonKm;
+    const pct = Math.min(100, Math.max(0, (usedSinceLast / b.periyot) * 100));
     
     return `
     <div class="best-card">
       <div style="display:flex; justify-content:space-between; margin-bottom:0.7rem; align-items: flex-start;">
         <div class="tag" style="margin:0">${b.ad}</div>
-        <button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="padding: 0.15rem 0.4rem; color: var(--red); border-color: transparent;">✕ Sil</button>
+        <div style="display:flex; gap:0.3rem;">
+          <button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="padding: 0.15rem 0.4rem; color: var(--green); border-color: transparent;" title="Bakım yapıldı olarak sıfırla">🔄 Sıfırla</button>
+          <button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="padding: 0.15rem 0.4rem; color: var(--red); border-color: transparent;">✕ Sil</button>
+        </div>
       </div>
-      <div class="big ${statusClass}" style="font-size:1.4rem; margin-bottom:0.6rem">${statusText}</div>
+      <div class="big ${statusClass}" style="font-size:1.3rem; margin-bottom:0.6rem">${statusText}</div>
       <div style="background:var(--elev); height:6px; border-radius:3px; margin-bottom:0.8rem; overflow:hidden;">
         <div style="background:var(--${statusClass}); height:100%; width:${pct}%"></div>
       </div>
@@ -969,15 +978,17 @@ function renderGarage() {
 
 document.getElementById('btnSaveGarageInfo').addEventListener('click', () => {
   garageData.model = document.getElementById('garageModel').value;
-  garageData.guncelKm = parseInt(document.getElementById('garageKm').value) || 0;
   saveGarage();
   renderGarage();
-  toast('Garaj bilgileri güncellendi', true);
+  toast('Garaj bilgileri kaydedildi', true);
 });
 
 document.getElementById('btnAddMaintenance').addEventListener('click', () => {
+  let totalKm = 0;
+  records.forEach(r => { totalKm += (+r.km || 0); });
+
   document.getElementById('mName').value = '';
-  document.getElementById('mLastKm').value = garageData.guncelKm || '';
+  document.getElementById('mLastKm').value = totalKm;
   document.getElementById('mInterval').value = '';
   document.getElementById('maintenanceOverlay').classList.add('show');
 });
@@ -997,7 +1008,7 @@ document.getElementById('maintForm').addEventListener('submit', (e) => {
   saveGarage();
   renderGarage();
   document.getElementById('maintenanceOverlay').classList.remove('show');
-  toast('Bakım eklendi', true);
+  toast('Bakım hedefi eklendi', true);
 });
 
 window.deleteMaint = function(i) {
@@ -1006,6 +1017,15 @@ window.deleteMaint = function(i) {
     saveGarage();
     renderGarage();
     toast('Bakım silindi', true);
+  }
+};
+
+window.resetMaint = function(i, currentTotalKm) {
+  if(confirm(`"${garageData.bakimlar[i].ad}" bakımı şu anki toplam km (${currentTotalKm} km) üzerinden sıfırlansın mı?`)) {
+    garageData.bakimlar[i].sonKm = currentTotalKm;
+    saveGarage();
+    renderGarage();
+    toast('Bakım sıfırlandı ve güncellendi', true);
   }
 };
 
@@ -1409,15 +1429,7 @@ document.getElementById('form').addEventListener('submit',e=>{
   }
   records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
   saveRecords();
-  
-  // Eğer garaj km'si günlük kayıttan küçükse uyararak otomatik güncelleyelim
-  if(garageData.guncelKm < rec.km && rec.km > 0 && confirm('Garajdaki güncel kilometreniz de ' + rec.km + ' olarak güncellensin mi?')) {
-      garageData.guncelKm = rec.km;
-      saveGarage();
-      renderGarage();
-  }
-
-  editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi',true)
+  editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi ve KM güncellendi',true)
 });
 
 function renderWeekly(){

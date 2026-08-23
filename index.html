@@ -229,7 +229,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
   <section class="page active" id="page-dashboard">
     <div class="page-head"><h1>Özet Panel</h1><p>Performans, paket ekonomisi ve trendler</p></div>
     
-    <!-- YENİ: GÜNLÜK HEDEF İlerleme Kartı -->
+    <!-- GÜNLÜK HEDEF İlerleme Kartı -->
     <div class="insight" style="background: linear-gradient(135deg, var(--card), var(--elev)); border-color: var(--border2); margin-bottom: 1.5rem;">
       <div class="insight-icon g">🏁</div>
       <div style="flex:1;">
@@ -644,6 +644,7 @@ function load() {
       garageData = data.garaj || { model: '', bakimlar: [], dailyGoal: 1500 };
       if(!garageData.bakimlar) garageData.bakimlar = [];
       if(!garageData.dailyGoal) garageData.dailyGoal = 1500;
+      wIdx = null; mIdx = null; // Veri yüklendiğinde indeksleri sıfırla ki en son döneme odaklansın
       updateBonuses(); renderDash(); renderGarage();
     } else {
       records = []; garageData = { model: '', bakimlar: [], dailyGoal: 1500 };
@@ -887,6 +888,25 @@ function renderMonthlyDetail(){
       ]},options:chartOpts()});
   }
 }
+
+// EKSİK OLAN HAFTALIK VE AYLIK NAVİGASYON DİNLEYİCİLERİ EKLENDİ
+document.addEventListener('DOMContentLoaded', () => {
+  const btnWPrev = document.getElementById('btnWPrev');
+  const btnWNext = document.getElementById('btnWNext');
+  const wJump = document.getElementById('wJump');
+  
+  if(btnWPrev) btnWPrev.addEventListener('click', () => { if(wIdx > 0) { wIdx--; renderWeeklyDetail(); } });
+  if(btnWNext) btnWNext.addEventListener('click', () => { const weeks = weeksList(); if(wIdx < weeks.length - 1) { wIdx++; renderWeeklyDetail(); } });
+  if(wJump) wJump.addEventListener('change', (e) => { wIdx = +e.target.value; renderWeeklyDetail(); });
+
+  const btnMPrev = document.getElementById('btnMPrev');
+  const btnMNext = document.getElementById('btnMNext');
+  const mJump = document.getElementById('mJump');
+
+  if(btnMPrev) btnMPrev.addEventListener('click', () => { if(mIdx > 0) { mIdx--; renderMonthlyDetail(); } });
+  if(btnMNext) btnMNext.addEventListener('click', () => { const months = monthsList(); if(mIdx < months.length - 1) { mIdx++; renderMonthlyDetail(); } });
+  if(mJump) mJump.addEventListener('change', (e) => { mIdx = +e.target.value; renderMonthlyDetail(); });
+});
 
 function renderProjections() {
   const weeks = weeksList(); 

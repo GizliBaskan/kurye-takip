@@ -240,6 +240,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
       </div>
     </div>
 
+    <!-- GEÇİCİ OLARAK SİLİNEN TÜM METRİK VE GİDER KARTLARI GERİ GETİRİLDİ -->
     <div class="metrics" id="mainMetrics"></div>
     <div class="insights" id="insights"></div>
     <div class="best-grid" id="bestDays"></div>
@@ -590,7 +591,8 @@ function calc(r){
   const tlkm = r.km>0 ? net/r.km : 0;
   const perPkg = r.teslimat>0 ? net/r.teslimat : 0;
   const kmPkg = r.teslimat>0 ? r.km/r.teslimat : 0;
-  return { gider, net, tlkm, perPkg, kmPkg, bonus, toplamGelir };
+  const yakitPkg = r.teslimat>0 ? (r.yakit||0)/r.teslimat : 0;
+  return { gider, net, tlkm, perPkg, kmPkg, yakitPkg, bonus, toplamGelir };
 }
 
 function hourStatsOf(recs){
@@ -728,7 +730,6 @@ function monthsList(){const map={};records.forEach(r=>{const k=monthKey(r.tarih)
 
 let wIdx=null,mIdx=null;
 
-// GERİ GETİRİLEN HAFTALIK FONKSİYONLAR
 function renderWeekly(){
   const map={};
   records.forEach(r=>{
@@ -789,7 +790,6 @@ function renderWeeklyDetail(){
   renderHeatmap('wheatmap', 'cWHeatmap', recs);
 }
 
-// GERİ GETİRİLEN AYLIK FONKSİYONLAR
 function renderMonthly(){
   const map={};
   records.forEach(r=>{
@@ -849,7 +849,6 @@ function renderMonthlyDetail(){
   renderHeatmap('mheatmap', 'cMHeatmap', recs);
   renderCategoryChart('mcat','cMCategory',recs);
 
-  // Geri Getirilen Haftalık Kırılım (Aylık Sekmesi İçin)
   const wMap={};recs.forEach(r=>{
     const c=calc(r); const w=weekOf(r.tarih);
     if(!wMap[w])wMap[w]={gelir:0,gider:0,net:0};
@@ -867,7 +866,6 @@ function renderMonthlyDetail(){
   }
 }
 
-// ONARILMIŞ GELECEK TAHMİNİ (HEM HAFTA HEM AY)
 function renderProjections() {
   const weeks = weeksList(); 
   const weekValEl = document.getElementById('weekProjectionVal');
@@ -881,7 +879,6 @@ function renderProjections() {
       return;
   }
   
-  // HAFTA TAHMİNİ
   const currentWeekObj = weeks[weeks.length - 1]; const wRecs = currentWeekObj.recs;
   const wTotals = totalsOf(wRecs); const daysLoggedThisWeek = wRecs.length;
   
@@ -899,7 +896,6 @@ function renderProjections() {
       weekDescEl.textContent = `Tahmini ${projectedPkg} paket ile hafta sonu kapanışı${projectedBonus > 0 ? ` (+${fmtInt(projectedBonus)} ₺ Bns)` : ''}`;
   }
 
-  // AY TAHMİNİ
   const months = monthsList();
   if(months.length > 0 && monthValEl) {
     const curMonthObj = months[months.length - 1];
@@ -917,14 +913,31 @@ function renderProjections() {
 }
 
 function renderDash(){
-  const t=totals(),b=bestOf(); renderProjections();
+  const t=totals(),b=bestOf(),hs=hourStatsOf(records); renderProjections();
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(Toplam +${fmtInt(t.totalBonus)}₺ Bonus Dahil)</span>` : '';
 
+  // ÖZET PANELDE EKSİK OLAN METRİK KARTLARI TAM OLARAK GERİ YÜKLENDİ
   document.getElementById('mainMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün</div></div>
 <div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub" style="margin-top:0">${bonusHTML}</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>`;
+<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt: ${fmt(t.yakit)} ₺</div></div>
+<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
+<div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div></div>
+<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div></div>
+<div class="metric orange"><div class="metric-label">Gider / km</div><div class="metric-value">${fmt(t.giderKm)} ₺</div></div>`;
+
+  document.getElementById('insights').innerHTML=`
+<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Maliyet düşüldükten sonra</div></div></div>
+<div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Paket başına yakılan yol</div></div></div>
+<div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Yakıt maliyeti payı</div></div></div>
+<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">Mesai saatlerine göre</div></div></div>`;
+
+  const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
+  document.getElementById('bestDays').innerHTML=`
+<div class="best-card"><div class="tag">En yüksek net gün</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div><div class="meta">${b.bestNet?(b.bestNet.km||0)+' km · '+(b.bestNet.teslimat||0)+' paket':''}</div></div>
+<div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(calc(b.bestTlkm).net)+' ₺ net':''}</div></div>
+<div class="best-card"><div class="tag">En çok paket atılan gün</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big amber">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km':''}</div></div>`;
   
   renderHeatmap('allheatmap', 'cHeatmapAll', records);
   
@@ -944,9 +957,8 @@ function renderDash(){
     {label:'Net',data:mKeys.map(k=>byM[k].gelir-byM[k].gider),backgroundColor:'rgba(56,189,248,.75)',borderRadius:5}
   ]},options:chartOpts()});
   
-  // GERİ GETİRİLEN DASHBOARD GRAFİKLERİ
   destroyChart('expense');
-  charts.expense=new Chart(document.getElementById('cExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c',' #a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
+  charts.expense=new Chart(document.getElementById('cExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
   
   destroyChart('daily');
   charts.daily=new Chart(document.getElementById('cDaily'),{type:'line',data:{labels:sorted.map(r=>r.tarih.slice(5)),datasets:[{label:'Net',data:sorted.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.12)',fill:true,tension:.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:chartOpts(false)});

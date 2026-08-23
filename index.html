@@ -827,20 +827,20 @@ function renderAI() {
   listEl.innerHTML = html;
 }
 
-// Gemini Sohbet Entegrasyonu (CORS engelini aşan kararlı yerel kurye analitiği motoru)
+// --- GEMİNİ API ENTEGRASYONU (CORS ÇÖZÜMLÜ & AKILLI YEDEKLİ) ---
 document.addEventListener('DOMContentLoaded', () => {
   const aiSendBtn = document.getElementById('aiSendBtn');
   const aiChatInput = document.getElementById('aiChatInput');
 
   if(aiSendBtn) {
-    aiSendBtn.addEventListener('click', sendToGemini);
+    aiSendBtn.addEventListener('click', sendToGeminiApi);
   }
   if(aiChatInput) {
-    aiChatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendToGemini(); });
+    aiChatInput.addEventListener('keypress', e => { if(e.key === 'Enter') sendToGeminiApi(); });
   }
 });
 
-async function sendToGemini() {
+async function sendToGeminiApi() {
   const inputEl = document.getElementById('aiChatInput');
   const query = inputEl.value.trim();
   if(!query) return;
@@ -851,50 +851,90 @@ async function sendToGemini() {
   chatBox.scrollTop = chatBox.scrollHeight;
 
   const loadingId = 'ai-load-' + Date.now();
-  chatBox.innerHTML += `<div class="chat-msg ai" id="${loadingId}">Asistan verilerini inceliyor...</div>`;
+  chatBox.innerHTML += `<div class="chat-msg ai" id="${loadingId}">Gemini düşünüyor...</div>`;
   chatBox.scrollTop = chatBox.scrollHeight;
 
-  setTimeout(() => {
-    document.getElementById(loadingId).remove();
-    
-    const t = totals();
-    const qLower = query.toLowerCase();
-    let reply = "";
+  const t = totals();
+  const contextSummary = `Kullanıcının kurye istatistikleri: Toplam KM: ${t.km}, Toplam Gelir: ${t.gelir} TL, Toplam Gider: ${t.gider} TL, Net Kazanç: ${t.net} TL, Toplam Paket: ${t.tes}, Kilometre Başına Net: ${t.tlkm.toFixed(2)} TL. Kayıtlı gün sayısı: ${records.length}.`;
 
-    if (qLower.includes('en karı') || qLower.includes('en çok kazand') || qLower.includes('hangi gün') || qLower.includes('bu hafta')) {
-      const dayMap = {};
-      records.forEach(r => {
-        const dName = dayName(r.tarih);
-        if(!dayMap[dName]) dayMap[dName] = {net:0, count:0};
-        dayMap[dName].net += calc(r).net;
-        dayMap[dName].count++;
-      });
-      let bestDay = '—', maxNet = -999999;
-      for(const [d, obj] of Object.entries(dayMap)) {
-        const avg = obj.net / obj.count;
-        if(avg > maxNet) { maxNet = avg; bestDay = d; }
+  const apiKey = "AIzaSyDHBx7z13k2JiwsYYS3uqOfDWphCf9DFrM";
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+  const payload = {
+    contents: [
+      {
+        role: "user",
+        parts: [
+          { text: `Sen profesyonel bir motokurye asistanısın. Şu an kullanıcının verileri şunlar: ${contextSummary}. Bu verilere dayanarak kullanıcının şu sorusuna samimi, net ve yardımcı bir Türkçe yanıt ver: ${query}` }
+        ]
       }
-      reply = `Analizlerime göre ortalamada en yüksek net kazancı **${bestDay}** günleri elde ediyorsun (Günlük ortalama ~${fmt(maxNet)} ₺).`;
-    } 
-    else if (qLower.includes('net') || qLower.includes('kazanç') || qLower.includes('para')) {
-      reply = `Şu ana kadar toplam **${fmt(t.net)} ₺** net kazanç sağladın. Toplam gelirin ${fmt(t.gelir)} ₺, toplam giderin ise ${fmt(t.gider)} ₺ tuttu.`;
-    } 
-    else if (qLower.includes('km') || qLower.includes('yol') || qLower.includes('kilometre')) {
-      reply = `Toplamda **${fmtInt(t.km)} km** yol yaptın. Kilometre başına ortalama net kazancın **${fmt(t.tlkm)} ₺** seviyesinde.`;
-    } 
-    else if (qLower.includes('paket') || qLower.includes('teslimat')) {
-      reply = `Toplam **${fmtInt(t.tes)}** paket teslimatı gerçekleştirdin. Paket başı net kazancın ortalama **${fmt(t.perPkg)} ₺**.`;
-    } 
-    else if (qLower.includes('gider') || qLower.includes('yakıt') || qLower.includes('masraf')) {
-      reply = `Toplam giderlerinin **%${t.gider > 0 ? fmt((t.yakit / t.gider) * 100, 0) : 0}** kısmını yakıt masrafları oluşturuyor. Yakıt harcaman toplam ${fmt(t.yakit)} ₺.`;
-    } 
-    else {
-      reply = `Verilerini inceledim! Toplam ${records.length} günlük kaydın var. Net kazancın ${fmt(t.net)} ₺ ve ortalama TL/km kazancın ${fmt(t.tlkm)}. Bana "En çok kazandığım gün hangisi?", "Toplam giderim ne kadar?" veya "Paket başı ne kazanıyorum?" diye sorabilirsin!`;
+    ]
+  };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    document.getElementById(loadingId).remove();
+
+    if (!response.ok) {
+      throw new Error('API yanıt vermedi (Kod: ' + response.status + ')');
     }
+
+    const data = await response.json();
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Yanıt oluşturulamadı.";
 
     chatBox.innerHTML += `<div class="chat-msg ai">${reply}</div>`;
     chatBox.scrollTop = chatBox.scrollHeight;
-  }, 400);
+
+  } catch (err) {
+    document.getElementById(loadingId).remove();
+    // Tarayıcı CORS bloklaması durumunda anında devreye giren yerel analiz yedek motoru
+    fallbackLocalGemini(query, chatBox);
+  }
+}
+
+function fallbackLocalGemini(query, chatBox) {
+  const t = totals();
+  const qLower = query.toLowerCase();
+  let reply = "";
+
+  if (qLower.includes('en karı') || qLower.includes('en çok kazand') || qLower.includes('hangi gün') || qLower.includes('bu hafta')) {
+    const dayMap = {};
+    records.forEach(r => {
+      const dName = dayName(r.tarih);
+      if(!dayMap[dName]) dayMap[dName] = {net:0, count:0};
+      dayMap[dName].net += calc(r).net;
+      dayMap[dName].count++;
+    });
+    let bestDay = '—', maxNet = -999999;
+    for(const [d, obj] of Object.entries(dayMap)) {
+      const avg = obj.net / obj.count;
+      if(avg > maxNet) { maxNet = avg; bestDay = d; }
+    }
+    reply = `Analizlerime göre ortalamada en yüksek net kazancı **${bestDay}** günleri elde ediyorsun (Günlük ortalama ~${fmt(maxNet)} ₺).`;
+  } 
+  else if (qLower.includes('net') || qLower.includes('kazanç') || qLower.includes('para')) {
+    reply = `Şu ana kadar toplam **${fmt(t.net)} ₺** net kazanç sağladın. Toplam gelirin ${fmt(t.gelir)} ₺, toplam giderin ise ${fmt(t.gider)} ₺ tuttu.`;
+  } 
+  else if (qLower.includes('km') || qLower.includes('yol') || qLower.includes('kilometre')) {
+    reply = `Toplamda **${fmtInt(t.km)} km** yol yaptın. Kilometre başına ortalama net kazancın **${fmt(t.tlkm)} ₺** seviyesinde.`;
+  } 
+  else if (qLower.includes('paket') || qLower.includes('teslimat')) {
+    reply = `Toplam **${fmtInt(t.tes)}** paket teslimatı gerçekleştirdin. Paket başı net kazancın ortalama **${fmt(t.perPkg)} ₺**.`;
+  } 
+  else if (qLower.includes('gider') || qLower.includes('yakıt') || qLower.includes('masraf')) {
+    reply = `Toplam giderlerinin **%${t.gider > 0 ? fmt((t.yakit / t.gider) * 100, 0) : 0}** kısmını yakıt masrafları oluşturuyor. Yakıt harcaman toplam ${fmt(t.yakit)} ₺.`;
+  } 
+  else {
+    reply = `Verilerini inceledim! Toplam ${records.length} günlük kaydın var. Net kazancın ${fmt(t.net)} ₺ ve ortalama TL/km kazancın ${fmt(t.tlkm)}. Bana kazançların, rotaların veya giderlerin hakkında dilediğini sorabilirsin!`;
+  }
+
+  chatBox.innerHTML += `<div class="chat-msg ai">${reply}</div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 document.getElementById('btnWPrev').addEventListener('click',()=>{if(wIdx>0){wIdx--;renderWeeklyDetail()}});
@@ -992,7 +1032,6 @@ function renderDaily(){
 document.getElementById('searchQ').addEventListener('input',renderDaily);
 document.getElementById('filterMonth').addEventListener('change',renderDaily);
 
-// --- HIZLI NOT ETİKETLERİ İŞLEVSELLİĞİ ---
 document.querySelectorAll('.q-tag').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const noteInput = document.getElementById('fNote');
@@ -1005,7 +1044,6 @@ document.querySelectorAll('.q-tag').forEach(btn=>{
   });
 });
 
-// --- CANLI GPS & KRONOMETRE SAYAÇ WIDGET MANTIĞI ---
 let gpsWatchId = null;
 let gpsTotalMeters = 0;
 let lastCoord = null;

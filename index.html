@@ -366,6 +366,27 @@ tbody tr:last-child td{border-bottom:none}
   <main class="main">
   <section class="page active" id="page-dashboard">
     <div class="page-head"><h1>Özet Panel</h1><p>Performans, paket ekonomisi ve trendler</p></div>
+    
+    <!-- YENİ: GELECEĞİ GÖRME VE TAHMİN KARTI -->
+    <div class="insights" id="projectionCard" style="margin-bottom: 1.5rem; grid-template-columns: repeat(2, 1fr);">
+      <div class="insight" style="background: linear-gradient(135deg, var(--card), var(--elev)); border-color: var(--border2);">
+        <div class="insight-icon g">🎯</div>
+        <div style="flex:1;">
+          <h4>Bu Haftanın Sonu Tahmini</h4>
+          <div class="val pos" id="weekProjectionVal" style="font-size: 1.2rem;">Hesaplanıyor...</div>
+          <div class="desc" id="weekProjectionDesc">Mevcut haftalık tempoya göre öngörü</div>
+        </div>
+      </div>
+      <div class="insight" style="background: linear-gradient(135deg, var(--card), var(--elev)); border-color: var(--border2);">
+        <div class="insight-icon c">🔮</div>
+        <div style="flex:1;">
+          <h4>Gelecek Ay Sonu Tahmini</h4>
+          <div class="val" id="monthProjectionVal" style="font-size: 1.2rem; color: var(--accent);">Hesaplanıyor...</div>
+          <div class="desc" id="monthProjectionDesc">Son 30 günlük ortalama performansla</div>
+        </div>
+      </div>
+    </div>
+
     <div class="metrics" id="mainMetrics"></div>
     <div class="insights" id="insights"></div>
     <div class="best-grid" id="bestDays"></div>
@@ -922,11 +943,10 @@ function renderMonthlyDetail(){
   renderCategoryChart('mcat','cMCategory',recs);
 }
 
-// --- GARAJ VE BAKIM MODÜLÜ (OTOMATİK KM ENTEGRELİ) ---
+// --- GARAJ VE BAKIM MODÜLÜ ---
 function renderGarage() {
   document.getElementById('garageModel').value = garageData.model || '';
   
-  // Toplam motor kilometresini günlük kayıtlardan otomatik hesapla
   let totalKm = 0;
   records.forEach(r => { totalKm += (+r.km || 0); });
   
@@ -1204,8 +1224,51 @@ document.addEventListener('keydown',e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();doUndo()}
 });
 
+function renderProjections() {
+  const weeks = weeksList();
+  const weekValEl = document.getElementById('weekProjectionVal');
+  const weekDescEl = document.getElementById('weekProjectionDesc');
+  const monthValEl = document.getElementById('monthProjectionVal');
+  const monthDescEl = document.getElementById('monthProjectionDesc');
+
+  if(!weeks.length || !weekValEl) return;
+
+  // Bu haftanın verileri
+  const currentWeekObj = weeks[weeks.length - 1];
+  const wRecs = currentWeekObj.recs;
+  const wTotals = totalsOf(wRecs);
+  const daysLoggedThisWeek = wRecs.length;
+  
+  // Haftalık tahmin: Günlük ortalama net kazanç * 7 gün (veya standart 7 günlük döngü)
+  const dailyAvgNet = daysLoggedThisWeek > 0 ? (wTotals.net / daysLoggedThisWeek) : 0;
+  const projectedWeekNet = dailyAvgNet * 7;
+
+  weekValEl.textContent = fmt(projectedWeekNet) + ' ₺';
+  weekDescEl.textContent = `Bu hafta şu ana kadar ${daysLoggedThisWeek} gün çalıştın (Günlük ort. ${fmt(dailyAvgNet)} ₺)`;
+
+  // Aylık tahmin (Mevcut ayın verileri)
+  const months = monthsList();
+  if(months.length > 0) {
+    const curMonthObj = months[months.length - 1];
+    const mRecs = curMonthObj.recs;
+    const mTotals = totalsOf(mRecs);
+    const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+    const daysLoggedThisMonth = mRecs.length;
+    const monthlyDailyAvg = daysLoggedThisMonth > 0 ? (mTotals.net / daysLoggedThisMonth) : 0;
+    const projectedMonthNet = monthlyDailyAvg * daysInMonth;
+
+    monthValEl.textContent = fmt(projectedMonthNet) + ' ₺';
+    monthDescEl.textContent = `Bu ay ${daysLoggedThisMonth}/${daysInMonth} gün baz alındı`;
+  } else {
+    monthValEl.textContent = '—';
+    monthDescEl.textContent = 'Yeterli veri yok';
+  }
+}
+
 function renderDash(){
   const t=totals(),b=bestOf(),hs=hourStatsOf(records);
+  renderProjections(); // Tahmin kartlarını güncelle
+  
   document.getElementById('mainMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün</div></div>
@@ -1429,7 +1492,7 @@ document.getElementById('form').addEventListener('submit',e=>{
   }
   records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
   saveRecords();
-  editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi ve KM güncellendi',true)
+  editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi',true)
 });
 
 function renderWeekly(){

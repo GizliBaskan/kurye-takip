@@ -37,39 +37,51 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased}
 
-#auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
-.auth-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.5rem; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
-.auth-box h2 { font-size: 1.3rem; margin-bottom: 0.3rem; color: var(--text); }
-.auth-box p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; }
-.auth-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.7rem 0.9rem; border-radius: var(--rs); font-size: 16px; margin-bottom: 0.8rem; outline: none; }
+/* YENİLENMİŞ HAVALI GİRİŞ EKRANI */
+#auth-screen { 
+  position: fixed; inset: 0; background: radial-gradient(circle at center, #151d28 0%, #0a0e14 100%); 
+  z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; 
+}
+.auth-box { 
+  background: var(--card); border: 1px solid var(--border2); border-radius: 20px; 
+  padding: 2rem 1.8rem; width: 100%; max-width: 380px; text-align: center; 
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6); position: relative; overflow: hidden; 
+}
+.auth-box::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #34d399);
+}
+.auth-box h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); letter-spacing: -0.02em; }
+.auth-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+.auth-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 0.75rem 1rem; border-radius: var(--rs); font-size: 16px; margin-bottom: 0.9rem; outline: none; transition: border-color 0.2s; }
 .auth-input:focus { border-color: var(--accent); }
-.auth-btn { width: 100%; padding: 0.75rem; border: none; border-radius: var(--rs); font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-bottom: 0.6rem; }
-.auth-login-btn { background: var(--accent); color: #0a0e14; }
+.auth-btn { width: 100%; padding: 0.8rem; border: none; border-radius: var(--rs); font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.9rem; margin-bottom: 0.6rem; }
+.auth-login-btn { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #0a0e14; box-shadow: 0 4px 14px rgba(14,165,233,0.35); }
 .auth-login-btn:hover { filter: brightness(1.1); }
 .auth-reg-btn { background: transparent; border: 1px solid var(--border); color: var(--sec); }
 .auth-reg-btn:hover { background: var(--hover); color: var(--text); }
 #auth-error { color: var(--red); font-size: 0.75rem; margin-top: 0.8rem; display: none; }
 
-/* === HAVALI AÇILIŞ (SPLASH) EKRANI === */
+/* HAVALI AÇILIŞ (SPLASH) EKRANI */
 #splash-screen {
-  position: fixed; inset: 0; background: radial-gradient(circle at center, #111820 0%, #0a0e14 100%);
+  position: fixed; inset: 0; background: radial-gradient(circle at center, #151d28 0%, #0a0e14 100%);
   z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center;
-  padding: 1.5rem; text-align: center; opacity: 0; transition: opacity 0.6s ease;
+  padding: 1.5rem; text-align: center; opacity: 0; transition: opacity 0.8s ease;
 }
 #splash-screen.show { display: flex; opacity: 1; }
 .splash-logo-wrap {
-  width: 80px; height: 80px; background: linear-gradient(135deg, #0ea5e9, #38bdf8);
-  border-radius: 22px; display: grid; place-items: center; font-size: 2.2rem;
-  box-shadow: 0 0 35px rgba(56,189,248,0.4); margin-bottom: 1.5rem;
+  width: 88px; height: 88px; background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  border-radius: 24px; display: grid; place-items: center; font-size: 2.5rem;
+  box-shadow: 0 0 40px rgba(56,189,248,0.45); margin-bottom: 1.5rem;
   animation: pulseLogo 2s infinite ease-in-out;
 }
-@keyframes pulseLogo { 0%, 100% { transform: scale(1); box-shadow: 0 0 25px rgba(56,189,248,0.3); } 50% { transform: scale(1.06); box-shadow: 0 0 45px rgba(56,189,248,0.6); } }
-.splash-title { font-size: 1.7rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.4rem; color: #fff; }
-.splash-subtitle { font-size: 0.850rem; color: var(--muted); margin-bottom: 2rem; }
-.splash-loader { width: 140px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; position: relative; margin-bottom: 2.5rem; }
-.splash-loader-bar { position: absolute; inset: 0; background: var(--accent); width: 40%; border-radius: 2px; animation: loadingSlide 1.2s infinite ease-in-out; }
+@keyframes pulseLogo { 0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(56,189,248,0.35); } 50% { transform: scale(1.07); box-shadow: 0 0 50px rgba(56,189,248,0.65); } }
+.splash-title { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.4rem; color: #fff; }
+.splash-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.2rem; }
+.splash-loader { width: 160px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; position: relative; margin-bottom: 2.5rem; }
+.splash-loader-bar { position: absolute; inset: 0; background: var(--accent); width: 40%; border-radius: 2px; animation: loadingSlide 1.5s infinite ease-in-out; }
 @keyframes loadingSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
-.splash-dev { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); background: var(--accent-dim); padding: 0.4rem 0.9rem; border-radius: 20px; border: 1px solid rgba(56,189,248,0.3); letter-spacing: 0.05em; }
+.splash-dev { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); background: var(--accent-dim); padding: 0.45rem 1rem; border-radius: 20px; border: 1px solid rgba(56,189,248,0.3); letter-spacing: 0.05em; }
 
 .app-container { display: none; min-height: 100vh; }
 .app-container.show { display: flex; }
@@ -209,11 +221,11 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
 <!-- GİRİŞ EKRANI -->
 <div id="auth-screen">
   <div class="auth-box">
-    <div class="logo-i" style="margin: 0 auto 0.8rem;">🏍️</div>
-    <h2>Kurye Takip</h2>
-    <p>Verilerine erişmek için giriş yap</p>
+    <div class="logo-i" style="margin: 0 auto 0.9rem; width: 48px; height: 48px; font-size: 1.4rem;">🏍️</div>
+    <h2>Motokurye OS</h2>
+    <p>Operasyon paneline erişmek için giriş yapın</p>
     <input type="email" id="authEmail" class="auth-input" placeholder="E-posta adresi" required />
-    <input type="password" id="authPassword" class="auth-input" placeholder="Şifre (En az 6 hane)" required />
+    <input type="password" id="authPassword" class="auth-input" placeholder="Şifre" required />
     <button id="btnLogin" class="auth-btn auth-login-btn" type="button">Giriş Yap</button>
     <button id="btnRegister" class="auth-btn auth-reg-btn" type="button">Hesap Oluştur</button>
     <div id="auth-error"></div>
@@ -224,7 +236,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
 <div id="splash-screen">
   <div class="splash-logo-wrap">🏍️</div>
   <div class="splash-title">Motokurye OS</div>
-  <div class="splash-subtitle">Operasyonel Veriler ve Garaj Senkronize Ediliyor...</div>
+  <div class="splash-subtitle">Finansal Veriler, Garaj ve Rotalar Senkronize Ediliyor...</div>
   <div class="splash-loader"><div class="splash-loader-bar"></div></div>
   <div class="splash-dev">developed by @furkann.sb</div>
 </div>
@@ -329,7 +341,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
         <table>
           <thead><tr>
             <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Toplam</th>
-            <th class="num" style="min-width:90px;">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Not</th><th></th>
+            <th class="num" style="min-width:90px;">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Diğer Gider Notu</th><th></th>
           </tr></thead>
           <tbody id="dailyBody"></tbody>
         </table>
@@ -487,12 +499,13 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
       </div>
       <div class="fg"><label>Saf Gelir (₺) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Bonus hariç</span></label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
       <div class="fg">
-        <label>Not</label>
-        <input type="text" id="fNote" placeholder="Opsiyonel"/>
+        <label>Diğer Gider Notu</label>
+        <input type="text" id="fNote" placeholder="Örn: Zincir yağlama, Bakım, Vergi vb."/>
         <div class="quick-tags">
-          <button type="button" class="q-tag" data-tag="Yağmur">🌧️ Yağmur</button>
-          <button type="button" class="q-tag" data-tag="Rüzgar">🌬️ Rüzgar</button>
-          <button type="button" class="q-tag" data-tag="Yemek Molası">🍔 Yemek</button>
+          <button type="button" class="q-tag" data-tag="Bakım">🔧 Bakım</button>
+          <button type="button" class="q-tag" data-tag="Vergi">🏛️ Vergi</button>
+          <button type="button" class="q-tag" data-tag="Ekipman">🪖 Ekipman</button>
+          <button type="button" class="q-tag" data-tag="Ceza">⚠️ Ceza</button>
         </div>
       </div>
       <div class="modal-actions">
@@ -605,14 +618,14 @@ auth.onAuthStateChanged(user => {
     document.getElementById('userEmailDisplay').textContent = user.email;
     authScreen.style.display = 'none';
     
-    // Havalı Açılış (Splash) Ekranını Göster ve Sonra Uygulamaya Geç
+    // Açılış (Splash) Ekranı Süresi Uzatıldı (2.8 Saniye)
     splashScreen.classList.add('show');
     
     load().then(() => {
       setTimeout(() => {
         splashScreen.classList.remove('show');
         appContainer.classList.add('show');
-      }, 1600);
+      }, 2800);
     });
   } else {
     currentUser = null; 

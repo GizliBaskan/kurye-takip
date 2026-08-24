@@ -49,7 +49,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background 0.3s, color 0.3s;}
 
-/* YENİLENMİŞ HAVALI GİRİŞ EKRANI */
+/* GİRİŞ EKRANI */
 #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--card) 0%, var(--bg) 100%); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
 .auth-box { background: var(--card); border: 1px solid var(--border2); border-radius: 20px; padding: 2rem 1.8rem; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
 .auth-box::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #0ea5e9, #38bdf8, #34d399); }
@@ -64,7 +64,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .auth-reg-btn:hover { background: var(--hover); color: var(--text); }
 #auth-error { color: var(--red); font-size: 0.75rem; margin-top: 0.8rem; display: none; }
 
-/* HAVALI AÇILIŞ (SPLASH) EKRANI */
+/* SPLASH EKRANI */
 #splash-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--card) 0%, var(--bg) 100%); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
 #splash-screen.show { display: flex; opacity: 1; }
 .splash-logo-wrap { width: 88px; height: 88px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); border-radius: 24px; display: grid; place-items: center; font-size: 2.5rem; box-shadow: 0 0 30px rgba(56,189,248,0.3); margin-bottom: 1.5rem; animation: pulseLogo 2s infinite ease-in-out; }
@@ -235,7 +235,7 @@ tbody tr:hover{background:var(--hover)}
   </div>
 </div>
 
-<!-- HAVALI AÇILIŞ (SPLASH) EKRANI -->
+<!-- SPLASH EKRANI -->
 <div id="splash-screen">
   <div class="splash-logo-wrap">🏍️</div>
   <div class="splash-title">Motokurye OS</div>
@@ -281,7 +281,6 @@ tbody tr:hover{background:var(--hover)}
   <section class="page active" id="page-dashboard">
     <div class="page-head"><h1>Özet Panel</h1><p>Performans, paket ekonomisi ve trendler</p></div>
     
-    <!-- GÜNLÜK HEDEF (Sabit Görünür) -->
     <div class="insight" style="background: linear-gradient(135deg, var(--card), var(--elev)); border-color: var(--border2); margin-bottom: 1.5rem;">
       <div class="insight-icon g">🏁</div>
       <div style="flex:1;">
@@ -299,7 +298,7 @@ tbody tr:hover{background:var(--hover)}
       </div>
     </div>
 
-    <!-- SEKMELER (TABS) -->
+    <!-- SEKMELER -->
     <div class="dash-tabs">
       <button class="dash-tab-btn active" data-tab="ozet">Temel Özet</button>
       <button class="dash-tab-btn" data-tab="detay">Detaylı Analiz & İçgörüler</button>
@@ -377,7 +376,7 @@ tbody tr:hover{background:var(--hover)}
     </div>
   </section>
   
-  <!-- HAFTALIK ÖZET -->
+  <!-- HAFTALIK ÖZET (SEKMELİ) -->
   <section class="page" id="page-weekly">
     <div class="page-head"><h1>Haftalık Özet</h1></div>
     <div class="period-nav">
@@ -388,32 +387,45 @@ tbody tr:hover{background:var(--hover)}
         <button class="nav-arrow" id="btnWNext"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
     </div>
-    <div id="wContent">
-      <div class="metrics" id="wMetrics"></div>
-      <div class="insights" id="wInsights"></div>
-      <div class="best-grid" id="wBest"></div>
-      <div class="chart-box" style="margin-bottom:1.5rem"><h3>Bu Hafta Mesai Yoğunluğu</h3><div class="chart-area"><canvas id="cWHeatmap"></canvas></div></div>
-      <div class="chart-grid">
-        <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cWDaily"></canvas></div></div>
-        <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cWExpense"></canvas></div></div>
-      </div>
-      <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri</h3><div class="chart-area"><canvas id="cWCategory"></canvas></div></div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab-btn active" data-tab="w-ozet">Özet & Detaylar</button>
+      <button class="dash-tab-btn" data-tab="w-grafik">Grafikler</button>
+      <button class="dash-tab-btn" data-tab="w-gecmis">Geçmiş Haftalar</button>
     </div>
-    <div class="section-divider"><h2>Tüm Haftalar</h2></div>
-    <div class="panel">
-      <div class="table-scroll">
-        <table>
-          <thead><tr>
-            <th>Hafta</th><th>Başlangıç</th><th>Bitiş</th><th class="num">KM</th><th class="num">Gelir</th><th class="num">Yakıt</th><th class="num">Diğer</th>
-            <th class="num">Gider</th><th class="num">Net</th><th class="num">Paket</th><th class="num">₺/paket</th><th class="num">TL/km</th>
-          </tr></thead>
-          <tbody id="weeklyBody"></tbody>
-        </table>
+
+    <div id="wContent">
+      <div id="tab-w-ozet" class="dash-tab-pane active">
+        <div class="metrics" id="wMetrics"></div>
+        <div class="insights" id="wInsights"></div>
+        <div class="best-grid" id="wBest"></div>
+      </div>
+      <div id="tab-w-grafik" class="dash-tab-pane">
+        <div class="chart-box" style="margin-bottom:1.5rem"><h3>Bu Hafta Mesai Yoğunluğu</h3><div class="chart-area"><canvas id="cWHeatmap"></canvas></div></div>
+        <div class="chart-grid">
+          <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cWDaily"></canvas></div></div>
+          <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cWExpense"></canvas></div></div>
+        </div>
+        <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri</h3><div class="chart-area"><canvas id="cWCategory"></canvas></div></div>
+      </div>
+    </div>
+
+    <div id="tab-w-gecmis" class="dash-tab-pane">
+      <div class="panel">
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>Hafta</th><th>Başlangıç</th><th>Bitiş</th><th class="num">KM</th><th class="num">Gelir</th><th class="num">Yakıt</th><th class="num">Diğer</th>
+              <th class="num">Gider</th><th class="num">Net</th><th class="num">Paket</th><th class="num">₺/paket</th><th class="num">TL/km</th>
+            </tr></thead>
+            <tbody id="weeklyBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
   
-  <!-- AYLIK ÖZET -->
+  <!-- AYLIK ÖZET (SEKMELİ) -->
   <section class="page" id="page-monthly">
     <div class="page-head"><h1>Aylık Özet</h1></div>
     <div class="period-nav">
@@ -424,28 +436,41 @@ tbody tr:hover{background:var(--hover)}
         <button class="nav-arrow" id="btnMNext"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
     </div>
-    <div id="mContent">
-      <div class="metrics" id="mMetrics"></div>
-      <div class="insights" id="mInsights"></div>
-      <div class="best-grid" id="mBest"></div>
-      <div class="chart-box" style="margin-bottom:1.5rem"><h3>Bu Ay Mesai Yoğunluğu</h3><div class="chart-area"><canvas id="cMHeatmap"></canvas></div></div>
-      <div class="chart-grid">
-        <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cMDaily"></canvas></div></div>
-        <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cMExpense"></canvas></div></div>
-      </div>
-      <div class="chart-box" style="margin-bottom:1.5rem"><h3>Haftalık Kırılım</h3><div class="chart-area"><canvas id="cMWeekly"></canvas></div></div>
-      <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri</h3><div class="chart-area"><canvas id="cMCategory"></canvas></div></div>
+
+    <div class="dash-tabs">
+      <button class="dash-tab-btn active" data-tab="m-ozet">Özet & Detaylar</button>
+      <button class="dash-tab-btn" data-tab="m-grafik">Grafikler</button>
+      <button class="dash-tab-btn" data-tab="m-gecmis">Geçmiş Aylar</button>
     </div>
-    <div class="section-divider"><h2>Tüm Aylar</h2></div>
-    <div class="panel">
-      <div class="table-scroll">
-        <table>
-          <thead><tr>
-            <th>Ay</th><th class="num">KM</th><th class="num">Gelir</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Gider</th>
-            <th class="num">Net</th><th class="num">Gün Ort.</th><th class="num">Paket</th><th class="num">₺/paket</th><th class="num">TL/km</th><th class="num">km/paket</th>
-          </tr></thead>
-          <tbody id="monthlyBody"></tbody>
-        </table>
+
+    <div id="mContent">
+      <div id="tab-m-ozet" class="dash-tab-pane active">
+        <div class="metrics" id="mMetrics"></div>
+        <div class="insights" id="mInsights"></div>
+        <div class="best-grid" id="mBest"></div>
+      </div>
+      <div id="tab-m-grafik" class="dash-tab-pane">
+        <div class="chart-box" style="margin-bottom:1.5rem"><h3>Bu Ay Mesai Yoğunluğu</h3><div class="chart-area"><canvas id="cMHeatmap"></canvas></div></div>
+        <div class="chart-grid">
+          <div class="chart-box"><h3>Günlük Net Kazanç</h3><div class="chart-area"><canvas id="cMDaily"></canvas></div></div>
+          <div class="chart-box"><h3>Gider Dağılımı</h3><div class="chart-area"><canvas id="cMExpense"></canvas></div></div>
+        </div>
+        <div class="chart-box" style="margin-bottom:1.5rem"><h3>Haftalık Kırılım</h3><div class="chart-area"><canvas id="cMWeekly"></canvas></div></div>
+        <div class="chart-box" style="margin-bottom:1.5rem"><h3>Diğer Gider Kategorileri</h3><div class="chart-area"><canvas id="cMCategory"></canvas></div></div>
+      </div>
+    </div>
+
+    <div id="tab-m-gecmis" class="dash-tab-pane">
+      <div class="panel">
+        <div class="table-scroll">
+          <table>
+            <thead><tr>
+              <th>Ay</th><th class="num">KM</th><th class="num">Gelir</th><th class="num">Yakıt</th><th class="num">Diğer</th><th class="num">Gider</th>
+              <th class="num">Net</th><th class="num">Gün Ort.</th><th class="num">Paket</th><th class="num">₺/paket</th><th class="num">TL/km</th><th class="num">km/paket</th>
+            </tr></thead>
+            <tbody id="monthlyBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
@@ -529,7 +554,7 @@ tbody tr:hover{background:var(--hover)}
   <section class="page" id="page-instructions">
     <div class="page-head"><h1>Talimatlar</h1></div>
     <div class="info-block">
-      <p>Talimat içerikleri ve kullanım ipuçları bu alanda yer alır.</p>
+      <p>Uygulama kullanım talimatları bu alanda yer alır.</p>
     </div>
   </section>
   </main>
@@ -650,22 +675,64 @@ btnThemeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', 'dark');
     btnThemeToggle.textContent = '☀️ Aydınlık Mod';
   }
-  // Re-render active page charts to apply new theme colors
   if(document.getElementById('page-dashboard').classList.contains('active')) renderDash();
   if(document.getElementById('page-weekly').classList.contains('active')) renderWeeklyDetail();
   if(document.getElementById('page-monthly').classList.contains('active')) renderMonthlyDetail();
   if(document.getElementById('page-garage').classList.contains('active')) renderGarage();
 });
 
-// TABS LOGIC
+// GÜNCELLENMİŞ TABS LOGIC (Sayfa Bazlı İzole Sekme Geçişi)
 document.querySelectorAll('.dash-tab-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
-    document.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.dash-tab-pane').forEach(p => p.classList.remove('active'));
+    const parentPage = e.target.closest('.page');
+    parentPage.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
+    parentPage.querySelectorAll('.dash-tab-pane').forEach(p => p.classList.remove('active'));
     e.target.classList.add('active');
-    document.getElementById('tab-' + e.target.dataset.tab).classList.add('active');
+    const targetPane = parentPage.querySelector('#tab-' + e.target.dataset.tab);
+    if(targetPane) targetPane.classList.add('active');
   });
 });
+
+// MOBİL İÇİN SWIPE (KAYDIRMA) DESTEĞİ
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipeGesture();
+}, {passive: true});
+
+function handleSwipeGesture() {
+  const swipeThreshold = 70;
+  const diff = touchEndX - touchStartX;
+  if (Math.abs(diff) < swipeThreshold) return;
+
+  const weeklyPage = document.getElementById('page-weekly');
+  if (weeklyPage && weeklyPage.classList.contains('active')) {
+    if (diff > 0) {
+      const btnPrev = document.getElementById('btnWPrev');
+      if (btnPrev && !btnPrev.disabled) btnPrev.click();
+    } else {
+      const btnNext = document.getElementById('btnWNext');
+      if (btnNext && !btnNext.disabled) btnNext.click();
+    }
+  }
+
+  const monthlyPage = document.getElementById('page-monthly');
+  if (monthlyPage && monthlyPage.classList.contains('active')) {
+    if (diff > 0) {
+      const btnPrev = document.getElementById('btnMPrev');
+      if (btnPrev && !btnPrev.disabled) btnPrev.click();
+    } else {
+      const btnNext = document.getElementById('btnMNext');
+      if (btnNext && !btnNext.disabled) btnNext.click();
+    }
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnLogin = document.getElementById('btnLogin');
@@ -820,6 +887,18 @@ function hourStatsOf(recs){
   return{daysWithHours:withH.length,totalHours,totalMolaDk,avgPerHour:totalNetHoursPos>0?totalNetPos/totalNetHoursPos:null}
 }
 
+// TOPLAM ÇALIŞILAN SAAT KARTI OLUŞTURUCU
+function getWorkingHoursHTML(recs) {
+  const hs = hourStatsOf(recs);
+  return `
+    <div class="metric violet">
+      <div class="metric-label">Toplam Çalışılan Saat</div>
+      <div class="metric-value">${hs.totalHours > 0 ? fmt(hs.totalHours, 1) + ' sa' : '0 sa'}</div>
+      <div class="metric-sub">Net saatlik: ${hs.avgPerHour != null ? fmt(hs.avgPerHour) + ' ₺/sa' : 'Veri yok'}</div>
+    </div>
+  `;
+}
+
 function commitRecords() { records.sort((a,b)=>a.tarih.localeCompare(b.tarih)); updateBonuses(); saveRecords(); }
 function saveRecords() { if(currentUser) db.ref('kullanicilar/' + currentUser.uid + '/kayitlar').set(records).catch(e => toast('Hata: '+e.message, false)); }
 function saveGarage() { if(currentUser) db.ref('kullanicilar/' + currentUser.uid + '/garaj').set(garageData).catch(e => toast('Hata: '+e.message, false)); }
@@ -948,7 +1027,7 @@ function renderWeeklyDetail(){
   nav.style.display='';
   if(wIdx===null)wIdx=weeks.length-1; wIdx=Math.max(0,Math.min(wIdx,weeks.length-1));
   const cur=weeks[wIdx],recs=cur.recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  const t=totalsOf(recs), b=bestOfRecs(recs), hs=hourStatsOf(recs);
+  const t=totalsOf(recs), b=bestOfRecs(recs);
   
   document.getElementById('wNavTitle').innerHTML=`Hafta ${cur.w} <span class="period-badge">${recs.length} gün kayıtlı</span>`;
   document.getElementById('btnWPrev').disabled=wIdx===0; document.getElementById('btnWNext').disabled=wIdx===weeks.length-1;
@@ -960,6 +1039,7 @@ function renderWeeklyDetail(){
   document.getElementById('wMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div></div>
+${getWorkingHoursHTML(recs)}
 <div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${bonusHTML}</div></div>
 <div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
@@ -969,8 +1049,6 @@ function renderWeeklyDetail(){
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div></div></div>
-<div class="insight"><div class="insight-icon a">☕</div><div><h4>Toplam mola süresi</h4><div class="val">${hs.totalMolaDk>0?fmt(hs.totalMolaDk/60,1)+' sa':'Veri yok'}</div></div></div>
 <div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div></div></div>`;
   
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
@@ -1010,7 +1088,7 @@ function renderMonthlyDetail(){
   nav.style.display='';
   if(mIdx===null)mIdx=months.length-1; mIdx=Math.max(0,Math.min(mIdx,months.length-1));
   const cur=months[mIdx],recs=cur.recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  const t=totalsOf(recs), b=bestOfRecs(recs), hs=hourStatsOf(recs);
+  const t=totalsOf(recs), b=bestOfRecs(recs);
   
   document.getElementById('mNavTitle').innerHTML=`${monthLabel(cur.key)} <span class="period-badge">${recs.length} gün kayıtlı</span>`;
   document.getElementById('btnMPrev').disabled=mIdx===0; document.getElementById('btnMNext').disabled=mIdx===months.length-1;
@@ -1022,6 +1100,7 @@ function renderMonthlyDetail(){
   document.getElementById('mMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div></div>
+${getWorkingHoursHTML(recs)}
 <div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${bonusHTML}</div></div>
 <div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
@@ -1031,8 +1110,6 @@ function renderMonthlyDetail(){
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div></div></div>
-<div class="insight"><div class="insight-icon a">☕</div><div><h4>Toplam mola süresi</h4><div class="val">${hs.totalMolaDk>0?fmt(hs.totalMolaDk/60,1)+' sa':'Veri yok'}</div></div></div>
 <div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div></div></div>`;
 
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
@@ -1158,7 +1235,6 @@ function editDailyGoal() {
   }
 }
 
-// THEME AWARE CHART OPTIONS
 function chartOpts(legend=true){
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
   const gridColor = isLight ? 'rgba(203, 213, 225, 0.45)' : 'rgba(30, 42, 58, 0.6)';
@@ -1175,7 +1251,7 @@ function chartOpts(legend=true){
 function destroyChart(key){if(charts[key]){charts[key].destroy();charts[key]=null}}
 
 function renderDash(){
-  const t=totals(),b=bestOf(),hs=hourStatsOf(records); 
+  const t=totals(),b=bestOf(); 
   renderProjections();
   renderDailyGoalWidget();
 
@@ -1184,6 +1260,7 @@ function renderDash(){
   document.getElementById('mainMetrics').innerHTML=`
 <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${t.workDays} çalışma günü</div></div>
 <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">Ort. ${fmt(t.tes/t.workDays,1)} paket/gün</div></div>
+${getWorkingHoursHTML(records)}
 <div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub" style="margin-top:0">${bonusHTML}</div></div>
 <div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">Yakıt: ${fmt(t.yakit)} ₺</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
@@ -1195,8 +1272,6 @@ function renderDash(){
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Maliyet düşüldükten sonra</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Paket başına yakılan yol</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Yakıt maliyeti payı</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">Mola hariç net çalışma süresi</div></div></div>
-<div class="insight"><div class="insight-icon a">☕</div><div><h4>Toplam mola süresi</h4><div class="val">${hs.totalMolaDk>0?fmt(hs.totalMolaDk/60,1)+' sa':'Veri yok'}</div><div class="desc">${hs.totalMolaDk>0&&t.km>0?'Tüm mesai süresinin bir parçası':'Kayıt girilmedi'}</div></div></div>
 <div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div><div class="desc">Litre girilen kayıtlardan</div></div></div>`;
 
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
@@ -1245,28 +1320,25 @@ function renderDaily(){
   sel.innerHTML='<option value="">Tüm aylar</option>'+months.map(m=>`<option value="${m}" ${m===cur?'selected':''}>${monthLabel(m)}</option>`).join('');
   let list=records.map((r,i)=>({...r,_i:i})).filter(r=>{if(month&&!r.tarih.startsWith(month))return false;if(q&&!r.tarih.includes(q)&&!(r.aciklama||'').toLowerCase().includes(q))return false;return true}).sort((a,b)=>a.tarih.localeCompare(b.tarih));
   if(!list.length){tbody.innerHTML='<tr><td colspan="16" class="empty">Kayıt yok</td></tr>';return}
-  let sKm=0,sY=0,sD=0,sG=0,sT=0,sNet=0,sSaat=0,sSaatDays=0;
   tbody.innerHTML=list.map(r=>{
     const c=calc(r);
-    sKm+=r.km||0;sY+=r.yakit||0;sD+=r.diger||0;sG+=c.toplamGelir;sT+=r.teslimat||0;sNet+=c.net;
-    if(r.saat!=null&&!isNaN(r.saat)){sSaat+=+r.saat;sSaatDays++}
     let bonusTag = c.bonus > 0 ? `<div style="font-size:0.65rem; color:var(--accent); margin-top:3px; font-weight:700;">+${fmtInt(c.bonus)} ₺ Bns</div>` : '';
-
-  return`<tr data-i="${r._i}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
-  <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
-  <td class="num" title="${r.molaDk>0?fmt(r.molaDk,0)+' dk mola':'Mola girilmedi'}">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}${r.molaDk>0?`<br><span style="font-size:0.65rem;color:var(--muted)">☕ ${fmt(r.molaDk,0)}dk mola</span>`:''}</td>
-  <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
-  <td class="num fuel-col"><input class="editable" type="number" data-f="yakitLitre" value="${r.yakitLitre||0}" min="0" step="0.01" aria-label="Yakıt litre"/></td>
-  <td class="num computed fuel-col">${c.kmPerLitre!=null?fmt(c.kmPerLitre,1):'—'}</td>
-  <td class="num"><input class="editable" type="number" data-f="diger" value="${r.diger||0}" min="0" step="0.01"/></td>
-  <td class="num computed">${fmt(c.gider)}</td>
-  <td class="num"><input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/>${bonusTag}</td>
-  <td class="num computed ${c.net<0?'neg':'pos'}">${fmt(c.net)}</td>
-  <td class="num"><input class="editable" type="number" data-f="teslimat" value="${r.teslimat||0}" min="0" step="1"/></td>
-  <td class="num computed">${fmt(c.tlkm)}</td>
-  <td class="num computed ${c.perPkg<0?'neg':'pos'}">${fmt(c.perPkg)}</td>
-  <td><input class="editable editable-text" type="text" data-f="aciklama" value="${(r.aciklama||'').replace(/"/g,'&quot;')}"/></td>
-  <td class="actions"><button class="btn btn-ghost btn-sm btn-edit" title="Düzenle" aria-label="${r.tarih} kaydını düzenle">✎</button><button class="btn btn-danger btn-sm btn-del" title="Sil" aria-label="${r.tarih} kaydını sil">✕</button></td></tr>`}).join('');
+    return`<tr data-i="${r._i}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
+    <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
+    <td class="num" title="${r.molaDk>0?fmt(r.molaDk,0)+' dk mola':'Mola girilmedi'}">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}${r.molaDk>0?`<br><span style="font-size:0.65rem;color:var(--muted)">☕ ${fmt(r.molaDk,0)}dk mola</span>`:''}</td>
+    <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
+    <td class="num fuel-col"><input class="editable" type="number" data-f="yakitLitre" value="${r.yakitLitre||0}" min="0" step="0.01" aria-label="Yakıt litre"/></td>
+    <td class="num computed fuel-col">${c.kmPerLitre!=null?fmt(c.kmPerLitre,1):'—'}</td>
+    <td class="num"><input class="editable" type="number" data-f="diger" value="${r.diger||0}" min="0" step="0.01"/></td>
+    <td class="num computed">${fmt(c.gider)}</td>
+    <td class="num"><input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/>${bonusTag}</td>
+    <td class="num computed ${c.net<0?'neg':'pos'}">${fmt(c.net)}</td>
+    <td class="num"><input class="editable" type="number" data-f="teslimat" value="${r.teslimat||0}" min="0" step="1"/></td>
+    <td class="num computed">${fmt(c.tlkm)}</td>
+    <td class="num computed ${c.perPkg<0?'neg':'pos'}">${fmt(c.perPkg)}</td>
+    <td><input class="editable editable-text" type="text" data-f="aciklama" value="${(r.aciklama||'').replace(/"/g,'&quot;')}"/></td>
+    <td class="actions"><button class="btn btn-ghost btn-sm btn-edit" title="Düzenle">✎</button><button class="btn btn-danger btn-sm btn-del" title="Sil">✕</button></td></tr>`
+  }).join('');
   applyFuelColsPreference();
   
   tbody.querySelectorAll('.editable').forEach(inp=>{inp.addEventListener('change',e=>{
@@ -1329,7 +1401,6 @@ let undoStack=[];
 function pushUndo(){undoStack.push(JSON.stringify(records));if(undoStack.length>25)undoStack.shift();}
 document.getElementById('btnUndo').addEventListener('click',() => {if(undoStack.length) { records=JSON.parse(undoStack.pop()); commitRecords(); renderDash(); renderDaily(); toast('Geri alındı',true) }});
 
-// YEDEK & GERİ YÜKLEME
 function downloadBlob(blob, filename){
   const url = URL.createObjectURL(blob); const a = document.createElement('a');
   a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -1384,7 +1455,6 @@ document.getElementById('btnCsv').addEventListener('click', () => {
   downloadBlob(blob, `motokurye-${new Date().toISOString().slice(0,10)}.csv`); toast('CSV indirildi', true);
 });
 
-// GARAJ
 function renderGarage() {
   const av = activeVehicle();
   document.getElementById('vehicleSelect').innerHTML = garageData.vehicles.map(v => `<option value="${v.id}" ${v.id===garageData.activeVehicleId?'selected':''}>${v.model || 'İsimsiz Araç'}</option>`).join('');
@@ -1469,7 +1539,6 @@ window.resetMaint = function(i, currentTotalKm) {
   }
 };
 
-// AYARLAR - BARAJLAR
 let editableTiers = [];
 function renderBonusTiers(){ editableTiers = getBonusTiers().slice().sort((a,b)=>b.p-a.p).map(t=>({...t})); drawTierRows(); }
 function drawTierRows(){

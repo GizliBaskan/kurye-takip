@@ -24,12 +24,21 @@
       "short_name": "Yeni Kayıt",
       "description": "Bugünün kaydını hızlıca ekle",
       "url": "./index.html?action=add",
-      "icons": [
-        {
-          "src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png",
-          "sizes": "512x512"
-        }
-      ]
+      "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Özet Panel",
+      "short_name": "Dashboard",
+      "description": "Performans özetini gör",
+      "url": "./index.html?action=dashboard",
+      "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Garaj & Bakım",
+      "short_name": "Garaj",
+      "description": "Araç bilgilerini yönet",
+      "url": "./index.html?action=garage",
+      "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png", "sizes": "192x192"}]
     }
   ]
 }

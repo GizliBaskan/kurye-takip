@@ -7,10 +7,12 @@
         ".read": "$uid === auth.uid",
         ".write": "$uid === auth.uid",
         "kayitlar": {
-          ".validate": true
+          "$index": {
+            ".validate": "newData.hasChildren(['tarih']) && newData.child('tarih').isString()"
+          }
         },
         "garaj": {
-          ".validate": true
+          ".validate": "newData.hasChildren(['vehicles'])"
         }
       }
     }

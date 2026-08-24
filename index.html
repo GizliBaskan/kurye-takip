@@ -35,7 +35,6 @@
   --mono:'JetBrains Mono',ui-monospace,monospace;
 }
 
-/* AYDINLIK MOD (LIGHT MODE) DEĞİŞKENLERİ */
 :root[data-theme="light"] {
   --bg: #f8fafc; --elev: #ffffff; --card: #ffffff; --hover: #f1f5f9;
   --border: #e2e8f0; --border2: #cbd5e1;
@@ -202,7 +201,6 @@ tbody tr:hover{background:var(--hover)}
 .garage-info-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
 .garage-inputs { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 
-/* Mobil Düzenlemeler */
 @media(max-width:1100px){.metrics, .insights{grid-template-columns:repeat(2,1fr)} .chart-grid{grid-template-columns:1fr}}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);width:min(280px,86vw);box-shadow:8px 0 32px rgba(0,0,0,.25)}
@@ -632,6 +630,8 @@ tbody tr:hover{background:var(--hover)}
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <!-- === JAVASCRIPT === -->
 <script>
 const firebaseConfig = {
@@ -656,7 +656,6 @@ const errorMsg = document.getElementById('auth-error');
 
 function showAuthError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; toast(msg, false); }
 
-// THEME (LIGHT/DARK MODE) LOGIC
 const btnThemeToggle = document.getElementById('btnThemeToggle');
 let isLight = localStorage.getItem('theme') === 'light';
 if (isLight) {
@@ -681,7 +680,6 @@ btnThemeToggle.addEventListener('click', () => {
   if(document.getElementById('page-garage').classList.contains('active')) renderGarage();
 });
 
-// GÜNCELLENMİŞ TABS LOGIC (Sayfa Bazlı İzole Sekme Geçişi)
 document.querySelectorAll('.dash-tab-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
     const parentPage = e.target.closest('.page');
@@ -693,7 +691,6 @@ document.querySelectorAll('.dash-tab-btn').forEach(btn => {
   });
 });
 
-// MOBİL İÇİN SWIPE (KAYDIRMA) DESTEĞİ
 let touchStartX = 0;
 let touchEndX = 0;
 
@@ -887,14 +884,15 @@ function hourStatsOf(recs){
   return{daysWithHours:withH.length,totalHours,totalMolaDk,avgPerHour:totalNetHoursPos>0?totalNetPos/totalNetHoursPos:null}
 }
 
-// TOPLAM ÇALIŞILAN SAAT KARTI OLUŞTURUCU
+// BİRLEŞTİRİLMİŞ ÇALIŞMA VE MOLA SÜRESİ KARTI
 function getWorkingHoursHTML(recs) {
   const hs = hourStatsOf(recs);
+  const molaSaat = hs.totalMolaDk > 0 ? (hs.totalMolaDk / 60).toFixed(1) : '0';
   return `
     <div class="metric violet">
-      <div class="metric-label">Toplam Çalışılan Saat</div>
+      <div class="metric-label">Çalışma & Mola</div>
       <div class="metric-value">${hs.totalHours > 0 ? fmt(hs.totalHours, 1) + ' sa' : '0 sa'}</div>
-      <div class="metric-sub">Net saatlik: ${hs.avgPerHour != null ? fmt(hs.avgPerHour) + ' ₺/sa' : 'Veri yok'}</div>
+      <div class="metric-sub">Toplam Mola: ${fmt(hs.totalMolaDk, 0)} dk (${molaSaat} sa)<br>Net saatlik: ${hs.avgPerHour != null ? fmt(hs.avgPerHour) + ' ₺/sa' : 'Veri yok'}</div>
     </div>
   `;
 }
@@ -1546,7 +1544,7 @@ function drawTierRows(){
   el.innerHTML = editableTiers.map((t,i)=>`<div class="fg-row" style="align-items:end; margin-bottom:0.6rem;"><div class="fg" style="margin-bottom:0;"><label>Eşik</label><input type="number" class="tier-p" data-i="${i}" value="${t.p}" min="0"/></div><div class="fg" style="margin-bottom:0;"><label>Bonus</label><input type="number" class="tier-b" data-i="${i}" value="${t.b}" min="0"/></div><button type="button" class="btn btn-danger btn-sm tier-del" data-i="${i}" style="height:38px;">✕</button></div>`).join('');
   el.querySelectorAll('.tier-p').forEach(inp=>inp.addEventListener('input', e=>{ editableTiers[+e.target.dataset.i].p = parseInt(e.target.value)||0; }));
   el.querySelectorAll('.tier-b').forEach(inp=>inp.addEventListener('input', e=>{ editableTiers[+e.target.dataset.i].b = parseInt(e.target.value)||0; }));
-  el.querySelectorAll('.tier-del').forEach(btn=>btn.addEventListener('click', e=>{ editableTiers.splice(+e.target.closest('.tier-del').dataset.i,1); drawTierRows(); }));
+  el.querySelectorAll('.tier-del').forEach(btn=>btn.click = e=>{ editableTiers.splice(+e.target.closest('.tier-del').dataset.i,1); drawTierRows(); });
 }
 document.getElementById('btnAddTier').addEventListener('click', ()=>{ editableTiers.push({p:0,b:0}); drawTierRows(); });
 document.getElementById('btnResetTiers').addEventListener('click', ()=>{ if(confirm('Varsayılana dön?')){ editableTiers = YS_BONUS_TIERS.map(t=>({...t})); drawTierRows(); } });

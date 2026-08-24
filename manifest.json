@@ -8,8 +8,23 @@
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png",
       "sizes": "512x512",
       "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Yeni Kayıt Ekle",
+      "short_name": "Kayıt Ekle",
+      "description": "Hızlıca yeni günlük çalışma kaydı ekle",
+      "url": "./index.html?action=new",
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/3063/3063822.png", "sizes": "192x192" }]
     }
   ]
 }

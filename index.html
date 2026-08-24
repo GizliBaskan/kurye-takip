@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="theme-color" content="#0a0e14"/>
 <link rel="manifest" href="manifest.json"/>
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3063/3063822.png">
 <title>Motokurye Takip</title>
 
 <!-- === FIREBASE KÜTÜPHANELERİ === -->
@@ -152,6 +152,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .btn-ghost:hover{background:var(--hover);color:var(--text)}
 .btn-danger{background:var(--red-dim);color:var(--red);border:1px solid transparent}
 .table-scroll{max-height:62vh;overflow:auto}
+.table-scroll.hide-fuel-cols .fuel-col{display:none}
 table{width:100%;border-collapse:collapse;font-size:.8125rem}
 thead th{background:var(--elev);padding:.7rem .8rem;text-align:left;font-weight:600;font-size:.68rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:2}
 tbody td{padding:.5rem .8rem;border-bottom:1px solid var(--border);vertical-align:middle}
@@ -260,6 +261,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
       <button class="nav-item" data-page="weekly"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Haftalık Özet</button>
       <button class="nav-item" data-page="monthly"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Aylık Özet</button>
       <button class="nav-item" data-page="garage"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linejoin="round" stroke-linecap="round"></path></svg>Garaj & Bakım</button>
+      <button class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>Ayarlar</button>
       <button class="nav-item" data-page="instructions"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Talimatlar</button>
     </nav>
     <div class="foot">
@@ -336,12 +338,13 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
         <input type="text" id="searchQ" placeholder="Tarih veya not ara…"/>
         <select id="filterMonth"><option value="">Tüm aylar</option></select>
         <button class="btn btn-primary" id="btnAdd">+ Yeni Kayıt</button>
+        <button class="btn btn-ghost" id="btnToggleFuelCols">⛽ Yakıt Detayı</button>
         <button class="btn btn-ghost" id="btnCsv">CSV</button>
       </div>
-      <div class="table-scroll">
+      <div class="table-scroll" id="dailyTableScroll">
         <table>
           <thead><tr>
-            <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num">Litre</th><th class="num">km/L</th><th class="num">Diğer</th><th class="num">Toplam</th>
+            <th>Tarih</th><th>Gün</th><th class="num">KM</th><th class="num">Saat</th><th class="num">Yakıt</th><th class="num fuel-col">Litre</th><th class="num fuel-col">km/L</th><th class="num">Diğer</th><th class="num">Toplam</th>
             <th class="num" style="min-width:90px;">Gelir</th><th class="num">Net</th><th class="num">Paket</th><th class="num">TL/km</th><th class="num">₺/paket</th><th>Diğer Gider Notu</th><th></th>
           </tr></thead>
           <tbody id="dailyBody"></tbody>
@@ -433,12 +436,17 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     <div class="info-block garage-info-flex">
       <div>
         <h3 style="margin-bottom:0.2rem">Araç Bilgisi & Toplam Kilometre</h3>
-        <p style="font-size:0.8rem">Toplam KM, günlük kayıt tablosuna girdiğin kilometrelerin toplamından otomatik hesaplanır.</p>
+        <p style="font-size:0.8rem">Toplam KM, seçili aracın günlük kayıtlarındaki kilometrelerin toplamından otomatik hesaplanır.</p>
       </div>
       <div class="garage-inputs">
+        <select id="vehicleSelect" class="auth-input" style="margin:0; width:170px;" aria-label="Araç seç"></select>
         <input type="text" id="garageModel" class="auth-input" style="margin:0; width:190px;" placeholder="Mondial 125 Drift L" />
         <button class="btn btn-primary" id="btnSaveGarageInfo">Modeli Kaydet</button>
       </div>
+    </div>
+    <div class="toolbar" style="margin-bottom: 1.5rem; background: transparent; border: none; padding: 0; gap:0.6rem; flex-wrap:wrap;">
+      <button class="btn btn-ghost" id="btnAddVehicle">🏍️ Yeni Araç Ekle</button>
+      <button class="btn btn-ghost" id="btnDeleteVehicle" style="color:var(--red);">🗑️ Bu Aracı Sil</button>
     </div>
 
     <div class="metrics" style="margin-bottom: 1.5rem;">
@@ -474,6 +482,27 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     
     <div class="best-grid" id="maintenanceList"></div>
   </section>
+
+  <section class="page" id="page-settings">
+    <div class="page-head">
+      <h1>Ayarlar</h1>
+      <p>Yemeksepeti paket bonus baremlerini kendi güncel verilerinize göre düzenleyin. Değişiklikler tüm geçmiş ve gelecek hesaplamalara anında yansır.</p>
+    </div>
+    <div class="info-block">
+      <h3 style="margin-bottom:0.2rem">Paket Bonus Barajları</h3>
+      <p style="font-size:0.8rem">Her satır bir eşik: haftalık paket sayınız "Paket Eşiği" değerine ulaştığında o satırdaki bonus tutarı uygulanır. Yemeksepeti barajları güncellediğinde buradan siz de güncelleyebilirsiniz.</p>
+    </div>
+    <div class="panel">
+      <div class="toolbar" style="background: transparent; border: none; padding: 1rem 1.1rem 0; gap:0.6rem; flex-wrap:wrap;">
+        <button class="btn btn-primary" id="btnAddTier">+ Yeni Baraj Ekle</button>
+        <button class="btn btn-ghost" id="btnResetTiers">Varsayılana Dön</button>
+      </div>
+      <div id="bonusTiersList" style="padding: 1rem 1.1rem;"></div>
+      <div style="padding: 0 1.1rem 1.1rem;">
+        <button class="btn btn-primary" id="btnSaveTiers">Kaydet</button>
+      </div>
+    </div>
+  </section>
   
   <section class="page" id="page-instructions">
     <div class="page-head"><h1>Talimatlar & PWA Kurulumu</h1></div>
@@ -487,7 +516,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     </div>
     <div class="info-block">
       <h3>Mesai Isı Haritası & Saatler</h3>
-      <p>Kayıt eklerken "Mesai Başlangıç" ve "Bitiş" saatlerini girerseniz sistem hem çalışma saatinizi (Örn: 8.5 saat) otomatik hesaplar hem de hangi saat dilimlerinde yoğun çalıştığınızı grafikle gösterir.</p>
+      <p>Kayıt eklerken "Mesai Başlangıç" ve "Bitiş" saatlerini girerseniz sistem hem çalışma saatinizi (Örn: 8.5 saat) otomatik hesaplar hem de hangi saat dilimlerinde yoğun çalıştığınızı grafikle gösterir. "Mola Süresi (dakika)" alanına yemek/dinlenme molalarınızı girerseniz, saatlik kazanç hesaplaması molayı düşerek gerçek net çalışma sürenizi baz alır; Dashboard, Haftalık ve Aylık sayfalarda toplam mola süreniz de ayrı bir kart olarak gösterilir.</p>
     </div>
     <div class="info-block">
       <h3>Uygulamayı Telefona Kurma (PWA)</h3>
@@ -507,7 +536,15 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     </div>
     <div class="info-block">
       <h3>Bakım Hatırlatma Bildirimleri</h3>
-      <p>Garaj & Bakım sayfasındaki <strong>"Bildirimleri Etkinleştir"</strong> butonuna dokunup tarayıcı izni verirseniz, bir bakım periyoduna 300 km veya daha az kaldığında ya da süresi geçtiğinde tarayıcı bildirimi alırsınız. Bildirimler günde bir kez, bakım başına gönderilir.</p>
+      <p>Garaj & Bakım sayfasındaki <strong>"Bildirimleri Etkinleştir"</strong> butonuna dokunup tarayıcı izni verirseniz, bir bakım periyoduna 300 km veya daha az kaldığında ya da süresi geçtiğinde tarayıcı bildirimi alırsınız. Bildirimler günde bir kez, bakım başına gönderilir. Not: Bu bildirimler yalnızca uygulama açıkken kontrol edilir; tamamen kapalıyken arka planda bildirim gelmez.</p>
+    </div>
+    <div class="info-block">
+      <h3>Çoklu Araç Desteği</h3>
+      <p>Garaj & Bakım sayfasından <strong>"Yeni Araç Ekle"</strong> ile birden fazla motosiklet tanımlayabilirsiniz. Kayıt eklerken (birden fazla aracınız varsa) hangi araca ait olduğunu seçebilir, Garaj sayfasındaki açılır menüden aktif aracı değiştirerek o araca özel toplam km, yakıt verimliliği ve bakım takibini görebilirsiniz.</p>
+    </div>
+    <div class="info-block">
+      <h3>Bonus Barajlarını Düzenleme</h3>
+      <p>Soldaki menüden <strong>Ayarlar</strong> sayfasına giderek Yemeksepeti paket bonus baremlerini kendiniz düzenleyebilir, yeni baraj ekleyebilir veya varsayılan değerlere geri dönebilirsiniz. Platform barajları güncellediğinde kod değişikliği gerekmeden buradan güncelleyebilirsiniz.</p>
     </div>
   </section>
   </main>
@@ -519,6 +556,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
     <h2 id="modalTitle">Yeni Kayıt</h2>
     <form id="form">
       <div class="fg"><label>Tarih</label><input type="date" id="fDate" required/></div>
+      <div class="fg" id="fAracRow" style="display:none"><label>Araç</label><select id="fArac"></select></div>
       <div class="fg-row">
         <div class="fg"><label>KM</label><input type="number" id="fKm" min="0" step="1" value="0"/></div>
         <div class="fg"><label>Paket</label><input type="number" id="fTes" min="0" step="1" value="0"/></div>
@@ -527,6 +565,7 @@ tbody tr:hover{background:rgba(56,189,248,.04)}
         <div class="fg"><label>Mesai Başlangıç</label><input type="time" id="fBaslangic" /></div>
         <div class="fg"><label>Mesai Bitiş</label><input type="time" id="fBitis" /></div>
       </div>
+      <div class="fg"><label>Mola Süresi (dakika) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Opsiyonel — yemek/dinlenme molaları</span></label><input type="number" id="fMolaDk" min="0" step="5" value="0"/></div>
       <div class="fg-row">
         <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" step="0.01" value="0"/></div>
         <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" step="0.01" value="0"/></div>
@@ -682,6 +721,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById('btnLogout').addEventListener('click', () => auth.signOut());
 
+let currentListenerRef = null;
+
 auth.onAuthStateChanged(user => {
   if(user) {
     currentUser = user; 
@@ -690,24 +731,56 @@ auth.onAuthStateChanged(user => {
     
     // Açılış (Splash) Ekranı Süresi Uzatıldı (2.8 Saniye)
     splashScreen.classList.add('show');
-    
-    load().then(() => {
-      setTimeout(() => {
-        splashScreen.classList.remove('show');
-        appContainer.classList.add('show');
-      }, 2800);
-    });
+    const splashStart = Date.now();
+    let firstLoadDone = false;
+
+    currentListenerRef = db.ref('kullanicilar/' + currentUser.uid);
+    currentListenerRef.on('value', snapshot => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        records = data.kayitlar || [];
+        if (!Array.isArray(records)) records = Object.values(records);
+        garageData = data.garaj || { vehicles: [], activeVehicleId: null, dailyGoal: 1500 };
+      } else {
+        records = []; garageData = { vehicles: [], activeVehicleId: null, dailyGoal: 1500 };
+      }
+      migrateGarageData();
+      updateBonuses();
+      renderDash(); renderGarage(); renderDaily();
+      if(document.getElementById('page-weekly').classList.contains('active')) { renderWeekly(); renderWeeklyDetail(); }
+      if(document.getElementById('page-monthly').classList.contains('active')) { renderMonthly(); renderMonthlyDetail(); }
+      if(document.getElementById('page-settings') && document.getElementById('page-settings').classList.contains('active')) renderBonusTiers();
+
+      if(!firstLoadDone) {
+        firstLoadDone = true;
+        const elapsed = Date.now() - splashStart;
+        setTimeout(() => {
+          splashScreen.classList.remove('show');
+          appContainer.classList.add('show');
+          maybeOpenQuickAddFromShortcut();
+        }, Math.max(0, 2800 - elapsed));
+      }
+    }, err => { toast('Bağlantı hatası: ' + err.message, false); });
   } else {
+    if(currentListenerRef) { currentListenerRef.off(); currentListenerRef = null; }
     currentUser = null; 
     splashScreen.classList.remove('show');
     authScreen.style.display = 'flex'; 
     appContainer.classList.remove('show');
-    records = []; garageData = { model: '', bakimlar: [], dailyGoal: 1500 };
+    records = []; garageData = { vehicles: [], activeVehicleId: null, dailyGoal: 1500 };
   }
 });
 
+function maybeOpenQuickAddFromShortcut(){
+  const params = new URLSearchParams(location.search);
+  if(params.get('action') === 'add'){
+    history.replaceState(null, '', location.pathname);
+    setTimeout(() => document.getElementById('btnAdd').click(), 200);
+  }
+}
+
 let records=[], charts={};
-let garageData = { model: '', bakimlar: [], dailyGoal: 1500 };
+let garageData = { vehicles: [], activeVehicleId: null, dailyGoal: 1500 };
 let dateBonusMap = {};
 
 function toast(msg,ok){const el=document.getElementById('toast');if(!el)return;el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),3000)}
@@ -722,7 +795,26 @@ function monthLabel(k){const[y,m]=k.split('-');return MONTHS[+m-1]+' '+y}
 
 // YEMEKSEPETİ BONUS SİSTEMİ
 const YS_BONUS_TIERS = [ {p: 400, b: 7500}, {p: 360, b: 6016}, {p: 325, b: 5208}, {p: 290, b: 4700}, {p: 255, b: 3625}, {p: 220, b: 3183}, {p: 200, b: 2570}, {p: 180, b: 1325}, {p: 160, b: 937} ];
-function getPackageBonus(teslimatSayisi) { for(let i=0; i<YS_BONUS_TIERS.length; i++) { if(teslimatSayisi >= YS_BONUS_TIERS[i].p) return YS_BONUS_TIERS[i].b; } return 0; }
+function getBonusTiers() { return (garageData.bonusTiers && garageData.bonusTiers.length) ? garageData.bonusTiers : YS_BONUS_TIERS; }
+function getPackageBonus(teslimatSayisi) { const tiers = getBonusTiers().slice().sort((a,b)=>b.p-a.p); for(let i=0; i<tiers.length; i++) { if(teslimatSayisi >= tiers[i].p) return tiers[i].b; } return 0; }
+
+// ÇOKLU ARAÇ DESTEĞİ - eski tekil "garaj" verisini yeni "vehicles" dizisine göçürür
+function migrateGarageData() {
+  if(!garageData.vehicles || !garageData.vehicles.length) {
+    garageData.vehicles = [{ id: 'v1', model: garageData.model || '', bakimlar: garageData.bakimlar || [] }];
+    garageData.activeVehicleId = 'v1';
+    delete garageData.model; delete garageData.bakimlar;
+  }
+  if(!garageData.activeVehicleId || !garageData.vehicles.find(v => v.id === garageData.activeVehicleId)) {
+    garageData.activeVehicleId = garageData.vehicles[0].id;
+  }
+  garageData.vehicles.forEach(v => { if(!v.bakimlar) v.bakimlar = []; });
+  if(!garageData.dailyGoal) garageData.dailyGoal = 1500;
+  const firstId = garageData.vehicles[0].id;
+  records.forEach(r => { if(!r.arac) r.arac = firstId; });
+}
+function activeVehicle() { return garageData.vehicles.find(v => v.id === garageData.activeVehicleId) || garageData.vehicles[0]; }
+function vehicleRecords(vid) { const fallback = garageData.vehicles[0].id; return records.filter(r => (r.arac || fallback) === vid); }
 
 function updateBonuses() {
   dateBonusMap = {}; const wMap = {};
@@ -748,16 +840,18 @@ function calc(r){
   const kmPkg = r.teslimat>0 ? r.km/r.teslimat : 0;
   const yakitPkg = r.teslimat>0 ? (r.yakit||0)/r.teslimat : 0;
   const kmPerLitre = (r.yakitLitre>0 && r.km>0) ? r.km/r.yakitLitre : null;
-  return { gider, net, tlkm, perPkg, kmPkg, yakitPkg, bonus, toplamGelir, kmPerLitre };
+  const netSaat = r.saat!=null ? Math.max(0, r.saat - (r.molaDk||0)/60) : null;
+  return { gider, net, tlkm, perPkg, kmPkg, yakitPkg, bonus, toplamGelir, kmPerLitre, netSaat };
 }
 
 function hourStatsOf(recs){
   const withH=recs.filter(r=>r.saat!=null&&!isNaN(r.saat));
   const totalHours=withH.reduce((s,r)=>s+(+r.saat||0),0);
+  const totalMolaDk=withH.reduce((s,r)=>s+(+r.molaDk||0),0);
   const posH=withH.filter(r=>r.saat>0);
-  const totalHoursPos=posH.reduce((s,r)=>s+(+r.saat||0),0);
+  const totalNetHoursPos=posH.reduce((s,r)=>s+calc(r).netSaat,0);
   const totalNetPos=posH.reduce((s,r)=>s+calc(r).net,0);
-  return{daysWithHours:withH.length,totalHours,avgPerHour:totalHoursPos>0?totalNetPos/totalHoursPos:null}
+  return{daysWithHours:withH.length,totalHours,totalMolaDk,avgPerHour:totalNetHoursPos>0?totalNetPos/totalNetHoursPos:null}
 }
 
 function commitRecords() {
@@ -767,25 +861,6 @@ function commitRecords() {
 
 function saveRecords() { if(currentUser) db.ref('kullanicilar/' + currentUser.uid + '/kayitlar').set(records).catch(e => toast('Hata: '+e.message, false)); }
 function saveGarage() { if(currentUser) db.ref('kullanicilar/' + currentUser.uid + '/garaj').set(garageData).catch(e => toast('Hata: '+e.message, false)); }
-
-function load() {
-  if(!currentUser) return Promise.resolve();
-  return db.ref('kullanicilar/' + currentUser.uid).once('value').then(snapshot => {
-    if (snapshot.exists()) {
-      const data = snapshot.val();
-      records = data.kayitlar || [];
-      if (!Array.isArray(records)) records = Object.values(records);
-      garageData = data.garaj || { model: '', bakimlar: [], dailyGoal: 1500 };
-      if(!garageData.bakimlar) garageData.bakimlar = [];
-      if(!garageData.dailyGoal) garageData.dailyGoal = 1500;
-      wIdx = null; mIdx = null;
-      updateBonuses(); renderDash(); renderGarage();
-    } else {
-      records = []; garageData = { model: '', bakimlar: [], dailyGoal: 1500 };
-      renderDash(); renderGarage();
-    }
-  }).catch(e => { toast("Bağlantı hatası", false); });
-}
 
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('show')}
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarBackdrop').classList.add('show')}
@@ -801,6 +876,7 @@ document.querySelectorAll('.nav-item').forEach(btn=>{
     if(btn.dataset.page==='weekly'){renderWeekly();renderWeeklyDetail();}
     if(btn.dataset.page==='monthly'){renderMonthly();renderMonthlyDetail();}
     if(btn.dataset.page==='garage')renderGarage();
+    if(btn.dataset.page==='settings')renderBonusTiers();
   })
 });
 document.getElementById('menuBtn').addEventListener('click',toggleSidebar);
@@ -932,7 +1008,9 @@ function renderWeeklyDetail(){
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div></div></div>`;
+<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div></div></div>
+<div class="insight"><div class="insight-icon a">☕</div><div><h4>Toplam mola süresi</h4><div class="val">${hs.totalMolaDk>0?fmt(hs.totalMolaDk/60,1)+' sa':'Veri yok'}</div></div></div>
+<div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div></div></div>`;
   
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
   document.getElementById('wBest').innerHTML=`
@@ -992,7 +1070,9 @@ function renderMonthlyDetail(){
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div></div></div>`;
+<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div></div></div>
+<div class="insight"><div class="insight-icon a">☕</div><div><h4>Toplam mola süresi</h4><div class="val">${hs.totalMolaDk>0?fmt(hs.totalMolaDk/60,1)+' sa':'Veri yok'}</div></div></div>
+<div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div></div></div>`;
 
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
   document.getElementById('mBest').innerHTML=`
@@ -1146,7 +1226,9 @@ function renderDash(){
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Maliyet düşüldükten sonra</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Paket başına yakılan yol</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Yakıt maliyeti payı</div></div></div>
-<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">Mesai saatlerine göre</div></div></div>`;
+<div class="insight"><div class="insight-icon v">⏱️</div><div><h4>Saatlik ortalama net</h4><div class="val ${hs.avgPerHour!=null?'pos':''}">${hs.avgPerHour!=null?fmt(hs.avgPerHour)+' ₺/sa':'Veri yok'}</div><div class="desc">Mola hariç net çalışma süresine göre</div></div></div>
+<div class="insight"><div class="insight-icon a">☕</div><div><h4>Toplam mola süresi</h4><div class="val">${hs.totalMolaDk>0?fmt(hs.totalMolaDk/60,1)+' sa':'Veri yok'}</div><div class="desc">${hs.totalMolaDk>0&&t.km>0?'Tüm mesai süresinin bir parçası':'Kayıt girilmedi'}</div></div></div>
+<div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div><div class="desc">Litre girilen kayıtlardan</div></div></div>`;
 
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
   document.getElementById('bestDays').innerHTML=`
@@ -1191,6 +1273,7 @@ function chartOpts(legend=true){return{responsive:true,maintainAspectRatio:false
 function destroyChart(key){if(charts[key]){charts[key].destroy();charts[key]=null}}
 
 function renderDaily(){
+  applyFuelColsPreference();
   const q=(document.getElementById('searchQ').value||'').toLowerCase(),month=document.getElementById('filterMonth').value,tbody=document.getElementById('dailyBody');
   const months=[...new Set(records.map(r=>r.tarih.slice(0,7)))].sort();const sel=document.getElementById('filterMonth'),cur=sel.value;
   sel.innerHTML='<option value="">Tüm aylar</option>'+months.map(m=>`<option value="${m}" ${m===cur?'selected':''}>${monthLabel(m)}</option>`).join('');
@@ -1205,10 +1288,10 @@ function renderDaily(){
 
   return`<tr data-i="${r._i}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
   <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
-  <td class="num">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}</td>
+  <td class="num" title="${r.molaDk>0?fmt(r.molaDk,0)+' dk mola':'Mola girilmedi'}">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}${r.molaDk>0?`<br><span style="font-size:0.65rem;color:var(--muted)">☕ ${fmt(r.molaDk,0)}dk mola</span>`:''}</td>
   <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
-  <td class="num"><input class="editable" type="number" data-f="yakitLitre" value="${r.yakitLitre||0}" min="0" step="0.01"/></td>
-  <td class="num computed">${c.kmPerLitre!=null?fmt(c.kmPerLitre,1):'—'}</td>
+  <td class="num fuel-col"><input class="editable" type="number" data-f="yakitLitre" value="${r.yakitLitre||0}" min="0" step="0.01" aria-label="Yakıt litre"/></td>
+  <td class="num computed fuel-col">${c.kmPerLitre!=null?fmt(c.kmPerLitre,1):'—'}</td>
   <td class="num"><input class="editable" type="number" data-f="diger" value="${r.diger||0}" min="0" step="0.01"/></td>
   <td class="num computed">${fmt(c.gider)}</td>
   <td class="num"><input class="editable" type="number" data-f="gelir" value="${r.gelir||0}" min="0" step="0.01"/>${bonusTag}</td>
@@ -1217,7 +1300,8 @@ function renderDaily(){
   <td class="num computed">${fmt(c.tlkm)}</td>
   <td class="num computed ${c.perPkg<0?'neg':'pos'}">${fmt(c.perPkg)}</td>
   <td><input class="editable editable-text" type="text" data-f="aciklama" value="${(r.aciklama||'').replace(/"/g,'&quot;')}"/></td>
-  <td class="actions"><button class="btn btn-ghost btn-sm btn-edit" title="Düzenle">✎</button><button class="btn btn-danger btn-sm btn-del" title="Sil">✕</button></td></tr>`}).join('');
+  <td class="actions"><button class="btn btn-ghost btn-sm btn-edit" title="Düzenle" aria-label="${r.tarih} kaydını düzenle">✎</button><button class="btn btn-danger btn-sm btn-del" title="Sil" aria-label="${r.tarih} kaydını sil">✕</button></td></tr>`}).join('');
+  applyFuelColsPreference();
   
   tbody.querySelectorAll('.editable').forEach(inp=>{inp.addEventListener('change',e=>{
     const tr=e.target.closest('tr'),i=+tr.dataset.i,f=e.target.dataset.f; let v=e.target.value;
@@ -1235,12 +1319,19 @@ document.getElementById('filterMonth').addEventListener('change',renderDaily);
 document.querySelectorAll('.q-tag').forEach(btn=>{ btn.addEventListener('click', e => { const inp = document.getElementById('fNote'); inp.value = inp.value ? inp.value + ' · ' + btn.dataset.tag : btn.dataset.tag; }); });
 
 let editingIndex=null;
+function populateAracSelect(selectedId){
+  const row = document.getElementById('fAracRow'), sel = document.getElementById('fArac');
+  if(!garageData.vehicles || garageData.vehicles.length <= 1){ row.style.display = 'none'; return; }
+  row.style.display = '';
+  sel.innerHTML = garageData.vehicles.map(v => `<option value="${v.id}" ${v.id===selectedId?'selected':''}>${v.model || 'İsimsiz Araç'}</option>`).join('');
+}
+
 document.getElementById('btnAdd').addEventListener('click',()=>{
-  editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';document.getElementById('fDate').value=new Date().toISOString().slice(0,10);['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fBaslangic').value='';document.getElementById('fBitis').value='';document.getElementById('fNote').value='';document.getElementById('overlay').classList.add('show')
+  editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';document.getElementById('fDate').value=new Date().toISOString().slice(0,10);['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes','fMolaDk'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fBaslangic').value='';document.getElementById('fBitis').value='';document.getElementById('fNote').value='';populateAracSelect(garageData.activeVehicleId);document.getElementById('overlay').classList.add('show')
 });
 
 function openEditModal(i){
-  const r=records[i];if(!r)return;editingIndex=i;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fBaslangic').value=r.baslangic||'';document.getElementById('fBitis').value=r.bitis||'';document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fYakitLitre').value=r.yakitLitre||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';document.getElementById('overlay').classList.add('show')
+  const r=records[i];if(!r)return;editingIndex=i;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fBaslangic').value=r.baslangic||'';document.getElementById('fBitis').value=r.bitis||'';document.getElementById('fMolaDk').value=r.molaDk||0;document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fYakitLitre').value=r.yakitLitre||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';populateAracSelect(r.arac||garageData.vehicles[0].id);document.getElementById('overlay').classList.add('show')
 }
 document.getElementById('btnCancel').addEventListener('click',()=>{ editingIndex=null;document.getElementById('overlay').classList.remove('show') });
 
@@ -1254,13 +1345,18 @@ document.getElementById('form').addEventListener('submit',e=>{
     if (end < start) end += 24;
     computedSaat = end - start;
   }
+  const molaDk = parseInt(document.getElementById('fMolaDk').value) || 0;
+  if(computedSaat!=null && molaDk > computedSaat*60){
+    toast('Mola süresi, toplam mesai süresinden uzun olamaz', false); return;
+  }
   
-  const rec={tarih:document.getElementById('fDate').value,km:parseFloat(document.getElementById('fKm').value)||0, baslangic: bas, bitis: bit, saat: computedSaat, yakit:parseFloat(document.getElementById('fYakit').value)||0,yakitLitre:parseFloat(document.getElementById('fYakitLitre').value)||0,diger:parseFloat(document.getElementById('fDiger').value)||0,gelir:parseFloat(document.getElementById('fGelir').value)||0,teslimat:parseInt(document.getElementById('fTes').value)||0,aciklama:document.getElementById('fNote').value.trim()};
+  const arac = (garageData.vehicles.length > 1 && document.getElementById('fArac').value) ? document.getElementById('fArac').value : garageData.activeVehicleId;
+  const rec={tarih:document.getElementById('fDate').value,arac,km:parseFloat(document.getElementById('fKm').value)||0, baslangic: bas, bitis: bit, saat: computedSaat, molaDk, yakit:parseFloat(document.getElementById('fYakit').value)||0,yakitLitre:parseFloat(document.getElementById('fYakitLitre').value)||0,diger:parseFloat(document.getElementById('fDiger').value)||0,gelir:parseFloat(document.getElementById('fGelir').value)||0,teslimat:parseInt(document.getElementById('fTes').value)||0,aciklama:document.getElementById('fNote').value.trim()};
   
   if(editingIndex!==null) { pushUndo(); records[editingIndex]=rec; }
   else {
-    const ex=records.findIndex(r=>r.tarih===rec.tarih);
-    if(ex>=0){if(!confirm(rec.tarih+' mevcut. Üzerine yazılsın mı?'))return;pushUndo();records[ex]=rec}else{pushUndo();records.push(rec)}
+    const ex=records.findIndex(r=>r.tarih===rec.tarih && (r.arac||garageData.vehicles[0].id)===rec.arac);
+    if(ex>=0){if(!confirm(rec.tarih+' için bu araçta zaten bir kayıt var. Üzerine yazılsın mı?'))return;pushUndo();records[ex]=rec}else{pushUndo();records.push(rec)}
   }
   commitRecords(); editingIndex=null;document.getElementById('overlay').classList.remove('show');renderDaily();toast('Kaydedildi',true)
 });
@@ -1279,7 +1375,8 @@ function downloadBlob(blob, filename){
 }
 
 document.getElementById('btnBackup').addEventListener('click', () => {
-  if(!records.length && !(garageData.bakimlar||[]).length) { toast('Yedeklenecek veri yok', false); return; }
+  const hasAnyMaint = (garageData.vehicles||[]).some(v => (v.bakimlar||[]).length > 0);
+  if(!records.length && !hasAnyMaint) { toast('Yedeklenecek veri yok', false); return; }
   const payload = { app: 'Motokurye Takip', exportedAt: new Date().toISOString(), kayitlar: records, garaj: garageData };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   downloadBlob(blob, `motokurye-yedek-${new Date().toISOString().slice(0,10)}.json`);
@@ -1302,9 +1399,8 @@ document.getElementById('fileRestore').addEventListener('change', (e) => {
       if(!confirm(`Yedekte ${importedRecords.length} kayıt bulundu. Mevcut tüm veriler bunun üzerine yazılacak, emin misiniz?`)) return;
       pushUndo();
       records = importedRecords;
-      if(data.garaj) garageData = data.garaj;
-      if(!garageData.bakimlar) garageData.bakimlar = [];
-      if(!garageData.dailyGoal) garageData.dailyGoal = 1500;
+      if(data.garaj) garageData = data.garaj; else garageData = { vehicles: [], activeVehicleId: null, dailyGoal: 1500 };
+      migrateGarageData();
       commitRecords(); saveGarage();
       renderDash(); renderGarage(); renderDaily();
       toast('Yedek başarıyla geri yüklendi', true);
@@ -1318,15 +1414,37 @@ document.getElementById('fileRestore').addEventListener('change', (e) => {
   reader.readAsText(file);
 });
 
+// GÜNLÜK TABLODA YAKIT DETAY SÜTUNLARINI GİZLE/GÖSTER (mobilde daha az kaydırma için)
+function applyFuelColsPreference(){
+  const scroll = document.getElementById('dailyTableScroll');
+  const btn = document.getElementById('btnToggleFuelCols');
+  if(!scroll) return;
+  let hidden = false;
+  try { hidden = localStorage.getItem('kurye_hide_fuel_cols') === '1'; } catch(e) {}
+  scroll.classList.toggle('hide-fuel-cols', hidden);
+  if(btn) btn.textContent = hidden ? '⛽ Yakıt Detayı Göster' : '⛽ Yakıt Detayı Gizle';
+}
+const btnToggleFuelCols = document.getElementById('btnToggleFuelCols');
+if(btnToggleFuelCols){
+  btnToggleFuelCols.addEventListener('click', () => {
+    let hidden = false;
+    try { hidden = localStorage.getItem('kurye_hide_fuel_cols') === '1'; } catch(e) {}
+    try { localStorage.setItem('kurye_hide_fuel_cols', hidden ? '0' : '1'); } catch(e) {}
+    applyFuelColsPreference();
+  });
+}
+
 document.getElementById('btnCsv').addEventListener('click', () => {
   if(!records.length) { toast('Aktarılacak kayıt yok', false); return; }
-  const headers = ['Tarih','Gün','KM','Mesai Başlangıç','Mesai Bitiş','Saat','Yakıt (₺)','Yakıt (Litre)','Diğer (₺)','Toplam Gider (₺)','Gelir (₺)','Bonus (₺)','Net (₺)','Paket','TL/km','₺/paket','Not'];
+  const headers = ['Tarih','Gün','Araç','KM','Mesai Başlangıç','Mesai Bitiş','Toplam Mesai (Saat)','Mola (Dakika)','Net Çalışma (Saat)','Yakıt (₺)','Yakıt (Litre)','Diğer (₺)','Toplam Gider (₺)','Gelir (₺)','Bonus (₺)','Net (₺)','Paket','TL/km','₺/paket','Not'];
   const sorted = records.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
   const rows = sorted.map(r => {
     const c = calc(r);
+    const v = garageData.vehicles.find(v=>v.id===(r.arac||garageData.vehicles[0].id));
     return [
-      r.tarih, dayName(r.tarih), r.km||0, r.baslangic||'', r.bitis||'',
-      r.saat!=null?fmt(r.saat,2):'', fmt(r.yakit||0), fmt(r.yakitLitre||0), fmt(r.diger||0),
+      r.tarih, dayName(r.tarih), (v&&v.model)||'—', r.km||0, r.baslangic||'', r.bitis||'',
+      r.saat!=null?fmt(r.saat,2):'', r.molaDk||0, c.netSaat!=null?fmt(c.netSaat,2):'',
+      fmt(r.yakit||0), fmt(r.yakitLitre||0), fmt(r.diger||0),
       fmt(c.gider), fmt(r.gelir||0), fmt(c.bonus), fmt(c.net), r.teslimat||0,
       fmt(c.tlkm), fmt(c.perPkg), (r.aciklama||'').replace(/;/g,',')
     ];
@@ -1339,32 +1457,41 @@ document.getElementById('btnCsv').addEventListener('click', () => {
 
 // GARAJ VE BAKIM
 function renderGarage() {
-  document.getElementById('garageModel').value = garageData.model || '';
-  let totalKm = 0; records.forEach(r => { totalKm += (+r.km || 0); });
+  const vehicleSelect = document.getElementById('vehicleSelect');
+  if(vehicleSelect){
+    vehicleSelect.innerHTML = garageData.vehicles.map(v => `<option value="${v.id}" ${v.id===garageData.activeVehicleId?'selected':''}>${v.model || 'İsimsiz Araç'}</option>`).join('');
+  }
+  const av = activeVehicle();
+  document.getElementById('garageModel').value = av.model || '';
+  document.getElementById('btnDeleteVehicle').style.display = garageData.vehicles.length > 1 ? '' : 'none';
+
+  const vRecs = vehicleRecords(av.id);
+  let totalKm = 0; vRecs.forEach(r => { totalKm += (+r.km || 0); });
   if(document.getElementById('totalMotorKmVal')) document.getElementById('totalMotorKmVal').textContent = fmtInt(totalKm) + ' km';
 
-  const t = totals();
+  const t = totalsOf(vRecs);
   const effEl = document.getElementById('fuelEfficiencyVal');
   const priceEl = document.getElementById('fuelPriceVal');
   if(effEl) effEl.textContent = t.avgKmPerLitre!=null ? fmt(t.avgKmPerLitre,1) + ' km/L' : 'Veri yok';
   if(priceEl) priceEl.textContent = t.avgFuelPrice!=null ? fmt(t.avgFuelPrice,2) + ' ₺/L' : 'Veri yok';
-  renderFuelEfficiencyChart();
+  renderFuelEfficiencyChart(vRecs);
   updateNotifBtnLabel();
   checkMaintenanceNotifications();
 
   const list = document.getElementById('maintenanceList');
-  if(!garageData.bakimlar || garageData.bakimlar.length === 0) {
+  const bakimlar = av.bakimlar || [];
+  if(!bakimlar.length) {
     list.innerHTML = '<div class="empty-period" style="grid-column: 1/-1"><div class="big-emoji">🔧</div>Henüz bakım kaydı yok</div>'; return;
   }
   
-  list.innerHTML = garageData.bakimlar.map((b, i) => {
+  list.innerHTML = bakimlar.map((b, i) => {
     const remaining = (b.sonKm + b.periyot) - totalKm;
     let statusClass = 'green', statusText = remaining + ' km kaldı';
     if(remaining <= 0) { statusClass = 'red'; statusText = Math.abs(remaining) + ' km GEÇTİ!'; } else if (remaining <= 300) { statusClass = 'amber'; }
     const pct = Math.min(100, Math.max(0, ((totalKm - b.sonKm) / b.periyot) * 100));
     return `<div class="best-card"><div style="display:flex; justify-content:space-between; margin-bottom:0.7rem;">
         <div class="tag" style="margin:0">${b.ad}</div>
-        <div style="display:flex; gap:0.3rem;"><button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="color:var(--green); border-color:transparent;">🔄 Sıfırla</button><button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="color:var(--red); border-color:transparent;">✕ Sil</button></div>
+        <div style="display:flex; gap:0.3rem;"><button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" aria-label="${b.ad} bakımını sıfırla" style="color:var(--green); border-color:transparent;">🔄 Sıfırla</button><button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" aria-label="${b.ad} bakımını sil" style="color:var(--red); border-color:transparent;">✕ Sil</button></div>
       </div>
       <div class="big ${statusClass}" style="font-size:1.3rem; margin-bottom:0.6rem">${statusText}</div>
       <div style="background:var(--elev); height:6px; border-radius:3px; margin-bottom:0.8rem; overflow:hidden;"><div style="background:var(--${statusClass}); height:100%; width:${pct}%"></div></div>
@@ -1373,8 +1500,35 @@ function renderGarage() {
   }).join('');
 }
 
-function renderFuelEfficiencyChart(){
-  const recs = records.filter(r => r.yakitLitre > 0 && r.km > 0).sort((a,b) => a.tarih.localeCompare(b.tarih));
+document.getElementById('vehicleSelect').addEventListener('change', (e) => {
+  garageData.activeVehicleId = e.target.value; saveGarage(); renderGarage();
+});
+
+document.getElementById('btnAddVehicle').addEventListener('click', () => {
+  const name = prompt('Yeni aracın model/adını girin (Örn: Mondial 125 Drift L):', '');
+  if(name === null) return;
+  const id = 'v' + Date.now();
+  garageData.vehicles.push({ id, model: name.trim(), bakimlar: [] });
+  garageData.activeVehicleId = id;
+  saveGarage(); renderGarage();
+  toast('Araç eklendi', true);
+});
+
+document.getElementById('btnDeleteVehicle').addEventListener('click', () => {
+  if(garageData.vehicles.length <= 1) return;
+  const av = activeVehicle();
+  if(!confirm(`"${av.model || 'İsimsiz Araç'}" aracını silmek istediğinize emin misiniz? Bu araca ait geçmiş kayıtlar, kalan ilk araca aktarılacaktır.`)) return;
+  const idx = garageData.vehicles.findIndex(v => v.id === av.id);
+  garageData.vehicles.splice(idx, 1);
+  const fallbackId = garageData.vehicles[0].id;
+  records.forEach(r => { if(r.arac === av.id) r.arac = fallbackId; });
+  garageData.activeVehicleId = fallbackId;
+  commitRecords(); saveGarage(); renderGarage(); renderDaily();
+  toast('Araç silindi, kayıtlar diğer araca aktarıldı', true);
+});
+
+function renderFuelEfficiencyChart(vRecs){
+  const recs = (vRecs||[]).filter(r => r.yakitLitre > 0 && r.km > 0).sort((a,b) => a.tarih.localeCompare(b.tarih));
   destroyChart('fueleff');
   const canvas = document.getElementById('cFuelEff'); if(!canvas) return;
   const box = canvas.closest('.chart-box');
@@ -1416,28 +1570,34 @@ if(btnEnableNotif){
 
 function checkMaintenanceNotifications(){
   if(!('Notification' in window) || Notification.permission !== 'granted') return;
-  if(!garageData.bakimlar || !garageData.bakimlar.length) return;
-  let totalKm = 0; records.forEach(r => { totalKm += (+r.km || 0); });
+  if(!garageData.vehicles || !garageData.vehicles.length) return;
   const today = new Date().toISOString().slice(0,10);
   let notifiedToday = {};
   try { notifiedToday = JSON.parse(localStorage.getItem('kurye_notif_' + today) || '{}'); } catch(e) {}
   let changed = false;
-  garageData.bakimlar.forEach((b, i) => {
-    const remaining = (b.sonKm + b.periyot) - totalKm;
-    const key = b.ad + '_' + i;
-    if(remaining <= 300 && !notifiedToday[key]){
-      const body = remaining <= 0 ? `${b.ad}: ${Math.abs(remaining)} km GEÇTİ! Bakım zamanı geldi.` : `${b.ad}: ${remaining} km kaldı, yaklaşıyor.`;
-      try { new Notification('🔧 Bakım Hatırlatması', { body, icon: 'https://cdn-icons-png.flaticon.com/512/3063/3063822.png' }); } catch(e) {}
-      notifiedToday[key] = true; changed = true;
-    }
+  const multi = garageData.vehicles.length > 1;
+  garageData.vehicles.forEach(v => {
+    if(!v.bakimlar || !v.bakimlar.length) return;
+    let totalKm = 0; vehicleRecords(v.id).forEach(r => { totalKm += (+r.km || 0); });
+    v.bakimlar.forEach((b, i) => {
+      const remaining = (b.sonKm + b.periyot) - totalKm;
+      const key = v.id + '_' + b.ad + '_' + i;
+      if(remaining <= 300 && !notifiedToday[key]){
+        const prefix = multi ? `[${v.model || 'Araç'}] ` : '';
+        const body = remaining <= 0 ? `${prefix}${b.ad}: ${Math.abs(remaining)} km GEÇTİ! Bakım zamanı geldi.` : `${prefix}${b.ad}: ${remaining} km kaldı, yaklaşıyor.`;
+        try { new Notification('🔧 Bakım Hatırlatması', { body, icon: 'https://cdn-icons-png.flaticon.com/512/3063/3063822.png' }); } catch(e) {}
+        notifiedToday[key] = true; changed = true;
+      }
+    });
   });
   if(changed){ try { localStorage.setItem('kurye_notif_' + today, JSON.stringify(notifiedToday)); } catch(e) {} }
 }
 
-document.getElementById('btnSaveGarageInfo').addEventListener('click', () => { garageData.model = document.getElementById('garageModel').value; saveGarage(); toast('Garaj kaydedildi', true); });
+document.getElementById('btnSaveGarageInfo').addEventListener('click', () => { activeVehicle().model = document.getElementById('garageModel').value; saveGarage(); renderGarage(); toast('Garaj kaydedildi', true); });
 
 document.getElementById('btnAddMaintenance').addEventListener('click', () => {
-  let totalKm = 0; records.forEach(r => { totalKm += (+r.km || 0); });
+  const av = activeVehicle();
+  let totalKm = 0; vehicleRecords(av.id).forEach(r => { totalKm += (+r.km || 0); });
   document.getElementById('mName').value = ''; document.getElementById('mLastKm').value = totalKm; document.getElementById('mInterval').value = '';
   document.getElementById('maintenanceOverlay').classList.add('show');
 });
@@ -1448,33 +1608,69 @@ function fillMaintTpl(name, interval) { document.getElementById('mName').value =
 document.getElementById('maintForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const ad = document.getElementById('mName').value, sonKm = parseInt(document.getElementById('mLastKm').value) || 0, periyot = parseInt(document.getElementById('mInterval').value) || 0;
-  if(!garageData.bakimlar) garageData.bakimlar = []; garageData.bakimlar.push({ad, sonKm, periyot}); saveGarage(); renderGarage();
+  const av = activeVehicle();
+  if(!av.bakimlar) av.bakimlar = [];
+  av.bakimlar.push({ad, sonKm, periyot}); saveGarage(); renderGarage();
   document.getElementById('maintenanceOverlay').classList.remove('show'); toast('Bakım eklendi', true);
 });
 
-window.deleteMaint = function(i) { if(confirm('Bu bakım hedefini silmek istediğinize emin misiniz?')) { garageData.bakimlar.splice(i, 1); saveGarage(); renderGarage(); toast('Bakım silindi', true); } };
+window.deleteMaint = function(i) { if(confirm('Bu bakım hedefini silmek istediğinize emin misiniz?')) { activeVehicle().bakimlar.splice(i, 1); saveGarage(); renderGarage(); toast('Bakım silindi', true); } };
 
 window.resetMaint = function(i, currentTotalKm) {
-  const b = garageData.bakimlar[i];
+  const av = activeVehicle();
+  const b = av.bakimlar[i];
   const cost = prompt(`"${b.ad}" bakımı şu anki toplam kilometre (${currentTotalKm} km) üzerinden sıfırlanacak.\n\nBu bakım için ne kadar harcadınız? (Masraf bugünün kayıtlarına 'Diğer' gider olarak eklensin istiyorsanız tutarı girin, aksi halde boş bırakın):`, "");
   
   if (cost !== null) {
-    garageData.bakimlar[i].sonKm = currentTotalKm; saveGarage(); renderGarage();
+    av.bakimlar[i].sonKm = currentTotalKm; saveGarage(); renderGarage();
     
     const cVal = parseFloat(cost.replace(',', '.'));
     if (!isNaN(cVal) && cVal > 0) {
       const today = new Date().toISOString().slice(0,10);
-      let ex = records.find(r => r.tarih === today);
+      let ex = records.find(r => r.tarih === today && (r.arac||garageData.vehicles[0].id) === av.id);
       if (ex) {
         ex.diger = (ex.diger || 0) + cVal;
         ex.aciklama = (ex.aciklama ? ex.aciklama + ' · ' : '') + b.ad + ' Bakımı';
       } else {
-        records.push({ tarih: today, km: 0, saat: null, yakit: 0, diger: cVal, gelir: 0, teslimat: 0, aciklama: b.ad + ' Bakımı' });
+        records.push({ tarih: today, arac: av.id, km: 0, saat: null, molaDk: 0, yakit: 0, yakitLitre: 0, diger: cVal, gelir: 0, teslimat: 0, aciklama: b.ad + ' Bakımı' });
       }
       commitRecords(); toast('Bakım sıfırlandı ve masraf giderlere eklendi!', true);
     } else { toast('Bakım sıfırlandı (Masraf girilmedi)', true); }
   }
 };
+// AYARLAR - BONUS BARAJLARI DÜZENLEME
+let editableTiers = [];
+function renderBonusTiers(){
+  editableTiers = getBonusTiers().slice().sort((a,b)=>b.p-a.p).map(t=>({...t}));
+  drawTierRows();
+}
+function drawTierRows(){
+  const el = document.getElementById('bonusTiersList'); if(!el) return;
+  if(!editableTiers.length){ el.innerHTML = '<div class="empty">Baraj yok, "+ Yeni Baraj Ekle" ile başlayın</div>'; return; }
+  el.innerHTML = editableTiers.map((t,i)=>`
+    <div class="fg-row" style="align-items:end; margin-bottom:0.6rem;">
+      <div class="fg" style="margin-bottom:0;"><label>Paket Eşiği</label><input type="number" class="tier-p" data-i="${i}" value="${t.p}" min="0"/></div>
+      <div class="fg" style="margin-bottom:0;"><label>Bonus (₺)</label><input type="number" class="tier-b" data-i="${i}" value="${t.b}" min="0"/></div>
+      <button type="button" class="btn btn-danger btn-sm tier-del" data-i="${i}" aria-label="Barajı sil" style="height:38px;">✕</button>
+    </div>`).join('');
+  el.querySelectorAll('.tier-p').forEach(inp=>inp.addEventListener('input', e=>{ editableTiers[+e.target.dataset.i].p = parseInt(e.target.value)||0; }));
+  el.querySelectorAll('.tier-b').forEach(inp=>inp.addEventListener('input', e=>{ editableTiers[+e.target.dataset.i].b = parseInt(e.target.value)||0; }));
+  el.querySelectorAll('.tier-del').forEach(btn=>btn.addEventListener('click', e=>{ editableTiers.splice(+e.target.closest('.tier-del').dataset.i,1); drawTierRows(); }));
+}
+document.getElementById('btnAddTier').addEventListener('click', ()=>{ editableTiers.push({p:0,b:0}); drawTierRows(); });
+document.getElementById('btnResetTiers').addEventListener('click', ()=>{
+  if(confirm('Barajlar varsayılan Yemeksepeti değerlerine döndürülsün mü?')){ editableTiers = YS_BONUS_TIERS.map(t=>({...t})); drawTierRows(); }
+});
+document.getElementById('btnSaveTiers').addEventListener('click', ()=>{
+  const cleaned = editableTiers.filter(t=>t.p>0).sort((a,b)=>b.p-a.p);
+  if(!cleaned.length){ toast('En az bir geçerli baraj girmelisiniz', false); return; }
+  garageData.bonusTiers = cleaned; saveGarage();
+  updateBonuses(); renderDash(); renderDaily(); renderGarage();
+  if(document.getElementById('page-weekly').classList.contains('active')) { renderWeekly(); renderWeeklyDetail(); }
+  if(document.getElementById('page-monthly').classList.contains('active')) { renderMonthly(); renderMonthlyDetail(); }
+  editableTiers = cleaned.map(t=>({...t})); drawTierRows();
+  toast('Bonus barajları kaydedildi', true);
+});
 </script>
 </body>
 </html>

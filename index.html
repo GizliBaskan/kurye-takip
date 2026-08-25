@@ -1720,6 +1720,14 @@ window.deleteUserDatabase = function(uid, email) {
     }
 };
 // ------------------------------------
+  // --- SERVICE WORKER KAYDI (APK/offline desteği için) ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('SW kayıtlı:', reg.scope))
+      .catch(err => console.warn('SW kayıt hatası:', err));
+  });
+}
 </script>
 </body>
 </html>

@@ -261,7 +261,7 @@ tbody tr:hover{background:var(--hover)}
       <button class="nav-item" data-page="garage"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linejoin="round" stroke-linecap="round"></path></svg>Garaj & Bakım</button>
       <button class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>Ayarlar</button>
       <button class="nav-item" data-page="instructions"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Talimatlar</button>
-      <!-- ADMIN BUTONU (Sadece admin giriş yapınca JS ile görünür yapılacak) -->
+      <!-- ADMIN BUTONU -->
       <button class="nav-item" data-page="admin" id="navAdmin" style="display:none; color: var(--amber);">
         <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
           <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"/>
@@ -567,7 +567,7 @@ tbody tr:hover{background:var(--hover)}
   <section class="page" id="page-admin">
     <div class="page-head">
       <h1>Admin Paneli</h1>
-      <p>Sistemdeki kullanıcıları yönetin ve veritabanı durumlarını kontrol edin.</p>
+      <p>Sistemdeki tüm kullanıcıları, geçmiş verilerini ve istatistiklerini yönetin.</p>
     </div>
     <div class="panel">
       <div class="table-scroll">
@@ -576,8 +576,9 @@ tbody tr:hover{background:var(--hover)}
             <tr>
               <th>UID</th>
               <th>E-posta</th>
-              <th>Son İşlem Tarihi</th>
-              <th>İşlemler</th>
+              <th>Kayıt Sayısı</th>
+              <th>Son Etkinlik</th>
+              <th style="text-align:right">İşlemler</th>
             </tr>
           </thead>
           <tbody id="adminUsersBody">
@@ -663,6 +664,19 @@ tbody tr:hover{background:var(--hover)}
   </div>
 </div>
 
+<!-- Modal: Admin Kullanıcı İstatistikleri -->
+<div class="overlay" id="adminStatsOverlay">
+  <div class="modal" style="max-width: 540px;">
+    <h2 id="adminStatsTitle" style="margin-bottom: 0.5rem;">İstatistikler</h2>
+    <div id="adminStatsContent" style="margin-bottom: 1.5rem;">
+      Yükleniyor...
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-primary" onclick="document.getElementById('adminStatsOverlay').classList.remove('show')">Kapat</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <!-- === JAVASCRIPT === -->
@@ -727,40 +741,21 @@ document.querySelectorAll('.dash-tab-btn').forEach(btn => {
 let touchStartX = 0;
 let touchEndX = 0;
 
-document.addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
-}, {passive: true});
-
-document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipeGesture();
-}, {passive: true});
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; handleSwipeGesture(); }, {passive: true});
 
 function handleSwipeGesture() {
-  const swipeThreshold = 70;
-  const diff = touchEndX - touchStartX;
+  const swipeThreshold = 70; const diff = touchEndX - touchStartX;
   if (Math.abs(diff) < swipeThreshold) return;
-
   const weeklyPage = document.getElementById('page-weekly');
   if (weeklyPage && weeklyPage.classList.contains('active')) {
-    if (diff > 0) {
-      const btnPrev = document.getElementById('btnWPrev');
-      if (btnPrev && !btnPrev.disabled) btnPrev.click();
-    } else {
-      const btnNext = document.getElementById('btnWNext');
-      if (btnNext && !btnNext.disabled) btnNext.click();
-    }
+    if (diff > 0) { const btnPrev = document.getElementById('btnWPrev'); if (btnPrev && !btnPrev.disabled) btnPrev.click(); } 
+    else { const btnNext = document.getElementById('btnWNext'); if (btnNext && !btnNext.disabled) btnNext.click(); }
   }
-
   const monthlyPage = document.getElementById('page-monthly');
   if (monthlyPage && monthlyPage.classList.contains('active')) {
-    if (diff > 0) {
-      const btnPrev = document.getElementById('btnMPrev');
-      if (btnPrev && !btnPrev.disabled) btnPrev.click();
-    } else {
-      const btnNext = document.getElementById('btnMNext');
-      if (btnNext && !btnNext.disabled) btnNext.click();
-    }
+    if (diff > 0) { const btnPrev = document.getElementById('btnMPrev'); if (btnPrev && !btnPrev.disabled) btnPrev.click(); } 
+    else { const btnNext = document.getElementById('btnMNext'); if (btnNext && !btnNext.disabled) btnNext.click(); }
   }
 }
 
@@ -788,6 +783,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('btnLogout').addEventListener('click', () => auth.signOut());
 
 let currentListenerRef = null;
+let adminUsersState = {};
+let adminDataState = {};
 
 auth.onAuthStateChanged(user => {
   if(user) {
@@ -798,21 +795,24 @@ auth.onAuthStateChanged(user => {
     const splashStart = Date.now();
     let firstLoadDone = false;
 
-    // --- ADMIN KONTROLÜ VE KULLANICI LİSTESİ KAYDI ---
+    // --- ADMIN KONTROLÜ VE LİSTELEME MANTIĞI ---
     const isAdmin = user.email === 'furkansb1040@gmail.com';
     const navAdmin = document.getElementById('navAdmin');
     if (navAdmin) navAdmin.style.display = isAdmin ? 'flex' : 'none';
 
-    db.ref('usersList/' + user.uid).update({
-        email: user.email,
-        lastLogin: new Date().toISOString()
-    });
+    // Aktif kullanıcının bilgisini yazdır
+    db.ref('usersList/' + user.uid).update({ email: user.email, lastLogin: new Date().toISOString() });
 
     if (isAdmin) {
+        // usersList dinle (E-postası bilinen güncel kullanıcılar)
         db.ref('usersList').on('value', snap => {
-            const users = [];
-            snap.forEach(child => { users.push({uid: child.key, ...child.val()}); });
-            renderAdminUsers(users);
+            adminUsersState = snap.val() || {};
+            mergeAndRenderAdmin();
+        });
+        // kullanicilar dizinini dinle (E-postası bilinmeyen ama geçmişte kayıt girmiş tüm UID'ler)
+        db.ref('kullanicilar').on('value', snap => {
+            adminDataState = snap.val() || {};
+            mergeAndRenderAdmin();
         });
     }
     // ----------------------------------------------------------------
@@ -1606,12 +1606,32 @@ document.getElementById('btnSaveTiers').addEventListener('click', ()=>{
 });
 
 // --- ADMIN PANELİ FONKSİYONLARI ---
+function mergeAndRenderAdmin() {
+    const finalUsers = {};
+    
+    // 1. Önce eski/tüm kullanıcıları 'kullanicilar' düğümünden çek (e-posta yok)
+    Object.keys(adminDataState).forEach(uid => {
+        const recs = adminDataState[uid].kayitlar || [];
+        const recsLen = Array.isArray(recs) ? recs.length : Object.keys(recs).length;
+        finalUsers[uid] = { uid: uid, email: 'Bilinmeyen E-posta (Eski Kayıt)', lastLogin: null, recCount: recsLen };
+    });
+
+    // 2. Yeni/Giriş yapmış olanları 'usersList' düğümünden çek (veya üzerine yaz)
+    Object.keys(adminUsersState).forEach(uid => {
+        if (!finalUsers[uid]) finalUsers[uid] = { uid: uid, recCount: 0 };
+        finalUsers[uid].email = adminUsersState[uid].email || finalUsers[uid].email;
+        finalUsers[uid].lastLogin = adminUsersState[uid].lastLogin || finalUsers[uid].lastLogin;
+    });
+
+    renderAdminUsers(Object.values(finalUsers));
+}
+
 function renderAdminUsers(users) {
     const tb = document.getElementById('adminUsersBody');
     if (!tb) return;
     
     if (!users.length) { 
-        tb.innerHTML = '<tr><td colspan="4" class="empty">Kayıtlı kullanıcı bulunamadı.</td></tr>'; 
+        tb.innerHTML = '<tr><td colspan="5" class="empty">Kayıtlı kullanıcı bulunamadı.</td></tr>'; 
         return; 
     }
 
@@ -1621,20 +1641,79 @@ function renderAdminUsers(users) {
         <tr>
             <td><span style="font-family:var(--mono); font-size:0.75rem; color:var(--muted);">${u.uid.slice(0,8)}...</span></td>
             <td style="font-weight:600; color:var(--text);">${u.email}</td>
-            <td><span style="font-size:0.8rem;">${u.lastLogin ? u.lastLogin.replace('T', ' ').slice(0, 16) : 'Bilinmiyor'}</span></td>
-            <td>
-                <button class="btn btn-danger btn-sm" onclick="deleteUserDatabase('${u.uid}', '${u.email}')" title="Kullanıcının tüm veritabanı kayıtlarını kalıcı olarak siler.">
-                    Kayıtlarını Sil
-                </button>
+            <td style="text-align:center;"><span style="background:var(--hover); padding:2px 6px; border-radius:4px; font-size:0.75rem;">${u.recCount || 0} Gün</span></td>
+            <td><span style="font-size:0.8rem;">${u.lastLogin ? u.lastLogin.replace('T', ' ').slice(0, 16) : 'Giriş Yapmadı'}</span></td>
+            <td style="text-align:right;">
+                <button class="btn btn-ghost btn-sm" onclick="viewUserStats('${u.uid}', '${u.email}')" title="İstatistikleri Gör" style="margin-right: 0.3rem;">📊 Gör</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteUserDatabase('${u.uid}', '${u.email}')" title="Kullanıcının tüm verilerini sıfırlar.">Sıfırla</button>
             </td>
         </tr>
     `).join('');
 }
 
+window.viewUserStats = function(uid, email) {
+    document.getElementById('adminStatsTitle').textContent = email + ' - İstatistikler';
+    document.getElementById('adminStatsContent').innerHTML = 'Yükleniyor...';
+    document.getElementById('adminStatsOverlay').classList.add('show');
+    
+    db.ref('kullanicilar/' + uid + '/kayitlar').once('value').then(snap => {
+        let userRecs = snap.val() || [];
+        if(!Array.isArray(userRecs)) userRecs = Object.values(userRecs);
+        
+        if(!userRecs.length) {
+            document.getElementById('adminStatsContent').innerHTML = '<div class="empty">Bu kullanıcının henüz veri kaydı yok.</div>';
+            return;
+        }
+        
+        // Kullanıcıya özel yerel bonus hesabı yapıyoruz
+        const wMap = {}; const localBonusMap = {};
+        userRecs.forEach(r => {
+            const w = weekOf(r.tarih);
+            if(!wMap[w]) wMap[w] = { tes: 0, lastDate: r.tarih };
+            wMap[w].tes += (r.teslimat || 0);
+            if(r.tarih > wMap[w].lastDate) wMap[w].lastDate = r.tarih; 
+        });
+        
+        // Varsayılan YS_BONUS_TIERS veya eğer kullanıcının kendi barajları varsa onu kullanabiliriz (Admin için şimdilik varsayılan üzerinden hesap)
+        for(let w in wMap) {
+            let bns = 0;
+            for(let i=0; i<YS_BONUS_TIERS.length; i++) { 
+                if(wMap[w].tes >= YS_BONUS_TIERS[i].p) { bns = YS_BONUS_TIERS[i].b; break; } 
+            }
+            if(bns > 0) localBonusMap[wMap[w].lastDate] = bns;
+        }
+        
+        let km=0, gelir=0, yakit=0, diger=0, tes=0, net=0, totalBonus=0, hours=0;
+        userRecs.forEach(r => {
+            const b = localBonusMap[r.tarih] || 0;
+            const g = (r.yakit||0) + (r.diger||0);
+            const toGelir = (r.gelir||0) + b;
+            const n = toGelir - g;
+            
+            km += r.km||0; gelir += toGelir; yakit += r.yakit||0; diger += r.diger||0; tes += r.teslimat||0; net += n; totalBonus += b;
+            if(r.saat!=null && !isNaN(r.saat)) hours += (+r.saat || 0);
+        });
+        
+        document.getElementById('adminStatsContent').innerHTML = `
+            <div class="metrics" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+                <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
+                <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(tes)}</div></div>
+                <div class="metric green"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(net)} ₺</div><div class="metric-sub">Bonus Dahil: ${fmtInt(totalBonus)} ₺</div></div>
+                <div class="metric violet"><div class="metric-label">Toplam Çalışma</div><div class="metric-value">${fmt(hours, 1)} sa</div><div class="metric-sub">${userRecs.length} gün kayıtlı</div></div>
+            </div>
+        `;
+    }).catch(err => {
+        document.getElementById('adminStatsContent').innerHTML = '<div class="empty" style="color:var(--red)">Veri çekilemedi: ' + err.message + '</div>';
+    });
+}
+
 window.deleteUserDatabase = function(uid, email) {
-    if(confirm(`DİKKAT: ${email} kullanıcısına ait tüm günlük kayıtlar ve garaj verileri SİLİNECEK.\n\nBu işlem geri alınamaz. Onaylıyor musunuz?`)) {
-        db.ref('kullanicilar/' + uid).remove().then(() => {
-            toast(`${email} kullanıcısının verileri başarıyla temizlendi.`, true);
+    if(confirm(`DİKKAT: ${email} kullanıcısına ait tüm veritabanı kayıtları (Günlük veriler ve garaj) KALICI OLARAK SİLİNECEK.\n\nNot: Google Firebase Kuralları gereği uygulamanın yetkisi sadece verileri silmektir. E-posta/Giriş kaydını tamamen silmek istiyorsanız Firebase Console'dan (Authentication kısmından) manuel olarak silmelisiniz.\n\nKullanıcının VERİLERİ temizlensin mi?`)) {
+        Promise.all([
+            db.ref('kullanicilar/' + uid).remove(),
+            db.ref('usersList/' + uid).remove()
+        ]).then(() => {
+            toast(`Kullanıcı verileri başarıyla temizlendi.`, true);
         }).catch(err => {
             toast('Silme Hatası: ' + err.message, false);
         });

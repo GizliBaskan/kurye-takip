@@ -1,11 +1,10 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
     "kullanicilar": {
+      ".read": "auth != null && auth.token.email === 'furkansb1040@gmail.com'",
       "$uid": {
-        ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid || (auth != null && auth.token.email === 'furkansb1040@gmail.com')",
+        ".write": "$uid === auth.uid || (auth != null && auth.token.email === 'furkansb1040@gmail.com')",
         "kayitlar": {
           "$index": {
             ".validate": "newData.hasChildren(['tarih']) && newData.child('tarih').isString()"
@@ -14,6 +13,12 @@
         "garaj": {
           ".validate": "newData.hasChildren(['vehicles'])"
         }
+      }
+    },
+    "usersList": {
+      ".read": "auth != null && auth.token.email === 'furkansb1040@gmail.com'",
+      "$uid": {
+        ".write": "$uid === auth.uid || (auth != null && auth.token.email === 'furkansb1040@gmail.com')"
       }
     }
   }

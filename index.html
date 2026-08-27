@@ -6,13 +6,15 @@
 <meta name="theme-color" content="#0a0e14"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3063/3063822.png">
-<title>Motokurye Takip</title>
+<title>Kurye Takip v1.0.11</title>
 
 <!-- === FIREBASE KÜTÜPHANELERİ === -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -63,23 +65,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .auth-reg-btn:hover { background: var(--hover); color: var(--text); }
 #auth-error { color: var(--red); font-size: 0.75rem; margin-top: 0.8rem; display: none; }
 
-/* SPLASH EKRANI */
+/* SPLASH EKRANI (Kurye OS Logo ve Geliştirici İmzası) */
 #splash-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--card) 0%, var(--bg) 100%); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
 #splash-screen.show { display: flex; opacity: 1; }
-.splash-logo-wrap { width: 88px; height: 88px; background: linear-gradient(135deg, #0ea5e9, #38bdf8); border-radius: 24px; display: grid; place-items: center; font-size: 2.5rem; box-shadow: 0 0 30px rgba(56,189,248,0.3); margin-bottom: 1.5rem; animation: pulseLogo 2s infinite ease-in-out; }
-@keyframes pulseLogo { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(56,189,248,0.2); } 50% { transform: scale(1.07); box-shadow: 0 0 40px rgba(56,189,248,0.4); } }
+.splash-logo-wrap { width: 130px; height: 130px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 35px rgba(14, 165, 233, 0.45); margin-bottom: 1.5rem; animation: pulseLogo 2s infinite ease-in-out; }
+.splash-logo-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+@keyframes pulseLogo { 0% { transform: scale(1); box-shadow: 0 0 25px rgba(14, 165, 233, 0.3); } 50% { transform: scale(1.04); box-shadow: 0 0 45px rgba(14, 165, 233, 0.6); } 100% { transform: scale(1); box-shadow: 0 0 25px rgba(14, 165, 233, 0.3); } }
 .splash-title { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.4rem; color: var(--text); }
 .splash-subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 2.2rem; }
 .splash-loader { width: 160px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; position: relative; margin-bottom: 2.5rem; }
 .splash-loader-bar { position: absolute; inset: 0; background: var(--accent); width: 40%; border-radius: 2px; animation: loadingSlide 1.5s infinite ease-in-out; }
 @keyframes loadingSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
+.splash-developer-tag { position: absolute; bottom: 2rem; color: var(--text-muted); font-size: 0.78rem; font-family: monospace, sans-serif; letter-spacing: 0.5px; opacity: 0.8; }
+
+/* Auth Ekranı Kurye OS Logo */
+.logo-i { width: 76px; height: 76px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35); margin: 0 auto 0.9rem; }
+.logo-i img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
 .app-container { display: none; min-height: 100vh; }
 .app-container.show { display: flex; }
 .sidebar{width:248px;background:var(--elev);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50;transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .brand{padding:1.4rem 1.35rem 1.2rem;border-bottom:1px solid var(--border); display: flex; justify-content: space-between; align-items: center;}
 .logo{display:flex;align-items:center;gap:.7rem;font-weight:700;font-size:1.05rem;letter-spacing:-.03em}
-.logo-i{width:36px;height:36px;background:linear-gradient(135deg,#0ea5e9,#38bdf8);border-radius:10px;display:grid;place-items:center;font-size:1.1rem;box-shadow:0 4px 12px rgba(14,165,233,.35)}
 .nav{flex:1;padding:.9rem .7rem;display:flex;flex-direction:column;gap:.2rem; overflow-y:auto;}
 .nav-item{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border:none;background:transparent;color:var(--sec);font-size:.875rem;font-weight:500;border-radius:10px;cursor:pointer;transition:all .15s;text-align:left;font-family:inherit;width:100%}
 .nav-item:hover{background:var(--hover);color:var(--text)}
@@ -221,11 +228,20 @@ tbody tr:hover{background:var(--hover)}
 <!-- GİRİŞ EKRANI -->
 <div id="auth-screen">
   <div class="auth-box">
-    <div class="logo-i" style="margin: 0 auto 0.9rem; width: 48px; height: 48px; font-size: 1.4rem;">🏍️</div>
-    <h2>Motokurye OS</h2>
+    <div class="logo-i">
+      <img src="icon.jpg" alt="Kurye OS Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%230ea5e9\'><path d=\'M19,20.5C17.07,20.5 15.5,18.93 15.5,17C15.5,15.07 17.07,13.5 19,13.5C20.93,13.5 22.5,15.07 22.5,17C22.5,18.93 20.93,20.5 19,20.5M19,15A2,2 0 0,0 17,17A2,2 0 0,0 19,19A2,2 0 0,0 21,17A2,2 0 0,0 19,15M5,20.5C3.07,20.5 1.5,18.93 1.5,17C1.5,15.07 3.07,13.5 5,13.5C6.93,13.5 8.5,15.07 8.5,17C8.5,18.93 6.93,20.5 5,20.5M5,15A2,2 0 0,0 3,17A2,2 0 0,0 5,19A2,2 0 0,0 7,17A2,2 0 0,0 5,15M14.8,9.5L16.2,11H19V9H17.2L15.8,7.5C15.4,7.1 14.8,6.8 14.2,6.9L10.3,7.5C9.7,7.6 9.2,8 8.9,8.5L6.5,12.5H9.1L10.6,10L13.2,10.6L11.5,13H15L17.2,10.7L14.8,9.5Z\'/></svg>'">
+    </div>
+    <h2>Motokurye Takip Sistemi</h2>
     <p>Operasyon paneline erişmek için giriş yapın</p>
     <input type="email" id="authEmail" class="auth-input" placeholder="E-posta adresi" required />
     <input type="password" id="authPassword" class="auth-input" placeholder="Şifre" required />
+    
+    <!-- Beni Hatırla Seçeneği -->
+    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; font-size: 0.8rem; color: var(--sec); text-align: left;">
+      <input type="checkbox" id="rememberMeCheckbox" style="accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer;" checked />
+      <label for="rememberMeCheckbox" style="cursor: pointer; user-select: none;">Beni Hatırla (Oturumu Açık Tut)</label>
+    </div>
+
     <button id="btnLogin" class="auth-btn auth-login-btn" type="button">Giriş Yap</button>
     <button id="btnRegister" class="auth-btn auth-reg-btn" type="button">Hesap Oluştur</button>
     <button id="btnForgotPassword" type="button" style="background:none;border:none;color:var(--accent);font-size:0.75rem;cursor:pointer;padding:0.3rem;text-decoration:underline;font-family:inherit;">Şifremi Unuttum</button>
@@ -235,10 +251,13 @@ tbody tr:hover{background:var(--hover)}
 
 <!-- SPLASH EKRANI -->
 <div id="splash-screen">
-  <div class="splash-logo-wrap">🏍️</div>
-  <div class="splash-title">Motokurye OS</div>
+  <div class="splash-logo-wrap">
+    <img src="icon.jpg" alt="Kurye OS Logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%230ea5e9\'><path d=\'M19,20.5C17.07,20.5 15.5,18.93 15.5,17C15.5,15.07 17.07,13.5 19,13.5C20.93,13.5 22.5,15.07 22.5,17C22.5,18.93 20.93,20.5 19,20.5M19,15A2,2 0 0,0 17,17A2,2 0 0,0 19,19A2,2 0 0,0 21,17A2,2 0 0,0 19,15M5,20.5C3.07,20.5 1.5,18.93 1.5,17C1.5,15.07 3.07,13.5 5,13.5C6.93,13.5 8.5,15.07 8.5,17C8.5,18.93 6.93,20.5 5,20.5M5,15A2,2 0 0,0 3,17A2,2 0 0,0 5,19A2,2 0 0,0 7,17A2,2 0 0,0 5,15M14.8,9.5L16.2,11H19V9H17.2L15.8,7.5C15.4,7.1 14.8,6.8 14.2,6.9L10.3,7.5C9.7,7.6 9.2,8 8.9,8.5L6.5,12.5H9.1L10.6,10L13.2,10.6L11.5,13H15L17.2,10.7L14.8,9.5Z\'/></svg>'">
+  </div>
+  <div class="splash-title">Motokurye Takip Sistemi</div>
   <div class="splash-subtitle">Finansal Veriler, Garaj ve Rotalar Senkronize Ediliyor...</div>
   <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  <div class="splash-developer-tag">developed by @furkann.sb</div>
 </div>
 
 <div class="app-container" id="app-container">
@@ -247,7 +266,7 @@ tbody tr:hover{background:var(--hover)}
   
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <div class="logo"><div class="logo-i">🏍️</div><span>Motokurye OS</span></div>
+      <div class="logo"><div class="logo-i" style="width:36px;height:36px;"><img src="icon.jpg" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><span>Motokurye Takip Sistemi</span></div>
     </div>
     <div class="brand" style="padding-top:0; border-bottom:1px solid var(--border); padding-bottom:1rem;">
       <span style="font-size: 0.75rem; color: var(--muted);" id="userEmailDisplay">Kullanıcı</span>
@@ -503,6 +522,25 @@ tbody tr:hover{background:var(--hover)}
       <button class="btn btn-ghost" id="btnDeleteVehicle" style="color:var(--red);">🗑️ Bu Aracı Sil</button>
     </div>
 
+    <!-- YAKIT VERİMLİLİĞİ KARTLARI -->
+    <div class="metrics" style="margin-bottom: 1.5rem; grid-template-columns: repeat(3, 1fr);">
+      <div class="metric green">
+        <div class="metric-label">100 KM'de Yakıt (L)</div>
+        <div class="metric-value" id="fuel100KmVal">0 L</div>
+        <div class="metric-sub">100 kilometrede ortalama tüketim</div>
+      </div>
+      <div class="metric amber">
+        <div class="metric-label">KM Başına Maliyet (TL/km)</div>
+        <div class="metric-value" id="fuelTlKmVal">0 ₺</div>
+        <div class="metric-sub">1 kilometrelik yakıt masrafı</div>
+      </div>
+      <div class="metric cyan">
+        <div class="metric-label">1 Litre ile Yol (km/L)</div>
+        <div class="metric-value" id="fuelKmLVal">0 km</div>
+        <div class="metric-sub">1 litre benzinle gidilen ort. yol</div>
+      </div>
+    </div>
+
     <div class="metrics" style="margin-bottom: 1.5rem;">
       <div class="metric cyan">
         <div class="metric-label">Toplam Motor KM</div>
@@ -587,6 +625,37 @@ tbody tr:hover{background:var(--hover)}
         </table>
       </div>
     </div>
+
+    <!-- GÜNCELLEME YÖNETİMİ PANELİ (OTA) -->
+    <div class="panel" id="updatePanel" style="margin-top:20px;">
+      <h3 style="margin:0 0 4px;">📦 Güncelleme Yönetimi (OTA)</h3>
+      <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">
+        Buradan yayınladığınız web dosyaları (index.html, manifest.json, sw.js vb.), Android Studio'ya veya Play Store'a
+        gerek kalmadan, uygulamayı kullanan herkese bir sonraki açılışta otomatik ulaşır. Yeni bir native
+        özellik (yeni izin, yeni eklenti) eklemiyorsanız bu yeterlidir.
+      </p>
+
+      <div id="updateCurrentInfo" style="background:var(--elev); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:16px; font-size:13px;">
+        Yüklü sürüm bilgisi kontrol ediliyor...
+      </div>
+
+      <div class="fg">
+        <label>Güncellenmiş Dosyaları Seçin (index.html, manifest.json, sw.js)</label>
+        <input type="file" id="updFiles" multiple accept=".html,.json,.js"/>
+      </div>
+      <div class="fg-row">
+        <div class="fg"><label>Yeni Sürüm Numarası</label><input type="text" id="updVersion" placeholder="örn. 1.0.1"/></div>
+        <div class="fg"><label>Yayın Notu (opsiyonel)</label><input type="text" id="updNotes" placeholder="Ne değişti?"/></div>
+      </div>
+      
+      <!-- Yayınla ve Rollback Butonları -->
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <button type="button" id="btnPublishUpdate" class="btn btn-primary" style="flex:1;">🚀 Yayınla</button>
+        <button type="button" id="btnRollback" class="btn btn-danger" style="flex:1;" title="Son güncellemeyi iptal edip bir önceki sürüme döner">↩️ Eski Sürüme Dön</button>
+      </div>
+      
+      <div id="updateStatus" style="margin-top:10px; font-size:13px; color:var(--muted);"></div>
+    </div>
   </section>
 
   </main>
@@ -602,6 +671,31 @@ tbody tr:hover{background:var(--hover)}
       <div class="fg-row">
         <div class="fg"><label>KM</label><input type="number" id="fKm" min="0" step="1" value="0"/></div>
         <div class="fg"><label>Paket</label><input type="number" id="fTes" min="0" step="1" value="0"/></div>
+      </div>
+      <div id="gpsTrackerBox" style="background:var(--elev,#151d28); border:1px solid var(--border,#1e2a3a); border-radius:12px; padding:12px 14px; margin:-6px 0 10px; display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span id="gpsStatusDot" style="width:8px; height:8px; border-radius:50%; background:var(--muted,#94a3b8); display:inline-block;"></span>
+            <span style="font-size:13px; color:var(--muted,#94a3b8);">📡 GPS Sayacı</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button type="button" id="btnGpsToggle" class="btn" style="padding:6px 10px; font-size:13px;">Takibi Başlat</button>
+            <button type="button" id="btnGpsApply" class="btn" style="padding:6px 10px; font-size:13px;">Önizle</button>
+          </div>
+        </div>
+        <div style="display:flex; gap:18px; padding:4px 2px;">
+          <div>
+            <div style="font-size:11px; color:var(--muted,#94a3b8);">Süre</div>
+            <div id="gpsSureLive" style="font-size:20px; font-weight:700; color:var(--text,#f0f4f8); font-variant-numeric:tabular-nums;">00:00:00</div>
+          </div>
+          <div>
+            <div style="font-size:11px; color:var(--muted,#94a3b8);">Mesafe</div>
+            <div id="gpsKmLive" style="font-size:20px; font-weight:700; color:var(--text,#f0f4f8);">0.00 km</div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--muted,#94a3b8); line-height:1.4;">
+          "Takibi Durdur"a bastığınızda ölçülen mesafe otomatik olarak bugünün kaydına eklenir ve kaydedilir. "Önizle" sadece devam eden ölçümü kaydetmeden bu forma yazar.
+        </div>
       </div>
       <div class="fg-row">
         <div class="fg"><label>Mesai Başlangıç</label><input type="time" id="fBaslangic" /></div>
@@ -691,11 +785,6 @@ const firebaseConfig = {
   appId: "1:700959539368:web:a78e6e16b4ec82dcb0429d"
 };
 
-// --- ADMIN KİMLİĞİ (tek yerden yönetilir) ---
-// ADMIN_UID: Firebase Console > Authentication > Users kısmından kendi UID'nizi
-// kopyalayıp buraya yapıştırın. UID kalıcıdır, e-posta değişse bile çalışır.
-// ADMIN_EMAIL: geçiş süresince yedek olarak tutulur; UID'yi doğru girdiğinizden
-// emin olduktan sonra isterseniz aşağıdaki isAdmin satırından kaldırabilirsiniz.
 const ADMIN_UID = "Le21NS0yFfZycqLRyNFRnB2FIDG3";
 const ADMIN_EMAIL = "furkansb1040@gmail.com";
 
@@ -703,6 +792,41 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 let currentUser = null;
+const CURRENT_APP_VERSION = "1.0.11";
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater) {
+    try { await window.Capacitor.Plugins.CapacitorUpdater.notifyAppReady(); } catch(e){ console.log("Updater notify hatası: ", e); }
+  }
+
+  if (typeof firebase !== 'undefined') {
+    firebase.database().ref('appUpdate/latest').once('value').then(async snap => {
+      const updateData = snap.val();
+      
+      if (updateData && updateData.version && updateData.version !== CURRENT_APP_VERSION) {
+        const skippedVersion = localStorage.getItem('skipped_version');
+        if (skippedVersion === updateData.version) return; 
+
+        const isAccepted = confirm(`🎉 Yeni Bir Güncelleme Var! (v${updateData.version})\n\nŞimdi indirilsin mi?`);
+        
+        if (isAccepted && updateData.url) {
+          try {
+            const CapacitorUpdater = window.Capacitor.Plugins.CapacitorUpdater;
+            const downloadResult = await CapacitorUpdater.download({
+              version: updateData.version,
+              url: updateData.url,
+            });
+            await CapacitorUpdater.set({ id: downloadResult.id });
+          } catch (error) {
+            alert("Güncelleme yüklenirken hata oluştu: " + JSON.stringify(error));
+          }
+        } else {
+          localStorage.setItem('skipped_version', updateData.version);
+        }
+      }
+    }).catch(err => console.log("Güncelleme kontrol hatası:", err));
+  }
+});
 
 const authScreen = document.getElementById('auth-screen');
 const splashScreen = document.getElementById('splash-screen');
@@ -770,20 +894,53 @@ function handleSwipeGesture() {
 document.addEventListener('DOMContentLoaded', () => {
   const btnLogin = document.getElementById('btnLogin');
   const btnRegister = document.getElementById('btnRegister');
+  const btnForgotPassword = document.getElementById('btnForgotPassword');
+
   if(btnLogin) {
     btnLogin.addEventListener('click', () => {
-      const e = document.getElementById('authEmail').value.trim(), p = document.getElementById('authPassword').value;
+      const e = document.getElementById('authEmail').value.trim();
+      const p = document.getElementById('authPassword').value;
+      const rememberMe = document.getElementById('rememberMeCheckbox').checked;
+
       if(!e || !p) return showAuthError('Lütfen e-posta ve şifre girin.');
       toast('Giriş yapılıyor...', true);
-      auth.signInWithEmailAndPassword(e, p).catch(err => showAuthError('Giriş Hatası: ' + err.message));
+
+      const persistence = rememberMe 
+        ? firebase.auth.Auth.Persistence.LOCAL 
+        : firebase.auth.Auth.Persistence.SESSION;
+
+      auth.setPersistence(persistence)
+        .then(() => auth.signInWithEmailAndPassword(e, p))
+        .catch(err => showAuthError('Giriş Hatası: ' + err.message));
     });
   }
+
   if(btnRegister) {
     btnRegister.addEventListener('click', () => {
-      const e = document.getElementById('authEmail').value.trim(), p = document.getElementById('authPassword').value;
+      const e = document.getElementById('authEmail').value.trim();
+      const p = document.getElementById('authPassword').value;
       if(!e || !p) return showAuthError('Lütfen e-posta ve şifre girin.');
       toast('Hesap oluşturuluyor...', true);
       auth.createUserWithEmailAndPassword(e, p).catch(err => showAuthError('Kayıt Hatası: ' + err.message));
+    });
+  }
+
+  if(btnForgotPassword) {
+    btnForgotPassword.addEventListener('click', () => {
+      const email = document.getElementById('authEmail').value.trim();
+      if(!email) {
+        showAuthError('Lütfen önce yukarıdaki alana e-posta adresinizi yazın.');
+        return;
+      }
+      toast('Şifre sıfırlama e-postası gönderiliyor...', true);
+      auth.sendPasswordResetEmail(email)
+        .then(() => {
+          alert('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.');
+          toast('E-posta gönderildi', true);
+        })
+        .catch(err => {
+          showAuthError('Şifre Sıfırlama Hatası: ' + err.message);
+        });
     });
   }
 });
@@ -803,27 +960,22 @@ auth.onAuthStateChanged(user => {
     const splashStart = Date.now();
     let firstLoadDone = false;
 
-    // --- ADMIN KONTROLÜ VE LİSTELEME MANTIĞI ---
     const isAdmin = user.uid === ADMIN_UID || user.email === ADMIN_EMAIL;
     const navAdmin = document.getElementById('navAdmin');
     if (navAdmin) navAdmin.style.display = isAdmin ? 'flex' : 'none';
 
-    // Aktif kullanıcının bilgisini yazdır
     db.ref('usersList/' + user.uid).update({ email: user.email, lastLogin: new Date().toISOString() });
 
     if (isAdmin) {
-        // usersList dinle (E-postası bilinen güncel kullanıcılar)
         db.ref('usersList').on('value', snap => {
             adminUsersState = snap.val() || {};
             mergeAndRenderAdmin();
         });
-        // kullanicilar dizinini dinle (E-postası bilinmeyen ama geçmişte kayıt girmiş tüm UID'ler)
         db.ref('kullanicilar').on('value', snap => {
             adminDataState = snap.val() || {};
             mergeAndRenderAdmin();
         });
     }
-    // ----------------------------------------------------------------
 
     currentListenerRef = db.ref('kullanicilar/' + currentUser.uid);
     currentListenerRef.on('value', snapshot => {
@@ -880,8 +1032,7 @@ let garageData = { vehicles: [], activeVehicleId: null, dailyGoal: 1500 };
 let dateBonusMap = {};
 
 function toast(msg,ok){const el=document.getElementById('toast');if(!el)return;el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),3000)}
-// GÜVENLİK: kullanıcı tarafından girilen serbest metinleri (araç adı, bakım adı, e-posta vb.)
-// innerHTML içine basmadan önce HTML olarak yorumlanmasını engellemek için kaçış (escape) fonksiyonu.
+
 function escapeHtml(str){
   if(str==null) return '';
   return String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -1472,7 +1623,7 @@ function downloadBlob(blob, filename){
 
 document.getElementById('btnBackup').addEventListener('click', () => {
   if(!records.length) { toast('Yedeklenecek veri yok', false); return; }
-  const blob = new Blob([JSON.stringify({ app: 'Motokurye OS', exportedAt: new Date().toISOString(), kayitlar: records, garaj: garageData }, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify({ app: 'Motokurye Takip Sistemi', exportedAt: new Date().toISOString(), kayitlar: records, garaj: garageData }, null, 2)], { type: 'application/json' });
   downloadBlob(blob, `motokurye-yedek-${new Date().toISOString().slice(0,10)}.json`);
   toast('Yedek indirildi', true);
 });
@@ -1529,6 +1680,25 @@ function renderGarage() {
   if(document.getElementById('totalMotorKmVal')) document.getElementById('totalMotorKmVal').textContent = fmtInt(totalKm) + ' km';
 
   const t = totalsOf(vRecs);
+  
+  let totalLiters = 0;
+  let totalFuelCost = 0;
+  let totalDrivenKm = 0;
+  
+  vRecs.forEach(r => {
+    totalLiters += Number(r.yakitLitre) || 0;
+    totalFuelCost += Number(r.yakit) || 0;
+    totalDrivenKm += Number(r.km) || 0;
+  });
+
+  const fuel100Km = totalDrivenKm > 0 ? (totalLiters / totalDrivenKm) * 100 : 0;
+  const fuelTlKm = totalDrivenKm > 0 ? totalFuelCost / totalDrivenKm : 0;
+  const fuelKmL = totalLiters > 0 ? totalDrivenKm / totalLiters : 0;
+
+  if(document.getElementById('fuel100KmVal')) document.getElementById('fuel100KmVal').textContent = fuel100Km > 0 ? fmt(fuel100Km, 2) + ' L' : '0 L';
+  if(document.getElementById('fuelTlKmVal')) document.getElementById('fuelTlKmVal').textContent = fuelTlKm > 0 ? fmt(fuelTlKm, 2) + ' ₺' : '0 ₺';
+  if(document.getElementById('fuelKmLVal')) document.getElementById('fuelKmLVal').textContent = fuelKmL > 0 ? fmt(fuelKmL, 2) + ' km' : '0 km';
+
   if(document.getElementById('fuelEfficiencyVal')) document.getElementById('fuelEfficiencyVal').textContent = t.avgKmPerLitre!=null ? fmt(t.avgKmPerLitre,1) + ' km/L' : 'Veri yok';
   if(document.getElementById('fuelPriceVal')) document.getElementById('fuelPriceVal').textContent = t.avgFuelPrice!=null ? fmt(t.avgFuelPrice,2) + ' ₺/L' : 'Veri yok';
   renderFuelEfficiencyChart(vRecs);
@@ -1623,14 +1793,12 @@ document.getElementById('btnSaveTiers').addEventListener('click', ()=>{
 function mergeAndRenderAdmin() {
     const finalUsers = {};
     
-    // 1. Önce eski/tüm kullanıcıları 'kullanicilar' düğümünden çek (e-posta yok)
     Object.keys(adminDataState).forEach(uid => {
         const recs = adminDataState[uid].kayitlar || [];
         const recsLen = Array.isArray(recs) ? recs.length : Object.keys(recs).length;
         finalUsers[uid] = { uid: uid, email: 'Bilinmeyen E-posta (Eski Kayıt)', lastLogin: null, recCount: recsLen };
     });
 
-    // 2. Yeni/Giriş yapmış olanları 'usersList' düğümünden çek (veya üzerine yaz)
     Object.keys(adminUsersState).forEach(uid => {
         if (!finalUsers[uid]) finalUsers[uid] = { uid: uid, recCount: 0 };
         finalUsers[uid].email = adminUsersState[uid].email || finalUsers[uid].email;
@@ -1679,7 +1847,6 @@ window.viewUserStats = function(uid, email) {
             return;
         }
         
-        // Kullanıcıya özel yerel bonus hesabı yapıyoruz
         const wMap = {}; const localBonusMap = {};
         userRecs.forEach(r => {
             const w = weekOf(r.tarih);
@@ -1688,7 +1855,6 @@ window.viewUserStats = function(uid, email) {
             if(r.tarih > wMap[w].lastDate) wMap[w].lastDate = r.tarih; 
         });
         
-        // Varsayılan YS_BONUS_TIERS veya eğer kullanıcının kendi barajları varsa onu kullanabiliriz (Admin için şimdilik varsayılan üzerinden hesap)
         for(let w in wMap) {
             let bns = 0;
             for(let i=0; i<YS_BONUS_TIERS.length; i++) { 
@@ -1722,7 +1888,7 @@ window.viewUserStats = function(uid, email) {
 }
 
 window.deleteUserDatabase = function(uid, email) {
-    if(confirm(`DİKKAT: ${email} kullanıcısına ait tüm veritabanı kayıtları (Günlük veriler ve garaj) KALICI OLARAK SİLİNECEK.\n\nNot: Google Firebase Kuralları gereği uygulamanın yetkisi sadece verileri silmektir. E-posta/Giriş kaydını tamamen silmek istiyorsanız Firebase Console'dan (Authentication kısmından) manuel olarak silmelisiniz.\n\nKullanıcının VERİLERİ temizlensin mi?`)) {
+    if(confirm(`DİKKAT: ${email} kullanıcısına ait tüm veritabanı kayıtları KALICI OLARAK SİLİNECEK.\n\nKullanıcının VERİLERİ temizlensin mi?`)) {
         Promise.all([
             db.ref('kullanicilar/' + uid).remove(),
             db.ref('usersList/' + uid).remove()
@@ -1733,7 +1899,410 @@ window.deleteUserDatabase = function(uid, email) {
         });
     }
 };
-// ------------------------------------
+</script>
+
+<!-- GPS Sayacı: Kalıcı Bildirim (native kronometre) ve Canlı KM Entegrasyonu -->
+<script>
+(function (global) {
+  let watchId = null;
+  let session = {
+    totalKm: 0,
+    lastLat: null,
+    lastLon: null,
+    startTime: null
+  };
+
+  const MIN_ACCURACY_METERS = 30;
+  const MAX_JUMP_KM = 0.6;
+
+  function haversineKm(lat1, lon1, lat2, lon2) {
+    const R = 6371; 
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+
+  function loadSession() {
+    const saved = localStorage.getItem('kurye_gps_session');
+    if (saved) {
+      try { session = JSON.parse(saved); } catch(e) {}
+    }
+  }
+
+  function saveSession(s) {
+    localStorage.setItem('kurye_gps_session', JSON.stringify(s));
+  }
+
+  function notify() {
+    if (typeof global.onTrackerUpdate === 'function') {
+      global.onTrackerUpdate(session);
+    }
+  }
+
+  function getBgGeo() {
+    return global.BackgroundGeolocation || (global.Capacitor && global.Capacitor.Plugins && global.Capacitor.Plugins.BackgroundGeolocation);
+  }
+
+  const BackgroundTracker = {
+    start: async function() {
+      loadSession();
+      if (!session.startTime) session.startTime = Date.now();
+
+      const bgGeo = getBgGeo();
+
+      if (bgGeo) {
+        try {
+          watchId = await bgGeo.addWatcher({
+            backgroundMessage: `Mesafe: ${(session.totalKm || 0).toFixed(2)} km`,
+            backgroundTitle: "Kurye OS Takip Aktif",
+            requestPermissions: true,
+            stale: false,
+            distanceFilter: 10
+          }, (location, error) => {
+            if (error) {
+              console.warn("KuryeGPS konum hatası:", error);
+              if (error.code === "NOT_AUTHORIZED") {
+                BackgroundTracker.stop();
+              }
+              return;
+            }
+            if (!location) return;
+
+            if (location.accuracy && location.accuracy > MIN_ACCURACY_METERS) return;
+            if (location.speed !== null && location.speed !== undefined && location.speed < 1.0) return;
+
+            let mesafeDegisti = false;
+            if (session.lastLat != null && session.lastLon != null) {
+              const deltaKm = haversineKm(session.lastLat, session.lastLon, location.latitude, location.longitude);
+              if (deltaKm > 0.01 && deltaKm <= MAX_JUMP_KM) {
+                session.totalKm += deltaKm;
+                mesafeDegisti = true;
+              }
+            }
+
+            session.lastLat = location.latitude;
+            session.lastLon = location.longitude;
+            saveSession(session);
+            notify();
+
+            if (mesafeDegisti) {
+              bgGeo.updateWatcher({
+                backgroundTitle: "Kurye OS Takip Aktif",
+                backgroundMessage: `Mesafe: ${session.totalKm.toFixed(2)} km`
+              }).catch((err) => console.warn("Bildirim güncellenemedi:", err));
+            }
+          });
+        } catch (e) {
+          console.error("BackgroundGeolocation başlatılamadı:", e);
+        }
+      } else {
+        console.warn("Native BackgroundGeolocation eklentisi bulunamadı!");
+      }
+    },
+    
+    stop: async function() {
+      const bgGeo = getBgGeo();
+      if (bgGeo && watchId) {
+        await bgGeo.removeWatcher({ id: watchId });
+        watchId = null;
+      }
+    },
+    
+    getSession: function() {
+      loadSession();
+      return session;
+    },
+    
+    resetSession: function() {
+      session = { totalKm: 0, lastLat: null, lastLon: null, startTime: Date.now() };
+      saveSession(session);
+      notify();
+    }
+  };
+
+  global.BackgroundTracker = BackgroundTracker;
+})(window);
+
+(function () {
+  function initGpsWidget() {
+    const btnToggle = document.getElementById('btnGpsToggle');
+    const btnApply = document.getElementById('btnGpsApply');
+    const liveLabel = document.getElementById('gpsKmLive');
+    const sureLabel = document.getElementById('gpsSureLive');
+    const statusDot = document.getElementById('gpsStatusDot');
+    const fKm = document.getElementById('fKm');
+
+    if (!btnToggle) return;
+
+    let isTracking = false;
+    let uiTickInterval = null;
+
+    function formatElapsed(startTime) {
+      if (!startTime) return '00:00:00';
+      const diffSec = Math.max(0, Math.floor((Date.now() - startTime) / 1000));
+      const h = String(Math.floor(diffSec / 3600)).padStart(2, '0');
+      const m = String(Math.floor((diffSec % 3600) / 60)).padStart(2, '0');
+      const s = String(diffSec % 60).padStart(2, '0');
+      return h + ':' + m + ':' + s;
+    }
+
+    function setTrackingVisual(active) {
+      if (statusDot) statusDot.style.background = active ? 'var(--green,#22c55e)' : 'var(--muted,#94a3b8)';
+      if (statusDot) statusDot.style.boxShadow = active ? '0 0 6px var(--green,#22c55e)' : 'none';
+      btnToggle.textContent = active ? 'Takibi Durdur' : 'Takibi Başlat';
+    }
+
+    function startUiTicker() {
+      if (uiTickInterval) clearInterval(uiTickInterval);
+      uiTickInterval = setInterval(() => {
+        const s = window.BackgroundTracker ? window.BackgroundTracker.getSession() : null;
+        if (sureLabel && s) sureLabel.textContent = formatElapsed(s.startTime);
+      }, 1000);
+    }
+
+    function stopUiTicker() {
+      if (uiTickInterval) {
+        clearInterval(uiTickInterval);
+        uiTickInterval = null;
+      }
+    }
+
+    window.onTrackerUpdate = function (session) {
+      if (liveLabel) {
+        liveLabel.textContent = (session.totalKm || 0).toFixed(2) + ' km';
+      }
+      if (sureLabel) {
+        sureLabel.textContent = formatElapsed(session.startTime);
+      }
+    };
+
+    btnToggle.addEventListener('click', async function () {
+      const tracker = window.BackgroundTracker;
+
+      if (!tracker) {
+        toast('GPS eklentisi başlatılamadı.', false);
+        return;
+      }
+
+      try {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Permissions) {
+          try {
+            await window.Capacitor.Plugins.Permissions.requestPermission({ name: 'location' });
+          } catch(e) {}
+        }
+
+        if (isTracking) {
+          await tracker.stop();
+          isTracking = false;
+          stopUiTicker();
+          setTrackingVisual(false);
+
+          const session = tracker.getSession();
+          const sessionKm = session ? (session.totalKm || 0) : 0;
+
+          if (sessionKm > 0.01) {
+            addGpsKmToTodayRecord(sessionKm);
+            tracker.resetSession();
+            if (sureLabel) sureLabel.textContent = '00:00:00';
+          } else {
+            toast('GPS takibi durduruldu (mesafe çok az, kayda eklenmedi).', true);
+          }
+        } else {
+          const bgGeo = window.BackgroundGeolocation || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation);
+          if (!bgGeo) {
+             toast('APK içinde BackgroundGeolocation eklentisi bulunamadı!', false);
+             return;
+          }
+
+          await tracker.start();
+          isTracking = true;
+          setTrackingVisual(true);
+          startUiTicker();
+          toast('GPS takibi başladı. Bildirimden ve uygulama içinden takip edebilirsiniz.', true);
+        }
+      } catch (e) {
+        toast('GPS başlatılamadı: Lütfen ayarlardan konum izni verin.', false);
+      }
+    });
+
+    function addGpsKmToTodayRecord(sessionKm) {
+      const today = new Date().toISOString().slice(0, 10);
+      const arac = garageData.activeVehicleId;
+      const idx = records.findIndex(r => r.tarih === today && (r.arac || garageData.vehicles[0].id) === arac);
+
+      pushUndo();
+      let yeniToplam = (idx >= 0 ? (parseFloat(records[idx].km) || 0) : 0) + sessionKm;
+
+      if (yeniToplam > 5000) yeniToplam = 5000;
+
+      if (idx >= 0) {
+        records[idx].km = yeniToplam;
+      } else {
+        records.push({
+          tarih: today, arac, km: yeniToplam, saat: null, molaDk: 0,
+          yakit: 0, yakitLitre: 0, diger: 0, gelir: 0, teslimat: 0,
+          aciklama: 'GPS ile otomatik eklendi'
+        });
+      }
+      commitRecords();
+      renderDaily();
+      if (typeof renderDash === 'function' && document.getElementById('page-dashboard') && document.getElementById('page-dashboard').classList.contains('active')) renderDash();
+
+      if (fKm && document.getElementById('fDate') && document.getElementById('fDate').value === today) {
+        fKm.value = Math.round(yeniToplam);
+      }
+
+      toast(sessionKm.toFixed(2) + ' km eklendi. Toplam: ' + yeniToplam.toFixed(2) + ' km', true);
+    }
+
+    btnApply.addEventListener('click', function () {
+      const tracker = window.BackgroundTracker;
+      if (!tracker) {
+        toast('Önizleme yapılamadı: GPS eklentisi aktif değil.', false);
+        return;
+      }
+
+      const session = tracker.getSession();
+      if (fKm && session) {
+        fKm.value = Math.round(session.totalKm || 0);
+        toast('Önizleme mesafesi forma yazıldı.', true);
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGpsWidget);
+  } else {
+    initGpsWidget();
+  }
+})();
+</script>
+
+<!-- GÜNCELLEME YÖNETİMİ (OTA) VE ROLLBACK -->
+<script>
+(function () {
+  function initUpdatePanel() {
+    const btnPublish = document.getElementById('btnPublishUpdate');
+    const btnRollback = document.getElementById('btnRollback');
+    const fileInput = document.getElementById('updFiles');
+    const versionInput = document.getElementById('updVersion');
+    const notesInput = document.getElementById('updNotes');
+    const statusEl = document.getElementById('updateStatus');
+    const currentInfoEl = document.getElementById('updateCurrentInfo');
+    if (!btnPublish) return;
+
+    async function refreshCurrentInfo() {
+      let deviceVersion = 'sadece tarayıcıda test ediliyor (native değil)';
+      if (window.KuryeUpdater) {
+        deviceVersion = await window.KuryeUpdater.getCurrentVersion();
+      }
+      firebase.database().ref('appUpdate/latest').once('value').then(snap => {
+        const data = snap.val();
+        const serverInfo = data
+          ? `Son yayınlanan: <strong>v${escapeHtml(data.version)}</strong> (${escapeHtml(data.publishedAt || '')})<br/>Not: ${escapeHtml(data.notes || '—')}`
+          : 'Henüz hiç OTA güncellemesi yayınlanmamış.';
+        currentInfoEl.innerHTML =
+          `Bu cihazdaki sürüm: <strong>${escapeHtml(deviceVersion)}</strong><br/>${serverInfo}`;
+      }).catch(() => {
+        currentInfoEl.textContent = 'Sunucu bilgisi okunamadı.';
+      });
+    }
+    refreshCurrentInfo();
+
+    btnPublish.addEventListener('click', async function () {
+      const files = fileInput.files;
+      const version = versionInput.value.trim();
+      const notes = notesInput.value.trim();
+
+      if (!files || files.length === 0) { toast('Lütfen en az bir dosya seçin.', false); return; }
+      if (!version || !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(version)) { toast('Sürüm numarasını "1.0.1" formatında girin.', false); return; }
+
+      btnPublish.disabled = true;
+      statusEl.textContent = 'Dosyalar paketleniyor...';
+
+      try {
+        const zip = new JSZip();
+        for (const file of files) {
+          const content = await file.arrayBuffer();
+          zip.file(file.name, content);
+        }
+        const zipBlob = await zip.generateAsync({ type: 'blob' }, (meta) => {
+          statusEl.textContent = 'Paketleniyor... %' + Math.round(meta.percent);
+        });
+
+        statusEl.textContent = 'Firebase Storage\'a yükleniyor...';
+        const storageRef = firebase.storage().ref('app-updates/v' + version + '.zip');
+        const uploadTask = storageRef.put(zipBlob, { contentType: 'application/zip' });
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on('state_changed', (snap) => {
+            const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+            statusEl.textContent = 'Yükleniyor... %' + pct;
+          }, reject, resolve);
+        });
+
+        const downloadUrl = await storageRef.getDownloadURL();
+
+        statusEl.textContent = 'Sürüm bilgisi yayınlanıyor...';
+        const snap = await firebase.database().ref('appUpdate/latest').once('value');
+        const currentLatest = snap.val();
+        if (currentLatest) {
+          await firebase.database().ref('appUpdate/previous').set(currentLatest);
+        }
+
+        await firebase.database().ref('appUpdate/latest').set({
+          version: version,
+          url: downloadUrl,
+          notes: notes || '',
+          publishedAt: new Date().toISOString()
+        });
+
+        statusEl.textContent = '';
+        toast('v' + version + ' başarıyla yayınlandı!', true);
+        fileInput.value = ''; versionInput.value = ''; notesInput.value = '';
+        refreshCurrentInfo();
+      } catch (err) {
+        statusEl.textContent = '';
+        toast('Yayınlama başarısız: ' + (err && err.message ? err.message : 'hata'), false);
+      } finally {
+        btnPublish.disabled = false;
+      }
+    });
+
+    if (btnRollback) {
+      btnRollback.addEventListener('click', async function () {
+        if (!confirm('Bir önceki sürüme dönmek istediğinize emin misiniz?')) return;
+        btnRollback.disabled = true;
+        statusEl.textContent = 'Eski sürüm yükleniyor...';
+        try {
+          const prevSnap = await firebase.database().ref('appUpdate/previous').once('value');
+          const previousVersion = prevSnap.val();
+          if (!previousVersion) { toast('Yedeklenmiş eski sürüm yok.', false); return; }
+
+          await firebase.database().ref('appUpdate/latest').set(previousVersion);
+          toast(`v${previousVersion.version} sürümüne geri dönüldü!`, true);
+          refreshCurrentInfo();
+        } catch (err) {
+          toast('Geri yükleme başarısız: ' + err.message, false);
+        } finally {
+          btnRollback.disabled = false;
+          statusEl.textContent = '';
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUpdatePanel);
+  } else {
+    initUpdatePanel();
+  }
+})();
 </script>
 </body>
 </html>

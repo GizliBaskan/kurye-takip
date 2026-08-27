@@ -65,10 +65,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .auth-reg-btn:hover { background: var(--hover); color: var(--text); }
 #auth-error { color: var(--red); font-size: 0.75rem; margin-top: 0.8rem; display: none; }
 
-/* SPLASH EKRANI (Kurye OS Logo ve Geliştirici İmzası) */
+/* SPLASH EKRANI (Kurye OS Logo ve Geliştirici İmzası) - Kusursuz Yuvarlak Tasarım */
 #splash-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--card) 0%, var(--bg) 100%); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; text-align: center; opacity: 0; transition: opacity 0.8s ease; }
 #splash-screen.show { display: flex; opacity: 1; }
-.splash-logo-wrap { width: 130px; height: 130px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 35px rgba(14, 165, 233, 0.45); margin-bottom: 1.5rem; animation: pulseLogo 2s infinite ease-in-out; }
+.splash-logo-wrap { width: 90px; height: 90px; border-radius: 50%; background: rgba(14, 165, 233, 0.15); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(14, 165, 233, 0.3); box-shadow: 0 0 35px rgba(14, 165, 233, 0.45); margin-bottom: 1.5rem; animation: pulseLogo 2s infinite ease-in-out; overflow: hidden; }
 .splash-logo-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 @keyframes pulseLogo { 0% { transform: scale(1); box-shadow: 0 0 25px rgba(14, 165, 233, 0.3); } 50% { transform: scale(1.04); box-shadow: 0 0 45px rgba(14, 165, 233, 0.6); } 100% { transform: scale(1); box-shadow: 0 0 25px rgba(14, 165, 233, 0.3); } }
 .splash-title { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.4rem; color: var(--text); }
@@ -78,8 +78,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @keyframes loadingSlide { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
 .splash-developer-tag { position: absolute; bottom: 2rem; color: var(--text-muted); font-size: 0.78rem; font-family: monospace, sans-serif; letter-spacing: 0.5px; opacity: 0.8; }
 
-/* Auth Ekranı Kurye OS Logo */
-.logo-i { width: 76px; height: 76px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35); margin: 0 auto 0.9rem; }
+/* Auth Ekranı Kurye OS Logo - Kusursuz Yuvarlak Tasarım */
+.logo-i { width: 70px; height: 70px; border-radius: 50%; background: rgba(14, 165, 233, 0.15); display: flex; align-items: center; justify-content: center; border: 2px solid rgba(14, 165, 233, 0.3); box-shadow: 0 4px 20px rgba(14, 165, 233, 0.35); margin: 0 auto 0.9rem; overflow: hidden; }
 .logo-i img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
 .app-container { display: none; min-height: 100vh; }
@@ -1335,7 +1335,7 @@ ${getWorkingHoursHTML(recs)}
   destroyChart('mdaily');
   charts.mdaily=new Chart(document.getElementById('cMDaily'),{type:'line',data:{labels:recs.map(r=>r.tarih.slice(8,10)+'.'+r.tarih.slice(5,7)),datasets:[{label:'Net',data:recs.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.14)',fill:true,tension:.3,borderWidth:2}]},options:chartOpts(false)});
   destroyChart('mexp');
-  charts.mexp=new Chart(document.getElementById('cMExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:chartOpts().plugins.legend.labels.color}}},cutout:'62%'}});
+  charts.mexp=new Chart(document.getElementById('cMExpense'),{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:chartOpts().plugins.legend.labels.color}}},cutout:'62%'}};
   
   renderHeatmap('mheatmap', 'cMHeatmap', recs);
   renderCategoryChart('mcat','cMCategory',recs);
@@ -1901,7 +1901,7 @@ window.deleteUserDatabase = function(uid, email) {
 };
 </script>
 
-<!-- GPS Sayacı: Kalıcı Bildirim (native kronometre) ve Canlı KM Entegrasyonu -->
+<!-- GPS Sayacı: Kalıcı Sabit Bildirim (Native Kronometre), Senkronize Sayaç ve Android 13+ İzinleri -->
 <script>
 (function (global) {
   let watchId = null;
@@ -1950,17 +1950,28 @@ window.deleteUserDatabase = function(uid, email) {
 
   const BackgroundTracker = {
     start: async function() {
-      loadSession();
-      if (!session.startTime) session.startTime = Date.now();
+      session = {
+        totalKm: 0,
+        lastLat: null,
+        lastLon: null,
+        startTime: Date.now()
+      };
+      saveSession(session);
+      notify();
 
       const bgGeo = getBgGeo();
 
       if (bgGeo) {
         try {
+          if (typeof bgGeo.requestPermissions === 'function') {
+            try { await bgGeo.requestPermissions(); } catch(pErr){}
+          }
+
           watchId = await bgGeo.addWatcher({
-            backgroundMessage: `Mesafe: ${(session.totalKm || 0).toFixed(2)} km`,
+            backgroundMessage: `Mesafe: 0.00 km`,
             backgroundTitle: "Kurye OS Takip Aktif",
             requestPermissions: true,
+            startTime: session.startTime,
             stale: false,
             distanceFilter: 10
           }, (location, error) => {
@@ -2019,7 +2030,7 @@ window.deleteUserDatabase = function(uid, email) {
     },
     
     resetSession: function() {
-      session = { totalKm: 0, lastLat: null, lastLon: null, startTime: Date.now() };
+      session = { totalKm: 0, lastLat: null, lastLon: null, startTime: null };
       saveSession(session);
       notify();
     }
@@ -2061,7 +2072,11 @@ window.deleteUserDatabase = function(uid, email) {
       if (uiTickInterval) clearInterval(uiTickInterval);
       uiTickInterval = setInterval(() => {
         const s = window.BackgroundTracker ? window.BackgroundTracker.getSession() : null;
-        if (sureLabel && s) sureLabel.textContent = formatElapsed(s.startTime);
+        if (sureLabel && s && s.startTime) {
+          sureLabel.textContent = formatElapsed(s.startTime);
+        } else if (sureLabel && (!s || !s.startTime)) {
+          sureLabel.textContent = '00:00:00';
+        }
       }, 1000);
     }
 
@@ -2074,10 +2089,10 @@ window.deleteUserDatabase = function(uid, email) {
 
     window.onTrackerUpdate = function (session) {
       if (liveLabel) {
-        liveLabel.textContent = (session.totalKm || 0).toFixed(2) + ' km';
+        liveLabel.textContent = (session ? (session.totalKm || 0) : 0).toFixed(2) + ' km';
       }
       if (sureLabel) {
-        sureLabel.textContent = formatElapsed(session.startTime);
+        sureLabel.textContent = session && session.startTime ? formatElapsed(session.startTime) : '00:00:00';
       }
     };
 
@@ -2090,12 +2105,6 @@ window.deleteUserDatabase = function(uid, email) {
       }
 
       try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Permissions) {
-          try {
-            await window.Capacitor.Plugins.Permissions.requestPermission({ name: 'location' });
-          } catch(e) {}
-        }
-
         if (isTracking) {
           await tracker.stop();
           isTracking = false;
@@ -2107,11 +2116,12 @@ window.deleteUserDatabase = function(uid, email) {
 
           if (sessionKm > 0.01) {
             addGpsKmToTodayRecord(sessionKm);
-            tracker.resetSession();
-            if (sureLabel) sureLabel.textContent = '00:00:00';
           } else {
-            toast('GPS takibi durduruldu (mesafe çok az, kayda eklenmedi).', true);
+            toast('GPS takibi durduruldu ve sayaç sıfırlandı.', true);
           }
+          tracker.resetSession();
+          if (sureLabel) sureLabel.textContent = '00:00:00';
+          if (liveLabel) liveLabel.textContent = '0.00 km';
         } else {
           const bgGeo = window.BackgroundGeolocation || (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation);
           if (!bgGeo) {
@@ -2123,10 +2133,10 @@ window.deleteUserDatabase = function(uid, email) {
           isTracking = true;
           setTrackingVisual(true);
           startUiTicker();
-          toast('GPS takibi başladı. Bildirimden ve uygulama içinden takip edebilirsiniz.', true);
+          toast('GPS takibi başladı. Bildirim ve sayaç senkronize edildi.', true);
         }
       } catch (e) {
-        toast('GPS başlatılamadı: Lütfen ayarlardan konum izni verin.', false);
+        toast('GPS başlatılamadı: Lütfen ayarlardan konum ve bildirim izinlerini verin.', false);
       }
     });
 
@@ -2278,7 +2288,7 @@ window.deleteUserDatabase = function(uid, email) {
       btnRollback.addEventListener('click', async function () {
         if (!confirm('Bir önceki sürüme dönmek istediğinize emin misiniz?')) return;
         btnRollback.disabled = true;
-        statusEl.textContent = 'Eski sürüm yükleniyor...';
+        statusEl.snapshot = 'Eski sürüm yükleniyor...';
         try {
           const prevSnap = await firebase.database().ref('appUpdate/previous').once('value');
           const previousVersion = prevSnap.val();

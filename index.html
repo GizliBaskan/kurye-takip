@@ -32,22 +32,27 @@
   --amber:#fbbf24;--amber-dim:rgba(251,191,36,.12);
   --violet:#a78bfa;--violet-dim:rgba(167,139,250,.12);
   --orange:#fb923c;
-  --r:14px;--rs:8px;
+  --r:14px;--rs:10px;
+  --shadow: 0 0 0 1px rgba(255,255,255,.02);
   --font:'DM Sans',system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
 }
 
 :root[data-theme="light"] {
-  --bg: #f8fafc; --elev: #ffffff; --card: #ffffff; --hover: #f1f5f9;
+  --bg: #f4f7fb; --elev: #ffffff; --card: #ffffff; --hover: #eef3f8;
   --border: #e2e8f0; --border2: #cbd5e1;
   --text: #0f172a; --sec: #334155; --muted: #64748b;
-  --accent: #0ea5e9; --accent-dim: rgba(14, 165, 233, 0.1);
-  --green: #10b981; --green-dim: rgba(16, 185, 129, 0.1);
-  --red: #ef4444; --red-dim: rgba(239, 68, 68, 0.1);
-  --amber: #f59e0b; --amber-dim: rgba(245, 158, 11, 0.1);
+  --accent: #0284c7; --accent-dim: rgba(2, 132, 199, 0.12);
+  --green: #059669; --green-dim: rgba(5, 150, 105, 0.1);
+  --red: #dc2626; --red-dim: rgba(220, 38, 38, 0.1);
+  --amber: #d97706; --amber-dim: rgba(217, 119, 6, 0.12);
+  --violet: #7c3aed; --violet-dim: rgba(124, 58, 237, 0.1);
+  --orange: #ea580c;
+  --shadow: 0 1px 2px rgba(15,23,42,.05), 0 4px 12px rgba(15,23,42,.04);
 }
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font-family:inherit}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color .4s ease, color .4s ease;}
 .sidebar,.metric,.chart-box,.panel,.modal,.auth-box,.info-block,.best-card,.insight,.toolbar,.period-nav,.daily-card,.foot,.brand,.bottom-nav,.nav-item,.goal-card,.toast{transition:background-color .4s ease,color .4s ease,border-color .4s ease}
 
@@ -88,6 +93,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .sidebar{width:248px;background:var(--elev);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50;transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .brand{padding:1.4rem 1.35rem 1.2rem;border-bottom:1px solid var(--border); display: flex; justify-content: space-between; align-items: center;}
 .logo{display:flex;align-items:center;gap:.7rem;font-weight:700;font-size:1.05rem;letter-spacing:-.03em}
+.sidebar .logo-i{margin:0;width:36px;height:36px;box-shadow:0 2px 10px rgba(14,165,233,.28)}
+.sidebar .brand + .brand{padding:.7rem 1.35rem .85rem;border-bottom:1px solid var(--border)}
+#userEmailDisplay{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--hover);border:1px solid var(--border);border-radius:999px;padding:.22rem .65rem;font-size:.72rem!important;color:var(--sec)!important}
 .nav{flex:1;padding:.9rem .7rem;display:flex;flex-direction:column;gap:.2rem; overflow-y:auto;}
 .nav-item{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border:none;background:transparent;color:var(--sec);font-size:.875rem;font-weight:500;border-radius:10px;cursor:pointer;transition:all .15s;text-align:left;font-family:inherit;width:100%}
 .nav-item:hover{background:var(--hover);color:var(--text)}
@@ -109,8 +117,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .page-head h1{font-size:1.55rem;font-weight:700;letter-spacing:-.035em;line-height:1.2}
 .page-head p{color:var(--muted);font-size:.875rem;margin-top:.25rem}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.5rem}
-.metric{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.15rem 1.2rem;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
-.metric:hover{border-color:var(--border2);transform:translateY(-1px)}
+.metric{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.15rem 1.2rem;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s,box-shadow .2s}
+.metric:hover{border-color:var(--border2)}
 .metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ma,var(--accent));opacity:.7}
 .metric-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.4rem}
 .metric-value{font-family:var(--mono);font-size:1.35rem;font-weight:500;letter-spacing:-.02em;line-height:1.2}
@@ -122,14 +130,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .metric.orange{--ma:var(--orange)}.metric.orange .metric-value{color:var(--orange)}
 .metric.cyan{--ma:var(--accent)}.metric.cyan .metric-value{color:var(--accent)}
 .insights{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.5rem}
-.insight{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start}
+.insight{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start;box-shadow:var(--shadow)}
 .insight-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex-shrink:0;font-size:1.15rem}
 .insight-icon.g{background:var(--green-dim)}.insight-icon.a{background:var(--amber-dim)}.insight-icon.c{background:var(--accent-dim)}.insight-icon.v{background:var(--violet-dim)}
 .insight h4{font-size:.8rem;font-weight:600;color:var(--sec);margin-bottom:.2rem}
 .insight .val{font-family:var(--mono);font-size:1.05rem;font-weight:500}
 .insight .desc{font-size:.72rem;color:var(--muted);margin-top:.15rem}
 .best-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-bottom:1.5rem}
-.best-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem}
+.best-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;box-shadow:var(--shadow)}
 .best-card .tag{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem}
 .best-card .date{font-size:.9rem;font-weight:600;margin-bottom:.15rem}
 .best-card .big{font-family:var(--mono);font-size:1.2rem;font-weight:500;color:var(--green)}
@@ -137,25 +145,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .best-card .big.amber{color:var(--amber)}
 .best-card .meta{font-size:.72rem;color:var(--muted);margin-top:.3rem}
 .chart-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:.9rem;margin-bottom:1.5rem}
-.chart-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.3rem 1rem}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.3rem 1rem;box-shadow:var(--shadow)}
 .chart-box h3{font-size:.8rem;font-weight:600;color:var(--sec);margin-bottom:1rem}
 .chart-area{position:relative;height:220px}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .toolbar{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center;padding:.9rem 1.1rem;border-bottom:1px solid var(--border);background:var(--elev)}
 .toolbar input,.toolbar select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.48rem .75rem;border-radius:var(--rs);font-size:.825rem;font-family:inherit;outline:none}
 .toolbar input:focus,.toolbar select:focus{border-color:var(--accent)}
 .toolbar input{flex:1;min-width:140px}
-.btn{display:inline-flex;align-items:center;gap:.35rem;padding:.48rem .95rem;border:none;border-radius:var(--rs);font-size:.825rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;padding:.52rem .95rem;border:none;border-radius:var(--rs);font-size:.825rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;min-height:38px}
+.btn-sm{padding:.28rem .55rem;font-size:.75rem;min-height:30px;border-radius:7px}
 .btn-primary{background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:#fff;box-shadow:0 2px 8px rgba(14,165,233,.2)}
 .btn-primary:hover{filter:brightness(1.08)}
 .btn-ghost{background:transparent;color:var(--sec);border:1px solid var(--border)}
 .btn-ghost:hover{background:var(--hover);color:var(--text)}
 .btn-danger{background:var(--red-dim);color:var(--red);border:1px solid transparent}
+.btn-danger:hover{filter:brightness(1.05)}
 .table-scroll{max-height:62vh;overflow:auto}
 
 /* MOBİL KART GÖRÜNÜMÜ (Günlük Kayıt) */
 .daily-cards{display:none;flex-direction:column;gap:.65rem}
-.daily-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;animation:rise .2s ease}
+.daily-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.05rem;animation:rise .2s ease;box-shadow:var(--shadow)}
 .daily-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
 .daily-card-date{font-weight:700;font-size:.92rem}
 .daily-card-day{font-weight:400;color:var(--muted);font-size:.75rem;margin-left:.3rem}
@@ -179,14 +189,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .confirm-icon-wrap.warn{background:var(--amber-dim)}
 
 /* ALT SEKME ÇUBUĞU (mobil) */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--elev);border-top:1px solid var(--border);z-index:60;padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -4px 20px rgba(0,0,0,.12)}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;background:none;border:none;color:var(--muted);font-size:.62rem;font-family:inherit;font-weight:600;padding:.55rem 0 .45rem;cursor:pointer}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--elev);border-top:1px solid var(--border);z-index:60;padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -8px 24px rgba(0,0,0,.12)}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.18rem;background:none;border:none;color:var(--muted);font-size:.62rem;font-family:inherit;font-weight:600;padding:.55rem 0 .45rem;cursor:pointer;position:relative}
 .bn-item svg{width:21px;height:21px}
 .bn-item.active{color:var(--accent)}
+.bn-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:2px;border-radius:99px;background:var(--accent)}
 
 /* YENİ KAYIT FORMU - DARALTILABİLİR DETAYLAR */
-.form-details{margin:0 0 1rem;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden}
-.form-details summary{list-style:none;cursor:pointer;padding:.7rem .85rem;font-size:.8rem;font-weight:700;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:.4rem;background:var(--card)}
+.form-details{margin:0 0 1rem;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;background:var(--bg)}
+.form-details summary{list-style:none;cursor:pointer;padding:.75rem .9rem;font-size:.8rem;font-weight:700;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:.4rem;background:var(--elev)}
 .form-details summary::-webkit-details-marker{display:none}
 .form-details summary span:nth-child(2){margin-right:auto;margin-left:.35rem}
 .form-details[open] summary{border-bottom:1px solid var(--border)}
@@ -208,13 +219,13 @@ tbody tr:hover{background:var(--hover)}
 .neg{color:var(--red)!important}.pos{color:var(--green)!important}
 .day-name{color:var(--muted);font-size:.75rem}
 .total-row{background:var(--elev)!important;font-weight:600}
-.info-block{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.35rem 1.5rem;margin-bottom:1rem}
+.info-block{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.4rem;margin-bottom:1rem;box-shadow:var(--shadow)}
 
 /* SEKMELİ YAPI (TABS) */
-.dash-tabs { display: flex; gap: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
-.dash-tab-btn { background: none; border: none; color: var(--muted); font-weight: 600; font-size: 0.95rem; cursor: pointer; padding: 0.5rem 0.5rem; border-bottom: 2px solid transparent; white-space: nowrap; transition: 0.2s; font-family: inherit; }
-.dash-tab-btn:hover { color: var(--text); }
-.dash-tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.dash-tabs { display: flex; gap: 4px; background: var(--elev); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-bottom: 1.35rem; overflow-x: auto; }
+.dash-tab-btn { flex: 1 1 auto; background: none; border: none; color: var(--muted); font-weight: 600; font-size: 0.82rem; cursor: pointer; padding: 0.55rem 0.8rem; border-radius: 9px; white-space: nowrap; transition: 0.2s; font-family: inherit; }
+.dash-tab-btn:hover { color: var(--text); background: var(--hover); }
+.dash-tab-btn.active { color: var(--accent); background: var(--accent-dim); }
 .dash-tab-pane { display: none; animation: rise 0.3s ease; }
 .dash-tab-pane.active { display: block; }
 
@@ -225,12 +236,14 @@ tbody tr:hover{background:var(--hover)}
 .modal h2{font-size:1.1rem;font-weight:700;margin-bottom:1rem;letter-spacing:-.02em}
 .fg{margin-bottom:.8rem}
 .fg label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
-.fg input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.55rem .8rem;border-radius:var(--rs);font-size:16px;font-family:inherit;outline:none}
+.fg input,.fg select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.6rem .8rem;border-radius:var(--rs);font-size:16px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.fg input:focus,.fg select:focus,textarea:focus,.auth-input:focus,.toolbar input:focus,.toolbar select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
 .quick-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
-.q-tag { background: var(--hover); border: 1px solid var(--border); color: var(--sec); font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 6px; cursor: pointer; transition: 0.15s; font-family: inherit; }
+.q-tag { background: var(--hover); border: 1px solid var(--border); color: var(--sec); font-size: 0.72rem; padding: 0.38rem 0.65rem; border-radius: 8px; cursor: pointer; transition: 0.15s; font-family: inherit; min-height: 34px; }
 .q-tag:hover { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
-.modal-actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.2rem;padding-bottom:0.5rem}
+.modal-actions{display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.2rem;padding-bottom:0.5rem;flex-wrap:wrap}
+.modal-actions .btn{flex:1 1 auto;min-width:96px}
 
 /* OTA GÜNCELLEME MODALI */
 .ota-icon-wrap{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg, var(--accent-dim), var(--accent));display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin:0.2rem auto 1rem;animation:otaPulse 2.2s ease-in-out infinite;box-shadow:0 0 0 rgba(56,189,248,.4)}
@@ -249,13 +262,15 @@ tbody tr:hover{background:var(--hover)}
 .menu-btn{display:none;position:fixed;top:.85rem;left:.85rem;z-index:70;width:42px;height:42px;background:var(--card);border:1px solid var(--border);border-radius:11px;color:var(--text);cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(5,8,12,.55);backdrop-filter:blur(3px);z-index:45}
 .sidebar-backdrop.show{display:block}
-.empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.9rem}
-.period-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.3rem;margin-bottom:1.3rem}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.9rem;line-height:1.5}
+.period-nav{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem 1.15rem;margin-bottom:1.2rem;box-shadow:var(--shadow)}
 .period-nav-left{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap}
 .period-nav-title{font-size:1.15rem;font-weight:700;letter-spacing:-.025em;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
 .period-range{font-size:.76rem;color:var(--muted);font-weight:500;font-family:var(--mono);background:var(--elev);padding:.2rem .55rem;border-radius:6px;border:1px solid var(--border)}
 .period-nav-btns{display:flex;align-items:center;gap:.5rem}
 .nav-arrow{width:38px;height:38px;border-radius:10px;background:var(--elev);border:1px solid var(--border);color:var(--text);display:grid;place-items:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.nav-arrow:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.nav-arrow:disabled{opacity:.35;cursor:not-allowed}
 .period-jump select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem .75rem;border-radius:var(--rs);font-size:.8rem;font-family:inherit;outline:none}
 .period-badge{font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);padding:.28rem .6rem;border-radius:20px}
 .section-divider{display:flex;align-items:center;gap:.8rem;margin:2rem 0 1.1rem}
@@ -271,7 +286,7 @@ tbody tr:hover{background:var(--hover)}
 .chart-area.chart-loading canvas{opacity:0}
 
 /* HAFTALIK KIYAS ETİKETİ */
-.delta-chip{display:inline-block;margin-top:.28rem;font-size:.68rem;font-weight:600;padding:.14rem .45rem;border-radius:999px;line-height:1.35}
+.delta-chip{display:inline-flex;align-items:center;max-width:100%;margin-top:.32rem;font-size:.65rem;font-weight:600;padding:.16rem .5rem;border-radius:999px;line-height:1.3}
 .delta-chip.up{color:var(--green);background:var(--green-dim)}
 .delta-chip.down{color:var(--red);background:var(--red-dim)}
 .delta-chip.even{color:var(--muted);background:var(--hover)}
@@ -285,7 +300,7 @@ textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:va
 textarea:focus{border-color:var(--accent)}
 
 /* HEDEF KARTI */
-.goal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.05rem 1.15rem 1.1rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.05rem 1.15rem 1.1rem;margin-bottom:1.4rem;position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--green));opacity:.75}
 .goal-seg-row{display:flex;background:var(--elev);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;margin-bottom:.95rem;width:fit-content;max-width:100%}
 .goal-seg{border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:.8rem;font-weight:600;padding:.4rem 1rem;border-radius:999px;cursor:pointer;transition:.2s}
@@ -309,6 +324,7 @@ textarea:focus{border-color:var(--accent)}
 .goal-empty{text-align:center;padding:.5rem .4rem .15rem}
 .goal-empty-icon{font-size:1.85rem;margin-bottom:.35rem}
 .goal-empty p{color:var(--muted);font-size:.85rem;margin-bottom:.85rem}
+.goal-empty .btn,.goal-info .btn-set-goal{min-height:40px}
 .goal-dots{display:flex;justify-content:center;gap:6px;margin-top:.75rem}
 .goal-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:background .2s}
 .goal-dot.active{background:var(--accent)}
@@ -316,13 +332,12 @@ textarea:focus{border-color:var(--accent)}
 .goal-type-btn{flex:1;min-height:44px;border:1px solid var(--border);background:var(--bg);color:var(--sec);border-radius:10px;font-family:inherit;font-weight:600;font-size:.82rem;cursor:pointer;transition:.15s}
 .goal-type-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
 
-/* HIZLI GİRİŞ */
-.quick-actions{display:flex;flex-wrap:wrap;gap:.45rem;margin:0 0 .95rem}
-.qa-btn{flex:1 1 calc(50% - .45rem);min-height:46px;min-width:118px;padding:.55rem .6rem;border-radius:10px;border:1px solid var(--border);background:var(--hover);color:var(--text);font-family:inherit;font-size:.82rem;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s,transform .12s,color .15s;-webkit-tap-highlight-color:transparent}
-.qa-btn:hover,.qa-btn:active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
-.qa-btn:active{transform:scale(.97)}
-.qa-flash{animation:qaPulse .35s ease}
-@keyframes qaPulse{0%{box-shadow:0 0 0 0 var(--accent)}100%{box-shadow:0 0 0 8px transparent}}
+/* GPS SAYACI */
+.gps-box{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin:0 0 12px;display:flex;flex-direction:column;gap:8px}
+.gps-box .gps-meta{font-size:13px;color:var(--muted)}
+.gps-box .gps-live{font-size:20px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.gps-box .gps-hint{font-size:11px;color:var(--muted);line-height:1.45}
+.gps-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
 
 @media(max-width:1100px){.metrics, .insights{grid-template-columns:repeat(2,1fr)} .chart-grid{grid-template-columns:1fr}}
 @media(max-width:768px){
@@ -343,6 +358,10 @@ textarea:focus{border-color:var(--accent)}
   .goal-slide-inner { flex-direction: column; text-align: center; }
   .goal-info-sub { margin-bottom: .7rem; }
   .goal-seg-row { margin-left: auto; margin-right: auto; }
+  .dash-tabs { gap: 3px; padding: 3px; }
+  .dash-tab-btn { padding: .5rem .6rem; font-size: .78rem; }
+  .modal { padding: 1.2rem 1.05rem; border-radius: 16px; }
+  .period-nav { padding: .75rem .85rem; }
 }
 </style>
 </head>
@@ -392,8 +411,8 @@ textarea:focus{border-color:var(--accent)}
     <div class="brand">
       <div class="logo"><div class="logo-i" style="width:36px;height:36px;"><img src="https://i.hizliresim.com/xkrylhbn.jpg" alt="Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div><span>Kurye OS</span></div>
     </div>
-    <div class="brand" style="padding-top:0; border-bottom:1px solid var(--border); padding-bottom:1rem;">
-      <span style="font-size: 0.75rem; color: var(--muted);" id="userEmailDisplay">Kullanıcı</span>
+    <div class="brand">
+      <span id="userEmailDisplay">Kullanıcı</span>
     </div>
 
     <nav class="nav">
@@ -621,7 +640,12 @@ textarea:focus{border-color:var(--accent)}
 
     <div id="mContent">
       <div id="tab-m-ozet" class="dash-tab-pane active">
-        <div class="metrics" id="mMetrics"></div>
+        <div class="metrics" id="mMetrics">
+          <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div></div>
+          <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div></div>
+          <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div></div>
+          <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div></div>
+        </div>
         <div class="insights" id="mInsights"></div>
         <div class="best-grid" id="mBest"></div>
       </div>
@@ -756,12 +780,12 @@ textarea:focus{border-color:var(--accent)}
 
     <div class="info-block" style="margin-bottom:1.2rem;">
       <h3 style="margin-bottom:0.3rem;">📝 Günlük Kayıt</h3>
-      <p style="font-size:0.85rem;">Her gün çalışmanızın sonunda "Yeni Kayıt Ekle" ile o güne ait KM, paket sayısı, gelir, yakıt ve diğer giderlerinizi girin. Eldivenle kullanım için "+10 Paket", "+50 km" ve "Mola +15 dk" gibi hızlı giriş butonlarını kullanabilirsiniz. Aynı tarihe tekrar kayıt eklerseniz üzerine yazmak isteyip istemediğiniz sorulur. Sarı renkli alanlara tıklayarak kayıtları daha sonra da düzenleyebilirsiniz. Kayıt eklerken "GPS Sayacı" kutusunu kullanarak "Takibi Başlat" butonuna basıp o günkü sürüşünüzü otomatik ölçtürebilir, "Takibi Durdur" dediğinizde ölçülen mesafe otomatik olarak KM alanına eklenir.</p>
+      <p style="font-size:0.85rem;">Her gün çalışmanızın sonunda "Yeni Kayıt Ekle" ile o güne ait KM, paket sayısı, gelir, yakıt ve diğer giderlerinizi girin. Aynı tarihe tekrar kayıt eklerseniz üzerine yazmak isteyip istemediğiniz sorulur. Sarı renkli alanlara tıklayarak kayıtları daha sonra da düzenleyebilirsiniz. Kayıt eklerken "GPS Sayacı" kutusunu kullanarak "Takibi Başlat" butonuna basıp o günkü sürüşünüzü otomatik ölçtürebilir, "Takibi Durdur" dediğinizde ölçülen mesafe otomatik olarak KM alanına eklenir.</p>
     </div>
 
     <div class="info-block" style="margin-bottom:1.2rem;">
       <h3 style="margin-bottom:0.3rem;">📅 Haftalık / Aylık Özet</h3>
-      <p style="font-size:0.85rem;">Bu sayfalarda ok tuşları veya tarih seçiciyle istediğiniz haftayı/ayı seçerek o döneme ait toplam kazanç, gider, paket bonusu ve net kâr bilgilerinizi görüntüleyebilirsiniz. Haftalık özette her metrik, bir önceki haftayla kıyaslanır.</p>
+      <p style="font-size:0.85rem;">Bu sayfalarda ok tuşları veya tarih seçiciyle istediğiniz haftayı/ayı seçerek o döneme ait toplam kazanç, gider, paket bonusu ve net kâr bilgilerinizi görüntüleyebilirsiniz. Haftalık özette metrikler bir önceki haftayla, aylık özette ise bir önceki ayla kıyaslanır.</p>
     </div>
 
     <div class="info-block" style="margin-bottom:1.2rem;">
@@ -837,7 +861,7 @@ textarea:focus{border-color:var(--accent)}
 
     <!-- İSTEK / ÖNERİ LİSTESİ (SADECE ADMIN) -->
     <div class="panel" id="feedbackPanel" style="margin-top:20px;">
-      <h3 style="margin:0 0 12px; padding:16px 16px 0;">💡 Kullanıcı İstek / Önerileri</h3>
+      <h3 style="margin:0; padding:16px 16px 8px;">💡 Kullanıcı İstek / Önerileri</h3>
       <div class="table-scroll">
         <table>
           <thead>
@@ -856,7 +880,7 @@ textarea:focus{border-color:var(--accent)}
     </div>
 
     <!-- GÜNCELLEME YÖNETİMİ PANELİ (OTA) -->
-    <div class="panel" id="updatePanel" style="margin-top:20px;">
+    <div class="panel" id="updatePanel" style="margin-top:20px; padding:16px;">
       <h3 style="margin:0 0 4px;">📦 Güncelleme Yönetimi (OTA)</h3>
       <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">
         Buradan yayınladığınız web dosyaları (index.html, manifest.json, sw.js vb.), Android Studio'ya veya Play Store'a
@@ -878,7 +902,7 @@ textarea:focus{border-color:var(--accent)}
       </div>
       <div class="fg">
         <label>Yayın Notları (her yeniliği yeni satıra yazın)</label>
-        <textarea id="updNotes" rows="5" placeholder="Haftalık hedef kartı eklendi&#10;Hızlı giriş butonları&#10;Grafik performansı iyileştirildi"></textarea>
+        <textarea id="updNotes" rows="5" placeholder="Haftalık hedef kartı eklendi&#10;Aylık kıyas eklendi&#10;Grafik performansı iyileştirildi"></textarea>
       </div>
       
       <!-- Yayınla ve Rollback Butonları -->
@@ -941,39 +965,29 @@ textarea:focus{border-color:var(--accent)}
         <div class="fg"><label>KM</label><input type="number" id="fKm" min="0" step="1" value="0"/></div>
         <div class="fg"><label>Paket</label><input type="number" id="fTes" min="0" step="1" value="0"/></div>
       </div>
-      <div class="quick-actions" id="quickActions">
-        <button type="button" class="qa-btn" data-qa="tes" data-delta="5">+5 Paket</button>
-        <button type="button" class="qa-btn" data-qa="tes" data-delta="10">+10 Paket</button>
-        <button type="button" class="qa-btn" data-qa="km" data-delta="10">+10 km</button>
-        <button type="button" class="qa-btn" data-qa="km" data-delta="50">+50 km</button>
-        <button type="button" class="qa-btn" data-qa="mola" data-delta="15">☕ Mola +15 dk</button>
-        <button type="button" class="qa-btn" data-qa="mola" data-delta="30">☕ Mola +30 dk</button>
-        <button type="button" class="qa-btn" data-qa="mesai" data-start="09:00" data-end="18:00">Mesai 09:00–18:00</button>
-        <button type="button" class="qa-btn" data-qa="mesai" data-start="10:00" data-end="21:00">Mesai 10:00–21:00</button>
-      </div>
-      <div id="gpsTrackerBox" style="background:var(--elev,#151d28); border:1px solid var(--border,#1e2a3a); border-radius:12px; padding:12px 14px; margin:-6px 0 10px; display:flex; flex-direction:column; gap:8px;">
+      <div id="gpsTrackerBox" class="gps-box">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span id="gpsStatusDot" style="width:8px; height:8px; border-radius:50%; background:var(--muted,#94a3b8); display:inline-block;"></span>
-            <span style="font-size:13px; color:var(--muted,#94a3b8);">📡 GPS Sayacı</span>
+            <span id="gpsStatusDot" class="gps-dot"></span>
+            <span class="gps-meta">📡 GPS Sayacı</span>
           </div>
           <div style="display:flex; gap:6px;">
-            <button type="button" id="btnGpsToggle" class="btn" style="padding:6px 10px; font-size:13px;">Takibi Başlat</button>
-            <button type="button" id="btnGpsApply" class="btn" style="padding:6px 10px; font-size:13px;">Önizle</button>
+            <button type="button" id="btnGpsToggle" class="btn btn-sm btn-ghost">Takibi Başlat</button>
+            <button type="button" id="btnGpsApply" class="btn btn-sm btn-ghost">Önizle</button>
           </div>
         </div>
         <div style="display:flex; gap:18px; padding:4px 2px;">
           <div>
-            <div style="font-size:11px; color:var(--muted,#94a3b8);">Süre</div>
-            <div id="gpsSureLive" style="font-size:20px; font-weight:700; color:var(--text,#f0f4f8); font-variant-numeric:tabular-nums;">00:00:00</div>
+            <div class="gps-meta" style="font-size:11px;">Süre</div>
+            <div id="gpsSureLive" class="gps-live">00:00:00</div>
           </div>
           <div>
-            <div style="font-size:11px; color:var(--muted,#94a3b8);">Mesafe</div>
-            <div id="gpsKmLive" style="font-size:20px; font-weight:700; color:var(--text,#f0f4f8);">0.00 km</div>
+            <div class="gps-meta" style="font-size:11px;">Mesafe</div>
+            <div id="gpsKmLive" class="gps-live">0.00 km</div>
           </div>
         </div>
-        <div style="font-size:11px; color:var(--muted,#94a3b8); line-height:1.4;">
-          "Takibi Durdur"a bastığınızda ölçülen mesafe otomatik olarak bugünün kaydına eklenir ve kaydedilir. "Önizle" sadece devam eden ölçümü kaydetmeden bu forma yazar.
+        <div class="gps-hint">
+          "Takibi Durdur"a bastığınızda ölçülen mesafe otomatik olarak bugünün kaydına eklenir. "Önizle" ölçümü kaydetmeden forma yazar.
         </div>
       </div>
       <div class="fg"><label>Saf Gelir (₺) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Bonus hariç</span></label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
@@ -1102,7 +1116,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 let currentUser = null;
-const CURRENT_APP_VERSION = "1.3.0";
+const CURRENT_APP_VERSION = "1.3.2";
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater) {
@@ -1296,6 +1310,11 @@ if (isLight) {
   btnThemeToggle.textContent = '🌙 Karanlık Mod';
 }
 
+function applyThemeChrome(){
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', isLight ? '#f4f7fb' : '#0a0e14');
+}
+applyThemeChrome();
 btnThemeToggle.addEventListener('click', () => {
   isLight = !isLight;
   if (isLight) {
@@ -1307,6 +1326,7 @@ btnThemeToggle.addEventListener('click', () => {
     localStorage.setItem('theme', 'dark');
     btnThemeToggle.textContent = '☀️ Aydınlık Mod';
   }
+  applyThemeChrome();
   refreshChartsTheme();
 });
 
@@ -1570,14 +1590,16 @@ function deltaChip(cur, prev, opts){
   const isInt = !!opts.int;
   const abs = Math.abs(diff);
   const threshold = isInt ? 0.5 : (opts.threshold != null ? opts.threshold : 0.5);
-  const period = opts.period || 'hafta';
-  if(abs < threshold) return `<span class="delta-chip even">geçen ${period}yla aynı</span>`;
+  const isMonth = opts.period === 'ay';
+  const sameTxt = isMonth ? 'geçen ayla aynı' : 'geçen haftayla aynı';
+  const fromTxt = isMonth ? 'geçen aydan' : 'geçen haftadan';
+  if(abs < threshold) return `<span class="delta-chip even">${sameTxt}</span>`;
   const up = diff > 0;
   const cls = opts.invert ? (up ? 'down' : 'up') : (up ? 'up' : 'down');
   const formatted = isInt ? fmtInt(Math.round(abs)) : fmt(abs, opts.d != null ? opts.d : 0);
   const unit = opts.unit || '';
   const word = up ? 'daha fazla' : 'daha az';
-  return `<span class="delta-chip ${cls}">geçen ${period}dan ${up?'+':'−'}${formatted}${unit} ${word}</span>`;
+  return `<span class="delta-chip ${cls}">${fromTxt} ${up?'+':'−'}${formatted}${unit} ${word}</span>`;
 }
 function dayName(t){return DAYS[new Date(t+'T12:00:00').getDay()]}
 function weekOf(t){const d=new Date(t+'T12:00:00'),s=new Date('2026-06-22T12:00:00');return Math.floor((d-s)/86400000/7)+1}
@@ -1846,12 +1868,18 @@ function renderMonthlyDetail(){
     const mm=document.getElementById('mMetrics'); if(mm) mm.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz kayıt yok</div>';
     const mi=document.getElementById('mInsights'); if(mi) mi.innerHTML='';
     const mb=document.getElementById('mBest'); if(mb) mb.innerHTML='';
+    ['cMDaily','cMExpense','cMCategory','cMHeatmap','cMWeekly'].forEach(id => { const c=document.getElementById(id); if(c) setChartEmpty(c,'Henüz kayıt yok'); });
     return;
   }
   nav.style.display='';
   if(mIdx===null)mIdx=months.length-1; mIdx=Math.max(0,Math.min(mIdx,months.length-1));
   const cur=months[mIdx],recs=cur.recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
   const t=totalsOf(recs), b=bestOfRecs(recs);
+  const [py, pm] = cur.key.split('-').map(Number);
+  const prevKey = (pm === 1 ? (py-1) : py) + '-' + String(pm === 1 ? 12 : pm-1).padStart(2,'0');
+  const prevMonth = months.find(m => m.key === prevKey);
+  const prevT = prevMonth ? totalsOf(prevMonth.recs) : null;
+  const dOpt = {period:'ay'};
   
   document.getElementById('mNavTitle').innerHTML=`${monthLabel(cur.key)} <span class="period-badge">${recs.length} gün kayıtlı</span>`;
   document.getElementById('btnMPrev').disabled=mIdx===0; document.getElementById('btnMNext').disabled=mIdx===months.length-1;
@@ -1861,13 +1889,13 @@ function renderMonthlyDetail(){
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
 
   document.getElementById('mMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div></div>
-<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div></div>
+<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km', ...dOpt})}</div></div>
+<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket', ...dOpt})}</div></div>
 ${getWorkingHoursHTML(recs)}
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${bonusHTML}</div></div>
-<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div></div>
-<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div></div>`;
+<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺', ...dOpt})}${bonusHTML}</div></div>
+<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true, ...dOpt})}</div></div>
+<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺', ...dOpt})}</div></div>
+<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div><div class="metric-sub">${deltaChip(t.gunOrt, prevT?prevT.gunOrt:null, {unit:' ₺', ...dOpt})}</div></div>`;
   
   document.getElementById('mInsights').innerHTML=`
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
@@ -2464,46 +2492,6 @@ function clearCurrentGoal(){
       document.querySelectorAll('.goal-type-btn').forEach(b => b.classList.toggle('active', b === btn));
       updateGoalAmountLabel();
     });
-  });
-})();
-
-/* HIZLI GİRİŞ */
-(function initQuickActions(){
-  const wrap = document.getElementById('quickActions');
-  if(!wrap) return;
-  wrap.addEventListener('click', (e) => {
-    const btn = e.target.closest('.qa-btn');
-    if(!btn) return;
-    const kind = btn.dataset.qa;
-    const delta = parseFloat(btn.dataset.delta) || 0;
-    let el = null;
-    if(kind === 'tes') el = document.getElementById('fTes');
-    else if(kind === 'km') el = document.getElementById('fKm');
-    else if(kind === 'mola'){
-      el = document.getElementById('fMolaDk');
-      const details = document.getElementById('formDetails');
-      if(details) details.open = true;
-    } else if(kind === 'mesai'){
-      const details = document.getElementById('formDetails');
-      if(details) details.open = true;
-      const a = document.getElementById('fBaslangic');
-      const b = document.getElementById('fBitis');
-      if(a) a.value = btn.dataset.start || '';
-      if(b) b.value = btn.dataset.end || '';
-      [a,b].forEach(inp => {
-        if(!inp) return;
-        inp.classList.remove('qa-flash');
-        void inp.offsetWidth;
-        inp.classList.add('qa-flash');
-      });
-      return;
-    }
-    if(!el) return;
-    const cur = parseFloat(el.value) || 0;
-    el.value = Math.max(0, cur + delta);
-    el.classList.remove('qa-flash');
-    void el.offsetWidth;
-    el.classList.add('qa-flash');
   });
 })();
 
@@ -3455,10 +3443,5 @@ window.deleteUserDatabase = function(uid, email) {
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a336edd66dfa733d',t:'MTc4ODEyNTc2Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>  initUpdatePanel();
-  }
-})();
-</script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3371af72ca5e324',t:'MTc4ODEyNzYxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

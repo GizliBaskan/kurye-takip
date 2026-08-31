@@ -1,81 +1,122 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gizlilik Politikası — Motokurye Takip</title>
-<style>
-  :root{
-    --bg:#0a0e14;--card:#151d28;--border:#1e2a3a;
-    --text:#f0f4f8;--sec:#94a3b8;--accent:#38bdf8;
-    --font:'DM Sans',system-ui,-apple-system,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;margin:0;padding:2rem 1.2rem;}
-  .wrap{max-width:720px;margin:0 auto;}
-  h1{font-size:1.6rem;font-weight:700;margin-bottom:.3rem;letter-spacing:-.02em;}
-  .updated{color:var(--sec);font-size:.85rem;margin-bottom:2rem;}
-  h2{font-size:1.1rem;font-weight:700;margin-top:2rem;margin-bottom:.6rem;color:var(--accent);}
-  p, li{color:#dbe4ee;font-size:.95rem;}
-  ul{padding-left:1.3rem;margin:.5rem 0;}
-  li{margin-bottom:.4rem;}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:1.2rem;}
-  a{color:var(--accent);}
-  .contact{font-weight:600;}
-</style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Gizlilik Politikası — Kurye OS</title>
+  <meta name="description" content="Kurye OS gizlilik politikası: hangi veriler toplanır, nerede saklanır ve hesap silme haklarınız."/>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --line: #e2e8f0;
+      --accent: #0284c7;
+      --red: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.2rem 1.2rem 4rem;
+    }
+    header {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.4rem 1.35rem;
+      margin-bottom: 1.4rem;
+    }
+    .kicker { color: var(--accent); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    h1 { margin: .25rem 0 .35rem; font-size: 1.7rem; letter-spacing: -.03em; }
+    .updated { color: var(--muted); font-size: .88rem; }
+    article {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.5rem 1.35rem 1.8rem;
+    }
+    h2 { font-size: 1.08rem; margin: 1.5rem 0 .45rem; }
+    p, li { color: #1e293b; font-size: .95rem; }
+    ul { padding-left: 1.15rem; }
+    li { margin: .28rem 0; }
+    a { color: var(--accent); }
+    .note {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: .85rem 1rem;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    footer { margin-top: 1.2rem; color: var(--muted); font-size: .82rem; text-align: center; }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Gizlilik Politikası</h1>
-  <div class="updated">Son güncelleme: 26 Ağustos 2026</div>
+  <div class="wrap">
+    <header>
+      <div class="kicker">Kurye OS</div>
+      <h1>Gizlilik Politikası</h1>
+      <div class="updated">Son güncelleme: 31 Ağustos 2026</div>
+    </header>
+    <article>
+      <p>Kurye OS (“Uygulama”), motokurye olarak çalışan kullanıcıların günlük teslimat, gelir, gider, mesai ve araç bakım verilerini takip etmelerini sağlayan kişisel bir yönetim aracıdır. Bu sayfa, uygulamayı kullanırken hangi verilerin toplandığını, nasıl saklandığını ve haklarınızı açıklar.</p>
 
-  <div class="card">
-    <p>Motokurye Takip ("Uygulama"), motokurye olarak çalışan kullanıcıların günlük teslimat, gelir, gider ve araç bakım verilerini takip etmelerini sağlayan kişisel bir yönetim aracıdır. Bu sayfa, uygulamayı kullanırken hangi verilerin toplandığını, nasıl saklandığını ve haklarınızın neler olduğunu açıklar.</p>
-  </div>
+      <h2>1. Topladığımız veriler</h2>
+      <ul>
+        <li><strong>Hesap bilgisi:</strong> Kayıt olurken verdiğiniz e-posta adresi. Şifreniz Firebase Authentication tarafından şifrelenmiş şekilde saklanır; uygulama geliştiricisi şifrenizi göremez.</li>
+        <li><strong>Çalışma kayıtlarınız:</strong> Sizin girdiğiniz tarih, kilometre, paket/teslimat sayısı, gelir, yakıt ve diğer giderler, mesai saatleri, mola ve serbest metin notlar.</li>
+        <li><strong>Garaj bilgileri:</strong> Eklediğiniz araç adı, bakım periyotları ve bakım kayıtları.</li>
+        <li><strong>Hedef ve ayarlar:</strong> Haftalık/aylık kazanç veya paket hedefleri ile bonus barajı tercihleri.</li>
+        <li><strong>İstek / öneri:</strong> Gönüllü olarak gönderdiğiniz geri bildirim (isim vermeniz opsiyoneldir).</li>
+        <li><strong>Teknik veri:</strong> Son giriş zamanı (oturum ve destek amaçlı).</li>
+      </ul>
 
-  <h2>1. Topladığımız Veriler</h2>
-  <div class="card">
-    <ul>
-      <li><strong>Hesap bilgisi:</strong> Kayıt olurken verdiğiniz e-posta adresi (şifreniz Firebase Authentication tarafından şifrelenmiş şekilde saklanır, bizim tarafımızdan görülemez).</li>
-      <li><strong>Uygulama içi kayıtlarınız:</strong> Kendi girdiğiniz tarih, kilometre, gelir, yakıt/gider, teslimat sayısı ve serbest metin notlar.</li>
-      <li><strong>Araç/garaj bilgileri:</strong> Kendi eklediğiniz araç adı ve bakım kayıtları.</li>
-      <li><strong>Teknik veri:</strong> Son giriş zamanı (uygulamanın düzgün çalışması ve destek amaçlı).</li>
-    </ul>
-    <p>Uygulama konum, kamera, mikrofon, kişi listesi gibi hassas telefon izinleri talep etmez ve bunlara erişmez.</p>
-  </div>
+      <h2>2. Konum (GPS)</h2>
+      <p>Uygulama varsayılan olarak konumunuza erişmez. GPS mesafe sayacı yalnızca siz “Takibi Başlat” dediğinizde çalışır; ölçülen kilometre, sizin onayınızla günlük kayda eklenebilir. Konum verisi reklam veya profilleme için kullanılmaz, üçüncü taraflarla satılmaz. Takibi durdurduğunuzda sayaç durur.</p>
+      <p>Kamera, mikrofon, rehber veya galeri erişimi talep edilmez.</p>
 
-  <h2>2. Verileriniz Nerede Saklanır?</h2>
-  <div class="card">
-    <p>Tüm verileriniz Google Firebase (Realtime Database ve Authentication) altyapısında, Avrupa (europe-west1) veri merkezinde saklanır. Veri iletimi HTTPS ile şifrelenir.</p>
-  </div>
+      <h2>3. Veriler nerede saklanır?</h2>
+      <p>Verileriniz Google Firebase (Authentication ve Realtime Database) altyapısında, Avrupa bölgesinde (europe-west1) saklanır. İletim HTTPS ile şifrelenir.</p>
 
-  <h2>3. Verilerinize Kim Erişebilir?</h2>
-  <div class="card">
-    <ul>
-      <li>Yalnızca <strong>siz</strong>, kendi hesabınızla giriş yaptığınızda kendi verilerinize erişebilirsiniz.</li>
-      <li>Uygulama geliştiricisi (yönetici hesabı), teknik destek ve hata giderme amacıyla toplu istatistiklere erişebilir; verileriniz üçüncü taraflarla paylaşılmaz, satılmaz veya reklam amacıyla kullanılmaz.</li>
-    </ul>
-  </div>
+      <h2>4. Verilere kim erişebilir?</h2>
+      <ul>
+        <li>Yalnızca siz, kendi hesabınızla giriş yaptığınızda kendi kayıtlarınıza erişebilirsiniz.</li>
+        <li>Uygulama geliştiricisi (yönetici), teknik destek ve hata giderme amacıyla sınırlı erişime sahip olabilir.</li>
+        <li>Verileriniz reklam ağıyla paylaşılmaz, satılmaz veya pazarlama profili için kullanılmaz.</li>
+      </ul>
 
-  <h2>4. Verilerinizin Silinmesi</h2>
-  <div class="card">
-    <p>Hesabınızı ve/veya tüm kayıtlarınızı silmek isterseniz aşağıdaki iletişim adresinden bizimle iletişime geçebilirsiniz; talebiniz makul bir süre içinde yerine getirilir.</p>
-  </div>
+      <h2>5. Hesap, şifre ve silme</h2>
+      <p>Uygulama içindeki <strong>Hesabım</strong> ekranından:</p>
+      <ul>
+        <li>Mevcut şifrenizi doğrulayarak şifrenizi değiştirebilirsiniz.</li>
+        <li>Hesabınızı ve ilişkili tüm kayıtlarınızı silebilirsiniz. Silme işlemi onay kutusu ve ikinci bir onay penceresi ile korunur; geri alınamaz.</li>
+        <li>Ayarlar ekranından verilerinizin bir kopyasını JSON olarak indirebilirsiniz.</li>
+      </ul>
+      <p>İsterseniz silme talebinizi e-posta ile de iletebilirsiniz; makul süre içinde yerine getirilir.</p>
 
-  <h2>5. Çocukların Gizliliği</h2>
-  <div class="card">
-    <p>Uygulama, motokurye olarak çalışan yetişkin kullanıcılara yöneliktir ve bilerek 13 yaş altı çocuklardan veri toplamaz.</p>
-  </div>
+      <h2>6. Haklarınız (KVKK)</h2>
+      <p>6698 sayılı KVKK kapsamında verilerinize erişme, düzelttirme, silinmesini isteme ve işlenmesine itiraz etme haklarına sahipsiniz. Bu hakları uygulama içinden veya aşağıdaki iletişim adresinden kullanabilirsiniz.</p>
 
-  <h2>6. Politika Güncellemeleri</h2>
-  <div class="card">
-    <p>Bu politika zaman zaman güncellenebilir. Önemli değişiklikler bu sayfada yayınlanacaktır.</p>
-  </div>
+      <h2>7. Çocukların gizliliği</h2>
+      <p>Uygulama, motokurye olarak çalışan yetişkin kullanıcılara yöneliktir ve bilerek 13 yaşından küçüklerden veri toplamaz.</p>
 
-  <h2>7. İletişim</h2>
-  <div class="card">
-    <p>Gizlilik ile ilgili sorularınız veya veri silme talepleriniz için: <span class="contact">furkansb1040@gmail.com</span></p>
+      <h2>8. Politika güncellemeleri</h2>
+      <p>Bu politika zaman zaman güncellenebilir. Önemli değişiklikler bu sayfada yayınlanır. Sayfanın üstündeki “Son güncelleme” tarihi geçerlidir.</p>
+
+      <h2>9. İletişim</h2>
+      <p>Gizlilik soruları, KVKK talepleri veya hesap silme için: <a href="/cdn-cgi/l/email-protection#bed8cbccd5dfd0cddc8f8e8a8efed9d3dfd7d290ddd1d3"><span class="__cf_email__" data-cfemail="2d4b585f464c435e4f1c1d191d6d4a404c4441034e4240">[email&#160;protected]</span></a></p>
+      <p class="note">Play Store Data safety formu ve uygulama içi “Hesabım” ekranı bu politika ile uyumludur. Konum izni yalnızca GPS sayacını sizin başlatmanız halinde istenir.</p>
+    </article>
+    <footer>© 2026 Kurye OS</footer>
   </div>
-</div>
-</body>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
 </html>

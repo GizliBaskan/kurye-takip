@@ -53,7 +53,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font-family:inherit}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color .4s ease, color .4s ease;}
-.sidebar,.metric,.chart-box,.panel,.modal,.auth-box,.info-block,.best-card,.insight,.toolbar,.period-nav,.daily-card,.foot,.brand,.bottom-nav,.nav-item,.goal-card,.toast{transition:background-color .4s ease,color .4s ease,border-color .4s ease}
+.sidebar,.metric,.panel,.modal,.auth-box,.info-block,.best-card,.insight,.toolbar,.period-nav,.daily-card,.foot,.brand,.bottom-nav,.nav-item,.goal-card,.toast{transition:background-color .4s ease,color .4s ease,border-color .4s ease}
 
 /* GİRİŞ EKRANI */
 #auth-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, var(--card) 0%, var(--bg) 100%); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; }
@@ -155,10 +155,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .best-card .big.red{color:var(--red)}
 .best-card .big.amber{color:var(--amber)}
 .best-card .meta{font-size:.72rem;color:var(--muted);margin-top:.3rem}
-.chart-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:.9rem;margin-bottom:1.5rem}
-.chart-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.2rem 1.3rem 1rem;box-shadow:var(--shadow)}
-.chart-box h3{font-size:.8rem;font-weight:600;color:var(--sec);margin-bottom:1rem}
-.chart-area{position:relative;height:220px}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .toolbar{display:flex;flex-wrap:wrap;gap:.65rem;align-items:center;padding:.9rem 1.1rem;border-bottom:1px solid var(--border);background:var(--elev)}
 .toolbar input,.toolbar select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.48rem .75rem;border-radius:var(--rs);font-size:.825rem;font-family:inherit;outline:none}
@@ -294,6 +290,35 @@ tbody tr:hover{background:var(--hover)}
 .nav-arrow:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .nav-arrow:disabled{opacity:.35;cursor:not-allowed}
 .period-jump select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem .75rem;border-radius:var(--rs);font-size:.8rem;font-family:inherit;outline:none}
+/* Dönem seçici butonu (native select yerine) */
+.period-nav-sub{font-size:.7rem;color:var(--muted);font-weight:500;margin-top:.15rem}
+.period-jump-btn{display:flex;align-items:center;gap:.45rem;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.5rem .7rem;border-radius:var(--rs);font-size:.8rem;font-family:inherit;font-weight:600;cursor:pointer;max-width:190px;transition:border-color .2s,background .2s}
+.period-jump-btn:active{background:var(--hover)}
+.period-jump-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.period-jump-btn svg{width:15px;height:15px;flex-shrink:0;color:var(--muted)}
+/* Alt sayfa (bottom sheet) */
+.sheet-overlay{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s ease}
+.sheet-overlay.show{opacity:1;pointer-events:auto}
+.sheet{width:100%;max-width:520px;background:var(--elev);border:1px solid var(--border2);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,.45);transform:translateY(100%);transition:transform .26s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;max-height:78vh;padding-bottom:env(safe-area-inset-bottom,0)}
+.sheet-overlay.show .sheet{transform:translateY(0)}
+.sheet-grab{width:38px;height:4px;border-radius:99px;background:var(--border2);margin:.6rem auto .2rem}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.1rem .7rem;border-bottom:1px solid var(--border)}
+.sheet-head h3{margin:0;font-size:.95rem;font-weight:700}
+.sheet-close{background:transparent;border:0;color:var(--muted);font-size:1rem;cursor:pointer;padding:.3rem .45rem;border-radius:8px;line-height:1}
+.sheet-close:active{background:var(--hover)}
+.sheet-list{overflow-y:auto;padding:.5rem .6rem 1rem;-webkit-overflow-scrolling:touch}
+.sheet-item{display:flex;align-items:center;justify-content:space-between;gap:.8rem;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:var(--text);font-family:inherit;padding:.7rem .8rem;border-radius:12px;cursor:pointer;margin-bottom:.15rem}
+.sheet-item:active{background:var(--hover)}
+.sheet-item.active{background:var(--card);border-color:var(--accent)}
+.sheet-item-main{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.sheet-item-title{font-size:.88rem;font-weight:600}
+.sheet-item.active .sheet-item-title{color:var(--accent)}
+.sheet-item-sub{font-size:.72rem;color:var(--muted)}
+.sheet-item-right{display:flex;align-items:center;gap:.55rem;flex-shrink:0}
+.sheet-item-count{font-size:.7rem;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:.15rem .45rem;border-radius:99px}
+.sheet-item.active .sheet-item-count{border-color:var(--accent)}
+.sheet-tick{width:16px;height:16px;color:var(--accent);opacity:0}
+.sheet-item.active .sheet-tick{opacity:1}
 .period-badge{font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);padding:.28rem .6rem;border-radius:20px}
 .section-divider{display:flex;align-items:center;gap:.8rem;margin:2rem 0 1.1rem}
 .section-divider h2{font-size:.95rem;font-weight:700;color:var(--sec);white-space:nowrap}
@@ -304,8 +329,6 @@ tbody tr:hover{background:var(--hover)}
 /* İSKELET YÜKLEME */
 @keyframes skeletonShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skeleton-block{background:linear-gradient(90deg,var(--elev) 0%,var(--hover) 45%,var(--elev) 90%);background-size:200% 100%;animation:skeletonShimmer 1.15s ease-in-out infinite;border-radius:8px;min-height:12px}
-.chart-area.chart-loading::before{content:'';position:absolute;inset:10px;border-radius:10px;background:linear-gradient(90deg,var(--elev) 0%,var(--hover) 45%,var(--elev) 90%);background-size:200% 100%;animation:skeletonShimmer 1.15s ease-in-out infinite;z-index:1}
-.chart-area.chart-loading canvas{opacity:0}
 
 /* HAFTALIK KIYAS ETİKETİ */
 .delta-chip{display:inline-flex;align-items:center;max-width:100%;margin-top:.32rem;font-size:.65rem;font-weight:600;padding:.16rem .5rem;border-radius:999px;line-height:1.3}
@@ -405,6 +428,49 @@ textarea:focus{border-color:var(--accent)}
 .metric-dots{position:absolute;bottom:7px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:2;pointer-events:none}
 .metric-dots span{width:5px;height:5px;border-radius:99px;background:var(--border2)}
 .metric-dots span.on{background:var(--ma,var(--accent))}
+.force-gate{position:fixed;inset:0;z-index:100000;background:var(--bg,#0b0f14);display:none;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto}
+.force-gate.show{display:flex}
+.force-card{max-width:400px;width:100%;text-align:center;background:var(--elev);border:1px solid var(--border2);border-radius:18px;padding:1.8rem 1.4rem;box-shadow:var(--shadow)}
+.force-icon{width:62px;height:62px;margin:0 auto 1rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(56,189,248,.06));border:1px solid rgba(56,189,248,.35)}
+.force-card h2{font-size:1.15rem;margin:0 0 .55rem}
+.force-badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;padding:.28rem .7rem;border-radius:999px;background:var(--card);border:1px solid var(--border);color:var(--accent)}
+.force-sub{color:var(--muted);font-size:.85rem;line-height:1.6;margin:.9rem 0 1.1rem}
+.force-notes{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.75rem .85rem;font-size:.78rem;text-align:left;margin-bottom:1.1rem;max-height:38vh;overflow-y:auto}
+.force-hint{font-size:.72rem;color:var(--muted);margin-top:.85rem;line-height:1.5}
+/* --- Vardiya sonu hatırlatma kartı --- */
+.rem-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;transition:border-color .25s}
+.rem-card.on{border-color:rgba(56,189,248,.35)}
+.rem-head{display:flex;align-items:center;gap:.85rem;padding:1rem 1.1rem}
+.rem-ico{width:42px;height:42px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:var(--bg);border:1px solid var(--border);transition:background .25s,border-color .25s}
+.rem-card.on .rem-ico{background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(56,189,248,.05));border-color:rgba(56,189,248,.4)}
+.rem-head-text{flex:1;min-width:0}
+.rem-head-text h3{margin:0 0 .15rem;font-size:.92rem;font-weight:700}
+.rem-head-text p{margin:0;font-size:.75rem;color:var(--muted);line-height:1.4}
+/* iOS tarzı anahtar */
+.rem-switch{position:relative;flex-shrink:0;width:48px;height:28px;cursor:pointer}
+.rem-switch input{position:absolute;opacity:0;width:0;height:0}
+.rem-slider{position:absolute;inset:0;background:var(--border2);border-radius:99px;transition:background .25s}
+.rem-slider::before{content:'';position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .25s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.rem-switch input:checked + .rem-slider{background:var(--accent)}
+.rem-switch input:checked + .rem-slider::before{transform:translateX(20px)}
+.rem-switch input:focus-visible + .rem-slider{outline:2px solid var(--accent);outline-offset:2px}
+/* Gövde: kapalıyken gizlenir */
+.rem-body{border-top:1px solid var(--border);padding:.95rem 1.1rem 1.05rem;display:block}
+.rem-body.hidden{display:none}
+.rem-time-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.rem-time-label{display:flex;flex-direction:column;gap:.1rem;min-width:0}
+.rem-time-cap{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.rem-time-val{font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent);line-height:1.15}
+.rem-time-edit{position:relative;overflow:hidden;flex-shrink:0;font-size:.78rem;font-weight:600;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:.5rem .85rem;cursor:pointer;transition:border-color .2s}
+.rem-time-edit:active{background:var(--hover)}
+.rem-time-edit input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0}
+.rem-quick{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.85rem}
+.rem-chip{font-size:.75rem;font-family:inherit;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:99px;padding:.34rem .7rem;cursor:pointer;transition:all .18s}
+.rem-chip:active{background:var(--hover)}
+.rem-chip.active{color:var(--accent);border-color:var(--accent);background:var(--accent-dim,rgba(56,189,248,.1))}
+.rem-status{font-size:.76rem;color:var(--muted);line-height:1.5;padding:.7rem 1.1rem;border-top:1px solid var(--border);background:var(--bg)}
+.rem-status.on{color:var(--green,#34d399)}
+.rem-status.warn{color:var(--amber,#fbbf24)}
 .bonus-mode-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
 @media(max-width:620px){.bonus-mode-row{grid-template-columns:1fr}}
 .bonus-mode-opt{text-align:left;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:.85rem .9rem;cursor:pointer;font-family:inherit;color:var(--text);transition:border-color .18s,background .18s}
@@ -443,7 +509,7 @@ textarea:focus{border-color:var(--accent)}
 .gd-tips h3{font-size:.88rem;font-weight:700;margin:0 0 .65rem}
 .gd-kbd{display:inline-block;background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:.05rem .38rem;font-size:.74rem;font-weight:600;color:var(--text)}
 
-@media(max-width:1100px){.metrics, .insights{grid-template-columns:repeat(2,1fr)} .chart-grid{grid-template-columns:1fr}}
+@media(max-width:1100px){.metrics, .insights{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);width:min(280px,86vw);box-shadow:8px 0 32px rgba(0,0,0,.25)}
   .sidebar.open{transform:translateX(0)}
@@ -697,7 +763,10 @@ textarea:focus{border-color:var(--accent)}
       <div class="period-nav-left"><div class="period-nav-title" id="wNavTitle">—</div></div>
       <div class="period-nav-btns">
         <button class="nav-arrow" id="btnWPrev"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
-        <div class="period-jump"><select id="wJump"></select></div>
+        <button type="button" class="period-jump-btn" id="wJump" aria-haspopup="listbox">
+          <span id="wJumpLabel">—</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
         <button class="nav-arrow" id="btnWNext"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
     </div>
@@ -727,13 +796,20 @@ textarea:focus{border-color:var(--accent)}
       <div class="period-nav-left"><div class="period-nav-title" id="mNavTitle">—</div></div>
       <div class="period-nav-btns">
         <button class="nav-arrow" id="btnMPrev"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
-        <div class="period-jump"><select id="mJump"></select></div>
+        <button type="button" class="period-jump-btn" id="mJump" aria-haspopup="listbox">
+          <span id="mJumpLabel">—</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
         <button class="nav-arrow" id="btnMNext"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
     </div>
 
     <div class="dash-tabs">
       <button class="dash-tab-btn active" data-tab="m-ozet">Özet & Detaylar</button>
+    </div>
+
+    <div class="toolbar" style="background:transparent;border:none;padding:0;margin-bottom:1.1rem;gap:.6rem;flex-wrap:wrap;">
+      <button class="btn btn-ghost" id="btnMonthlyPdf" title="Bu ayın özetini PDF olarak kaydedin">📄 Aylık Özeti PDF Yap</button>
     </div>
 
     <div id="mContent">
@@ -816,6 +892,42 @@ textarea:focus{border-color:var(--accent)}
       <button class="btn btn-primary" id="btnAddMaintenance">+ Yeni Bakım Hedefi Ekle</button>
       <button class="btn btn-ghost" id="btnEnableNotif">🔔 Bildirimleri Etkinleştir</button>
     </div>
+
+    <div class="section-divider"><h2>Vardiya Sonu Hatırlatması</h2></div>
+    <div class="rem-card" id="reminderCard">
+      <div class="rem-head">
+        <div class="rem-ico"><span>⏰</span></div>
+        <div class="rem-head-text">
+          <h3>Günlük Hatırlatma</h3>
+          <p>Kaydınızı girmediyseniz akşam hatırlatırız</p>
+        </div>
+        <label class="rem-switch" aria-label="Hatırlatmayı aç veya kapat">
+          <input type="checkbox" id="reminderEnabled" />
+          <span class="rem-slider"></span>
+        </label>
+      </div>
+
+      <div class="rem-body" id="reminderBody">
+        <div class="rem-time-row">
+          <div class="rem-time-label">
+            <span class="rem-time-cap">Hatırlatma saati</span>
+            <span class="rem-time-val" id="reminderTimeVal">23:00</span>
+          </div>
+          <label class="rem-time-edit">
+            Değiştir
+            <input type="time" id="reminderTime" value="23:00" />
+          </label>
+        </div>
+        <div class="rem-quick" id="reminderQuick">
+          <button type="button" class="rem-chip" data-t="21:00">21:00</button>
+          <button type="button" class="rem-chip" data-t="22:00">22:00</button>
+          <button type="button" class="rem-chip" data-t="23:00">23:00</button>
+          <button type="button" class="rem-chip" data-t="00:00">00:00</button>
+        </div>
+      </div>
+
+      <div id="reminderStatus" class="rem-status"></div>
+    </div>
     <div class="best-grid" id="maintenanceList"></div>
   </section>
 
@@ -862,12 +974,7 @@ textarea:focus{border-color:var(--accent)}
 
     <div class="info-block" style="margin-top:1.4rem;">
       <h3 style="margin-bottom:0.2rem">Verilerim</h3>
-      <p style="font-size:0.8rem">Kayıtlarınızın bir kopyasını cihazınıza alın. Play Store ve KVKK kapsamında verilerinize erişebilirsiniz.</p>
-    </div>
-    <div class="panel" style="margin-bottom:1.2rem;">
-      <div style="padding:1.1rem;">
-        <button class="btn btn-ghost" id="btnExportData" type="button" style="width:100%;">Verilerimi İndir (JSON)</button>
-      </div>
+      <p style="font-size:0.8rem">Kayıtlarınızın bir kopyasını <strong>Günlük Kayıt</strong> sayfasındaki <strong>⬇ CSV</strong> butonuyla, aylık raporunuzu ise <strong>Aylık Özet</strong> sayfasındaki <strong>📄 PDF</strong> butonuyla cihazınıza alabilirsiniz.</p>
     </div>
 
     <div class="info-block">
@@ -936,6 +1043,7 @@ textarea:focus{border-color:var(--accent)}
         <ul class="gd-list">
           <li>Her metrik bir <b>önceki dönemle kıyaslanır</b>; yeşil artışı, kırmızı düşüşü gösterir.</li>
           <li>Sayfa boşluğunda <b>yana kaydırarak</b> önceki/sonraki döneme geçebilirsiniz.</li>
+          <li>Aylık Özet'te <b>"📄 Aylık Özeti PDF Yap"</b> ile o ayın raporunu PDF olarak kaydedebilirsiniz.</li>
         </ul>
       </div>
 
@@ -945,7 +1053,8 @@ textarea:focus{border-color:var(--accent)}
         <ul class="gd-list">
           <li>Yakıt verimliliğiniz (km/L, KM başına maliyet) otomatik hesaplanır.</li>
           <li><b>Bakım hedefi</b> ekleyin: yağ, zincir, lastik için periyot KM girin; sırası gelince uyarılırsınız.</li>
-          <li>Bakımı yaptırınca <b>"Sıfırla"</b> deyin; masrafı yazarsanız gidere de otomatik işlenir.</li>
+            <li>Bakımı yaptırınca <b>"Sıfırla"</b> deyin; masrafı yazarsanız gidere de otomatik işlenir.</li>
+          <li><b>Vardiya sonu hatırlatması:</b> Bu sayfadan saat belirleyin; uygulama kapalı olsa bile o saatte kaydınızı girmediyseniz bildirim alırsınız.</li>
         </ul>
       </div>
 
@@ -978,7 +1087,7 @@ textarea:focus{border-color:var(--accent)}
         <li><b>Kartların üzerinde yana kaydırın</b> → kart kendi içinde değişir, sayfa değişmez.</li>
         <li>Telefonun <span class="gd-kbd">geri</span> tuşu açık pencereleri kapatır.</li>
         <li>Yanlış bir düzenleme yaptıysanız Günlük Kayıt sayfasındaki <b>↶ Geri Al</b> butonunu kullanın.</li>
-        <li><b>⬇ CSV</b> ile tüm kayıtlarınızı Excel'de açılabilir biçimde indirebilirsiniz (muhasebe için uygundur).</li>
+        <li><b>⬇ CSV</b> ile tüm kayıtlarınızı Excel'de açılabilir biçimde indirebilir, <b>📄 PDF</b> ile aylık rapor alabilirsiniz.</li>
         <li>Verileriniz hesabınıza bağlı bulutta saklanır; <b>çevrimdışıyken</b> girdikleriniz cihazınıza kaydedilir ve bağlantı gelince otomatik yüklenir.</li>
       </ul>
     </div>
@@ -1170,6 +1279,40 @@ textarea:focus{border-color:var(--accent)}
       
       <div id="updateStatus" style="margin-top:10px; font-size:13px; color:var(--muted);"></div>
     </div>
+
+    <!-- ZORUNLU MAĞAZA GÜNCELLEMESİ -->
+    <div class="panel" style="margin-top:1.4rem;">
+      <div style="padding:1.1rem;">
+        <h3 style="margin:0 0 .4rem;font-size:.95rem;">🔒 Zorunlu Güncelleme (Play Store)</h3>
+        <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
+          Yukarıdaki OTA yayını yalnızca <b>web dosyalarını</b> günceller.
+          Native (Java) değişiklik yaptığınızda Play Store'a yeni sürüm yüklemeniz gerekir.
+          Buradaki <b>minimum sürümü</b> yükseltirseniz, daha eski sürümdeki kullanıcılar
+          güncelleyene kadar uygulamayı <b>kullanamaz</b>.
+        </p>
+        <div class="fg">
+          <label>Minimum Zorunlu Sürüm (bundan eskisi kilitlenir)</label>
+          <input type="text" id="storeMinVersion" placeholder="örn. 2.0.0"/>
+        </div>
+        <div class="fg">
+          <label>Mağazadaki Güncel Sürüm (bilgi amaçlı gösterilir)</label>
+          <input type="text" id="storeLatestVersion" placeholder="örn. 2.0.0"/>
+        </div>
+        <div class="fg">
+          <label>Zorunlu Güncelleme Notu (etiketli yazabilirsiniz)</label>
+          <textarea id="storeNotes" rows="3" placeholder="[yeni] Arka planda çalışan bildirimler eklendi"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+          <button type="button" id="btnSaveStoreGate" class="btn btn-primary" style="flex:1;min-width:150px;">🔒 Zorunlu Sürümü Kaydet</button>
+          <button type="button" id="btnClearStoreGate" class="btn btn-ghost" style="flex:1;min-width:150px;" title="Zorunlu güncellemeyi tamamen kaldırır">Kapıyı Kaldır</button>
+        </div>
+        <div id="storeGateStatus" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
+        <p style="font-size:.72rem;color:var(--muted);line-height:1.5;margin:.9rem 0 0;">
+          ⚠️ Dikkat: Buraya Play Store'da <b>yayında olan</b> bir sürüm yazın. Henüz yayınlanmamış
+          bir sürüm yazarsanız kullanıcılar güncelleyemez ve uygulamada kilitli kalır.
+        </p>
+      </div>
+    </div>
   </section>
 
   </main>
@@ -1219,6 +1362,38 @@ textarea:focus{border-color:var(--accent)}
     <div class="modal-actions" id="otaActions" style="justify-content:center;">
       <button class="btn btn-ghost" id="otaBtnLater">Daha Sonra</button>
       <button class="btn btn-primary" id="otaBtnUpdate">🚀 Şimdi Güncelle</button>
+    </div>
+  </div>
+</div>
+
+<!-- DÖNEM SEÇİCİ (tema uyumlu alt sayfa; native select yerine) -->
+<div class="sheet-overlay" id="periodSheet">
+  <div class="sheet" role="listbox" aria-label="Dönem seçin">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <h3 id="periodSheetTitle">Hafta Seçin</h3>
+      <button type="button" class="sheet-close" id="periodSheetClose" aria-label="Kapat">✕</button>
+    </div>
+    <div class="sheet-list" id="periodSheetList"></div>
+  </div>
+</div>
+
+<!-- ZORUNLU GÜNCELLEME KAPISI (kapatılamaz, tüm uygulamayı örter) -->
+<div class="force-gate" id="forceUpdateGate">
+  <div class="force-card">
+    <div class="force-icon"><span>⬆️</span></div>
+    <h2>Güncelleme Gerekli</h2>
+    <div class="force-badge" id="forceVersionBadge">v1.0.0</div>
+    <p class="force-sub" id="forceSubtitle">
+      Uygulamanın yeni bir sürümü yayınlandı. Kullanmaya devam etmek için
+      Play Store'dan güncellemeniz gerekiyor.
+    </p>
+    <div id="forceNotesBox" class="force-notes" style="display:none;"></div>
+    <button class="btn btn-primary" id="forceBtnStore" style="width:100%;margin-top:.4rem;">
+      ▶ Play Store'da Güncelle
+    </button>
+    <div class="force-hint" id="forceHint">
+      Güncelledikten sonra uygulamaya geri dönün.
     </div>
   </div>
 </div>
@@ -1428,7 +1603,138 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 let currentUser = null;
-const CURRENT_APP_VERSION = "1.6.1";
+const CURRENT_APP_VERSION = "5.1.2";
+
+/* ============================================================
+   ZORUNLU GÜNCELLEME (Play Store / native sürüm)
+   ------------------------------------------------------------
+   İKİ FARKLI SÜRÜM KAVRAMI VAR, KARIŞTIRMAYIN:
+
+   • CURRENT_APP_VERSION → OTA (web) sürümü. Admin panelinden
+     yayınlanır, uygulama içinde indirilir. İsteğe bağlıdır.
+
+   • native sürüm (ShiftReminder.getAppVersion) → Play Store'dan
+     kurulan APK sürümü. Yalnızca mağazadan güncellenebilir.
+
+   Firebase'deki appUpdate/store düğümü mağaza sürümünü tutar:
+     { minVersion: "2.0.0", latestVersion: "2.1.0", notes: "..." }
+
+   Kullanıcının native sürümü minVersion'dan küçükse uygulama
+   TAMAMEN KİLİTLENİR: kapatılamayan bir ekran gösterilir ve
+   Play Store'a yönlendirilir.
+   ============================================================ */
+
+// "1.10.2" > "1.9.0" doğru sonuçlansın diye parça parça sayısal karşılaştırma.
+// Dönüş: a<b ise -1, a==b ise 0, a>b ise 1
+function cmpVersions(a, b){
+  const pa = String(a||'0').trim().replace(/^v/i,'').split(/[.\-+]/);
+  const pb = String(b||'0').trim().replace(/^v/i,'').split(/[.\-+]/);
+  const n = Math.max(pa.length, pb.length);
+  for(let i=0; i<n; i++){
+    const x = parseInt(pa[i], 10) || 0;
+    const y = parseInt(pb[i], 10) || 0;
+    if(x < y) return -1;
+    if(x > y) return 1;
+  }
+  return 0;
+}
+
+// Cihazdaki native (Play Store) sürümünü okur. Eklenti yoksa null döner.
+async function getNativeAppVersion(){
+  const SR = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.ShiftReminder) || null;
+  if(SR && typeof SR.getAppVersion === 'function'){
+    try{
+      const r = await SR.getAppVersion();
+      if(r && r.available && r.version) return String(r.version);
+    }catch(e){}
+  }
+  // Capacitor App eklentisi varsa yedek yol
+  const App = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) || null;
+  if(App && typeof App.getInfo === 'function'){
+    try{
+      const info = await App.getInfo();
+      if(info && info.version) return String(info.version);
+    }catch(e){}
+  }
+  return null;
+}
+
+function openPlayStore(){
+  const SR = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.ShiftReminder) || null;
+  if(SR && typeof SR.openStore === 'function'){
+    try{ SR.openStore(); return; }catch(e){}
+  }
+  try{
+    window.open('https://play.google.com/store/apps/details?id=' + (window.__ANDROID_PACKAGE__ || ''), '_blank');
+  }catch(e){}
+}
+
+let _forceGateActive = false;
+function showForceUpdateGate(storeData, installedVersion){
+  const gate = document.getElementById('forceUpdateGate');
+  if(!gate) return;
+  _forceGateActive = true;
+
+  const badge = document.getElementById('forceVersionBadge');
+  const notes = document.getElementById('forceNotesBox');
+  const hint  = document.getElementById('forceHint');
+  const target = storeData.latestVersion || storeData.minVersion;
+
+  if(badge) badge.textContent = 'v' + target;
+  if(hint && installedVersion){
+    hint.textContent = 'Yüklü sürüm: v' + installedVersion + ' · Güncelledikten sonra uygulamaya geri dönün.';
+  }
+  if(notes){
+    if(storeData.notes){
+      notes.innerHTML = formatUpdateNotes(storeData.notes);
+      notes.style.display = notes.innerHTML ? '' : 'none';
+    } else notes.style.display = 'none';
+  }
+
+  const btn = document.getElementById('forceBtnStore');
+  if(btn) btn.onclick = () => openPlayStore();
+
+  gate.classList.add('show');
+  document.body.style.overflow = 'hidden';
+
+  // Geri tuşuyla kapatılamasın: kullanıcı çıkmaya çalışırsa kapı kalır.
+  try{
+    window.history.pushState({forceGate:1}, '');
+    window.addEventListener('popstate', () => {
+      if(_forceGateActive){ try{ window.history.pushState({forceGate:1}, ''); }catch(e){} }
+    });
+  }catch(e){}
+}
+
+// Uygulama öne her geldiğinde yeniden bakılır: kullanıcı mağazada
+// güncelleyip döndüyse kapı kalkar.
+async function checkForcedUpdate(){
+  if(typeof firebase === 'undefined') return false;
+  let storeData = null;
+  try{
+    const snap = await firebase.database().ref('appUpdate/store').once('value');
+    storeData = snap.val();
+  }catch(e){ return false; }
+  if(!storeData || !storeData.minVersion) return false;
+
+  const installed = await getNativeAppVersion();
+  // Native sürüm okunamıyorsa (tarayıcı / eklenti kurulmamış eski sürüm)
+  // kullanıcıyı kilitlemiyoruz; yanlışlıkla herkesi dışarıda bırakmayalım.
+  if(!installed) return false;
+
+  if(cmpVersions(installed, storeData.minVersion) < 0){
+    showForceUpdateGate(storeData, installed);
+    return true;
+  }
+  // Sürüm yeterliyse kapı varsa kaldır.
+  const gate = document.getElementById('forceUpdateGate');
+  if(gate && gate.classList.contains('show')){
+    _forceGateActive = false;
+    gate.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  return false;
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater) {
@@ -1436,6 +1742,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   if (typeof firebase !== 'undefined') {
+    // ÖNCE zorunlu (mağaza) güncelleme kontrolü. Kapı açılırsa OTA
+    // modalını hiç göstermiyoruz; iki pencere üst üste binmesin.
+    let blocked = false;
+    try{ blocked = await checkForcedUpdate(); }catch(e){}
+    if(blocked) return;
+
     firebase.database().ref('appUpdate/latest').once('value').then(snap => {
       const updateData = snap.val();
 
@@ -1447,6 +1759,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         showOtaUpdateModal(updateData);
       }
     }).catch(err => console.log("Güncelleme kontrol hatası:", err));
+  }
+});
+
+// Kullanıcı Play Store'dan dönünce kapının kalkması için.
+document.addEventListener('visibilitychange', () => {
+  if(document.visibilityState === 'visible'){
+    checkForcedUpdate().catch(()=>{});
   }
 });
 
@@ -1705,7 +2024,6 @@ btnThemeToggle.addEventListener('click', () => {
     btnThemeToggle.textContent = '☀️ Aydınlık Mod';
   }
   applyThemeChrome();
-  refreshChartsTheme();
 });
 
 document.querySelectorAll('.dash-tab-btn').forEach(btn => {
@@ -1717,12 +2035,6 @@ document.querySelectorAll('.dash-tab-btn').forEach(btn => {
     const targetPane = parentPage.querySelector('#tab-' + e.target.dataset.tab);
     if(targetPane){
       targetPane.classList.add('active');
-      requestAnimationFrame(() => {
-        targetPane.querySelectorAll('canvas').forEach(c => {
-          const ch = Object.values(charts).find(x => x && x.canvas === c);
-          if(ch && typeof ch.resize === 'function') ch.resize();
-        });
-      });
     }
   });
 });
@@ -1947,20 +2259,37 @@ auth.onAuthStateChanged(user => {
     }
 
     currentListenerRef.on('value', snapshot => {
+      let rawRecords = null;
       if (snapshot.exists()) {
         const data = snapshot.val();
+        rawRecords = data.kayitlar || null;
         records = data.kayitlar || [];
+        // Sunucu hâlâ eski DİZİ formatındaysa işaretle: ilk yazımda anahtarlı
+        // yapıya geçirilecek. Nesne ise zaten yeni format.
+        _serverUsesArrayFormat = Array.isArray(records) && records.length > 0;
         if (!Array.isArray(records)) records = Object.values(records);
         garageData = data.garaj || { vehicles: [], activeVehicleId: null };
       } else {
         records = []; garageData = { vehicles: [], activeVehicleId: null };
+        _serverUsesArrayFormat = false;
       }
       // Eski kayıtlara kalıcı id ver; eksikse buluta geri yaz.
       const idsAdded = ensureRecordIds();
       migrateGarageData();
       saveLocalCache();
+
+      // Sunucudaki güncel hâli anlık görüntü olarak sakla; bundan sonraki
+      // yazımlar sadece gerçek farkları gönderir.
+      if(rawRecords && !Array.isArray(rawRecords) && !idsAdded){
+        const snap = {};
+        Object.keys(rawRecords).forEach(k => { snap[k] = JSON.stringify(rawRecords[k]); });
+        _serverRecordSnapshot = snap;
+      } else {
+        _refreshServerSnapshot();
+      }
+
       if(idsAdded && navigator.onLine !== false){
-        try{ db.ref('kullanicilar/' + currentUser.uid + '/kayitlar').set(_serializeRecords()); }catch(e){}
+        try{ _pushRecords(); }catch(e){}
       }
       updateBonuses();
       scheduleRender();
@@ -1974,9 +2303,6 @@ auth.onAuthStateChanged(user => {
           splashScreen.classList.remove('show');
           appContainer.classList.add('show');
           maybeOpenQuickAddFromShortcut();
-          requestAnimationFrame(() => {
-            Object.values(charts).forEach(ch => { if(ch && typeof ch.resize === 'function') ch.resize(); });
-          });
         }, Math.max(0, 3000 - elapsed));
       }
     }, err => {
@@ -1994,6 +2320,7 @@ auth.onAuthStateChanged(user => {
     if(adminDataListenerRef) { adminDataListenerRef.off(); adminDataListenerRef = null; }
     if(adminFeedbackListenerRef) { adminFeedbackListenerRef.off(); adminFeedbackListenerRef = null; }
     clearLocalCache();
+    _serverRecordSnapshot = {}; _serverUsesArrayFormat = false;
     currentUser = null; 
     splashScreen.classList.remove('show');
     authScreen.style.display = 'flex'; 
@@ -2015,7 +2342,7 @@ function maybeOpenQuickAddFromShortcut(){
   }
 }
 
-let records=[], charts={};
+let records=[];
 let garageData = { vehicles: [], activeVehicleId: null };
 let dateBonusMap = {};
 
@@ -2053,6 +2380,9 @@ function showInfoDialog(opts){
 
 function isOverlayShown(el){ return !!(el && el.classList.contains('show')); }
 function closeTopUi(){
+  // Dönem seçici en üstte: geri tuşu önce onu kapatsın.
+  const sheet = document.getElementById('periodSheet');
+  if(isOverlayShown(sheet)){ closePeriodSheet(); return true; }
   const confirmOv = document.getElementById('confirmOverlay');
   if(isOverlayShown(confirmOv)){
     const btn = document.getElementById('confirmBtnCancel');
@@ -2112,6 +2442,7 @@ function escapeHtml(str){
 }
 const DAYS=['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
 const MONTHS=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+const MONTHS_SHORT=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
 function fmt(n,d=2){if(n==null||isNaN(n))return'0';return Number(n).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function fmtInt(n){return Math.round(Number(n||0)).toLocaleString('tr-TR',{maximumFractionDigits:0})}
 function deltaChip(cur, prev, opts){
@@ -2147,6 +2478,39 @@ function weekOf(t){
   firstThu.setUTCDate(firstThu.getUTCDate() - firstDayNum + 3);
   const week = 1 + Math.round((target - firstThu) / (7 * 86400000));
   return isoYear * 100 + week; // örn. 202636 -> sıralanabilir, çakışmaz
+}
+// ISO hafta numarasindan (202630) o haftanin Pazartesi tarihini bulur.
+function isoWeekStart(code){
+  const year = Math.floor(code / 100);
+  const week = code % 100;
+  // 4 Ocak her zaman 1. haftanin icindedir.
+  const jan4 = new Date(Date.UTC(year, 0, 4));
+  const jan4Day = (jan4.getUTCDay() + 6) % 7;        // Pazartesi = 0
+  const week1Mon = new Date(jan4);
+  week1Mon.setUTCDate(jan4.getUTCDate() - jan4Day);
+  const d = new Date(week1Mon);
+  d.setUTCDate(week1Mon.getUTCDate() + (week - 1) * 7);
+  return d;
+}
+// "202630" -> { title:"27 Tem - 2 Ağu", sub:"2026 · 30. hafta" }
+// Kullaniciya ham kod yerine gercek tarih araligi gosterilir.
+function weekLabelParts(code){
+  const c = +code;
+  if(!c || c < 100000) return { title: 'Hafta ' + code, sub: '' };
+  const mon = isoWeekStart(c);
+  const sun = new Date(mon);
+  sun.setUTCDate(mon.getUTCDate() + 6);
+  const year = Math.floor(c / 100);
+  const week = c % 100;
+  const dm = (d) => d.getUTCDate() + ' ' + MONTHS_SHORT[d.getUTCMonth()];
+  const range = (mon.getUTCMonth() === sun.getUTCMonth())
+    ? mon.getUTCDate() + '-' + sun.getUTCDate() + ' ' + MONTHS_SHORT[sun.getUTCMonth()]
+    : dm(mon) + ' - ' + dm(sun);
+  return { title: range, sub: year + ' · ' + week + '. hafta', week, year };
+}
+function weekLabel(code){
+  const p = weekLabelParts(code);
+  return p.sub ? p.title + ' · ' + p.sub : p.title;
 }
 function monthKey(t){return t.slice(0,7)}
 function monthLabel(k){const[y,m]=k.split('-');return MONTHS[+m-1]+' '+y}
@@ -2185,7 +2549,15 @@ function migrateGarageData() {
   if(!garageData.goals.weekly) garageData.goals.weekly = {};
   if(!garageData.goals.monthly) garageData.goals.monthly = {};
 }
-function activeVehicle() { return garageData.vehicles.find(v => v.id === garageData.activeVehicleId) || garageData.vehicles[0]; }
+// Savunma: migrateGarageData() normalde en az bir araç garanti eder, ama
+// beklenmedik bir veri durumunda (boş dizi) render zincirinin komple
+// çökmemesi için boş bir araç nesnesi döndürüyoruz.
+function activeVehicle() {
+  const list = (garageData && garageData.vehicles) || [];
+  return list.find(v => v && v.id === garageData.activeVehicleId)
+      || list[0]
+      || { id: 'v1', model: '', bakimlar: [] };
+}
 function fallbackVehicleId(){
   if(garageData.activeVehicleId) return garageData.activeVehicleId;
   if(garageData.vehicles && garageData.vehicles[0]) return garageData.vehicles[0].id;
@@ -2285,29 +2657,98 @@ function _serializeRecords(){
   if(!_stripIdsForServer) return records;
   return records.map(r => { const c = {...r}; delete c.id; return c; });
 }
+
+// ============================================================
+//  ANAHTARLI (DELTA) SENKRONİZASYON
+// ------------------------------------------------------------
+//  Eskiden tüm kayıt dizisi .set() ile topluca yazılıyordu. İki cihaz aynı anda
+//  kayıt girdiğinde, geç yazan diğerinin verisini sessizce siliyordu.
+//  Artık kayıtlar id ile anahtarlanır ve SADECE değişen kayıtlar .update() ile
+//  gönderilir. Farklı günleri düzenleyen iki cihaz birbirini ezmez.
+//
+//  Geriye dönük uyumluluk: eski sürümler de veriyi Object.values() ile okuduğu
+//  için, güncellenmemiş cihazlar anahtarlı veriyi sorunsuz görmeye devam eder.
+// ============================================================
+let _serverRecordSnapshot = {};   // id -> son bilinen sunucu hâli (JSON metni)
+let _serverUsesArrayFormat = false; // sunucudaki veri hâlâ eski dizi formatında mı
+
+function _recordKey(r){ return (r && r.id) ? String(r.id) : null; }
+function _recordForServer(r){
+  const c = {...r};
+  if(_stripIdsForServer) delete c.id;
+  return c;
+}
+// Mevcut kayıtları anahtarlı nesneye çevirir (tam yazım / migration için).
+function _keyedRecords(){
+  const out = {};
+  records.forEach(r => { const k = _recordKey(r); if(k) out[k] = _recordForServer(r); });
+  return out;
+}
+// Sunucu anlık görüntüsünü tazeler (başarılı yazımdan veya okumadan sonra).
+function _refreshServerSnapshot(){
+  const snap = {};
+  records.forEach(r => { const k = _recordKey(r); if(k) snap[k] = JSON.stringify(_recordForServer(r)); });
+  _serverRecordSnapshot = snap;
+}
+// Sadece değişen/silinen kayıtları içeren update payload'ı üretir.
+function _buildRecordsDelta(){
+  const payload = {};
+  const live = new Set();
+  records.forEach(r => {
+    const k = _recordKey(r); if(!k) return;
+    live.add(k);
+    const cur = JSON.stringify(_recordForServer(r));
+    if(_serverRecordSnapshot[k] !== cur) payload[k] = _recordForServer(r);
+  });
+  // Yerelde silinmiş olanları sunucudan da kaldır.
+  Object.keys(_serverRecordSnapshot).forEach(k => { if(!live.has(k)) payload[k] = null; });
+  return payload;
+}
+
+function _recordsPath(){ return 'kullanicilar/' + currentUser.uid + '/kayitlar'; }
+
+// Kayıtları delta olarak gönderir. Sunucu hâlâ dizi formatındaysa bir kereliğine
+// tam yazım yaparak anahtarlı yapıya geçirir (migration).
+function _pushRecords(){
+  if(!currentUser) { _setOfflinePending('records', true); return; }
+  if((typeof navigator !== 'undefined') && navigator.onLine === false){ _setOfflinePending('records', true); return; }
+
+  const ref = db.ref(_recordsPath());
+  const onOk = () => { _refreshServerSnapshot(); _setOfflinePending('records', false); };
+  const onErr = (err) => {
+    const msg = String((err && (err.code || err.message)) || '');
+    if(!_stripIdsForServer && /permission|denied|PERMISSION/i.test(msg)){
+      _stripIdsForServer = true;
+      console.warn("Kural uyumluluğu: kayıt id'leri sunucuya gönderilmiyor. database.rules.json güncellenmeli.");
+      ref.set(_keyedRecords()).then(onOk).catch(() => _setOfflinePending('records', true));
+      return;
+    }
+    _setOfflinePending('records', true);
+  };
+
+  if(_serverUsesArrayFormat){
+    // Eski dizi düğümünü anahtarlı nesneyle değiştir (sayısal anahtarlar temizlenir).
+    _serverUsesArrayFormat = false;
+    ref.set(_keyedRecords()).then(onOk).catch(onErr);
+    return;
+  }
+
+  const delta = _buildRecordsDelta();
+  if(!Object.keys(delta).length){ _setOfflinePending('records', false); return; }
+  ref.update(delta).then(onOk).catch(onErr);
+}
+
 function _pushToFirebase(kind, path, value){
   if(!currentUser) { _setOfflinePending(kind, true); return; }
   if((typeof navigator !== 'undefined') && navigator.onLine === false){ _setOfflinePending(kind, true); return; }
   db.ref(path).set(value)
     .then(() => { _setOfflinePending(kind, false); })
-    .catch((err) => {
-      const msg = String((err && (err.code || err.message)) || '');
-      if(kind === 'records' && !_stripIdsForServer && /permission|denied|PERMISSION/i.test(msg)){
-        // Tek seferlik geri çekilme: id'siz tekrar dene.
-        _stripIdsForServer = true;
-        console.warn('Kural uyumluluğu: kayıt id\'leri sunucuya gönderilmiyor. database.rules.json güncellenmeli.');
-        db.ref(path).set(_serializeRecords())
-          .then(() => { _setOfflinePending(kind, false); })
-          .catch(() => { _setOfflinePending(kind, true); });
-        return;
-      }
-      _setOfflinePending(kind, true);
-    });
+    .catch(() => { _setOfflinePending(kind, true); });
 }
 function flushOfflineQueue(){
   if((typeof navigator !== 'undefined') && navigator.onLine === false) return;
   const p = _offlinePending();
-  if(p.records && currentUser) _pushToFirebase('records', 'kullanicilar/' + currentUser.uid + '/kayitlar', _serializeRecords());
+  if(p.records && currentUser) _pushRecords();
   if(p.garage && currentUser) _pushToFirebase('garage', 'kullanicilar/' + currentUser.uid + '/garaj', garageData);
 }
 window.addEventListener('online', () => { updateOfflineBadge(); flushOfflineQueue(); toast('Bağlantı geri geldi, bekleyen veriler senkronlanıyor.', true); });
@@ -2380,8 +2821,11 @@ function commitRecords() {
   ensureRecordIds();
   records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
   updateBonuses(); saveRecords(); checkMaintenanceThresholds();
+  // Bugünün kaydı girildiyse native hatırlatma bunu bilsin ve
+  // akşam gereksiz bildirim göstermesin.
+  try{ if(typeof syncLastRecordDateToNative === 'function') syncLastRecordDateToNative(); }catch(e){}
 }
-function saveRecords() { saveLocalCache(); if(currentUser) _pushToFirebase('records', 'kullanicilar/' + currentUser.uid + '/kayitlar', _serializeRecords()); }
+function saveRecords() { saveLocalCache(); if(currentUser) _pushRecords(); }
 function saveGarage() { saveLocalCache(); if(currentUser) _pushToFirebase('garage', 'kullanicilar/' + currentUser.uid + '/garaj', garageData); }
 
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('show');const mb=document.getElementById('menuBtn');if(mb)mb.style.display='';const bn=document.getElementById('bottomNav');if(bn)bn.style.display=''}
@@ -2506,44 +2950,69 @@ const EXPENSE_CATEGORIES=[
 function categorize(aciklama){const text=(aciklama||'').toUpperCase();for(const c of EXPENSE_CATEGORIES){if(c.kw.some(k=>text.includes(k)))return c.key}return 'Diğer'}
 function categoryBreakdown(recs){const map={};recs.forEach(r=>{if(!(r.diger>0))return;const k=categorize(r.aciklama);map[k]=(map[k]||0)+r.diger});return map}
 function categoryColor(key){const c=EXPENSE_CATEGORIES.find(c=>c.key===key);return c?c.color:'#64748b'}
-function renderCategoryChart(chartKey,canvasId,recs){
-  const map=categoryBreakdown(recs),keys=Object.keys(map).sort((a,b)=>map[b]-map[a]);
-  const canvas=document.getElementById(canvasId);if(!canvas)return;
-  if(!keys.length){
-      setChartEmpty(canvas, 'Bu dönemde kategorilenebilir gider yok');
-      return;
-  }
-  const opts = chartOpts();
-  ensureChart(chartKey, canvasId, {type:'bar',data:{labels:keys,datasets:[{label:'Tutar',data:keys.map(k=>map[k]),backgroundColor:keys.map(categoryColor),borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:opts.scales.x.ticks.color},grid:{color:opts.scales.x.grid.color}},y:{ticks:{color:opts.scales.y.ticks.color,font:{size:11}},grid:{display:false}}}}});
-}
 
-function renderHeatmap(chartKey, canvasId, recs) {
-  const hourCounts = new Array(24).fill(0);
-  recs.forEach(r => {
-    if (r.baslangic && r.bitis) {
-      let h1 = parseInt(r.baslangic.split(':')[0]); let h2 = parseInt(r.bitis.split(':')[0]);
-      if (h2 < h1) h2 += 24;
-      for (let i = h1; i <= h2; i++) hourCounts[i % 24]++;
-    }
-  });
-  const canvas = document.getElementById(canvasId); if (!canvas) return;
-  const maxCount = Math.max(...hourCounts);
-  if (maxCount === 0) {
-      setChartEmpty(canvas, 'Mesai saati girilmiş kayıt yok');
-      return;
-  }
-  const labels = Array.from({length: 24}, (_, i) => `${String(i).padStart(2, '0')}:00`);
-  ensureChart(chartKey, canvasId, {
-    type: 'bar',
-    data: { labels: labels, datasets: [{ label: 'Çalışılan Gün Sayısı', data: hourCounts, backgroundColor: hourCounts.map(v => `rgba(56, 189, 248, ${v === 0 ? 0.1 : (0.2 + (v/maxCount)*0.8)})`), borderColor: '#38bdf8', borderWidth: 1, borderRadius: 4 }] },
-    options: chartOpts(false)
-  });
-}
 
 function weeksList(){const map={};records.forEach(r=>{const w=weekOf(r.tarih);if(!map[w])map[w]={w,recs:[]};map[w].recs.push(r)});return Object.values(map).sort((a,b)=>a.w-b.w)}
 function monthsList(){const map={};records.forEach(r=>{const k=monthKey(r.tarih);if(!map[k])map[k]={key:k,recs:[]};map[k].recs.push(r)});return Object.values(map).sort((a,b)=>a.key.localeCompare(b.key))}
 
 let wIdx=null,mIdx=null;
+
+/* ============================================================
+   DÖNEM SEÇİCİ (alt sayfa)
+   Native <select> Android'de sistem temasıyla açılıyordu ve
+   uygulamanın koyu temasına uymuyordu. Artık kendi alt
+   sayfamızı gösteriyoruz: tarih aralığı + kayıt sayısı ile.
+   ============================================================ */
+let _sheetOnPick = null;
+function openPeriodSheet(opts){
+  const ov = document.getElementById('periodSheet');
+  const list = document.getElementById('periodSheetList');
+  const title = document.getElementById('periodSheetTitle');
+  if(!ov || !list) return;
+  title.textContent = opts.title || 'Seçin';
+  _sheetOnPick = opts.onPick || null;
+
+  list.innerHTML = (opts.items || []).map((it, i) => `
+    <button type="button" class="sheet-item${i === opts.activeIndex ? ' active' : ''}" data-idx="${i}" role="option">
+      <span class="sheet-item-main">
+        <span class="sheet-item-title">${escapeHtml(it.title)}</span>
+        ${it.sub ? `<span class="sheet-item-sub">${escapeHtml(it.sub)}</span>` : ''}
+      </span>
+      <span class="sheet-item-right">
+        ${it.count != null ? `<span class="sheet-item-count">${fmtInt(it.count)} gün</span>` : ''}
+        <svg class="sheet-tick" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+      </span>
+    </button>`).join('');
+
+  ov.classList.add('show');
+  // Seçili olanı görünür alana getir.
+  requestAnimationFrame(() => {
+    const act = list.querySelector('.sheet-item.active');
+    if(act && act.scrollIntoView) { try{ act.scrollIntoView({block:'center'}); }catch(e){} }
+  });
+}
+function closePeriodSheet(){
+  const ov = document.getElementById('periodSheet');
+  if(ov) ov.classList.remove('show');
+  _sheetOnPick = null;
+}
+(function initPeriodSheet(){
+  const ov = document.getElementById('periodSheet');
+  const list = document.getElementById('periodSheetList');
+  const close = document.getElementById('periodSheetClose');
+  if(!ov) return;
+  if(close) close.addEventListener('click', closePeriodSheet);
+  ov.addEventListener('click', (e) => { if(e.target === ov) closePeriodSheet(); });
+  if(list) list.addEventListener('click', (e) => {
+    const btn = e.target.closest('.sheet-item');
+    if(!btn) return;
+    const idx = +btn.dataset.idx;
+    const cb = _sheetOnPick;
+    closePeriodSheet();
+    if(cb) cb(idx);
+  });
+})();
+
 
 function renderWeekly(){
   const map={};
@@ -2568,7 +3037,6 @@ function renderWeeklyDetail(){
     const wm=document.getElementById('wMetrics'); if(wm) wm.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz kayıt yok</div>';
     const wi=document.getElementById('wInsights'); if(wi) wi.innerHTML='';
     const wb=document.getElementById('wBest'); if(wb) wb.innerHTML='';
-    ['cWDaily','cWExpense','cWCategory','cWHeatmap'].forEach(id => { const c=document.getElementById(id); if(c) setChartEmpty(c,'Henüz kayıt yok'); });
     return;
   }
   nav.style.display='';
@@ -2578,9 +3046,12 @@ function renderWeeklyDetail(){
   const prevWeek = weeks.find(w => w.w === cur.w - 1);
   const prevT = prevWeek ? totalsOf(prevWeek.recs) : null;
   
-  document.getElementById('wNavTitle').innerHTML=`Hafta ${cur.w} <span class="period-badge">${recs.length} gün kayıtlı</span>`;
+  const curW = weekLabelParts(cur.w);
+  document.getElementById('wNavTitle').innerHTML=`<span>${escapeHtml(curW.title)}</span> <span class="period-badge">${recs.length} gün kayıtlı</span>`
+    + (curW.sub ? `<div class="period-nav-sub">${escapeHtml(curW.sub)}</div>` : '');
   document.getElementById('btnWPrev').disabled=wIdx===0; document.getElementById('btnWNext').disabled=wIdx===weeks.length-1;
-  document.getElementById('wJump').innerHTML=weeks.map((w,i)=>`<option value="${i}" ${i===wIdx?'selected':''}>Hafta ${w.w}</option>`).join('');
+  const wLabelEl = document.getElementById('wJumpLabel');
+  if(wLabelEl) wLabelEl.textContent = curW.title;
   if(content) content.style.display='';
   
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
@@ -2606,11 +3077,7 @@ ${getWorkingHoursHTML(recs)}
 <div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div></div>
 <div class="best-card"><div class="tag">En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div></div>`;
 
-  ensureChart('wdaily','cWDaily',{type:'line',data:{labels:recs.map(r=>dayName(r.tarih).slice(0,3)),datasets:[{label:'Net',data:recs.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.14)',fill:true,tension:.3,borderWidth:2}]},options:chartOpts(false)});
-  ensureChart('wexp','cWExpense',{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:chartOpts().plugins.legend.labels.color}}},cutout:'62%'}});
   
-  renderCategoryChart('wcat','cWCategory',recs);
-  renderHeatmap('wheatmap', 'cWHeatmap', recs);
 }
 
 function renderMonthly(){
@@ -2636,7 +3103,6 @@ function renderMonthlyDetail(){
     const mm=document.getElementById('mMetrics'); if(mm) mm.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz kayıt yok</div>';
     const mi=document.getElementById('mInsights'); if(mi) mi.innerHTML='';
     const mb=document.getElementById('mBest'); if(mb) mb.innerHTML='';
-    ['cMDaily','cMExpense','cMCategory','cMHeatmap','cMWeekly'].forEach(id => { const c=document.getElementById(id); if(c) setChartEmpty(c,'Henüz kayıt yok'); });
     return;
   }
   nav.style.display='';
@@ -2651,7 +3117,8 @@ function renderMonthlyDetail(){
   
   document.getElementById('mNavTitle').innerHTML=`${monthLabel(cur.key)} <span class="period-badge">${recs.length} gün kayıtlı</span>`;
   document.getElementById('btnMPrev').disabled=mIdx===0; document.getElementById('btnMNext').disabled=mIdx===months.length-1;
-  document.getElementById('mJump').innerHTML=months.map((m,i)=>`<option value="${i}" ${i===mIdx?'selected':''}>${monthLabel(m.key)}</option>`).join('');
+  const mLabelEl = document.getElementById('mJumpLabel');
+  if(mLabelEl) mLabelEl.textContent = monthLabel(cur.key);
   content.style.display='';
   
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
@@ -2677,11 +3144,7 @@ ${getWorkingHoursHTML(recs)}
 <div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div></div>
 <div class="best-card"><div class="tag">En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div></div>`;
 
-  ensureChart('mdaily','cMDaily',{type:'line',data:{labels:recs.map(r=>r.tarih.slice(8,10)+'.'+r.tarih.slice(5,7)),datasets:[{label:'Net',data:recs.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.14)',fill:true,tension:.3,borderWidth:2}]},options:chartOpts(false)});
-  ensureChart('mexp','cMExpense',{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:chartOpts().plugins.legend.labels.color}}},cutout:'62%'}});
   
-  renderHeatmap('mheatmap', 'cMHeatmap', recs);
-  renderCategoryChart('mcat','cMCategory',recs);
 
   const wMap={};recs.forEach(r=>{
     const c=calc(r); const w=weekOf(r.tarih);
@@ -2689,11 +3152,6 @@ ${getWorkingHoursHTML(recs)}
     wMap[w].gelir+=c.toplamGelir; wMap[w].gider+=c.gider; wMap[w].net+=c.net;
   });
   const wKeys=Object.keys(wMap).sort((a,b)=>a-b);
-  ensureChart('mweekly','cMWeekly',{type:'bar',data:{labels:wKeys.map(k=>'Hafta '+k),datasets:[
-      {label:'Gelir',data:wKeys.map(k=>wMap[k].gelir),backgroundColor:'rgba(52,211,153,.75)',borderRadius:5},
-      {label:'Gider',data:wKeys.map(k=>wMap[k].gider),backgroundColor:'rgba(248,113,113,.7)',borderRadius:5},
-      {label:'Net',data:wKeys.map(k=>wMap[k].net),backgroundColor:'rgba(56,189,248,.75)',borderRadius:5}
-      ]},options:chartOpts()});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2702,14 +3160,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const wJump = document.getElementById('wJump');
   if(btnWPrev) btnWPrev.addEventListener('click', () => { if(wIdx > 0) { wIdx--; renderWeeklyDetail(); } });
   if(btnWNext) btnWNext.addEventListener('click', () => { const weeks = weeksList(); if(wIdx < weeks.length - 1) { wIdx++; renderWeeklyDetail(); } });
-  if(wJump) wJump.addEventListener('change', (e) => { wIdx = +e.target.value; renderWeeklyDetail(); });
+  if(wJump) wJump.addEventListener('click', () => {
+    const weeks = weeksList();
+    if(!weeks.length) return;
+    openPeriodSheet({
+      title: 'Hafta Seçin',
+      activeIndex: (wIdx == null ? weeks.length - 1 : wIdx),
+      items: weeks.map(w => {
+        const p = weekLabelParts(w.w);
+        return { title: p.title, sub: p.sub, count: w.recs.length };
+      }),
+      onPick: (i) => { wIdx = i; renderWeeklyDetail(); }
+    });
+  });
 
   const btnMPrev = document.getElementById('btnMPrev');
   const btnMNext = document.getElementById('btnMNext');
   const mJump = document.getElementById('mJump');
   if(btnMPrev) btnMPrev.addEventListener('click', () => { if(mIdx > 0) { mIdx--; renderMonthlyDetail(); } });
   if(btnMNext) btnMNext.addEventListener('click', () => { const months = monthsList(); if(mIdx < months.length - 1) { mIdx++; renderMonthlyDetail(); } });
-  if(mJump) mJump.addEventListener('change', (e) => { mIdx = +e.target.value; renderMonthlyDetail(); });
+  if(mJump) mJump.addEventListener('click', () => {
+    const months = monthsList();
+    if(!months.length) return;
+    openPeriodSheet({
+      title: 'Ay Seçin',
+      activeIndex: (mIdx == null ? months.length - 1 : mIdx),
+      items: months.map(m => ({ title: monthLabel(m.key), sub: '', count: m.recs.length })),
+      onPick: (i) => { mIdx = i; renderMonthlyDetail(); }
+    });
+  });
 });
 
 function renderProjections() {
@@ -2758,115 +3237,6 @@ function renderProjections() {
   }
 }
 
-function chartOpts(legend=true){
-  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  const gridColor = isLight ? 'rgba(203, 213, 225, 0.45)' : 'rgba(30, 42, 58, 0.6)';
-  const textColor = isLight ? '#64748b' : '#94a3b8';
-  return {
-    responsive: true, maintainAspectRatio: false,
-    animation: { duration: 650, easing: 'easeOutQuart' },
-    plugins: { legend: legend ? { labels: { color: textColor, boxWidth: 12, font: { size: 11 } } } : { display: false } },
-    scales: {
-      x: { ticks: { color: textColor, maxTicksLimit: 12, font: { size: 10 } }, grid: { color: gridColor } },
-      y: { ticks: { color: textColor }, grid: { color: gridColor } }
-    }
-  }
-}
-function destroyChart(key){if(charts[key]){try{charts[key].destroy()}catch(e){} charts[key]=null}}
-function markChartReady(canvas){
-  if(!canvas) return;
-  const area = canvas.closest('.chart-area');
-  if(area) area.classList.remove('chart-loading');
-}
-function setChartEmpty(canvas, message){
-  if(!canvas) return;
-  markChartReady(canvas);
-  const area = canvas.closest('.chart-area');
-  canvas.style.display = 'none';
-  if(area){
-    let e = area.querySelector('.empty-inline');
-    if(!e){
-      e = document.createElement('div');
-      e.className = 'empty-inline empty';
-      e.style.padding = '2.2rem 0';
-      area.appendChild(e);
-    }
-    e.textContent = message;
-    e.style.display = '';
-  }
-}
-function setChartVisible(canvas){
-  if(!canvas) return;
-  markChartReady(canvas);
-  canvas.style.display = '';
-  const area = canvas.closest('.chart-area');
-  if(area){
-    const e = area.querySelector('.empty-inline');
-    if(e) e.style.display = 'none';
-  }
-}
-function applyChartThemeColors(ch){
-  if(!ch || !ch.options) return;
-  const base = chartOpts(true);
-  const textColor = base.plugins.legend.labels.color;
-  const gridColor = base.scales.x.grid.color;
-  if(ch.options.plugins && ch.options.plugins.legend && ch.options.plugins.legend.labels){
-    ch.options.plugins.legend.labels.color = textColor;
-  }
-  if(ch.options.scales){
-    Object.keys(ch.options.scales).forEach(axisKey => {
-      const axis = ch.options.scales[axisKey];
-      if(!axis) return;
-      if(axis.ticks) axis.ticks.color = axisKey === 'y1' ? '#fbbf24' : textColor;
-      if(axis.grid && axis.grid.display !== false) axis.grid.color = gridColor;
-    });
-  }
-}
-function refreshChartsTheme(){
-  Object.keys(charts).forEach(key => {
-    const ch = charts[key];
-    if(!ch) return;
-    applyChartThemeColors(ch);
-    try{ ch.update(); }catch(e){}
-  });
-}
-function ensureChart(key, canvasId, config){
-  // Chart.js CDN'i kaldırıldı; grafikler tamamen devre dışı.
-  if(typeof Chart === 'undefined') return null;
-  const canvas = document.getElementById(canvasId);
-  if(!canvas) return null;
-  setChartVisible(canvas);
-  const incomingType = config.type;
-  const existing = charts[key];
-  if(existing && existing.canvas === canvas && existing.config && existing.config.type === incomingType){
-    try{
-      existing.data.labels = config.data.labels || [];
-      const incoming = config.data.datasets || [];
-      while(existing.data.datasets.length > incoming.length) existing.data.datasets.pop();
-      incoming.forEach((ds, i) => {
-        if(!existing.data.datasets[i]){
-          existing.data.datasets.push(ds);
-        } else {
-          const cur = existing.data.datasets[i];
-          Object.keys(ds).forEach(k => { cur[k] = ds[k]; });
-        }
-      });
-      applyChartThemeColors(existing);
-      existing.update();
-      if(typeof existing.resize === 'function') existing.resize();
-      return existing;
-    }catch(e){
-      try{ existing.destroy(); }catch(err){}
-      charts[key] = null;
-    }
-  }
-  if(charts[key]){
-    try{ charts[key].destroy(); }catch(e){}
-    charts[key] = null;
-  }
-  charts[key] = new Chart(canvas, config);
-  return charts[key];
-}
 
 function metricSwipe(cls, slides){
   const html = (slides||[]).map(s => `<div class="metric-slide"><div class="metric-label">${s.label}</div><div class="metric-value"${s.size?` style="font-size:${s.size}"`:''}>${s.value}</div><div class="metric-sub">${s.sub||''}</div></div>`).join('');
@@ -2979,7 +3349,6 @@ function renderDash(){
 <div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(calc(b.bestTlkm).net)+' ₺ net':''}</div></div>
 <div class="best-card"><div class="tag">En çok paket atılan gün</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big amber">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km':''}</div></div>`;
   
-  renderHeatmap('allheatmap', 'cHeatmapAll', records);
   
   const byM={};records.forEach(r=>{
     const c=calc(r); const k=monthKey(r.tarih);
@@ -2987,26 +3356,6 @@ function renderDash(){
     byM[k].gelir+=c.toplamGelir; byM[k].gider+=(r.yakit||0)+(r.diger||0);
   });
   
-  const sorted=[...records].sort((a,b)=>a.tarih.localeCompare(b.tarih));
-  const mKeys=Object.keys(byM).sort(),mLab=mKeys.map(monthLabel);
-  
-  ensureChart('monthly','cMonthly',{type:'bar',data:{labels:mLab,datasets:[
-    {label:'Gelir',data:mKeys.map(k=>byM[k].gelir),backgroundColor:'rgba(52,211,153,.75)',borderRadius:5},
-    {label:'Gider',data:mKeys.map(k=>byM[k].gider),backgroundColor:'rgba(248,113,113,.7)',borderRadius:5},
-    {label:'Net',data:mKeys.map(k=>byM[k].gelir-byM[k].gider),backgroundColor:'rgba(56,189,248,.75)',borderRadius:5}
-  ]},options:chartOpts()});
-  
-  ensureChart('expense','cExpense',{type:'doughnut',data:{labels:['Yakıt','Diğer'],datasets:[{data:[t.yakit,t.diger],backgroundColor:['#fb923c','#a78bfa'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:chartOpts().plugins.legend.labels.color,boxWidth:12,padding:14,font:{size:12}}}},cutout:'62%'}});
-  
-  ensureChart('daily','cDaily',{type:'line',data:{labels:sorted.map(r=>r.tarih.slice(5)),datasets:[{label:'Net',data:sorted.map(r=>calc(r).net),borderColor:'#38bdf8',backgroundColor:'rgba(56,189,248,.12)',fill:true,tension:.35,pointRadius:2,pointHoverRadius:5,borderWidth:2}]},options:chartOpts(false)});
-  
-  const delivOpts = chartOpts();
-  ensureChart('deliv','cDeliv',{type:'bar',data:{labels:sorted.map(r=>r.tarih.slice(5)),datasets:[
-    {label:'Paket',data:sorted.map(r=>r.teslimat||0),backgroundColor:'rgba(52,211,153,.65)',borderRadius:3,yAxisID:'y'},
-    {label:'KM',data:sorted.map(r=>r.km||0),type:'line',borderColor:'#fbbf24',backgroundColor:'transparent',tension:.3,pointRadius:1.5,borderWidth:2,yAxisID:'y1'}
-  ]},options:{responsive:true,maintainAspectRatio:false,animation:delivOpts.animation,plugins:{legend:{labels:{color:delivOpts.plugins.legend.labels.color,boxWidth:12,font:{size:11}}}},scales:{x:{ticks:{color:delivOpts.scales.x.ticks.color,maxTicksLimit:10,font:{size:10}},grid:{display:false}},y:{position:'left',ticks:{color:delivOpts.scales.y.ticks.color},grid:{color:delivOpts.scales.y.grid.color}},y1:{position:'right',ticks:{color:'#fbbf24'},grid:{display:false}}}}});
-  
-  renderCategoryChart('cat','cCategory',records);
 }
 
 function renderDaily(){
@@ -3524,6 +3873,303 @@ if(btnEnableNotifEl){
   refreshNotifBtnLabel();
 }
 
+/* ============================================================
+   VARDİYA SONU HATIRLATMASI
+   ------------------------------------------------------------
+   TERCİH EDİLEN YOL — native ShiftReminder eklentisi:
+     AlarmManager ile gerçek zamanlanmış bildirim kurar; uygulama
+     KAPALIYKEN ve cihaz yeniden başlatıldıktan sonra da çalışır.
+     (Kurulum: android-plugin/KURULUM.md — Play Store sürümü gerekir.)
+
+   YEDEK YOL — eklenti yoksa (eski sürüm / tarayıcı):
+     1) Uygulama açıkken dakikalık kontrol.
+     2) Kapalıyken saat geçtiyse, bir sonraki açılışta "kaçırılmış
+        hatırlatma" olarak gösterilir.
+
+   Not: Resmî LocalNotifications eklentisine HÂLÂ dokunmuyoruz;
+   getPermissionStates NPE'si uygulamayı çökertiyordu.
+
+   Her iki yolda da: günde en fazla bir kez tetiklenir ve o güne ait
+   kayıt zaten girilmişse hiç gösterilmez.
+   ============================================================ */
+const REMINDER_ENABLED_KEY = 'kurye_reminder_enabled';
+const REMINDER_TIME_KEY    = 'kurye_reminder_time';
+const REMINDER_LAST_KEY    = 'kurye_reminder_last'; // en son hatırlatılan gün (YYYY-MM-DD)
+
+// Native zamanlanmış hatırlatma eklentisi (varsa)
+function getShiftReminderPlugin(){
+  return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.ShiftReminder) || null;
+}
+let _nativeReminderInfo = { available: false, exact: true, notificationsAllowed: true };
+
+// VARSAYILAN: hatırlatma AÇIK ve saat 23:00.
+// Kullanıcı bir kez kapatmışsa/saati değiştirmişse tercihi korunur:
+// localStorage'da kayıt YOKSA varsayılan uygulanır, VARSA ona uyulur.
+const REMINDER_DEFAULT_TIME = '23:00';
+function reminderIsEnabled(){
+  const v = localStorage.getItem(REMINDER_ENABLED_KEY);
+  if(v === null) return true;   // hiç dokunulmamış -> varsayılan açık
+  return v === '1';
+}
+function reminderTime(){
+  const t = localStorage.getItem(REMINDER_TIME_KEY) || REMINDER_DEFAULT_TIME;
+  return /^\d{2}:\d{2}$/.test(t) ? t : REMINDER_DEFAULT_TIME;
+}
+// O gün için (herhangi bir araçta) kayıt girilmiş mi?
+function hasRecordForToday(){
+  const today = todayISO();
+  return records.some(r => r && r.tarih === today);
+}
+async function sendShiftReminder(){
+  const title = 'Vardiya sonu · Kurye OS';
+  const body  = 'Bugünün kaydını henüz girmediniz. KM, paket ve kazancınızı girmek için birkaç saniye yeterli.';
+  const BG = getSafePermPlugin();
+  if(BG && typeof BG.showNotification === 'function'){
+    try{ await BG.showNotification({ title, body }); return true; }
+    catch(e){ console.log('Hatırlatma bildirimi gönderilemedi:', e); }
+  }
+  if(typeof Notification !== 'undefined' && Notification.permission === 'granted'){
+    try{ new Notification(title, { body }); return true; }catch(e){}
+  }
+  // Bildirim yoksa en azından uygulama içinde göster.
+  toast(body, true);
+  return false;
+}
+// Hatırlatma vakti geldi mi? (aynı gün tekrar tetiklenmez)
+function checkShiftReminder(){
+  try{
+    if(!reminderIsEnabled()) return;
+    if(!currentUser) return;
+    const today = todayISO();
+    if(localStorage.getItem(REMINDER_LAST_KEY) === today) return;
+
+    const [hh, mm] = reminderTime().split(':').map(Number);
+    const now = new Date();
+    const due = new Date();
+    due.setHours(hh, mm, 0, 0);
+    if(now < due) return;                 // vakit gelmedi
+    if(hasRecordForToday()){              // kayıt zaten girilmiş: rahatsız etme
+      localStorage.setItem(REMINDER_LAST_KEY, today);
+      return;
+    }
+    localStorage.setItem(REMINDER_LAST_KEY, today);
+    sendShiftReminder();
+  }catch(e){ /* hatırlatma asla uygulamayı bozmamalı */ }
+}
+
+// Tercihleri native tarafa yansıt: alarmı kur ya da iptal et.
+async function syncNativeReminder(){
+  const SR = getShiftReminderPlugin();
+  if(!SR) return false;
+  try{
+    if(reminderIsEnabled()){
+      const [hh, mm] = reminderTime().split(':').map(Number);
+      const res = await SR.schedule({
+        hour: hh, minute: mm,
+        title: 'Vardiya sonu · Kurye OS',
+        body: 'Bugünün kaydını henüz girmediniz. KM, paket ve kazancınızı girmek için birkaç saniye yeterli.'
+      });
+      if(res && typeof res.exact === 'boolean') _nativeReminderInfo.exact = res.exact;
+    } else {
+      await SR.cancel();
+    }
+    return true;
+  }catch(e){ console.log('Native hatırlatma kurulamadı:', e); return false; }
+}
+
+// Native tarafın "bugün kayıt girildi mi?" sorusunu uygulama kapalıyken de
+// yanıtlayabilmesi için son kayıt tarihini paylaşıyoruz.
+function syncLastRecordDateToNative(){
+  const SR = getShiftReminderPlugin();
+  if(!SR || typeof SR.setLastRecordDate !== 'function') return;
+  try{ SR.setLastRecordDate({ date: hasRecordForToday() ? todayISO() : '' }); }catch(e){}
+}
+
+async function refreshNativeReminderInfo(){
+  const SR = getShiftReminderPlugin();
+  if(!SR){ _nativeReminderInfo.available = false; return; }
+  _nativeReminderInfo.available = true;
+  try{
+    if(typeof SR.status === 'function'){
+      const st = await SR.status();
+      if(st){
+        if(typeof st.canScheduleExact === 'boolean') _nativeReminderInfo.exact = st.canScheduleExact;
+        if(typeof st.notificationsAllowed === 'boolean') _nativeReminderInfo.notificationsAllowed = st.notificationsAllowed;
+      }
+    }
+  }catch(e){}
+}
+
+function updateReminderStatusUI(){
+  const box  = document.getElementById('reminderStatus');
+  const card = document.getElementById('reminderCard');
+  const body = document.getElementById('reminderBody');
+  const on   = reminderIsEnabled();
+  const t    = reminderTime();
+
+  // Kart görünümü: açıkken vurgulu, kapalıyken sade.
+  if(card) card.classList.toggle('on', on);
+  if(body) body.classList.toggle('hidden', !on);
+
+  // Saat göstergesi ve hızlı seçim rozetleri
+  const val = document.getElementById('reminderTimeVal');
+  if(val) val.textContent = t;
+  const quick = document.getElementById('reminderQuick');
+  if(quick) quick.querySelectorAll('.rem-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.t === t);
+  });
+  const timeInput = document.getElementById('reminderTime');
+  if(timeInput && timeInput.value !== t) timeInput.value = t;
+
+  if(!box) return;
+  if(!on){
+    box.className = 'rem-status';
+    box.textContent = 'Hatırlatma kapalı. Açarsanız gün sonunda kaydınızı hatırlatırız.';
+    return;
+  }
+
+  const native = _nativeReminderInfo.available;
+  let msg, cls;
+  if(native && _nativeReminderInfo.exact){
+    cls = 'rem-status on';
+    msg = `✓ Her gün ${t} · uygulama kapalıyken de bildirim alırsınız.`;
+  } else if(native){
+    cls = 'rem-status warn';
+    msg = `⏰ Her gün ${t} · kesin alarm izni verilmediği için bildirim birkaç dakika sapabilir.`;
+  } else {
+    cls = 'rem-status warn';
+    msg = `⚠ Her gün ${t} · uygulama kapalıyken bildirim için Play Store güncellemesi gerekiyor.`;
+  }
+  box.className = cls;
+  box.textContent = msg;
+
+  // Kesin alarm izni yoksa tek dokunuşla ayarlara götüren buton.
+  if(native && !_nativeReminderInfo.exact){
+    const a = document.createElement('button');
+    a.type = 'button';
+    a.className = 'btn btn-ghost btn-sm';
+    a.style.cssText = 'margin-top:.6rem;display:block;';
+    a.textContent = '⏰ Kesin alarm iznini ver';
+    a.addEventListener('click', async () => {
+      const SR = getShiftReminderPlugin();
+      if(SR && typeof SR.openExactAlarmSettings === 'function'){
+        try{ await SR.openExactAlarmSettings(); }catch(e){}
+        toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+      }
+    });
+    box.appendChild(a);
+  }
+}
+
+// Saat değişimini tek yerden yönet (input ve hızlı rozetler ortak kullanır).
+function applyReminderTime(v){
+  if(!/^\d{2}:\d{2}$/.test(v)) return false;
+  localStorage.setItem(REMINDER_TIME_KEY, v);
+  // Saat ileri alındıysa bugünkü "gönderildi" işaretini kaldır.
+  const [hh, mm] = v.split(':').map(Number);
+  const due = new Date(); due.setHours(hh, mm, 0, 0);
+  if(new Date() < due) localStorage.removeItem(REMINDER_LAST_KEY);
+  updateReminderStatusUI();
+  syncNativeReminder().then(() => updateReminderStatusUI());
+  toast('Hatırlatma saati ' + v + ' olarak ayarlandı.', true);
+  return true;
+}
+
+(function initShiftReminder(){
+  const chk  = document.getElementById('reminderEnabled');
+  const time = document.getElementById('reminderTime');
+  if(!chk || !time) return;
+
+  chk.checked  = reminderIsEnabled();
+  time.value   = reminderTime();
+
+  // Varsayılan AÇIK: ilk kurulumda tercih henüz yazılmamışsa şimdi yaz ki
+  // native alarm da kurulsun. Mevcut kullanıcının tercihi ezilmez.
+  const firstRun = localStorage.getItem(REMINDER_ENABLED_KEY) === null;
+  if(firstRun){
+    localStorage.setItem(REMINDER_ENABLED_KEY, '1');
+    if(!localStorage.getItem(REMINDER_TIME_KEY)){
+      localStorage.setItem(REMINDER_TIME_KEY, REMINDER_DEFAULT_TIME);
+    }
+  }
+  updateReminderStatusUI();
+
+  // Hızlı saat seçimi
+  const quick = document.getElementById('reminderQuick');
+  if(quick) quick.addEventListener('click', (e) => {
+    const chip = e.target.closest('.rem-chip');
+    if(!chip) return;
+    applyReminderTime(chip.dataset.t);
+  });
+
+  chk.addEventListener('change', async () => {
+    if(chk.checked){
+      // Bildirim izni yoksa iste; izin verilmese bile uygulama içi uyarı çalışır.
+      let granted = await checkNotifGranted();
+      if(!granted){
+        const BG = getSafePermPlugin();
+        if(BG && typeof BG.requestNotificationPermission === 'function'){
+          try{ const r = await BG.requestNotificationPermission(); granted = !!(r && r.granted); }catch(e){}
+        } else if(typeof Notification !== 'undefined'){
+          try{
+            let p = Notification.permission;
+            if(p === 'default') p = await Notification.requestPermission();
+            granted = (p === 'granted');
+          }catch(e){}
+        }
+      }
+      localStorage.setItem(REMINDER_ENABLED_KEY, '1');
+      toast(granted
+        ? 'Vardiya sonu hatırlatması açıldı.'
+        : 'Hatırlatma açıldı, ancak bildirim izni yok: uygulama açıkken uyarı göreceksiniz.', granted);
+    } else {
+      localStorage.setItem(REMINDER_ENABLED_KEY, '0');
+      toast('Vardiya sonu hatırlatması kapatıldı.', false);
+    }
+    await syncNativeReminder();
+    await refreshNativeReminderInfo();
+    syncLastRecordDateToNative();
+    updateReminderStatusUI();
+    checkShiftReminder();
+  });
+
+  time.addEventListener('change', () => {
+    if(!applyReminderTime(time.value)) time.value = reminderTime();
+  });
+
+  // Native eklenti varsa alarmı o kurar; JS yedeği devre dışı kalır
+  // (aksi halde aynı gün iki bildirim gösterilebilirdi).
+  refreshNativeReminderInfo().then(async () => {
+    updateReminderStatusUI();
+    // Varsayılan açık geldiği için ilk açılışta bildirim iznini bir kez isteriz.
+    if(firstRun && !(await checkNotifGranted())){
+      const BG = getSafePermPlugin();
+      if(BG && typeof BG.requestNotificationPermission === 'function'){
+        try{ await BG.requestNotificationPermission(); }catch(e){}
+      }
+      updateReminderStatusUI();
+    }
+    if(_nativeReminderInfo.available){
+      // Tercih zaten açıksa alarmın kurulu olduğundan emin ol.
+      if(reminderIsEnabled()) syncNativeReminder();
+      syncLastRecordDateToNative();
+      document.addEventListener('visibilitychange', () => {
+        if(document.visibilityState === 'visible'){
+          syncLastRecordDateToNative();
+          refreshNativeReminderInfo().then(updateReminderStatusUI);
+        }
+      });
+      return;
+    }
+    // --- YEDEK YOL (native yok) ---
+    setInterval(checkShiftReminder, 60000);
+    document.addEventListener('visibilitychange', () => {
+      if(document.visibilityState === 'visible'){ checkShiftReminder(); updateReminderStatusUI(); }
+    });
+    setTimeout(checkShiftReminder, 4000);
+  });
+})();
+
 /* BAKIM KM EŞİĞİ TAKİBİ (1000 km ve 500 km kala hatırlatma) */
 const MAINT_THRESHOLDS = [1000, 500];
 
@@ -3682,7 +4328,6 @@ function renderGarage() {
 
   if(document.getElementById('fuelEfficiencyVal')) document.getElementById('fuelEfficiencyVal').textContent = t.avgKmPerLitre!=null ? fmt(t.avgKmPerLitre,1) + ' km/L' : 'Veri yok';
   if(document.getElementById('fuelPriceVal')) document.getElementById('fuelPriceVal').textContent = t.avgFuelPrice!=null ? fmt(t.avgFuelPrice,2) + ' ₺/L' : 'Veri yok';
-  renderFuelEfficiencyChart(vRecs);
 
   const list = document.getElementById('maintenanceList');
   const bakimlar = av.bakimlar || [];
@@ -3760,12 +4405,6 @@ document.getElementById('btnDeleteVehicle').addEventListener('click', () => {
   }, {title:'Aracı Sil', icon:'🏍️'});
 });
 
-function renderFuelEfficiencyChart(vRecs){
-  const recs = (vRecs||[]).filter(r => r.yakitLitre > 0 && r.km > 0).sort((a,b) => a.tarih.localeCompare(b.tarih));
-  const canvas = document.getElementById('cFuelEff'); if(!canvas) return;
-  if(!recs.length){ setChartEmpty(canvas, 'Litre girilmiş kayıt yok'); return; }
-  ensureChart('fueleff','cFuelEff', { type: 'line', data: { labels: recs.map(r => r.tarih.slice(5)), datasets: [{ label: 'km/L', data: recs.map(r => r.km / r.yakitLitre), borderColor: '#34d399', backgroundColor: 'rgba(52,211,153,.14)', fill: true, tension: .3, borderWidth: 2 }] }, options: chartOpts(false) });
-}
 
 document.getElementById('btnSaveGarageInfo').addEventListener('click', () => { activeVehicle().model = document.getElementById('garageModel').value; saveGarage(); renderGarage(); toast('Kaydedildi', true); });
 document.getElementById('btnAddMaintenance').addEventListener('click', () => { document.getElementById('maintenanceOverlay').classList.add('show'); });
@@ -3901,32 +4540,149 @@ document.getElementById('btnSaveTiers').addEventListener('click', ()=>{
   toast('Bonus ayarları kaydedildi', true);
 });
 
-function exportUserData(){
-  const payload = {
-    version: CURRENT_APP_VERSION,
-    exportedAt: new Date().toISOString(),
-    email: currentUser ? currentUser.email : '',
-    kayitlar: records,
-    garaj: garageData
+/* ============================================================
+   AYLIK ÖZET · PDF
+   ------------------------------------------------------------
+   Harici PDF kütüphanesi (jsPDF vb.) YÜKLEMİYORUZ: hem paket
+   boyutunu şişirir hem de CDN gerektirdiği için çevrimdışı
+   çalışmaz. Bunun yerine yazdırmaya hazır bir HTML belgesi
+   üretip cihazın kendi "Yazdır → PDF olarak kaydet" akışını
+   kullanıyoruz. Android ve iOS'ta yerleşik olarak desteklenir.
+   ============================================================ */
+function buildMonthlyReportHtml(monthKeyStr, recs){
+  const t = totalsOf(recs);
+  const sorted = recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
+  const vName = (id) => {
+    const v = (garageData.vehicles||[]).find(x => x.id === id);
+    return v ? (v.model || 'İsimsiz Araç') : '—';
   };
-  const text = JSON.stringify(payload, null, 2);
-  try {
-    const blob = new Blob([text], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'kurye-os-' + todayISO() + '.json';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1500);
-    toast('Yedek dosyası hazırlandı', true);
-  } catch(err){
-    toast(friendlyError(err), false);
-  }
+  const money = (n) => fmt(n) + ' ₺';
+  const workDays = sorted.filter(r => (r.km||0)>0 || (r.teslimat||0)>0).length;
+  const hours = sorted.reduce((a,r)=>a+(calc(r).netSaat||0),0);
+  const bonusMode = getBonusMode() === 'daily' ? 'Günlük' : 'Haftalık';
+
+  const rows = sorted.map(r => {
+    const c = calc(r);
+    return `<tr>
+      <td>${escapeHtml(r.tarih)}</td>
+      <td>${escapeHtml(dayName(r.tarih))}</td>
+      <td class="r">${fmtInt(r.km||0)}</td>
+      <td class="r">${fmtInt(r.teslimat||0)}</td>
+      <td class="r">${fmt(r.gelir||0)}</td>
+      <td class="r">${c.bonus>0?fmt(c.bonus):'—'}</td>
+      <td class="r">${fmt(r.yakit||0)}</td>
+      <td class="r">${fmt(r.diger||0)}</td>
+      <td class="r ${c.net<0?'neg':'pos'}"><b>${fmt(c.net)}</b></td>
+    </tr>`;
+  }).join('');
+
+  const kpi = (label, value, sub) =>
+    `<div class="kpi"><div class="kpi-l">${escapeHtml(label)}</div><div class="kpi-v">${value}</div>${sub?`<div class="kpi-s">${sub}</div>`:''}</div>`;
+
+  return `<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<title>Kurye OS · ${escapeHtml(monthLabel(monthKeyStr))} Özeti</title>
+<style>
+  @page { size: A4; margin: 14mm; }
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#111;margin:0;font-size:12px;line-height:1.45}
+  h1{font-size:20px;margin:0 0 2px}
+  .sub{color:#666;font-size:11px;margin-bottom:14px}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:14px}
+  .brandline{font-size:11px;color:#666;text-align:right}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+  .kpi{border:1px solid #ddd;border-radius:6px;padding:8px 10px}
+  .kpi-l{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:#777;margin-bottom:3px}
+  .kpi-v{font-size:15px;font-weight:700}
+  .kpi-s{font-size:9px;color:#888;margin-top:2px}
+  h2{font-size:13px;margin:16px 0 7px;padding-bottom:4px;border-bottom:1px solid #ddd}
+  table{width:100%;border-collapse:collapse;font-size:10.5px}
+  th{background:#f3f4f6;text-align:left;padding:5px 6px;border-bottom:1.5px solid #ccc;font-size:9px;text-transform:uppercase;letter-spacing:.03em;color:#555}
+  td{padding:4px 6px;border-bottom:1px solid #eee}
+  td.r,th.r{text-align:right}
+  tfoot td{border-top:1.5px solid #999;font-weight:700;background:#fafafa}
+  .pos{color:#047857}.neg{color:#b91c1c}
+  .foot{margin-top:18px;padding-top:8px;border-top:1px solid #ddd;font-size:9px;color:#888;display:flex;justify-content:space-between}
+  tr{page-break-inside:avoid}
+  @media print{ .noprint{display:none!important} }
+</style></head><body>
+<div class="head">
+  <div>
+    <h1>${escapeHtml(monthLabel(monthKeyStr))} · Aylık Özet</h1>
+    <div class="sub">Kurye OS finansal rapor${currentUser && currentUser.email ? ' · ' + escapeHtml(currentUser.email) : ''}</div>
+  </div>
+  <div class="brandline">Oluşturma: ${escapeHtml(todayISO())}<br>Bonus sistemi: ${bonusMode}</div>
+</div>
+
+<div class="kpis">
+  ${kpi('Net Kazanç', '<span class="'+(t.net>=0?'pos':'neg')+'">'+money(t.net)+'</span>', 'Gelir − Gider')}
+  ${kpi('Toplam Gelir', money(t.gelir), t.totalBonus>0 ? fmt(t.totalBonus)+' ₺ bonus dahil' : 'Bonus yok')}
+  ${kpi('Toplam Gider', money(t.gider), fmt(t.yakit)+' ₺ yakıt')}
+  ${kpi('Çalışılan Gün', fmtInt(workDays), hours>0 ? fmt(hours,1)+' saat' : '')}
+</div>
+<div class="kpis">
+  ${kpi('Toplam KM', fmtInt(t.km) + ' km', t.tlkm ? fmt(t.tlkm)+' ₺/km' : '')}
+  ${kpi('Toplam Paket', fmtInt(t.tes), t.perPkg ? fmt(t.perPkg)+' ₺/paket' : '')}
+  ${kpi('Günlük Ortalama', money(t.gunOrt), 'Çalışılan güne göre')}
+  ${kpi('Yakıt Verimi', t.avgKmPerLitre!=null ? fmt(t.avgKmPerLitre,1)+' km/L' : 'Veri yok', t.avgFuelPrice!=null ? fmt(t.avgFuelPrice)+' ₺/L' : '')}
+</div>
+
+<h2>Günlük Döküm</h2>
+<table>
+  <thead><tr>
+    <th>Tarih</th><th>Gün</th><th class="r">KM</th><th class="r">Paket</th>
+    <th class="r">Gelir</th><th class="r">Bonus</th><th class="r">Yakıt</th><th class="r">Diğer</th><th class="r">Net</th>
+  </tr></thead>
+  <tbody>${rows || '<tr><td colspan="9" style="text-align:center;color:#999;padding:14px">Bu ayda kayıt yok</td></tr>'}</tbody>
+  <tfoot><tr>
+    <td colspan="2">TOPLAM</td>
+    <td class="r">${fmtInt(t.km)}</td>
+    <td class="r">${fmtInt(t.tes)}</td>
+    <td class="r">${fmt(t.gelir - t.totalBonus)}</td>
+    <td class="r">${fmt(t.totalBonus)}</td>
+    <td class="r">${fmt(t.yakit)}</td>
+    <td class="r">${fmt(t.diger)}</td>
+    <td class="r ${t.net<0?'neg':'pos'}">${fmt(t.net)}</td>
+  </tr></tfoot>
+</table>
+
+<div class="foot">
+  <span>Kurye OS v${escapeHtml(CURRENT_APP_VERSION)}</span>
+  <span>${escapeHtml(monthLabel(monthKeyStr))} · ${fmtInt(sorted.length)} kayıt</span>
+</div>
+</body></html>`;
 }
-const btnExportData = document.getElementById('btnExportData');
-if(btnExportData) btnExportData.addEventListener('click', exportUserData);
+
+function exportMonthlyPdf(){
+  const months = monthsList();
+  if(!months.length) return toast('Önce en az bir kayıt girin', false);
+  const idx = (mIdx==null) ? months.length-1 : Math.max(0, Math.min(mIdx, months.length-1));
+  const cur = months[idx];
+  if(!cur || !cur.recs.length) return toast('Bu ayda kayıt yok', false);
+
+  const html = buildMonthlyReportHtml(cur.key, cur.recs);
+  // Gizli iframe içinde yazdır: sayfadan ayrılmadan, pop-up engeline takılmadan.
+  const old = document.getElementById('pdfFrame');
+  if(old) old.remove();
+  const f = document.createElement('iframe');
+  f.id = 'pdfFrame';
+  f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+  document.body.appendChild(f);
+  const doc = f.contentDocument || f.contentWindow.document;
+  doc.open(); doc.write(html); doc.close();
+  const go = () => {
+    try{
+      f.contentWindow.focus();
+      f.contentWindow.print();
+      toast('Yazdırma ekranında "PDF olarak kaydet" seçin.', true);
+    }catch(e){
+      toast('PDF oluşturulamadı: ' + friendlyError(e), false);
+    }
+  };
+  if(doc.readyState === 'complete') setTimeout(go, 250);
+  else f.onload = () => setTimeout(go, 250);
+}
+const btnMonthlyPdfEl = document.getElementById('btnMonthlyPdf');
+if(btnMonthlyPdfEl) btnMonthlyPdfEl.addEventListener('click', exportMonthlyPdf);
 
 // --- CSV DIŞA AKTARIM (muhasebe / vergi için) ---
 function exportCsv(){
@@ -4583,6 +5339,18 @@ window.deleteUserDatabase = function(uid, email) {
       return session;
     },
 
+    // UI her saniye çağırır: native servisin saydığı mesafeyi yerel oturuma
+    // çeker. Native mesafeyi KENDİ hesapladığı için (onLoc callback'i arka
+    // planda kısılabiliyor/hiç gelmeyebiliyor) tek doğru kaynak burasıdır.
+    syncNativeDistance: async function () {
+      if (!getBgGeo()) return session;
+      try {
+        const native = await pullNativeState();
+        if (native) { mergeNative(native); notify(); }
+      } catch (e) { /* sessiz: gösterge donmasın */ }
+      return session;
+    },
+
     resetSession: function () {
       session = { totalKm: 0, lastLat: null, lastLon: null, startTime: null, active: false };
       saveSession(session, true);
@@ -4705,9 +5473,23 @@ window.deleteUserDatabase = function(uid, email) {
       // Dashboard Süre/Mesafe artık her saniye getSession() ile güncelleniyor.
       // Önceden yalnızca konum fix'i geldikçe (onTrackerUpdate) güncelleniyordu;
       // kapalı alanda fix gecikince/show edilmeyince gösterge 00:00:00'da donuyordu.
+      let tick = 0;
+      let syncing = false;
       uiTickInterval = setInterval(function () {
-        const s = window.BackgroundTracker ? window.BackgroundTracker.getSession() : null;
-        renderSessionLabels(s);
+        const T = window.BackgroundTracker;
+        if (!T) return;
+        renderSessionLabels(T.getSession());
+        // Mesafeyi native servis sayıyor. Saniyede bir köprü çağrısı pahalı
+        // olduğu için 3 saniyede bir senkronize ediyoruz; üst üste binmesin
+        // diye de basit bir kilit kullanıyoruz.
+        tick++;
+        if (tick % 3 === 0 && !syncing && typeof T.syncNativeDistance === 'function') {
+          syncing = true;
+          T.syncNativeDistance()
+            .then(function (s) { renderSessionLabels(s); })
+            .catch(function () {})
+            .then(function () { syncing = false; });
+        }
       }, 1000);
     }
 
@@ -4883,6 +5665,81 @@ window.deleteUserDatabase = function(uid, email) {
 <!-- GÜNCELLEME YÖNETİMİ (OTA) VE ROLLBACK -->
 <script>
 (function () {
+  // --- ZORUNLU MAĞAZA SÜRÜMÜ YÖNETİMİ ---
+  function initStoreGatePanel(){
+    const minEl    = document.getElementById('storeMinVersion');
+    const latestEl = document.getElementById('storeLatestVersion');
+    const notesEl  = document.getElementById('storeNotes');
+    const btnSave  = document.getElementById('btnSaveStoreGate');
+    const btnClear = document.getElementById('btnClearStoreGate');
+    const statusEl = document.getElementById('storeGateStatus');
+    if(!btnSave) return;
+
+    const setStatus = (msg, ok) => {
+      if(!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.style.color = ok === true ? 'var(--green,#34d399)'
+                            : ok === false ? 'var(--red,#f87171)' : 'var(--muted)';
+    };
+
+    // Mevcut ayarı yükle
+    firebase.database().ref('appUpdate/store').once('value').then(snap => {
+      const d = snap.val();
+      if(!d){ setStatus('Şu anda zorunlu güncelleme yok.'); return; }
+      if(minEl) minEl.value = d.minVersion || '';
+      if(latestEl) latestEl.value = d.latestVersion || '';
+      if(notesEl) notesEl.value = d.notes || '';
+      setStatus('Aktif: v' + (d.minVersion||'?') + ' altındaki sürümler kilitli.');
+    }).catch(e => setStatus('Okunamadı: ' + e.message, false));
+
+    btnSave.addEventListener('click', () => {
+      const min = (minEl.value || '').trim();
+      const latest = (latestEl.value || '').trim() || min;
+      if(!/^\d+\.\d+\.\d+$/.test(min)){
+        setStatus('Sürüm biçimi hatalı. Örnek: 2.0.0', false);
+        return;
+      }
+      showConfirm(
+        'v' + min + ' sürümünden ESKİ olan tüm kullanıcılar, Play Store\'dan güncelleyene '
+        + 'kadar uygulamayı kullanamayacak. Bu sürümün mağazada yayında olduğundan emin misiniz?',
+        async () => {
+          try{
+            await firebase.database().ref('appUpdate/store').set({
+              minVersion: min,
+              latestVersion: latest,
+              notes: (notesEl.value || '').trim(),
+              updatedAt: Date.now()
+            });
+            setStatus('✓ Kaydedildi. v' + min + ' altındaki sürümler artık kilitli.', true);
+            toast('Zorunlu güncelleme ayarlandı.', true);
+          }catch(e){
+            setStatus('Kaydedilemedi: ' + e.message, false);
+          }
+        },
+        { title: 'Zorunlu güncelleme kurulsun mu?', okText: 'Evet, kur', icon: '🔒', warn: true }
+      );
+    });
+
+    btnClear.addEventListener('click', () => {
+      showConfirm(
+        'Kilit kalkacak ve tüm kullanıcılar sürümü ne olursa olsun uygulamayı kullanabilecek.',
+        async () => {
+          try{
+            await firebase.database().ref('appUpdate/store').remove();
+            if(minEl) minEl.value = '';
+            if(latestEl) latestEl.value = '';
+            if(notesEl) notesEl.value = '';
+            setStatus('Zorunlu güncelleme kaldırıldı.', true);
+            toast('Kilit kaldırıldı.', true);
+          }catch(e){
+            setStatus('Kaldırılamadı: ' + e.message, false);
+          }
+        },
+        { title: 'Zorunlu güncelleme kaldırılsın mı?', okText: 'Kaldır', icon: '🔓' }
+      );
+    });
+  }
+
   function initUpdatePanel() {
     const btnPublish = document.getElementById('btnPublishUpdate');
     const btnRollback = document.getElementById('btnRollback');
@@ -5040,6 +5897,7 @@ window.deleteUserDatabase = function(uid, email) {
     document.addEventListener('DOMContentLoaded', initUpdatePanel);
   } else {
     initUpdatePanel();
+    try{ initStoreGatePanel(); }catch(e){ console.log('store gate panel:', e); }
   }
 })();
 </script>
@@ -5096,5 +5954,5 @@ window.deleteUserDatabase = function(uid, email) {
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34fb8a44d94c1be',t:'MTc4ODM4NTczMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a352e00b9dcfd602',t:'MTc4ODQxODgwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

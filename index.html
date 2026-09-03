@@ -1,8 +1,72 @@
 <!DOCTYPE html>
 <html lang="tr">
+<!--
+================================================================================
+  KURYE OS  ·  v6.0.3  ·  TEK DOSYA UYGULAMA
+================================================================================
+
+  NEDEN TEK DOSYA?
+  Tarihsel sebep: OTA paketlemesi klasör yolunu korumuyordu. v6.0.3'te
+  DÜZELTİLDİ — artık "📁 Klasör Seç" ile alt klasörler yollarıyla
+  birlikte paketlenir. Yani dosyayı bölmek artık teknik olarak mümkün.
+
+  Yine de tek dosya tercih ediliyor çünkü:
+   · jsdom test altyapısı tek dosyaya bağlı (bu oturumdaki ciddi
+     hataların çoğu o testlerle yakalandı)
+   · Tek geliştirici; modülerliğin asıl faydası ekipte ortaya çıkar
+   · Derleme adımı yok; bölme yeni hata sınıfları açar (yükleme sırası)
+  Bölmeye karar verirseniz: paketin KÖKÜNDE index.html bulunmalı.
+
+--------------------------------------------------------------------------------
+  NASIL GEZİLİR?
+  Aşağıdaki etiketlerden birini Ctrl+F ile aratın; doğrudan o bölüme gider.
+  VS Code kullanıyorsanız #region işaretleri sayesinde bölümleri
+  katlayabilirsiniz (Ctrl+K Ctrl+0 = hepsini katla).
+--------------------------------------------------------------------------------
+
+  [01] CSS ............... Tema değişkenleri, bileşen stilleri
+  [02] HTML-AUTH ......... Giriş / kayıt / splash ekranları
+  [03] HTML-SAYFA ........ Özet, Kayıt, Haftalık, Aylık, Garaj, Bonus,
+                           Hesabım, Talimatlar, Güncelleme Notları, Admin
+  [04] HTML-MODAL ........ Onay, bilgi, OTA, dosya kurtarma, dönem seçici,
+                           zorunlu güncelleme kapısı, kayıt/hedef/araç
+  [05] SURUM ............. Sürüm karşılaştırma, Play Store, zorunlu kapı
+  [06] OTA-NOT ........... Güncelleme notu kategorileri ve modal
+  [07] AUTH .............. Firebase kimlik doğrulama, hata çevirisi
+  [08] UI-TEMEL .......... Tema, jestler, toast, onay, geri tuşu
+  [09] YARDIMCI .......... Tarih/sayı biçimleme, hafta hesabı
+  [10] BONUS ............. Baraj sistemi, haftalık/günlük mod
+  [11] HESAPLAMA ......... calc(), totals, saat istatistikleri
+  [12] SENKRON ........... Çevrimdışı kuyruk, delta yazma, yerel önbellek
+  [13] SAYFA-GECIS ....... switchToPage, sidebar, dönem seçici
+  [14] RENDER ............ Dashboard, günlük, haftalık, aylık çizimleri
+  [15] HEDEF ............. Hedef kartı ve halka göstergesi
+  [16] BILDIRIM .......... İzinler, vardiya hatırlatması, bakım uyarıları
+  [17] SISTEM-UYARI ...... Pil/bildirim/alarm sorun tespiti
+  [18] CHANGELOG ......... Sürüm geçmişi sayfası
+  [19] GERIBILDIRIM ...... İstek/öneri + spam koruması
+  [20] GARAJ ............. Araç yönetimi, bakım takibi
+  [21] DISA-AKTARIM ...... PDF raporu, CSV, dosya kaydetme
+  [22] HESAP ............. Şifre değiştirme, hesap silme
+  [23] ADMIN ............. Kullanıcı listesi, geri bildirim yönetimi
+  [24] GPS ............... Arka plan konum takibi (ayrı script bloğu)
+  [25] OTA-YAYIN ......... Yayınlama, rollback, sürüm geçmişi yönetimi
+  [26] SIFRE-GOZ ......... Şifre göster/gizle
+
+--------------------------------------------------------------------------------
+  DİKKAT EDİLECEKLER
+  · CURRENT_APP_VERSION ile build.gradle'daki versionName AYNI olmalı.
+  · Zorunlu güncelleme (admin panel) yalnızca Play Store'da YAYINDA olan
+    bir sürüme ayarlanmalı; yoksa kullanıcılar kilitli kalır.
+  · Resmî LocalNotifications eklentisi bu projede çökmeye yol açıyor;
+    bildirimler kendi ShiftReminder eklentimizle yapılıyor.
+  · Dosyanın en sonundaki Cloudflare scripti sizin kodunuz DEĞİL;
+    dosya bir kez CDN üzerinden geçtiği için eklenmiş, zararsızdır.
+================================================================================
+-->
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <meta name="theme-color" content="#0a0e14"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="https://i.hizliresim.com/xkrylhbn.jpg">
@@ -21,6 +85,11 @@
 
 <!-- === STİL DOSYALARI (CSS) === -->
 <style>
+/* #region 01-CSS ====================================================
+   [01-CSS]  STİLLER
+   Tema değişkenleri (:root ve [data-theme=light]), bileşen stilleri.
+   Bölüm sırası: değişkenler > yerleşim > kartlar > modaller > mobil.
+   ====================================================================== */
 :root{
   --bg:#0a0e14;--elev:#111820;--card:#151d28;--hover:#1a2433;
   --border:#1e2a3a;--border2:#2a3a4f;
@@ -96,7 +165,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 .app-container { display: none; min-height: 100vh; }
 .app-container.show { display: flex; }
-.sidebar{width:248px;background:var(--elev);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50;transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.sidebar{width:248px;background:var(--elev);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:50;padding-top:env(safe-area-inset-top,0px);box-sizing:border-box;transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .brand{padding:1.4rem 1.35rem 1.2rem;border-bottom:1px solid var(--border); display: flex; justify-content: space-between; align-items: center;}
 .logo{display:flex;align-items:center;gap:.7rem;font-weight:700;font-size:1.05rem;letter-spacing:-.03em}
 .sidebar .logo-i{margin:0;width:36px;height:36px;box-shadow:0 2px 10px rgba(14,165,233,.28)}
@@ -128,12 +197,60 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .page-head h1{font-size:1.55rem;font-weight:700;letter-spacing:-.035em;line-height:1.2}
 .page-head p{color:var(--muted);font-size:.875rem;margin-top:.25rem}
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.5rem}
-.metric{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.15rem 1.2rem;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:border-color .2s,box-shadow .2s}
-.metric:hover{border-color:var(--border2)}
-.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ma,var(--accent));opacity:.7}
-.metric-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.4rem}
-.metric-value{font-family:var(--mono);font-size:1.35rem;font-weight:500;letter-spacing:-.02em;line-height:1.2}
-.metric-sub{font-size:.72rem;color:var(--muted);margin-top:.35rem}
+/* ============================================================
+   METRİK KARTI — yeniden tasarım
+   ------------------------------------------------------------
+   ÖNCESİ: üstte ince renkli çizgi + düz yüzey. Tüm kartlar
+   birbirinin aynıydı, sayı ile başlık aynı ağırlıkta duruyordu.
+
+   SONRASI:
+   • Üstteki çizgi yerine SOL kenarda renkli aksan → kartlar
+     dikey listede daha hızlı taranıyor.
+   • Rengin kendisinden türeyen çok hafif bir yüzey tonu:
+     kart "boyanmış" görünmüyor ama kimliği oluyor.
+   • Sayı büyütülüp mono fonta alındı, başlık küçültüldü:
+     net bir okuma hiyerarşisi.
+   • Dokununca hafif bastırma efekti (mobil geri bildirim).
+   ============================================================ */
+.metric{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-left:3px solid var(--ma,var(--accent));
+  border-radius:var(--r);
+  padding:1rem 1.1rem 1.05rem;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .18s cubic-bezier(.22,1,.36,1),border-color .2s,box-shadow .2s;
+}
+.metric:active{transform:scale(.985)}
+@media (hover:hover){
+  .metric:hover{border-color:var(--border2);border-left-color:var(--ma,var(--accent));box-shadow:0 6px 22px rgba(0,0,0,.18)}
+}
+/* Rengin çok hafif yüzey tonu — sağ üstten sola doğru sönümlenir. */
+@supports (background: color-mix(in srgb, red 10%, transparent)){
+  .metric::after{content:'';position:absolute;inset:0;border-radius:inherit;
+    background:linear-gradient(135deg, color-mix(in srgb, var(--ma,var(--accent)) 7%, transparent) 0%, transparent 55%);
+    pointer-events:none}
+}
+/* --- Metrik kartı ikonu ---
+   Kartlar sadece metinden oluşuyordu; hızlı taramada hangi kartın ne
+   olduğunu ayırt etmek zordu. Sağ üste yumuşak renkli bir ikon rozeti
+   koyuyoruz: metnin akışını bozmadan görsel bir çıpa sağlar. */
+/* YEDEK ÖNCE: color-mix() Chrome 111+ ister. Eski Android WebView'da
+   desteklenmez ve kural komple düşerdi -> ikon rozeti görünmez olurdu.
+   Önce nötr bir görünüm tanımlıyoruz, destekleyen tarayıcı @supports
+   bloğunda renkli sürümü alıyor. */
+.metric-ico{position:absolute;top:.9rem;right:.9rem;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:.95rem;line-height:1;background:var(--hover);border:1px solid var(--border);opacity:1;pointer-events:none;z-index:1}
+@supports (background: color-mix(in srgb, red 10%, transparent)){
+  .metric-ico{background:color-mix(in srgb, var(--ma,var(--accent)) 16%, transparent);border-color:color-mix(in srgb, var(--ma,var(--accent)) 32%, transparent)}
+}
+.metric-slide .metric-ico{top:0;right:0}
+.metric-slide{position:relative}
+/* İkon varken başlık ikonun altına girmesin */
+.metric-ico ~ .metric-label,.metric-label{padding-right:34px}
+.metric-label{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem;line-height:1.3}
+.metric-value{font-family:var(--mono);font-size:1.5rem;font-weight:600;letter-spacing:-.03em;line-height:1.15;color:var(--text)}
+.metric-sub{font-size:.71rem;color:var(--muted);margin-top:.45rem;line-height:1.4}
 .metric.green{--ma:var(--green)}.metric.green .metric-value{color:var(--green)}
 .metric.red{--ma:var(--red)}.metric.red .metric-value{color:var(--red)}
 .metric.amber{--ma:var(--amber)}.metric.amber .metric-value{color:var(--amber)}
@@ -141,17 +258,37 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .metric.orange{--ma:var(--orange)}.metric.orange .metric-value{color:var(--orange)}
 .metric.cyan{--ma:var(--accent)}.metric.cyan .metric-value{color:var(--accent)}
 .insights{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.5rem}
-.insight{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start;box-shadow:var(--shadow)}
-.insight-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex-shrink:0;font-size:1.15rem}
-.insight-icon.g{background:var(--green-dim)}.insight-icon.a{background:var(--amber-dim)}.insight-icon.c{background:var(--accent-dim)}.insight-icon.v{background:var(--violet-dim)}
-.insight h4{font-size:.8rem;font-weight:600;color:var(--sec);margin-bottom:.2rem}
-.insight .val{font-family:var(--mono);font-size:1.05rem;font-weight:500}
+/* İçgörü kartı: ikon kutusu çerçevelendi, dokunma geri bildirimi eklendi. */
+.insight{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;display:flex;gap:.9rem;align-items:center;box-shadow:var(--shadow);transition:transform .18s cubic-bezier(.22,1,.36,1),border-color .2s}
+.insight:active{transform:scale(.985)}
+@media (hover:hover){ .insight:hover{border-color:var(--border2)} }
+.insight-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;font-size:1.2rem;border:1px solid var(--border)}
+.insight-icon.g{background:var(--green-dim);border-color:rgba(52,211,153,.28)}
+.insight-icon.a{background:var(--amber-dim);border-color:rgba(251,191,36,.28)}
+.insight-icon.c{background:var(--accent-dim);border-color:rgba(56,189,248,.28)}
+.insight-icon.v{background:var(--violet-dim);border-color:rgba(167,139,250,.28)}
+.insight h4{font-size:.72rem;font-weight:600;color:var(--muted);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.045em}
+.insight .val{font-family:var(--mono);font-size:1.15rem;font-weight:600;letter-spacing:-.02em}
 .insight .desc{font-size:.72rem;color:var(--muted);margin-top:.15rem}
 .best-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-bottom:1.5rem}
-.best-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.2rem;box-shadow:var(--shadow)}
-.best-card .tag{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem}
-.best-card .date{font-size:.9rem;font-weight:600;margin-bottom:.15rem}
-.best-card .big{font-family:var(--mono);font-size:1.2rem;font-weight:500;color:var(--green)}
+.best-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .18s cubic-bezier(.22,1,.36,1),border-color .2s}
+.best-card:active{transform:scale(.985)}
+@media (hover:hover){ .best-card:hover{border-color:var(--border2)} }
+.best-card .tag{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.best-card .tag i{font-style:normal;font-size:.95rem;line-height:1}
+/* Rekor kartlarında hafif bir parıltı: başarı hissini güçlendirir. */
+.best-card::before{content:'';position:absolute;top:-30%;right:-18%;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle, rgba(251,191,36,.13) 0%, transparent 68%);pointer-events:none}
+/* Bakım kartında aciliyet sol kenardan da okunsun (renk körlüğü için ikonla birlikte) */
+.maint-card{border-left-width:3px}
+.maint-card.green{border-left-color:var(--green)}
+.maint-card.amber{border-left-color:var(--amber)}
+.maint-card.red{border-left-color:var(--red)}
+.maint-card::before{display:none}
+.best-card .date{font-size:.76rem;font-weight:500;color:var(--muted);margin-bottom:.3rem;order:2}
+.best-card .big{font-family:var(--mono);font-size:1.35rem;font-weight:600;letter-spacing:-.02em;color:var(--green);order:1}
+/* Sayı önce, tarih sonra okunsun diye sıra CSS ile değiştirildi. */
+.best-card{display:flex;flex-direction:column}
+.best-card .tag{order:0}
 .best-card .big.red{color:var(--red)}
 .best-card .big.amber{color:var(--amber)}
 .best-card .meta{font-size:.72rem;color:var(--muted);margin-top:.3rem}
@@ -162,6 +299,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .toolbar input{flex:1;min-width:140px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;padding:.52rem .95rem;border:none;border-radius:var(--rs);font-size:.825rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap;min-height:38px}
 .btn-sm{padding:.28rem .55rem;font-size:.75rem;min-height:30px;border-radius:7px}
+/* Küçük ikon butonlar (✎ / ✕) parmakla zor hedefleniyordu. Görsel boyut
+   aynı kalsın diye ::after ile görünmez bir dokunma alanı ekliyoruz. */
+.actions .btn-sm{position:relative}
+.actions .btn-sm::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px}
 .btn-primary{background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:#fff;box-shadow:0 2px 8px rgba(14,165,233,.2)}
 .btn-primary:hover{filter:brightness(1.08)}
 .btn-ghost{background:transparent;color:var(--sec);border:1px solid var(--border)}
@@ -177,20 +318,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 /* MOBİL KART GÖRÜNÜMÜ (Günlük Kayıt) */
 .daily-cards{display:none;flex-direction:column;gap:.65rem}
-.daily-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.05rem;animation:rise .2s ease;box-shadow:var(--shadow)}
+/* Günlük kayıt kartı: kâr/zarar durumu sol kenardan da okunuyor. */
+.daily-card{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border2);border-radius:var(--r);padding:.9rem 1rem;animation:rise .2s ease;box-shadow:var(--shadow);transition:transform .18s cubic-bezier(.22,1,.36,1),border-color .2s}
+.daily-card:active{transform:scale(.99)}
+.daily-card.pos-day{border-left-color:var(--green)}
+.daily-card.neg-day{border-left-color:var(--red)}
 .daily-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.6rem;margin-bottom:.5rem}
 .daily-card-date{font-weight:700;font-size:.92rem}
 .daily-card-day{font-weight:400;color:var(--muted);font-size:.75rem;margin-left:.3rem}
-.daily-card-net{font-family:var(--mono);font-size:1.15rem;font-weight:700;white-space:nowrap}
+.daily-card-net{font-family:var(--mono);font-size:1.22rem;font-weight:700;white-space:nowrap;letter-spacing:-.02em}
 .daily-card-net.pos{color:var(--green)}
 .daily-card-net.neg{color:var(--red)}
+.daily-card.is-today{border-color:rgba(56,189,248,.45);box-shadow:0 0 0 1px rgba(56,189,248,.12),var(--shadow)}
+.today-badge{margin-left:.45rem;font-size:.58rem;font-weight:800;letter-spacing:.06em;color:var(--accent);background:var(--accent-dim,rgba(56,189,248,.12));border:1px solid rgba(56,189,248,.35);border-radius:999px;padding:.1rem .4rem;vertical-align:middle}
 .daily-card-stats{display:flex;flex-wrap:wrap;gap:.5rem;font-size:.78rem;color:var(--sec);margin-bottom:.6rem}
-.daily-card-stats span{background:var(--hover);border-radius:999px;padding:.2rem .6rem}
+.daily-card-stats span{background:var(--hover);border:1px solid var(--border);border-radius:999px;padding:.24rem .62rem;font-variant-numeric:tabular-nums}
 .daily-card-bonus{color:var(--accent)!important;font-weight:700}
 .daily-card-expand-btn{background:none;border:none;color:var(--accent);font-size:.76rem;font-weight:600;padding:.2rem 0;cursor:pointer;font-family:inherit}
 .daily-card-details{display:none;margin-top:.6rem;padding-top:.6rem;border-top:1px dashed var(--border);font-size:.8rem;color:var(--text)}
 .daily-card-details.show{display:block}
-.daily-card-detail-row{display:flex;justify-content:space-between;padding:.22rem 0}
+.daily-card-detail-row{display:flex;justify-content:space-between;padding:.32rem 0;border-bottom:1px solid var(--border)}
+.daily-card-detail-row:last-of-type{border-bottom:0}
+.daily-card-detail-row span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .daily-card-detail-row span:first-child{color:var(--muted)}
 .daily-card-note{margin-top:.4rem;font-size:.76rem;color:var(--muted);font-style:italic}
 .daily-card-actions{display:flex;gap:.5rem;margin-top:.7rem}
@@ -248,7 +397,7 @@ tbody tr:hover{background:var(--hover)}
 .dash-tab-pane.active { display: block; }
 
 /* MOBİL İÇİN OPTİMİZE EDİLMİŞ MODAL */
-.overlay{position:fixed;inset:0;background:rgba(5,8,12,.78);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;padding:0.75rem;overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility .28s ease}
+.overlay{position:fixed;inset:0;background:rgba(5,8,12,.78);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;padding:calc(env(safe-area-inset-top,0px) + .75rem) .75rem calc(env(safe-area-inset-bottom,0px) + .75rem);overflow-y:auto;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility .28s ease}
 .overlay.show{opacity:1;visibility:visible;pointer-events:auto}
 .modal{background:var(--elev);border:1px solid var(--border2);border-radius:18px;padding:1.4rem;width:100%;max-width:440px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 10px 40px rgba(0,0,0,.4);animation:rise .25s ease}
 .modal h2{font-size:1.1rem;font-weight:700;margin-bottom:1rem;letter-spacing:-.02em}
@@ -277,7 +426,7 @@ tbody tr:hover{background:var(--hover)}
 
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border2);color:var(--text);padding:.75rem 1.15rem;border-radius:10px;font-size:.85rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(80px);opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.4,0,.2,1);z-index:3200}
 .toast.show{transform:none;opacity:1;pointer-events:auto}.toast.ok{border-color:var(--green)}
-.menu-btn{display:none;position:fixed;top:.85rem;left:.85rem;z-index:70;width:42px;height:42px;background:var(--card);border:1px solid var(--border);border-radius:11px;color:var(--text);cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.menu-btn{display:none;position:fixed;top:calc(env(safe-area-inset-top,0px) + .85rem);left:calc(env(safe-area-inset-left,0px) + .85rem);z-index:70;width:42px;height:42px;background:var(--card);border:1px solid var(--border);border-radius:11px;color:var(--text);cursor:pointer;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(5,8,12,.55);backdrop-filter:blur(3px);z-index:45}
 .sidebar-backdrop.show{display:block}
 .empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.9rem;line-height:1.5}
@@ -428,7 +577,14 @@ textarea:focus{border-color:var(--accent)}
 .metric-dots{position:absolute;bottom:7px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:2;pointer-events:none}
 .metric-dots span{width:5px;height:5px;border-radius:99px;background:var(--border2)}
 .metric-dots span.on{background:var(--ma,var(--accent))}
-.force-gate{position:fixed;inset:0;z-index:100000;background:var(--bg,#0b0f14);display:none;align-items:center;justify-content:center;padding:1.5rem;overflow-y:auto}
+/* Hareket azaltma tercihi: sistem ayarında "animasyonları azalt" açıksa
+   geçişleri kapatıyoruz (baş dönmesi/mide bulantısı yaşayan kullanıcılar). */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* Klavye ile gezinenler için görünür odak halkası (fare ile tıklamada çıkmaz). */
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.force-gate{position:fixed;inset:0;z-index:100000;background:var(--bg,#0b0f14);display:none;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 1.5rem) 1.5rem calc(env(safe-area-inset-bottom,0px) + 1.5rem);overflow-y:auto}
 .force-gate.show{display:flex}
 .force-card{max-width:400px;width:100%;text-align:center;background:var(--elev);border:1px solid var(--border2);border-radius:18px;padding:1.8rem 1.4rem;box-shadow:var(--shadow)}
 .force-icon{width:62px;height:62px;margin:0 auto 1rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(56,189,248,.06));border:1px solid rgba(56,189,248,.35)}
@@ -437,7 +593,58 @@ textarea:focus{border-color:var(--accent)}
 .force-sub{color:var(--muted);font-size:.85rem;line-height:1.6;margin:.9rem 0 1.1rem}
 .force-notes{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.75rem .85rem;font-size:.78rem;text-align:left;margin-bottom:1.1rem;max-height:38vh;overflow-y:auto}
 .force-hint{font-size:.72rem;color:var(--muted);margin-top:.85rem;line-height:1.5}
+.force-link{display:inline-block;margin-top:.5rem;font-size:.74rem;color:var(--accent);text-decoration:underline;padding:.35rem .2rem}
 /* --- Vardiya sonu hatırlatma kartı --- */
+/* --- Sistem uyarı bandı (ana sayfa) --- */
+/* OTA dosya seçimi */
+.upd-pick{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
+.upd-pick-btn{cursor:pointer;margin:0}
+.upd-filelist{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:.55rem .7rem;font-size:.74rem;color:var(--muted);max-height:150px;overflow-y:auto;line-height:1.6;font-family:var(--mono)}
+.upd-filelist .warn{color:var(--red);font-weight:600}
+.upd-filelist .ok{color:var(--green)}
+/* --- Admin paneli iç sekmeleri ---
+   Tüm bölümler tek sayfada yığılıydı; sayfa çok uzuyor ve
+   aradığınızı bulmak zorlaşıyordu. Geniş ekranda sol sidebar,
+   dar ekranda yatay kaydırmalı sekme çubuğu. */
+.adm-wrap{display:grid;grid-template-columns:200px 1fr;gap:1rem;align-items:start}
+@media(max-width:820px){ .adm-wrap{grid-template-columns:1fr} }
+.adm-nav{display:flex;flex-direction:column;gap:.3rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.5rem;position:sticky;top:.8rem;box-shadow:var(--shadow)}
+@media(max-width:820px){
+  .adm-nav{flex-direction:row;overflow-x:auto;position:static;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .adm-nav::-webkit-scrollbar{display:none}
+  .adm-tab{white-space:nowrap;flex:0 0 auto}
+}
+.adm-tab{display:flex;align-items:center;gap:.5rem;background:transparent;border:1px solid transparent;color:var(--sec);font-family:inherit;font-size:.82rem;font-weight:600;text-align:left;padding:.6rem .7rem;border-radius:9px;cursor:pointer;transition:background .18s,color .18s,border-color .18s}
+.adm-tab:active{background:var(--hover)}
+.adm-tab.active{background:var(--accent-dim,rgba(56,189,248,.12));border-color:rgba(56,189,248,.35);color:var(--accent)}
+.adm-pane{display:none;animation:rise .2s ease}
+.adm-pane.active{display:block}
+.adm-pane > .panel{margin-top:0!important}
+/* Geçmiş yönetimi satırları */
+.cl-adm-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--border);border-radius:9px;margin-bottom:.4rem;background:var(--bg);font-size:.82rem}
+.cl-adm-row b{font-family:var(--mono)}
+.cl-adm-row .sp{margin-left:auto;display:flex;gap:.35rem}
+/* --- Güncelleme notları (sürüm geçmişi) --- */
+.cl-current{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1.1rem;box-shadow:var(--shadow)}
+.cl-current-cap{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.cl-current-ver{font-family:var(--mono);font-size:1.15rem;font-weight:700;color:var(--accent)}
+.cl-entry{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.8rem;box-shadow:var(--shadow);overflow:hidden}
+.cl-entry.is-current{border-color:rgba(56,189,248,.45)}
+.cl-head{display:flex;align-items:center;gap:.6rem;padding:.85rem 1rem;flex-wrap:wrap}
+.cl-ver{font-family:var(--mono);font-size:1rem;font-weight:700}
+.cl-badge{font-size:.58rem;font-weight:800;letter-spacing:.06em;color:var(--accent);background:var(--accent-dim,rgba(56,189,248,.12));border:1px solid rgba(56,189,248,.35);border-radius:999px;padding:.12rem .45rem}
+.cl-date{margin-left:auto;font-size:.75rem;color:var(--muted);white-space:nowrap}
+.cl-body{padding:0 1rem 1rem}
+.cl-empty{text-align:center;padding:2.4rem 1rem;color:var(--muted);line-height:1.6}
+.sys-warn{display:flex;align-items:flex-start;gap:.7rem;background:var(--card);border:1px solid var(--amber);border-left:4px solid var(--amber);border-radius:var(--rs);padding:.8rem .9rem;margin-bottom:.55rem;font-size:.82rem;line-height:1.5}
+.sys-warn.crit{border-color:var(--red);border-left-color:var(--red)}
+.sys-warn-ico{font-size:1.15rem;line-height:1;flex-shrink:0;margin-top:.05rem}
+.sys-warn-body{flex:1;min-width:0}
+.sys-warn-title{font-weight:700;margin-bottom:.15rem}
+.sys-warn-desc{color:var(--muted);font-size:.76rem;line-height:1.45}
+.sys-warn-actions{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.6rem}
+.sys-warn-x{background:transparent;border:0;color:var(--muted);font-size:.95rem;cursor:pointer;padding:.1rem .3rem;border-radius:6px;line-height:1;flex-shrink:0}
+.sys-warn-x:active{background:var(--hover)}
 .rem-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:1.5rem;overflow:hidden;transition:border-color .25s}
 .rem-card.on{border-color:rgba(56,189,248,.35)}
 .rem-head{display:flex;align-items:center;gap:.85rem;padding:1rem 1.1rem}
@@ -513,10 +720,10 @@ textarea:focus{border-color:var(--accent)}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);width:min(280px,86vw);box-shadow:8px 0 32px rgba(0,0,0,.25)}
   .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0;padding:4.4rem .85rem 5.2rem;max-width:100%}
+  .main{margin-left:0;padding:calc(env(safe-area-inset-top,0px) + 4.4rem) .85rem calc(env(safe-area-inset-bottom,0px) + 5.2rem);max-width:100%}
   .menu-btn{display:flex}
   .bottom-nav{display:flex}
-  .toast{bottom:4.6rem;right:.85rem;left:.85rem;text-align:center}
+  .toast{bottom:calc(env(safe-area-inset-bottom,0px) + 4.6rem);right:.85rem;left:.85rem;text-align:center}
   .metrics, .insights, .best-grid{grid-template-columns:1fr;gap:.65rem;margin-bottom:1.1rem}
   .fg-row{grid-template-columns:1fr}
   .table-scroll{max-height:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -537,6 +744,9 @@ textarea:focus{border-color:var(--accent)}
 </head>
 <body>
 
+<!-- #region 02-HTML-AUTH ==================================================
+     [02-HTML-AUTH]  GİRİŞ / KAYIT / SPLASH EKRANLARI
+     ====================================================================== -->
 <!-- ÇEVRİMDIŞİ / SENKRON DURUM ROZETİ -->
 <div id="offlineBadge" style="display:none;position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:400;background:var(--amber,#f59e0b);color:#111;font-size:0.7rem;font-weight:700;padding:0.32rem 0.8rem;border-radius:999px;box-shadow:0 2px 12px rgba(0,0,0,0.45);pointer-events:none"></div>
 
@@ -612,6 +822,7 @@ textarea:focus{border-color:var(--accent)}
       <button class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>Bonus Sistemi</button>
       <button class="nav-item" data-page="account"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Hesabım</button>
       <button class="nav-item" data-page="instructions"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Talimatlar</button>
+      <button class="nav-item" data-page="changelog"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>Güncelleme Notları</button>
       <button class="nav-item" data-page="feedback"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>İstek / Öneri</button>
       <!-- ADMIN BUTONU -->
       <button class="nav-item" data-page="admin" id="navAdmin" style="display:none; color: var(--amber);">
@@ -640,6 +851,14 @@ textarea:focus{border-color:var(--accent)}
     <button class="bn-item" id="bnMore"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><span>Diğer</span></button>
   </nav>
 
+  <!-- ======================================================================
+       [03-HTML-SAYFA]  UYGULAMA SAYFALARI
+       Sıra: Özet Panel · Günlük Kayıt · Haftalık · Aylık · Garaj ·
+       Bonus Sistemi · Talimatlar · Güncelleme Notları · İstek/Öneri ·
+       Hesabım · Admin Paneli
+       Her biri <section class="page" id="page-XXX">; switchToPage() ile
+       .active sınıfı taşınarak gösterilir.
+       ====================================================================== -->
   <main class="main">
   <!-- ÖZET PANEL -->
   <section class="page active" id="page-dashboard">
@@ -668,6 +887,11 @@ textarea:focus{border-color:var(--accent)}
         <button type="button" class="btn btn-sm btn-danger" id="dashGpsStop">Durdur</button>
       </div>
     </div>
+
+    <!-- SİSTEM UYARILARI: bildirim izni / pil optimizasyonu / kesin alarm.
+         Garaj sayfasındaki hatırlatma kartı yeterli değildi; kullanıcı oraya
+         hiç gitmeyebiliyor ve bildirimin neden gelmediğini anlamıyordu. -->
+    <div id="sysWarnBanner" style="display:none; margin-bottom:1rem;"></div>
 
     <div id="maintWarningBanner" style="display:none; margin-bottom:1rem;"></div>
 
@@ -840,7 +1064,7 @@ textarea:focus{border-color:var(--accent)}
       </div>
       <div class="garage-inputs">
         <select id="vehicleSelect" class="auth-input" style="margin:0; width:170px;" aria-label="Araç seç"></select>
-        <input type="text" id="garageModel" class="auth-input" style="margin:0; width:190px;" placeholder="Model Adı" />
+        <input type="text" id="garageModel" class="auth-input" maxlength="60" style="margin:0; width:190px;" placeholder="Model Adı" />
         <button class="btn btn-primary" id="btnSaveGarageInfo">Modeli Kaydet</button>
       </div>
     </div>
@@ -852,16 +1076,19 @@ textarea:focus{border-color:var(--accent)}
     <!-- YAKIT VERİMLİLİĞİ KARTLARI -->
     <div class="metrics" style="margin-bottom: 1.5rem; grid-template-columns: repeat(3, 1fr);">
       <div class="metric green">
+        <div class="metric-ico">⛽</div>
         <div class="metric-label">100 KM'de Yakıt (L)</div>
         <div class="metric-value" id="fuel100KmVal">0 L</div>
         <div class="metric-sub">100 kilometrede ortalama tüketim</div>
       </div>
       <div class="metric amber">
+        <div class="metric-ico">💸</div>
         <div class="metric-label">KM Başına Maliyet (TL/km)</div>
         <div class="metric-value" id="fuelTlKmVal">0 ₺</div>
         <div class="metric-sub">1 kilometrelik yakıt masrafı</div>
       </div>
       <div class="metric cyan">
+        <div class="metric-ico">🛣️</div>
         <div class="metric-label">1 Litre ile Yol (km/L)</div>
         <div class="metric-value" id="fuelKmLVal">0 km</div>
         <div class="metric-sub">1 litre benzinle gidilen ort. yol</div>
@@ -870,16 +1097,19 @@ textarea:focus{border-color:var(--accent)}
 
     <div class="metrics" style="margin-bottom: 1.5rem;">
       <div class="metric cyan">
+        <div class="metric-ico">🏍️</div>
         <div class="metric-label">Toplam Motor KM</div>
         <div class="metric-value" id="totalMotorKmVal">0 km</div>
         <div class="metric-sub">Günlük kayıtlardan otomatik hesaplanır</div>
       </div>
       <div class="metric green">
+        <div class="metric-ico">🛢️</div>
         <div class="metric-label">Ort. Yakıt Verimliliği</div>
         <div class="metric-value" id="fuelEfficiencyVal">Veri yok</div>
         <div class="metric-sub">Litre girilen kayıtlardan hesaplanır</div>
       </div>
       <div class="metric amber">
+        <div class="metric-ico">🏷️</div>
         <div class="metric-label">Ort. Yakıt Fiyatı</div>
         <div class="metric-value" id="fuelPriceVal">Veri yok</div>
         <div class="metric-sub">Toplam ₺ / Toplam Litre</div>
@@ -893,41 +1123,6 @@ textarea:focus{border-color:var(--accent)}
       <button class="btn btn-ghost" id="btnEnableNotif">🔔 Bildirimleri Etkinleştir</button>
     </div>
 
-    <div class="section-divider"><h2>Vardiya Sonu Hatırlatması</h2></div>
-    <div class="rem-card" id="reminderCard">
-      <div class="rem-head">
-        <div class="rem-ico"><span>⏰</span></div>
-        <div class="rem-head-text">
-          <h3>Günlük Hatırlatma</h3>
-          <p>Kaydınızı girmediyseniz akşam hatırlatırız</p>
-        </div>
-        <label class="rem-switch" aria-label="Hatırlatmayı aç veya kapat">
-          <input type="checkbox" id="reminderEnabled" />
-          <span class="rem-slider"></span>
-        </label>
-      </div>
-
-      <div class="rem-body" id="reminderBody">
-        <div class="rem-time-row">
-          <div class="rem-time-label">
-            <span class="rem-time-cap">Hatırlatma saati</span>
-            <span class="rem-time-val" id="reminderTimeVal">23:00</span>
-          </div>
-          <label class="rem-time-edit">
-            Değiştir
-            <input type="time" id="reminderTime" value="23:00" />
-          </label>
-        </div>
-        <div class="rem-quick" id="reminderQuick">
-          <button type="button" class="rem-chip" data-t="21:00">21:00</button>
-          <button type="button" class="rem-chip" data-t="22:00">22:00</button>
-          <button type="button" class="rem-chip" data-t="23:00">23:00</button>
-          <button type="button" class="rem-chip" data-t="00:00">00:00</button>
-        </div>
-      </div>
-
-      <div id="reminderStatus" class="rem-status"></div>
-    </div>
     <div class="best-grid" id="maintenanceList"></div>
   </section>
 
@@ -1023,7 +1218,8 @@ textarea:focus{border-color:var(--accent)}
         <ul class="gd-list">
           <li>Metrik kartlarını <b>yana kaydırarak</b> tümü · bu hafta · bu ay değerleri arasında geçin.</li>
           <li><b>Hedef kartı</b> ile haftalık/aylık kazanç veya paket hedefi koyun, dairesel çubuk ilerlemenizi gösterir.</li>
-          <li>"Detaylı Analiz" sekmesinde trend grafikleri ve içgörüler yer alır.</li>
+          <li><b>"Detaylı Analiz"</b> sekmesinde paket başına kâr, yakıt verimliliği gibi içgörüler yer alır.</li>
+          <li>Bildirimleri engelleyen bir telefon ayarı varsa sayfanın en üstünde <b>uyarı</b> ve düzeltme butonu çıkar.</li>
         </ul>
       </div>
 
@@ -1034,6 +1230,8 @@ textarea:focus{border-color:var(--accent)}
           <li><b>GPS Sayacı:</b> "Takibi Başlat" deyip mesaiye çıkın; durdurduğunuzda ölçülen mesafe KM alanına kendiliğinden yazılır.</li>
           <li>Kayıtlara tıklayarak sonradan <b>düzenleyebilir</b> veya silebilirsiniz.</li>
           <li>Aynı tarihe ikinci kez kayıt girerseniz üzerine yazmak isteyip istemediğiniz sorulur.</li>
+          <li>Bugünün kaydı listede <b>BUGÜN</b> etiketiyle işaretlenir; kartın sol kenarı kazançlı günlerde yeşil, zararlı günlerde kırmızı olur.</li>
+          <li><b>⬇ CSV</b> ile tüm kayıtlarınızı dışa aktarabilirsiniz.</li>
         </ul>
       </div>
 
@@ -1043,6 +1241,7 @@ textarea:focus{border-color:var(--accent)}
         <ul class="gd-list">
           <li>Her metrik bir <b>önceki dönemle kıyaslanır</b>; yeşil artışı, kırmızı düşüşü gösterir.</li>
           <li>Sayfa boşluğunda <b>yana kaydırarak</b> önceki/sonraki döneme geçebilirsiniz.</li>
+          <li>Ortadaki tarihe dokunun: haftalar <b>"20-26 Tem"</b> gibi tarih aralığıyla ve kaç gün kayıt olduğuyla listelenir.</li>
           <li>Aylık Özet'te <b>"📄 Aylık Özeti PDF Yap"</b> ile o ayın raporunu PDF olarak kaydedebilirsiniz.</li>
         </ul>
       </div>
@@ -1054,8 +1253,20 @@ textarea:focus{border-color:var(--accent)}
           <li>Yakıt verimliliğiniz (km/L, KM başına maliyet) otomatik hesaplanır.</li>
           <li><b>Bakım hedefi</b> ekleyin: yağ, zincir, lastik için periyot KM girin; sırası gelince uyarılırsınız.</li>
             <li>Bakımı yaptırınca <b>"Sıfırla"</b> deyin; masrafı yazarsanız gidere de otomatik işlenir.</li>
-          <li><b>Vardiya sonu hatırlatması:</b> Bu sayfadan saat belirleyin; uygulama kapalı olsa bile o saatte kaydınızı girmediyseniz bildirim alırsınız.</li>
+          <li>Bakım kartının kenarı ve ikonu durumu gösterir: ✅ zamanı var, ⚠️ yaklaştı, 🚨 geçti.</li>
         </ul>
+      </div>
+
+      <div class="gd-card">
+        <div class="gd-card-head"><div class="gd-ico">👤</div><h3>Hesabım</h3></div>
+        <p>Hesabınıza bağlı tercihler, güvenlik ve gizlilik ayarları burada.</p>
+        <ul class="gd-list">
+          <li><b>Vardiya sonu hatırlatması:</b> Varsayılan olarak açıktır ve her gün <b>23:00</b>'te hatırlatır. Saati değiştirebilir veya kapatabilirsiniz.</li>
+          <li>O gün kaydınızı zaten girdiyseniz hatırlatma <b>gelmez</b>; gereksiz bildirimle rahatsız edilmezsiniz.</li>
+          <li>Uygulama kapalıyken de çalışır. <b>Bildirim gelmiyorsa</b> aşağıdaki butonla telefon ayarlarınızı kontrol edin.</li>
+          <li>Buradan şifrenizi değiştirebilir, gizlilik politikasını okuyabilir veya hesabınızı silebilirsiniz.</li>
+        </ul>
+        <button type="button" class="btn btn-ghost btn-sm" id="btnBatteryHelp" style="margin-top:.3rem;">🔋 Bildirim sorunlarını gider</button>
       </div>
 
       <div class="gd-card">
@@ -1070,10 +1281,21 @@ textarea:focus{border-color:var(--accent)}
       </div>
 
       <div class="gd-card">
+        <div class="gd-card-head"><div class="gd-ico">📋</div><h3>Güncelleme Notları</h3></div>
+        <p>Uygulamanın hangi sürümünde ne değiştiğini buradan takip edebilirsiniz.</p>
+        <ul class="gd-list">
+          <li>Her sürüm <b>yayın tarihiyle</b> birlikte listelenir, en yeni en üstte.</li>
+          <li>Notlar türüne göre ayrılır: ✨ yeni özellik, 🛠️ düzeltme, ⚡ iyileştirme.</li>
+          <li>Kullandığınız sürüm <b>KULLANDIĞINIZ</b> etiketiyle işaretlenir.</li>
+        </ul>
+      </div>
+
+      <div class="gd-card">
         <div class="gd-card-head"><div class="gd-ico">💡</div><h3>İstek / Öneri</h3></div>
         <p>Fikirlerinizi, hata bildirimlerinizi ve özellik taleplerinizi doğrudan geliştiriciye iletin.</p>
         <ul class="gd-list">
           <li>Öneriniz uygulamaya eklenirse, isminizi yazdıysanız <b>fikir sahibi olarak anılırsınız</b>.</li>
+          <li>Aynı mesajı tekrar göndermeye gerek yok; saatte en fazla 3 mesaj gönderilebilir.</li>
         </ul>
       </div>
 
@@ -1088,6 +1310,7 @@ textarea:focus{border-color:var(--accent)}
         <li>Telefonun <span class="gd-kbd">geri</span> tuşu açık pencereleri kapatır.</li>
         <li>Yanlış bir düzenleme yaptıysanız Günlük Kayıt sayfasındaki <b>↶ Geri Al</b> butonunu kullanın.</li>
         <li><b>⬇ CSV</b> ile tüm kayıtlarınızı Excel'de açılabilir biçimde indirebilir, <b>📄 PDF</b> ile aylık rapor alabilirsiniz.</li>
+        <li><b>İki parmakla</b> ekranı yakınlaştırabilirsiniz.</li>
         <li>Verileriniz hesabınıza bağlı bulutta saklanır; <b>çevrimdışıyken</b> girdikleriniz cihazınıza kaydedilir ve bağlantı gelince otomatik yüklenir.</li>
       </ul>
     </div>
@@ -1118,6 +1341,19 @@ textarea:focus{border-color:var(--accent)}
     </div>
   </section>
 
+  <!-- GÜNCELLEME NOTLARI (sürüm geçmişi) -->
+  <section class="page" id="page-changelog">
+    <div class="page-head">
+      <h1>Güncelleme Notları</h1>
+      <p>Hangi sürümde ne değişti? Tüm geçmişi buradan takip edebilirsiniz.</p>
+    </div>
+    <div class="cl-current" id="clCurrent">
+      <span class="cl-current-cap">Kullandığınız sürüm</span>
+      <span class="cl-current-ver" id="clCurrentVer">—</span>
+    </div>
+    <div id="clList"></div>
+  </section>
+
   <section class="page" id="page-account">
     <div class="page-head">
       <h1>Hesabım</h1>
@@ -1131,6 +1367,45 @@ textarea:focus{border-color:var(--accent)}
           <div id="accEmail" class="account-email">—</div>
         </div>
       </div>
+    </div>
+
+    <div class="info-block" style="max-width:560px;">
+      <h3 style="margin-bottom:0.2rem">Vardiya sonu hatırlatması</h3>
+      <p style="font-size:0.8rem;line-height:1.5;">Gün sonunda kaydınızı girmeyi unutmayın diye hatırlatırız. Bu tercih hesabınıza bağlıdır, aracınıza değil.</p>
+    </div>
+    <div class="rem-card" id="reminderCard" style="max-width:560px;">
+      <div class="rem-head">
+        <div class="rem-ico"><span>⏰</span></div>
+        <div class="rem-head-text">
+          <h3>Günlük Hatırlatma</h3>
+          <p>Uygulama kapalıyken de çalışır · kayıt girdiyseniz gelmez</p>
+        </div>
+        <label class="rem-switch" aria-label="Hatırlatmayı aç veya kapat">
+          <input type="checkbox" id="reminderEnabled" />
+          <span class="rem-slider"></span>
+        </label>
+      </div>
+
+      <div class="rem-body" id="reminderBody">
+        <div class="rem-time-row">
+          <div class="rem-time-label">
+            <span class="rem-time-cap">Hatırlatma saati</span>
+            <span class="rem-time-val" id="reminderTimeVal">23:00</span>
+          </div>
+          <label class="rem-time-edit">
+            Değiştir
+            <input type="time" id="reminderTime" value="23:00" />
+          </label>
+        </div>
+        <div class="rem-quick" id="reminderQuick">
+          <button type="button" class="rem-chip" data-t="21:00">21:00</button>
+          <button type="button" class="rem-chip" data-t="22:00">22:00</button>
+          <button type="button" class="rem-chip" data-t="23:00">23:00</button>
+          <button type="button" class="rem-chip" data-t="00:00">00:00</button>
+        </div>
+      </div>
+
+      <div id="reminderStatus" class="rem-status"></div>
     </div>
 
     <div class="info-block" style="max-width:560px;">
@@ -1190,127 +1465,189 @@ textarea:focus{border-color:var(--accent)}
       <h1>Admin Paneli</h1>
       <p>Sistemdeki tüm kullanıcıları, geçmiş verilerini ve istatistiklerini yönetin.</p>
     </div>
-    <div class="panel">
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>UID</th>
-              <th>E-posta</th>
-              <th>Kayıt Sayısı</th>
-              <th>Son Etkinlik</th>
-              <th style="text-align:right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody id="adminUsersBody">
-            <!-- JS ile doldurulacak -->
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- ADMIN İÇ SEKMELERİ -->
+    <div class="adm-wrap">
+      <nav class="adm-nav" id="admNav" role="tablist" aria-label="Admin bölümleri">
+        <button class="adm-tab active" data-adm="users"  role="tab">👥 <span>Kullanıcılar</span></button>
+        <button class="adm-tab"        data-adm="feed"   role="tab">💡 <span>İstek / Öneri</span></button>
+        <button class="adm-tab"        data-adm="ota"    role="tab">📦 <span>OTA Yayın</span></button>
+        <button class="adm-tab"        data-adm="clog"   role="tab">📋 <span>Sürüm Geçmişi</span></button>
+        <button class="adm-tab"        data-adm="store"  role="tab">🔒 <span>Zorunlu Güncelleme</span></button>
+      </nav>
 
-    <!-- İSTEK / ÖNERİ LİSTESİ (SADECE ADMIN) -->
-    <div class="panel" id="feedbackPanel" style="margin-top:20px;">
-      <h3 style="margin:0; padding:16px 16px 8px;">💡 Kullanıcı İstek / Önerileri</h3>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Tarih</th>
-              <th>İsim</th>
-              <th>Mesaj</th>
-              <th style="text-align:right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody id="adminFeedbackBody">
-            <!-- JS ile doldurulacak -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- GÜNCELLEME YÖNETİMİ PANELİ (OTA) -->
-    <div class="panel" id="updatePanel" style="margin-top:20px; padding:16px;">
-      <h3 style="margin:0 0 4px;">📦 Güncelleme Yönetimi (OTA)</h3>
-      <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">
-        Buradan yayınladığınız web dosyaları (index.html, manifest.json, sw.js vb.), Android Studio'ya veya Play Store'a
-        gerek kalmadan, uygulamayı kullanan herkese bir sonraki açılışta otomatik ulaşır. Yeni bir native
-        özellik (yeni izin, yeni eklenti) eklemiyorsanız bu yeterlidir.
-      </p>
-
-      <div id="updateCurrentInfo" style="background:var(--elev); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:16px; font-size:13px;">
-        Yüklü sürüm bilgisi kontrol ediliyor...
-      </div>
-
-      <div class="fg">
-        <label>Güncellenmiş Dosyaları Seçin (index.html, manifest.json, sw.js)</label>
-        <input type="file" id="updFiles" multiple accept=".html,.json,.js"/>
-      </div>
-      <div class="fg">
-        <label>Yeni Sürüm Numarası</label>
-        <input type="text" id="updVersion" placeholder="örn. 1.0.1"/>
-      </div>
-      <div class="fg">
-        <label>Yayın Notları (her değişikliği yeni satıra yazın)</label>
-        <div class="ota-tag-row">
-          <span class="ota-tag-hint">Satır başına etiket ekle:</span>
-          <button type="button" class="ota-tag-btn feat" data-ota-tag="yeni">✨ Yeni</button>
-          <button type="button" class="ota-tag-btn fix" data-ota-tag="duzeltme">🛠️ Düzeltme</button>
-          <button type="button" class="ota-tag-btn imp" data-ota-tag="iyilestirme">⚡ İyileştirme</button>
+      <div class="adm-body">
+        <div class="adm-pane active" id="adm-users" role="tabpanel">
+        <div class="panel">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>UID</th>
+                  <th>E-posta</th>
+                  <th>Kayıt Sayısı</th>
+                  <th>Son Etkinlik</th>
+                  <th style="text-align:right">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersBody">
+                <!-- JS ile doldurulacak -->
+              </tbody>
+            </table>
+          </div>
         </div>
-        <textarea id="updNotes" rows="6" placeholder="[yeni] Bonus sistemi haftalık/günlük seçilebiliyor&#10;[duzeltme] Şifremi unuttum bildirimi görünmüyordu&#10;[iyilestirme] Kayıt listesi büyük verilerde hızlandı"></textarea>
-        <p style="font-size:.72rem;color:var(--muted);margin:.45rem 0 0;line-height:1.5;">
-          Etiket yazmazsanız sistem içerikten tahmin eder; tahmin edemezse "Diğer Değişiklikler" altında gösterir.
-        </p>
-      </div>
 
-      <div class="fg">
-        <label>Kullanıcıya Nasıl Görünecek? (canlı önizleme)</label>
-        <div id="otaNotesPreview" class="ota-preview-box ota-preview-scale">
-          <span style="color:var(--muted);font-size:.78rem;">Not yazdıkça burada görünecek…</span>
         </div>
-      </div>
+
+        <div class="adm-pane" id="adm-feed" role="tabpanel">
+          <div class="panel" id="feedbackPanel">
+          <h3 style="margin:0; padding:16px 16px 8px;">💡 Kullanıcı İstek / Önerileri</h3>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tarih</th>
+                  <th>İsim</th>
+                  <th>Mesaj</th>
+                  <th style="text-align:right">İşlemler</th>
+                </tr>
+              </thead>
+              <tbody id="adminFeedbackBody">
+                <!-- JS ile doldurulacak -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        </div>
+
+        <div class="adm-pane" id="adm-ota" role="tabpanel">
+          <div class="panel" id="updatePanel" style="padding:16px;">
+          <h3 style="margin:0 0 4px;">📦 Güncelleme Yönetimi (OTA)</h3>
+          <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">
+            Buradan yayınladığınız web dosyaları (index.html, manifest.json, sw.js vb.), Android Studio'ya veya Play Store'a
+            gerek kalmadan, uygulamayı kullanan herkese bir sonraki açılışta otomatik ulaşır. Yeni bir native
+            özellik (yeni izin, yeni eklenti) eklemiyorsanız bu yeterlidir.
+          </p>
+
+          <div id="updateCurrentInfo" style="background:var(--elev); border:1px solid var(--border); border-radius:10px; padding:12px 14px; margin-bottom:16px; font-size:13px;">
+            Yüklü sürüm bilgisi kontrol ediliyor...
+          </div>
+
+          <div class="fg">
+            <label>Güncellenmiş Dosyaları Seçin</label>
+            <div class="upd-pick">
+              <label class="btn btn-ghost btn-sm upd-pick-btn">
+                📄 Dosya Seç
+                <input type="file" id="updFiles" multiple hidden/>
+              </label>
+              <label class="btn btn-ghost btn-sm upd-pick-btn">
+                📁 Klasör Seç
+                <input type="file" id="updFolder" webkitdirectory directory multiple hidden/>
+              </label>
+            </div>
+            <div id="updFileList" class="upd-filelist">Henüz dosya seçilmedi.</div>
+            <p style="font-size:.72rem;color:var(--muted);line-height:1.5;margin:.5rem 0 0;">
+              Pakette mutlaka <b>index.html</b> bulunmalı. Klasör seçerseniz alt
+              klasörlerdeki dosyalar da yolları korunarak eklenir.
+            </p>
+          </div>
+          <div class="fg">
+            <label>Yeni Sürüm Numarası</label>
+            <input type="text" id="updVersion" placeholder="örn. 1.0.1"/>
+          </div>
+          <div class="fg">
+            <label>Yayın Notları (her değişikliği yeni satıra yazın)</label>
+            <div class="ota-tag-row">
+              <span class="ota-tag-hint">Satır başına etiket ekle:</span>
+              <button type="button" class="ota-tag-btn feat" data-ota-tag="yeni">✨ Yeni</button>
+              <button type="button" class="ota-tag-btn fix" data-ota-tag="duzeltme">🛠️ Düzeltme</button>
+              <button type="button" class="ota-tag-btn imp" data-ota-tag="iyilestirme">⚡ İyileştirme</button>
+            </div>
+            <textarea id="updNotes" rows="6" placeholder="[yeni] Bonus sistemi haftalık/günlük seçilebiliyor&#10;[duzeltme] Şifremi unuttum bildirimi görünmüyordu&#10;[iyilestirme] Kayıt listesi büyük verilerde hızlandı"></textarea>
+            <p style="font-size:.72rem;color:var(--muted);margin:.45rem 0 0;line-height:1.5;">
+              Etiket yazmazsanız sistem içerikten tahmin eder; tahmin edemezse "Diğer Değişiklikler" altında gösterir.
+            </p>
+          </div>
+
+          <div class="fg">
+            <label>Kullanıcıya Nasıl Görünecek? (canlı önizleme)</label>
+            <div id="otaNotesPreview" class="ota-preview-box ota-preview-scale">
+              <span style="color:var(--muted);font-size:.78rem;">Not yazdıkça burada görünecek…</span>
+            </div>
+          </div>
       
-      <!-- Yayınla ve Rollback Butonları -->
-      <div style="display:flex; gap:10px; margin-top:8px;">
-        <button type="button" id="btnPublishUpdate" class="btn btn-primary" style="flex:1;">🚀 Yayınla</button>
-        <button type="button" id="btnRollback" class="btn btn-danger" style="flex:1;" title="Son güncellemeyi iptal edip bir önceki sürüme döner">↩️ Eski Sürüme Dön</button>
-      </div>
+          <!-- Yayınla ve Rollback Butonları -->
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <button type="button" id="btnPublishUpdate" class="btn btn-primary" style="flex:1;">🚀 Yayınla</button>
+            <button type="button" id="btnRollback" class="btn btn-danger" style="flex:1;" title="Son güncellemeyi iptal edip bir önceki sürüme döner">↩️ Eski Sürüme Dön</button>
+          </div>
       
-      <div id="updateStatus" style="margin-top:10px; font-size:13px; color:var(--muted);"></div>
-    </div>
+          <div id="updateStatus" style="margin-top:10px; font-size:13px; color:var(--muted);"></div>
+        </div>
 
-    <!-- ZORUNLU MAĞAZA GÜNCELLEMESİ -->
-    <div class="panel" style="margin-top:1.4rem;">
-      <div style="padding:1.1rem;">
-        <h3 style="margin:0 0 .4rem;font-size:.95rem;">🔒 Zorunlu Güncelleme (Play Store)</h3>
-        <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
-          Yukarıdaki OTA yayını yalnızca <b>web dosyalarını</b> günceller.
-          Native (Java) değişiklik yaptığınızda Play Store'a yeni sürüm yüklemeniz gerekir.
-          Buradaki <b>minimum sürümü</b> yükseltirseniz, daha eski sürümdeki kullanıcılar
-          güncelleyene kadar uygulamayı <b>kullanamaz</b>.
-        </p>
-        <div class="fg">
-          <label>Minimum Zorunlu Sürüm (bundan eskisi kilitlenir)</label>
-          <input type="text" id="storeMinVersion" placeholder="örn. 2.0.0"/>
         </div>
-        <div class="fg">
-          <label>Mağazadaki Güncel Sürüm (bilgi amaçlı gösterilir)</label>
-          <input type="text" id="storeLatestVersion" placeholder="örn. 2.0.0"/>
+
+        <div class="adm-pane" id="adm-clog" role="tabpanel">
+          <div class="panel" style="padding:16px;">
+            <h3 style="margin:0 0 .4rem;font-size:.95rem;">📋 Sürüm Geçmişi Yönetimi</h3>
+            <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
+              Kullanıcıların <b>Güncelleme Notları</b> sayfasında gördüğü kayıtlar.
+              OTA yayınladığınızda otomatik eklenir; buradan düzenleyebilir,
+              silebilir veya geçmişe dönük kayıt ekleyebilirsiniz.
+            </p>
+            <div class="fg">
+              <label>Sürüm</label>
+              <input type="text" id="clEditVersion" placeholder="örn. 6.0.1"/>
+            </div>
+            <div class="fg">
+              <label>Yayın Tarihi</label>
+              <input type="datetime-local" id="clEditDate"/>
+            </div>
+            <div class="fg">
+              <label>Notlar (etiketli yazın)</label>
+              <textarea id="clEditNotes" rows="5" placeholder="[yeni] Yeni özellik&#10;[duzeltme] Giderilen hata&#10;[iyilestirme] İyileştirme"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button type="button" id="btnClSave" class="btn btn-primary" style="flex:1;min-width:140px;">💾 Kaydet</button>
+              <button type="button" id="btnClNew" class="btn btn-ghost" style="flex:1;min-width:140px;">+ Yeni Kayıt</button>
+            </div>
+            <div id="clAdminStatus" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
+            <div id="clAdminList" style="margin-top:1rem;"></div>
+          </div>
         </div>
-        <div class="fg">
-          <label>Zorunlu Güncelleme Notu (etiketli yazabilirsiniz)</label>
-          <textarea id="storeNotes" rows="3" placeholder="[yeni] Arka planda çalışan bildirimler eklendi"></textarea>
+
+        <div class="adm-pane" id="adm-store" role="tabpanel">
+          <div style="padding:1.1rem;">
+            <h3 style="margin:0 0 .4rem;font-size:.95rem;">🔒 Zorunlu Güncelleme (Play Store)</h3>
+            <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
+              Yukarıdaki OTA yayını yalnızca <b>web dosyalarını</b> günceller.
+              Native (Java) değişiklik yaptığınızda Play Store'a yeni sürüm yüklemeniz gerekir.
+              Buradaki <b>minimum sürümü</b> yükseltirseniz, daha eski sürümdeki kullanıcılar
+              güncelleyene kadar uygulamayı <b>kullanamaz</b>.
+            </p>
+            <div class="fg">
+              <label>Minimum Zorunlu Sürüm (bundan eskisi kilitlenir)</label>
+              <input type="text" id="storeMinVersion" placeholder="örn. 2.0.0"/>
+            </div>
+            <div class="fg">
+              <label>Mağazadaki Güncel Sürüm (bilgi amaçlı gösterilir)</label>
+              <input type="text" id="storeLatestVersion" placeholder="örn. 2.0.0"/>
+            </div>
+            <div class="fg">
+              <label>Zorunlu Güncelleme Notu (etiketli yazabilirsiniz)</label>
+              <textarea id="storeNotes" rows="3" placeholder="[yeni] Arka planda çalışan bildirimler eklendi"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
+              <button type="button" id="btnSaveStoreGate" class="btn btn-primary" style="flex:1;min-width:150px;">🔒 Zorunlu Sürümü Kaydet</button>
+              <button type="button" id="btnClearStoreGate" class="btn btn-ghost" style="flex:1;min-width:150px;" title="Zorunlu güncellemeyi tamamen kaldırır">Kapıyı Kaldır</button>
+            </div>
+            <div id="storeGateStatus" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
+            <p style="font-size:.72rem;color:var(--muted);line-height:1.5;margin:.9rem 0 0;">
+              ⚠️ Dikkat: Buraya Play Store'da <b>yayında olan</b> bir sürüm yazın. Henüz yayınlanmamış
+              bir sürüm yazarsanız kullanıcılar güncelleyemez ve uygulamada kilitli kalır.
+            </p>
+          </div>
         </div>
-        <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
-          <button type="button" id="btnSaveStoreGate" class="btn btn-primary" style="flex:1;min-width:150px;">🔒 Zorunlu Sürümü Kaydet</button>
-          <button type="button" id="btnClearStoreGate" class="btn btn-ghost" style="flex:1;min-width:150px;" title="Zorunlu güncellemeyi tamamen kaldırır">Kapıyı Kaldır</button>
-        </div>
-        <div id="storeGateStatus" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
-        <p style="font-size:.72rem;color:var(--muted);line-height:1.5;margin:.9rem 0 0;">
-          ⚠️ Dikkat: Buraya Play Store'da <b>yayında olan</b> bir sürüm yazın. Henüz yayınlanmamış
-          bir sürüm yazarsanız kullanıcılar güncelleyemez ve uygulamada kilitli kalır.
-        </p>
       </div>
     </div>
   </section>
@@ -1318,6 +1655,11 @@ textarea:focus{border-color:var(--accent)}
   </main>
 </div>
 
+<!-- #region 04-HTML-MODAL ==================================================
+     [04-HTML-MODAL]  MODALLER VE ÖRTÜ KATMANLARI
+     Onay, bilgi, OTA güncelleme, dosya kurtarma, dönem seçici,
+     zorunlu güncelleme kapısı, kayıt/hedef/araç/bakım modalları.
+     ====================================================================== -->
 <!-- Modal: Genel Onay -->
 <div class="overlay" id="confirmOverlay">
   <div class="modal" style="max-width:380px; text-align:center;">
@@ -1366,6 +1708,22 @@ textarea:focus{border-color:var(--accent)}
   </div>
 </div>
 
+<!-- DOSYA KURTARMA: cihaza kaydedilemeyen içeriği kaybetmemek için -->
+<div class="overlay" id="fileFallbackOverlay">
+  <div class="modal" style="max-width:560px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:.8rem;margin-bottom:.3rem;">
+      <h2 id="ffTitle" style="margin:0;font-size:1rem;word-break:break-all;">Dosya</h2>
+      <button type="button" class="sheet-close" id="ffClose" aria-label="Kapat">✕</button>
+    </div>
+    <p id="ffHint" style="color:var(--muted);font-size:.78rem;line-height:1.5;margin:.2rem 0 .9rem;"></p>
+    <div id="ffBody"></div>
+    <div class="modal-actions" style="margin-top:1rem;">
+      <button class="btn btn-ghost" id="ffCopy">📋 Panoya Kopyala</button>
+      <button class="btn btn-primary" id="ffDone">Tamam</button>
+    </div>
+  </div>
+</div>
+
 <!-- DÖNEM SEÇİCİ (tema uyumlu alt sayfa; native select yerine) -->
 <div class="sheet-overlay" id="periodSheet">
   <div class="sheet" role="listbox" aria-label="Dönem seçin">
@@ -1395,6 +1753,11 @@ textarea:focus{border-color:var(--accent)}
     <div class="force-hint" id="forceHint">
       Güncelledikten sonra uygulamaya geri dönün.
     </div>
+    <!-- Buton bir sebeple çalışmazsa kullanıcı kilitli kalmasın:
+         doğrudan tıklanabilir bağlantı. -->
+    <a class="force-link" id="forceStoreLink"
+       href="https://play.google.com/store/apps/details?id=gizlibaskan.kuryetakip"
+       target="_blank" rel="noopener noreferrer">Buton çalışmıyorsa buraya dokunun</a>
   </div>
 </div>
 
@@ -1406,8 +1769,8 @@ textarea:focus{border-color:var(--accent)}
       <div class="fg"><label>Tarih</label><input type="date" id="fDate" required/></div>
       <div class="fg" id="fAracRow" style="display:none"><label>Araç</label><select id="fArac"></select></div>
       <div class="fg-row">
-        <div class="fg"><label>KM</label><input type="number" id="fKm" min="0" step="1" value="0"/></div>
-        <div class="fg"><label>Paket</label><input type="number" id="fTes" min="0" step="1" value="0"/></div>
+        <div class="fg"><label>KM</label><input type="number" id="fKm" min="0" max="2000" step="1" value="0" inputmode="numeric"/></div>
+        <div class="fg"><label>Paket</label><input type="number" id="fTes" min="0" max="500" step="1" value="0" inputmode="numeric"/></div>
       </div>
       <div id="gpsTrackerBox" class="gps-box">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
@@ -1434,7 +1797,7 @@ textarea:focus{border-color:var(--accent)}
           "Takibi Durdur"a basınca mesafe bugünün kaydına eklenir. Uygulamayı tamamen kapatsanız da sayaç ve süre kaldığı yerden devam eder. "Önizle" kaydetmeden forma yazar.
         </div>
       </div>
-      <div class="fg"><label>Saf Gelir (₺) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Bonus hariç</span></label><input type="number" id="fGelir" min="0" step="0.01" value="0"/></div>
+      <div class="fg"><label>Saf Gelir (₺) <span style="font-size:0.6rem; color:var(--muted); text-transform:none;">Bonus hariç</span></label><input type="number" id="fGelir" min="0" max="100000" step="0.01" value="0" inputmode="decimal"/></div>
 
       <details class="form-details" id="formDetails">
         <summary>Detaylar <span style="font-weight:400; color:var(--muted);">(Mesai, Yakıt, Not)</span><span class="form-details-chevron">▾</span></summary>
@@ -1445,13 +1808,13 @@ textarea:focus{border-color:var(--accent)}
           </div>
           <div class="fg"><label>Mola Süresi (dakika)</label><input type="number" id="fMolaDk" min="0" step="5" value="0"/></div>
           <div class="fg-row">
-            <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" step="0.01" value="0"/></div>
-            <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" step="0.01" value="0"/></div>
+            <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" max="100000" step="0.01" value="0" inputmode="decimal"/></div>
+            <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" max="100000" step="0.01" value="0" inputmode="decimal"/></div>
           </div>
-          <div class="fg"><label>Yakıt (Litre)</label><input type="number" id="fYakitLitre" min="0" step="0.01" value="0"/></div>
+          <div class="fg"><label>Yakıt (Litre)</label><input type="number" id="fYakitLitre" min="0" max="200" step="0.01" value="0" inputmode="decimal"/></div>
           <div class="fg">
             <label>Diğer Gider Notu</label>
-            <input type="text" id="fNote" placeholder="Örn: Zincir yağlama, Bakım, Vergi vb."/>
+            <input type="text" id="fNote" maxlength="300" placeholder="Örn: Zincir yağlama, Bakım, Vergi vb."/>
             <div class="quick-tags">
               <button type="button" class="q-tag" data-tag="Bakım">🔧 Bakım</button>
               <button type="button" class="q-tag" data-tag="Vergi">🏛️ Vergi</button>
@@ -1534,7 +1897,7 @@ textarea:focus{border-color:var(--accent)}
     <form id="maintForm">
       <div class="fg">
         <label>Bakım Adı</label>
-        <input type="text" id="mName" required placeholder="Örn: Motor Yağı" />
+        <input type="text" id="mName" required maxlength="60" placeholder="Örn: Motor Yağı" />
       </div>
       <div class="fg-row">
         <div class="fg">
@@ -1596,6 +1959,12 @@ const firebaseConfig = {
   appId: "1:700959539368:web:a78e6e16b4ec82dcb0429d"
 };
 
+/* #region 05-SURUM ====================================================
+   [05-SURUM]  SÜRÜM YÖNETİMİ & ZORUNLU GÜNCELLEME
+   Firebase yapılandırması, sürüm karşılaştırma (cmpVersions),
+   Play Store yönlendirme, zorunlu güncelleme kapısı.
+   DİKKAT: CURRENT_APP_VERSION = build.gradle versionName
+   ====================================================================== */
 const ADMIN_UID = "Le21NS0yFfZycqLRyNFRnB2FIDG3";
 const ADMIN_EMAIL = "furkansb1040@gmail.com";
 
@@ -1603,7 +1972,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 let currentUser = null;
-const CURRENT_APP_VERSION = "5.1.3";
+const CURRENT_APP_VERSION = "6.0.3";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -1659,14 +2028,38 @@ async function getNativeAppVersion(){
   return null;
 }
 
-function openPlayStore(){
+// Uygulamanın Play Store adresi. Tek yerden yönetilsin diye sabit.
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=gizlibaskan.kuryetakip';
+
+/* Play Store'u açar. Sırayla:
+   1) Native eklenti (market:// ile doğrudan Play uygulamasını açar)
+   2) window.open (yeni sekme)
+   3) location.href (pop-up engellenirse son çare)
+
+   ÖNCEKİ HATA: yedek adres `id=' + window.__ANDROID_PACKAGE__` kuruyordu
+   ama bu değişken hiçbir yerde tanımlı değildi; sonuç `...details?id=`
+   olan BOZUK bir bağlantıydı. Artık paket adı sabit. */
+function _openStoreWeb(){
+  try{
+    const win = window.open(PLAY_STORE_URL, '_blank', 'noopener');
+    if(win) return true;
+  }catch(e){}
+  // Pop-up engellendiyse aynı sekmede aç.
+  try{ window.location.href = PLAY_STORE_URL; return true; }catch(e){}
+  return false;
+}
+
+async function openPlayStore(){
   const SR = (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.ShiftReminder) || null;
   if(SR && typeof SR.openStore === 'function'){
-    try{ SR.openStore(); return; }catch(e){}
+    try{
+      const r = await SR.openStore();
+      // Native taraf artık gerçekten açıp açamadığını bildiriyor.
+      // Açamadıysa (Play Store yok/engelli) web adresine düşüyoruz.
+      if(!r || r.opened !== false) return true;
+    }catch(e){ /* köprü hatası: web'e düş */ }
   }
-  try{
-    window.open('https://play.google.com/store/apps/details?id=' + (window.__ANDROID_PACKAGE__ || ''), '_blank');
-  }catch(e){}
+  return _openStoreWeb();
 }
 
 let _forceGateActive = false;
@@ -1774,6 +2167,11 @@ document.addEventListener('visibilitychange', () => {
 // --- OTA NOT KATEGORİLERİ ---
 // Admin panelinde her satırın başına etiket yazılır:  [yeni] / [duzeltme] / [iyilestirme]
 // Etiketsiz satırlar "Diğer Değişiklikler" altında toplanır.
+/* #region 06-OTA-NOT ====================================================
+   [06-OTA-NOT]  OTA GÜNCELLEME NOTLARI
+   Not kategorileri (yeni/düzeltme/iyileştirme), ayrıştırma ve
+   kullanıcıya gösterilen güncelleme modalı.
+   ====================================================================== */
 const OTA_CATEGORIES = [
   { key:'feat',  cls:'feat',  icon:'✨', label:'Yeni Özellikler',
     kw:['yeni','ozellik','özellik','eklendi','feat','new','add','added'] },
@@ -1955,6 +2353,10 @@ const splashScreen = document.getElementById('splash-screen');
 const appContainer = document.getElementById('app-container');
 const errorMsg = document.getElementById('auth-error');
 
+/* #region 07-AUTH ====================================================
+   [07-AUTH]  KİMLİK DOĞRULAMA
+   Giriş/kayıt/şifre sıfırlama, Firebase hata mesajı çevirisi.
+   ====================================================================== */
 function showAuthError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; toast(msg, false); }
 
 function translateAuthError(err){ return friendlyError(err); }
@@ -2009,6 +2411,11 @@ if (isLight) {
   btnThemeToggle.textContent = '🌙 Karanlık Mod';
 }
 
+/* #region 08-UI-TEMEL ====================================================
+   [08-UI-TEMEL]  TEMA · JESTLER · ORTAK BİLEŞENLER
+   Açık/koyu tema, kaydırma jestleri, toast, onay ve bilgi
+   pencereleri, donanım geri tuşu yönetimi.
+   ====================================================================== */
 function applyThemeChrome(){
   const meta = document.querySelector('meta[name="theme-color"]');
   if(meta) meta.setAttribute('content', isLight ? '#f4f7fb' : '#0a0e14');
@@ -2047,12 +2454,18 @@ let swipeIgnore = false;
 
 const SWIPE_IGNORE_SEL = '#goalTrack, .goal-card, .goal-track, .goal-slide, .metric.swipeable, .metric-swipe, .metric-slide, .overlay, .modal, .table-scroll, .dash-tabs, .quick-tags';
 document.addEventListener('touchstart', e => {
+  // ÇOK PARMAK = yakınlaştırma jesti. Tek parmak kontrolü yapılmazsa
+  // kullanıcı iki parmakla zoom yaparken parmaklar yatayda ayrıldığı için
+  // bu "kaydırma" sanılıp sayfa değiştiriyordu.
+  if (e.touches && e.touches.length > 1) { swipeIgnore = true; return; }
   const el = e.target && e.target.closest ? e.target.closest(SWIPE_IGNORE_SEL) : null;
   swipeIgnore = !!el;
   touchStartX = e.changedTouches[0].screenX;
 }, {passive: true});
 document.addEventListener('touchend', e => {
   if(swipeIgnore) return;
+  // Jest sırasında ikinci parmak değdiyse yine yakınlaştırmadır.
+  if(e.touches && e.touches.length > 0) return;
   touchEndX = e.changedTouches[0].screenX; handleSwipeGesture();
 }, {passive: true});
 
@@ -2252,7 +2665,7 @@ auth.onAuthStateChanged(user => {
     // çevrimdışı açılışta ekran boş kalmaz).
     const cached = loadLocalCache(currentUser.uid);
     if(cached && Array.isArray(cached.records)){
-      records = cached.records;
+      records = sanitizeRecords(cached.records);
       garageData = cached.garageData || { vehicles: [], activeVehicleId: null };
       ensureRecordIds();
       migrateGarageData();
@@ -2275,6 +2688,11 @@ auth.onAuthStateChanged(user => {
         records = []; garageData = { vehicles: [], activeVehicleId: null };
         _serverUsesArrayFormat = false;
       }
+      // SAVUNMA: tarihi olmayan/bozuk kayıt tüm listeyi çökertiyordu
+      // (r.tarih.slice / localeCompare -> undefined hatası). Bulut verisi
+      // beklenmedik şekilde bozulursa uygulama komple açılmaz hale gelmesin.
+      records = sanitizeRecords(records);
+
       // Eski kayıtlara kalıcı id ver; eksikse buluta geri yaz.
       const idsAdded = ensureRecordIds();
       migrateGarageData();
@@ -2392,7 +2810,7 @@ function closeTopUi(){
     else confirmOv.classList.remove('show');
     return true;
   }
-  const ids = ['infoOverlay','otaUpdateOverlay','vehicleOverlay','maintenanceOverlay','adminStatsOverlay','goalOverlay','overlay'];
+  const ids = ['fileFallbackOverlay','infoOverlay','otaUpdateOverlay','vehicleOverlay','maintenanceOverlay','adminStatsOverlay','goalOverlay','overlay'];
   for(let i=0;i<ids.length;i++){
     const el = document.getElementById(ids[i]);
     if(isOverlayShown(el)){
@@ -2438,6 +2856,11 @@ document.addEventListener('keydown', e => {
 bindHardwareBack();
 setTimeout(bindHardwareBack, 800);
 
+/* #region 09-YARDIMCI ====================================================
+   [09-YARDIMCI]  YARDIMCI FONKSİYONLAR
+   HTML kaçırma (XSS koruması), sayı/tarih biçimleme,
+   ISO hafta hesabı (weekOf / weekLabelParts).
+   ====================================================================== */
 function escapeHtml(str){
   if(str==null) return '';
   return String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -2517,6 +2940,11 @@ function weekLabel(code){
 function monthKey(t){return t.slice(0,7)}
 function monthLabel(k){const[y,m]=k.split('-');return MONTHS[+m-1]+' '+y}
 
+/* #region 10-BONUS ====================================================
+   [10-BONUS]  BONUS SİSTEMİ
+   Haftalık ve günlük baraj modları, paket sayısına göre
+   bonus hesabı. İki modun barajları ayrı saklanır.
+   ====================================================================== */
 const YS_BONUS_TIERS = [ {p: 400, b: 7500}, {p: 360, b: 6016}, {p: 325, b: 5208}, {p: 290, b: 4700}, {p: 255, b: 3625}, {p: 220, b: 3183}, {p: 200, b: 2570}, {p: 180, b: 1325}, {p: 160, b: 937} ];
 function getBonusTiers() { return (garageData.bonusTiers && garageData.bonusTiers.length) ? garageData.bonusTiers : YS_BONUS_TIERS; }
 function getPackageBonus(teslimatSayisi) { const tiers = getBonusTiers().slice().sort((a,b)=>b.p-a.p); for(let i=0; i<tiers.length; i++) { if(teslimatSayisi >= tiers[i].p) return tiers[i].b; } return 0; }
@@ -2567,6 +2995,12 @@ function fallbackVehicleId(){
 }
 function vehicleRecords(vid) { const fallback = fallbackVehicleId(); return records.filter(r => (r.arac || fallback) === vid); }
 
+/* #region 11-HESAPLAMA ====================================================
+   [11-HESAPLAMA]  HESAPLAMA ÇEKİRDEĞİ
+   calc() tek kaydın net/gider/bonus hesabı; totalsOf() dönem
+   toplamları; çalışma saati istatistikleri.
+   İlgili: [10-BONUS] bonus tutarı buradan gelir
+   ====================================================================== */
 function updateBonuses() {
   dateBonusMap = {};
   const mode = getBonusMode();
@@ -2633,6 +3067,12 @@ function getWorkingHoursHTML(recs) {
 // ---- ÇEVRİMDIŞİ SENKRON KUYRUĞU ----
 // Çevrimdışıyken (veya push başarısız olduğunda) kayıtlar/garaj yerelde işaretlenir;
 // bağlantı geri gelince kuyruk otomatik olarak Firebase'e yeniden yazılır.
+/* #region 12-SENKRON ====================================================
+   [12-SENKRON]  VERİ SENKRONİZASYONU
+   Çevrimdışı kuyruk, DELTA yazma (çoklu cihazda veri ezilmesini
+   önler), kalıcı kayıt id'leri, yerel önbellek.
+   İlgili: [16-BILDIRIM] commitRecords() hatırlatmayı bilgilendirir
+   ====================================================================== */
 const OFFLINE_PENDING_KEY = 'kurye_offline_pending';
 function _offlinePending(){ try{ return JSON.parse(localStorage.getItem(OFFLINE_PENDING_KEY) || '{}') || {}; }catch(e){ return {}; } }
 function _setOfflinePending(kind, on){
@@ -2775,6 +3215,22 @@ function ensureRecordIds(){
   });
   return changed;
 }
+// Geçersiz kayıtları ayıklar. 'tarih' alanı tüm sıralama/gruplama
+// mantığının temeli; yoksa kayıt kullanılamaz. Sessizce atmak yerine
+// konsola not düşüyoruz ki veri kaybı fark edilebilsin.
+function sanitizeRecords(list){
+  if(!Array.isArray(list)) return [];
+  const ok = [];
+  let atilan = 0;
+  list.forEach(r => {
+    if(r && typeof r === 'object' && typeof r.tarih === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.tarih)){
+      ok.push(r);
+    } else if(r) { atilan++; }
+  });
+  if(atilan) console.warn('Geçersiz ' + atilan + ' kayıt atlandı (tarih alanı eksik/bozuk).');
+  return ok;
+}
+
 function indexOfRecordId(id){ return records.findIndex(r => r && r.id === id); }
 
 // --- YEREL ÖNBELLEK ---
@@ -2823,13 +3279,19 @@ function commitRecords() {
   ensureRecordIds();
   records.sort((a,b)=>a.tarih.localeCompare(b.tarih));
   updateBonuses(); saveRecords(); checkMaintenanceThresholds();
-  // Bugünün kaydı girildiyse native hatırlatma bunu bilsin ve
-  // akşam gereksiz bildirim göstermesin.
+  // ÇAPRAZ BAĞ -> [16-BILDIRIM]
+  // Bugünün kaydı girildiyse native hatırlatma bunu bilsin ve akşam
+  // gereksiz bildirim göstermesin. Fonksiyon aşağıdaki bölümde tanımlı,
+  // bu yüzden typeof kontrolü ile çağırıyoruz (yükleme sırası güvenliği).
   try{ if(typeof syncLastRecordDateToNative === 'function') syncLastRecordDateToNative(); }catch(e){}
 }
 function saveRecords() { saveLocalCache(); if(currentUser) _pushRecords(); }
 function saveGarage() { saveLocalCache(); if(currentUser) _pushToFirebase('garage', 'kullanicilar/' + currentUser.uid + '/garaj', garageData); }
 
+/* #region 13-SAYFA-GECIS ====================================================
+   [13-SAYFA-GECIS]  SAYFA GEÇİŞİ & DÖNEM SEÇİCİ
+   switchToPage, sidebar, tema uyumlu dönem seçici (alt sayfa).
+   ====================================================================== */
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarBackdrop').classList.remove('show');const mb=document.getElementById('menuBtn');if(mb)mb.style.display='';const bn=document.getElementById('bottomNav');if(bn)bn.style.display=''}
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('sidebarBackdrop').classList.add('show');const mb=document.getElementById('menuBtn');if(mb)mb.style.display='none';const bn=document.getElementById('bottomNav');if(bn)bn.style.display='none'}
 function toggleSidebar(){const s=document.getElementById('sidebar');if(s.classList.contains('open'))closeSidebar();else openSidebar()}
@@ -2852,6 +3314,7 @@ function switchToPage(pageName, dir){
   if(pageName==='daily')renderDaily();
   if(pageName==='weekly'){renderWeekly();renderWeeklyDetail();}
   if(pageName==='monthly'){renderMonthly();renderMonthlyDetail();}
+  if(pageName==='changelog'){ try{ renderChangelog(); }catch(e){} }   // -> [18-CHANGELOG]
   if(pageName==='garage')renderGarage();
   if(pageName==='settings')renderBonusTiers();
   if(pageName==='account') fillAccountPage();
@@ -2895,8 +3358,14 @@ document.getElementById('sidebarBackdrop').addEventListener('click',closeSidebar
     tracking = true;
   }, {passive:true});
 
+  // Jest ortasında ikinci parmak değerse (yakınlaştırma) takibi bırak.
+  document.addEventListener('touchmove', function(e){
+    if (e.touches && e.touches.length > 1) tracking = false;
+  }, {passive:true});
+
   document.addEventListener('touchend', function(e){
     if(!tracking) return; tracking=false;
+    if(e.touches && e.touches.length > 0) return;   // hâlâ parmak var: zoom
     if(startX===null || startY===null) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - startX, dy = t.clientY - startY;
@@ -2998,6 +3467,17 @@ function closePeriodSheet(){
   if(ov) ov.classList.remove('show');
   _sheetOnPick = null;
 }
+(function initFileFallback(){
+  const ov = document.getElementById('fileFallbackOverlay');
+  if(!ov) return;
+  const close = () => { ov.classList.remove('show'); const b=document.getElementById('ffBody'); if(b) b.innerHTML=''; };
+  const c1 = document.getElementById('ffClose');
+  const c2 = document.getElementById('ffDone');
+  if(c1) c1.addEventListener('click', close);
+  if(c2) c2.addEventListener('click', close);
+  ov.addEventListener('click', (e) => { if(e.target === ov) close(); });
+})();
+
 (function initPeriodSheet(){
   const ov = document.getElementById('periodSheet');
   const list = document.getElementById('periodSheetList');
@@ -3016,6 +3496,12 @@ function closePeriodSheet(){
 })();
 
 
+/* #region 14-RENDER ====================================================
+   [14-RENDER]  EKRAN ÇİZİMLERİ
+   Haftalık/aylık özet, dashboard metrik kartları, günlük kayıt
+   listesi ve kartları, kayıt düzenleme modalı.
+   İlgili: [11-HESAPLAMA] calc/totalsOf · [17-SISTEM-UYARI] renderDash uyarı bandını çizer
+   ====================================================================== */
 function renderWeekly(){
   const map={};
   records.forEach(r=>{
@@ -3036,7 +3522,7 @@ function renderWeeklyDetail(){
   const weeks=weeksList(); const content=document.getElementById('wContent'),nav=document.querySelector('#page-weekly .period-nav');
   if(!weeks.length){
     if(nav) nav.style.display='none';
-    const wm=document.getElementById('wMetrics'); if(wm) wm.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz kayıt yok</div>';
+    const wm=document.getElementById('wMetrics'); if(wm) wm.innerHTML='<div class="empty" style="grid-column:1/-1;padding:2rem 1rem;text-align:center;line-height:1.6;">📅 Henüz kayıt yok.<br><span style="font-size:.75rem;">Kayıt sayfasından gün eklediğinizde haftalık özetiniz burada oluşur.</span></div>';
     const wi=document.getElementById('wInsights'); if(wi) wi.innerHTML='';
     const wb=document.getElementById('wBest'); if(wb) wb.innerHTML='';
     return;
@@ -3059,13 +3545,13 @@ function renderWeeklyDetail(){
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
   
   document.getElementById('wMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km'})}</div></div>
-<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket'})}</div></div>
+<div class="metric cyan"><div class="metric-ico">🛣️</div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km'})}</div></div>
+<div class="metric"><div class="metric-ico">📦</div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket'})}</div></div>
 ${getWorkingHoursHTML(recs)}
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺'})}${bonusHTML}</div></div>
-<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true})}</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺'})}</div></div>
-<div class="metric amber"><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${deltaChip(t.tlkm, prevT?prevT.tlkm:null, {d:2})}</div></div>`;
+<div class="metric green"><div class="metric-ico">💰</div><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺'})}${bonusHTML}</div></div>
+<div class="metric red"><div class="metric-ico">💸</div><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true})}</div></div>
+<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-ico">${t.net>=0?'📈':'📉'}</div><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺'})}</div></div>
+<div class="metric amber"><div class="metric-ico">📐</div><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${deltaChip(t.tlkm, prevT?prevT.tlkm:null, {d:2})}</div></div>`;
   
   document.getElementById('wInsights').innerHTML=`
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
@@ -3075,9 +3561,9 @@ ${getWorkingHoursHTML(recs)}
   
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
   document.getElementById('wBest').innerHTML=`
-<div class="best-card"><div class="tag">En yüksek net</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div></div>
-<div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div></div>
-<div class="best-card"><div class="tag">En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div></div>`;
+<div class="best-card"><div class="tag"><i>🥇</i>En yüksek net</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div></div>
+<div class="best-card"><div class="tag"><i>🎯</i>En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div></div>
+<div class="best-card"><div class="tag"><i>🚀</i>En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div></div>`;
 
   
 }
@@ -3102,7 +3588,7 @@ function renderMonthlyDetail(){
   const months=monthsList(); const content=document.getElementById('mContent'),nav=document.querySelector('#page-monthly .period-nav');
   if(!months.length){
     if(nav) nav.style.display='none';
-    const mm=document.getElementById('mMetrics'); if(mm) mm.innerHTML='<div class="empty" style="grid-column:1/-1">Henüz kayıt yok</div>';
+    const mm=document.getElementById('mMetrics'); if(mm) mm.innerHTML='<div class="empty" style="grid-column:1/-1;padding:2rem 1rem;text-align:center;line-height:1.6;">📅 Henüz kayıt yok.<br><span style="font-size:.75rem;">Kayıt sayfasından gün eklediğinizde aylık özetiniz burada oluşur.</span></div>';
     const mi=document.getElementById('mInsights'); if(mi) mi.innerHTML='';
     const mb=document.getElementById('mBest'); if(mb) mb.innerHTML='';
     return;
@@ -3126,13 +3612,13 @@ function renderMonthlyDetail(){
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
 
   document.getElementById('mMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km', ...dOpt})}</div></div>
-<div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket', ...dOpt})}</div></div>
+<div class="metric cyan"><div class="metric-ico">🛣️</div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km', ...dOpt})}</div></div>
+<div class="metric"><div class="metric-ico">📦</div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket', ...dOpt})}</div></div>
 ${getWorkingHoursHTML(recs)}
-<div class="metric green"><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺', ...dOpt})}${bonusHTML}</div></div>
-<div class="metric red"><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true, ...dOpt})}</div></div>
-<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺', ...dOpt})}</div></div>
-<div class="metric violet"><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div><div class="metric-sub">${deltaChip(t.gunOrt, prevT?prevT.gunOrt:null, {unit:' ₺', ...dOpt})}</div></div>`;
+<div class="metric green"><div class="metric-ico">💰</div><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺', ...dOpt})}${bonusHTML}</div></div>
+<div class="metric red"><div class="metric-ico">💸</div><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true, ...dOpt})}</div></div>
+<div class="metric ${t.net>=0?'green':'red'}"><div class="metric-ico">${t.net>=0?'📈':'📉'}</div><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺', ...dOpt})}</div></div>
+<div class="metric violet"><div class="metric-ico">📊</div><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div><div class="metric-sub">${deltaChip(t.gunOrt, prevT?prevT.gunOrt:null, {unit:' ₺', ...dOpt})}</div></div>`;
   
   document.getElementById('mInsights').innerHTML=`
 <div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
@@ -3142,9 +3628,9 @@ ${getWorkingHoursHTML(recs)}
 
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
   document.getElementById('mBest').innerHTML=`
-<div class="best-card"><div class="tag">En yüksek net</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div></div>
-<div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div></div>
-<div class="best-card"><div class="tag">En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div></div>`;
+<div class="best-card"><div class="tag"><i>🥇</i>En yüksek net</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div></div>
+<div class="best-card"><div class="tag"><i>🎯</i>En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div></div>
+<div class="best-card"><div class="tag"><i>🚀</i>En çok paket</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div></div>`;
 
   
 
@@ -3240,10 +3726,12 @@ function renderProjections() {
 }
 
 
-function metricSwipe(cls, slides){
+// ico: kart genelinde TEK ikon (slaytlar arası değişmez, sabit çıpa görevi görür)
+function metricSwipe(cls, slides, ico){
   const html = (slides||[]).map(s => `<div class="metric-slide"><div class="metric-label">${s.label}</div><div class="metric-value"${s.size?` style="font-size:${s.size}"`:''}>${s.value}</div><div class="metric-sub">${s.sub||''}</div></div>`).join('');
   const dots = (slides||[]).map((_,i)=>`<span class="${i===0?'on':''}"></span>`).join('');
-  return `<div class="metric swipeable ${cls||''}"><div class="metric-swipe">${html}</div><div class="metric-dots">${dots}</div></div>`;
+  const icoHtml = ico ? `<div class="metric-ico">${ico}</div>` : '';
+  return `<div class="metric swipeable ${cls||''}">${icoHtml}<div class="metric-swipe">${html}</div><div class="metric-dots">${dots}</div></div>`;
 }
 function bindMetricSwipes(root){
   (root||document).querySelectorAll('.metric-swipe').forEach(el => {
@@ -3276,6 +3764,7 @@ function renderDash(){
   const tM=totalsOf(recsForCurrentMonth());
   renderProjections();
   renderMaintWarningBanner();
+  try{ renderSysWarnBanner(); }catch(e){}   // -> [17-SISTEM-UYARI]
   renderGoals();
 
   const recsW = recsForCurrentWeek();
@@ -3287,47 +3776,47 @@ function renderDash(){
       {label:'Toplam KM', value:fmtInt(t.km), sub:`Tümü · ${t.workDays} çalışma günü`},
       {label:'Bu Hafta KM', value:fmtInt(tW.km), sub:`Bu hafta · ${tW.workDays} gün`},
       {label:'Bu Ay KM', value:fmtInt(tM.km), sub:`Bu ay · ${tM.workDays} gün`}
-    ]) +
+    ], '🛣️') +
     metricSwipe('', [
       {label:'Toplam Paket', value:fmtInt(t.tes), sub:`Tümü · ort. ${fmt(t.tes/t.workDays,1)} /gün`},
       {label:'Bu Hafta Paket', value:fmtInt(tW.tes), sub:`Bu hafta · ort. ${fmt(tW.tes/tW.workDays,1)} /gün`},
       {label:'Bu Ay Paket', value:fmtInt(tM.tes), sub:`Bu ay · ort. ${fmt(tM.tes/tM.workDays,1)} /gün`}
-    ]) +
+    ], '📦') +
     metricSwipe('violet', [
       hoursSlide('Çalışma & Mola', records, 'Tümü'),
       hoursSlide('Çalışma & Mola', recsW, 'Bu hafta'),
       hoursSlide('Çalışma & Mola', recsM, 'Bu ay')
-    ]) +
+    ], '⏱️') +
     metricSwipe('green', [
       {label:'Toplam Gelir', value:fmt(t.gelir)+' ₺', sub:'Tümü · '+bonusOf(t), size:'1.2rem'},
       {label:'Bu Hafta Gelir', value:fmt(tW.gelir)+' ₺', sub:'Bu hafta · '+bonusOf(tW), size:'1.2rem'},
       {label:'Bu Ay Gelir', value:fmt(tM.gelir)+' ₺', sub:'Bu ay · '+bonusOf(tM), size:'1.2rem'}
-    ]) +
+    ], '💰') +
     metricSwipe('red', [
       {label:'Toplam Gider', value:fmt(t.gider)+' ₺', sub:`Tümü · yakıt ${fmt(t.yakit)} ₺`},
       {label:'Bu Hafta Gider', value:fmt(tW.gider)+' ₺', sub:`Bu hafta · yakıt ${fmt(tW.yakit)} ₺`},
       {label:'Bu Ay Gider', value:fmt(tM.gider)+' ₺', sub:`Bu ay · yakıt ${fmt(tM.yakit)} ₺`}
-    ]) +
+    ], '💸') +
     metricSwipe(t.net>=0?'green':'red', [
       {label:'Net Kazanç', value:fmt(t.net)+' ₺', sub:'Tümü'},
       {label:'Bu Hafta Net', value:fmt(tW.net)+' ₺', sub:'Bu hafta'},
       {label:'Bu Ay Net', value:fmt(tM.net)+' ₺', sub:'Bu ay'}
-    ]) +
+    ], t.net>=0?'📈':'📉') +
     metricSwipe('amber', [
       {label:'Ort. TL / km', value:fmt(t.tlkm), sub:'Tümü'},
       {label:'Bu Hafta TL / km', value:fmt(tW.tlkm), sub:'Bu hafta'},
       {label:'Bu Ay TL / km', value:fmt(tM.tlkm), sub:'Bu ay'}
-    ]) +
+    ], '📐') +
     metricSwipe('violet', [
       {label:'Günlük Ort. Net', value:fmt(t.gunOrt)+' ₺', sub:'Tümü'},
       {label:'Bu Hafta Günlük Ort.', value:fmt(tW.gunOrt)+' ₺', sub:'Bu hafta'},
       {label:'Bu Ay Günlük Ort.', value:fmt(tM.gunOrt)+' ₺', sub:'Bu ay'}
-    ]) +
+    ], '📊') +
     metricSwipe('orange', [
       {label:'Gider / km', value:fmt(t.giderKm)+' ₺', sub:'Tümü'},
       {label:'Bu Hafta Gider / km', value:fmt(tW.giderKm)+' ₺', sub:'Bu hafta'},
       {label:'Bu Ay Gider / km', value:fmt(tM.giderKm)+' ₺', sub:'Bu ay'}
-    ]);
+    ], '⚙️');
   bindMetricSwipes(document.getElementById('mainMetrics'));
   let hint = document.getElementById('metricsHint');
   if(!hint){
@@ -3348,7 +3837,7 @@ function renderDash(){
   const bn=calc(b.bestNet||{}),bt=calc(b.bestTlkm||{});
   document.getElementById('bestDays').innerHTML=`
 <div class="best-card"><div class="tag">En yüksek net gün</div><div class="date">${b.bestNet?b.bestNet.tarih+' · '+dayName(b.bestNet.tarih):'—'}</div><div class="big">${b.bestNet?fmt(bn.net)+' ₺':'—'}</div><div class="meta">${b.bestNet?(b.bestNet.km||0)+' km · '+(b.bestNet.teslimat||0)+' paket':''}</div></div>
-<div class="best-card"><div class="tag">En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(calc(b.bestTlkm).net)+' ₺ net':''}</div></div>
+<div class="best-card"><div class="tag"><i>🎯</i>En verimli TL/km</div><div class="date">${b.bestTlkm?b.bestTlkm.tarih+' · '+dayName(b.bestTlkm.tarih):'—'}</div><div class="big">${b.bestTlkm?fmt(bt.tlkm)+' TL/km':'—'}</div><div class="meta">${b.bestTlkm?fmt(calc(b.bestTlkm).net)+' ₺ net':''}</div></div>
 <div class="best-card"><div class="tag">En çok paket atılan gün</div><div class="date">${b.bestTes?b.bestTes.tarih+' · '+dayName(b.bestTes.tarih):'—'}</div><div class="big amber">${b.bestTes?(b.bestTes.teslimat||0)+' paket':'—'}</div><div class="meta">${b.bestTes?(b.bestTes.km||0)+' km':''}</div></div>`;
   
   
@@ -3366,7 +3855,14 @@ function renderDaily(){
   const months=[...new Set(records.map(r=>r.tarih.slice(0,7)))].sort();const sel=document.getElementById('filterMonth'),cur=sel.value;
   sel.innerHTML='<option value="">Tüm aylar</option>'+months.map(m=>`<option value="${m}" ${m===cur?'selected':''}>${monthLabel(m)}</option>`).join('');
   let list=records.map((r,i)=>({...r,_i:i})).filter(r=>{if(month&&!r.tarih.startsWith(month))return false;if(q&&!r.tarih.includes(q)&&!(r.aciklama||'').toLowerCase().includes(q))return false;return true}).sort((a,b)=>b.tarih.localeCompare(a.tarih)||((b._i||0)-(a._i||0)));
-  if(!list.length){tbody.innerHTML='<tr><td colspan="16" class="empty">Kayıt yok</td></tr>'; renderDailyCardsView(list); return}
+  if(!list.length){
+    // Hiç kayıt yok mu, yoksa filtre mi boş sonuç veriyor? İkisi farklı mesaj ister.
+    const filtered = records.length > 0;
+    const msg = filtered
+      ? 'Bu filtreye uyan kayıt yok. Arama veya ay seçimini değiştirin.'
+      : 'Henüz kayıt yok. Sağ üstteki <b>+ Yeni Kayıt</b> ile ilk gününüzü ekleyin.';
+    tbody.innerHTML = '<tr><td colspan="16" class="empty">' + msg + '</td></tr>';
+    renderDailyCardsView(list); return}
   tbody.innerHTML=list.map(r=>{
     const c=calc(r);
     let bonusTag = c.bonus > 0 ? `<div style="font-size:0.65rem; color:var(--accent); margin-top:3px; font-weight:700;">+${fmtInt(c.bonus)} ₺ Bns</div>` : '';
@@ -3420,15 +3916,25 @@ function renderDaily(){
 function renderDailyCardsView(list){
   const container = document.getElementById('dailyCards');
   if(!container) return;
-  if(!list.length){ container.innerHTML = '<div class="empty" style="text-align:center;padding:2rem 1rem;color:var(--muted);">Kayıt yok</div>'; return; }
+  if(!list.length){
+    const filtered = records.length > 0;
+    const icon = filtered ? '🔍' : '📋';
+    const msg = filtered
+      ? 'Bu filtreye uyan kayıt yok.<br><span style="font-size:.75rem;">Arama veya ay seçimini değiştirin.</span>'
+      : 'Henüz kayıt yok.<br><span style="font-size:.75rem;">Sağ üstteki <b>+ Yeni Kayıt</b> ile ilk gününüzü ekleyin.</span>';
+    container.innerHTML = '<div class="empty" style="text-align:center;padding:2.4rem 1rem;color:var(--muted);line-height:1.6;">'
+      + '<div style="font-size:2rem;margin-bottom:.5rem;opacity:.5;">' + icon + '</div>' + msg + '</div>';
+    return; }
 
   container.innerHTML = list.map(r => {
     const c = calc(r);
     const bonusTag = c.bonus > 0 ? `<span class="daily-card-bonus">+${fmtInt(c.bonus)}₺ Bonus</span>` : '';
     const saatText = r.baslangic && r.bitis ? `${r.baslangic}–${r.bitis}` : (r.saat!=null ? `${fmt(r.saat,1)} sa` : '—');
-    return `<div class="daily-card" data-id="${escapeHtml(r.id||'')}">
+    const isToday = r.tarih === todayISO();
+    const dayCls = c.net < 0 ? ' neg-day' : ' pos-day';
+    return `<div class="daily-card${dayCls}${isToday?' is-today':''}" data-id="${escapeHtml(r.id||'')}">
       <div class="daily-card-top">
-        <div class="daily-card-date">${r.tarih}<span class="daily-card-day">${dayName(r.tarih)}</span></div>
+        <div class="daily-card-date">${r.tarih}<span class="daily-card-day">${dayName(r.tarih)}</span>${isToday?'<span class="today-badge">BUGÜN</span>':''}</div>
         <div class="daily-card-net ${c.net<0?'neg':'pos'}">${fmt(c.net)} ₺</div>
       </div>
       <div class="daily-card-stats">
@@ -3439,12 +3945,12 @@ function renderDailyCardsView(list){
       </div>
       <button type="button" class="daily-card-expand-btn" data-id="${escapeHtml(r.id||'')}">Detaylar ▾</button>
       <div class="daily-card-details">
-        <div class="daily-card-detail-row"><span>Toplam Gelir</span><span>${fmt(c.toplamGelir)} ₺</span></div>
-        <div class="daily-card-detail-row"><span>Yakıt</span><span>${fmt(r.yakit||0)} ₺${r.yakitLitre>0?` (${fmt(r.yakitLitre)} L)`:''}</span></div>
-        <div class="daily-card-detail-row"><span>Diğer Gider</span><span>${fmt(r.diger||0)} ₺</span></div>
-        <div class="daily-card-detail-row"><span>TL/km</span><span>${fmt(c.tlkm)} ₺</span></div>
-        <div class="daily-card-detail-row"><span>₺/paket</span><span>${fmt(c.perPkg)} ₺</span></div>
-        ${r.molaDk>0?`<div class="daily-card-detail-row"><span>Mola</span><span>${fmt(r.molaDk,0)} dk</span></div>`:''}
+        <div class="daily-card-detail-row"><span>💰 Toplam Gelir</span><span>${fmt(c.toplamGelir)} ₺</span></div>
+        <div class="daily-card-detail-row"><span>⛽ Yakıt</span><span>${fmt(r.yakit||0)} ₺${r.yakitLitre>0?` (${fmt(r.yakitLitre)} L)`:''}</span></div>
+        <div class="daily-card-detail-row"><span>🧾 Diğer Gider</span><span>${fmt(r.diger||0)} ₺</span></div>
+        <div class="daily-card-detail-row"><span>📐 TL/km</span><span>${fmt(c.tlkm)} ₺</span></div>
+        <div class="daily-card-detail-row"><span>📦 ₺/paket</span><span>${fmt(c.perPkg)} ₺</span></div>
+        ${r.molaDk>0?`<div class="daily-card-detail-row"><span>☕ Mola</span><span>${fmt(r.molaDk,0)} dk</span></div>`:''}
         ${r.aciklama?`<div class="daily-card-note">📝 ${escapeHtml(r.aciklama)}</div>`:''}
       </div>
       <div class="daily-card-actions">
@@ -3496,7 +4002,10 @@ function populateAracSelect(selectedId){
 }
 
 document.getElementById('btnAdd').addEventListener('click',()=>{
-  editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';document.getElementById('fDate').value=todayISO();['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes','fMolaDk'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fNote').value='';populateAracSelect(garageData.activeVehicleId);
+  editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';
+  // Takvimde gelecek günleri kapat (her açılışta güncellenmeli: gün değişir).
+  try{ document.getElementById('fDate').max = todayISO(); }catch(e){}
+  document.getElementById('fDate').value=todayISO();['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes','fMolaDk'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fNote').value='';populateAracSelect(garageData.activeVehicleId);
 
   // AKILLI VARSAYILAN: son mesai saatlerini bir önceki kayıttan doldur (kullanıcı isterse değiştirebilir)
   const lastWithHours = [...records].filter(r => r.baslangic && r.bitis).sort((a,b)=>b.tarih.localeCompare(a.tarih))[0];
@@ -3534,6 +4043,9 @@ document.getElementById('form').addEventListener('submit',e=>{
 
   const tarih = document.getElementById('fDate').value;
   if(!tarih){ toast('Lütfen tarih seçin', false); return; }
+  // Yanlış yıl/ay seçimi (örn. 2030) haftalık-aylık özetleri ve bonus
+  // gruplamasını bozuyordu. Bugünden sonrası için kullanıcıyı uyarıyoruz.
+  if(tarih > todayISO()){ toast('Gelecek tarihli kayıt eklenemez. Lütfen tarihi kontrol edin.', false); return; }
   
   const arac = (garageData.vehicles.length > 1 && document.getElementById('fArac').value) ? document.getElementById('fArac').value : (garageData.activeVehicleId || fallbackVehicleId());
   const rec={tarih,arac,km:Math.max(0,parseFloat(document.getElementById('fKm').value)||0), baslangic: bas, bitis: bit, saat: computedSaat, molaDk, yakit:Math.max(0,parseFloat(document.getElementById('fYakit').value)||0),yakitLitre:Math.max(0,parseFloat(document.getElementById('fYakitLitre').value)||0),diger:Math.max(0,parseFloat(document.getElementById('fDiger').value)||0),gelir:Math.max(0,parseFloat(document.getElementById('fGelir').value)||0),teslimat:Math.max(0,parseInt(document.getElementById('fTes').value)||0),aciklama:document.getElementById('fNote').value.trim()};
@@ -3588,6 +4100,10 @@ function performUndo(){
 
 
 /* HEDEF KARTI (Haftalık / Aylık) */
+/* #region 15-HEDEF ====================================================
+   [15-HEDEF]  HEDEF KARTI
+   Haftalık/aylık kazanç veya paket hedefi, dairesel ilerleme.
+   ====================================================================== */
 const GOAL_CIRC = 2 * Math.PI * 52;
 // Hedef halkası ilerledikçe renk değiştirir: 0% kırmızı -> 15% sarı -> 50% turuncu -> 100% yeşil.
 function goalRingColor(p){
@@ -3783,6 +4299,13 @@ function clearCurrentGoal(){
 /* BAKIM BİLDİRİMLERİNİ ETKİNLEŞTİR/DEVRE DIŞI BIRAK */
 const btnEnableNotifEl = document.getElementById('btnEnableNotif');
 
+/* #region 16-BILDIRIM ====================================================
+   [16-BILDIRIM]  BİLDİRİMLER & VARDİYA HATIRLATMASI
+   NOT: Resmî LocalNotifications eklentisi bu projede çökmeye yol
+   açıyor; kendi ShiftReminder eklentimiz kullanılıyor.
+   Hatırlatma varsayılan AÇIK ve saat 23:00.
+   İlgili: [17-SISTEM-UYARI] izin sorunlarını kullanıcıya gösterir
+   ====================================================================== */
 function getLocalNotifPlugin(){
   return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications) || null;
 }
@@ -3902,7 +4425,7 @@ const REMINDER_LAST_KEY    = 'kurye_reminder_last'; // en son hatırlatılan gü
 function getShiftReminderPlugin(){
   return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.ShiftReminder) || null;
 }
-let _nativeReminderInfo = { available: false, exact: true, notificationsAllowed: true };
+let _nativeReminderInfo = { available: false, exact: true, notificationsAllowed: true, battery: true };
 
 // VARSAYILAN: hatırlatma AÇIK ve saat 23:00.
 // Kullanıcı bir kez kapatmışsa/saati değiştirmişse tercihi korunur:
@@ -3997,6 +4520,7 @@ async function refreshNativeReminderInfo(){
       if(st){
         if(typeof st.canScheduleExact === 'boolean') _nativeReminderInfo.exact = st.canScheduleExact;
         if(typeof st.notificationsAllowed === 'boolean') _nativeReminderInfo.notificationsAllowed = st.notificationsAllowed;
+        if(typeof st.ignoringBatteryOptimizations === 'boolean') _nativeReminderInfo.battery = st.ignoringBatteryOptimizations;
       }
     }
   }catch(e){}
@@ -4030,36 +4554,95 @@ function updateReminderStatusUI(){
     return;
   }
 
-  const native = _nativeReminderInfo.available;
+  const info = _nativeReminderInfo;
+  const native = info.available;
+
+  // Sorunları önem sırasına göre bildir: bildirim izni > pil > kesin alarm.
+  // "Bildirim gelmiyor" şikayetlerinin çoğu bu üçünden birinden kaynaklanır.
+  const fixes = [];
   let msg, cls;
-  if(native && _nativeReminderInfo.exact){
-    cls = 'rem-status on';
-    msg = `✓ Her gün ${t} · uygulama kapalıyken de bildirim alırsınız.`;
-  } else if(native){
-    cls = 'rem-status warn';
-    msg = `⏰ Her gün ${t} · kesin alarm izni verilmediği için bildirim birkaç dakika sapabilir.`;
-  } else {
+
+  if(!native){
     cls = 'rem-status warn';
     msg = `⚠ Her gün ${t} · uygulama kapalıyken bildirim için Play Store güncellemesi gerekiyor.`;
-  }
-  box.className = cls;
-  box.textContent = msg;
-
-  // Kesin alarm izni yoksa tek dokunuşla ayarlara götüren buton.
-  if(native && !_nativeReminderInfo.exact){
-    const a = document.createElement('button');
-    a.type = 'button';
-    a.className = 'btn btn-ghost btn-sm';
-    a.style.cssText = 'margin-top:.6rem;display:block;';
-    a.textContent = '⏰ Kesin alarm iznini ver';
-    a.addEventListener('click', async () => {
+  } else if(!info.notificationsAllowed){
+    cls = 'rem-status warn';
+    msg = `⚠ Her gün ${t} · ancak bildirim izni KAPALI, hatırlatma görünmez.`;
+    fixes.push({ label: '🔔 Bildirim iznini ver', act: async () => {
+      const BG = getSafePermPlugin();
+      if(BG && typeof BG.requestNotificationPermission === 'function'){
+        try{ await BG.requestNotificationPermission(); }catch(e){}
+      }
+      await refreshNativeReminderInfo(); updateReminderStatusUI();
+    }});
+  } else if(!info.battery){
+    cls = 'rem-status warn';
+    msg = `⚠ Her gün ${t} · pil optimizasyonu açık, bildirim gecikebilir veya hiç gelmeyebilir.`;
+    fixes.push({ label: '🔋 Pil kısıtlamasını kaldır', act: async () => {
+      const SR = getShiftReminderPlugin();
+      if(SR && typeof SR.requestBatteryExemption === 'function'){
+        try{ await SR.requestBatteryExemption(); }catch(e){}
+        toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+      }
+    }});
+  } else if(!info.exact){
+    cls = 'rem-status warn';
+    msg = `⏰ Her gün ${t} · kesin alarm izni yok, bildirim birkaç dakika sapabilir.`;
+    fixes.push({ label: '⏰ Kesin alarm iznini ver', act: async () => {
       const SR = getShiftReminderPlugin();
       if(SR && typeof SR.openExactAlarmSettings === 'function'){
         try{ await SR.openExactAlarmSettings(); }catch(e){}
         toast('İzni verdikten sonra uygulamaya geri dönün.', true);
       }
+    }});
+  } else {
+    cls = 'rem-status on';
+    msg = `✓ Her gün ${t} · uygulama kapalıyken de bildirim alırsınız.`;
+  }
+
+  box.className = cls;
+  box.textContent = msg;
+
+  // Sorun varsa düzeltme butonu, her durumda test butonu göster.
+  if(native){
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.65rem;';
+    fixes.forEach(f => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn btn-ghost btn-sm';
+      b.textContent = f.label;
+      b.addEventListener('click', f.act);
+      row.appendChild(b);
     });
-    box.appendChild(a);
+    const test = document.createElement('button');
+    test.type = 'button'; test.className = 'btn btn-ghost btn-sm';
+    test.textContent = '🔔 Test bildirimi';
+    test.addEventListener('click', async () => {
+      const SR = getShiftReminderPlugin();
+      // ÖNCEKİ HATA: eklenti yoksa/metot eksikse hiçbir şey olmuyordu;
+      // kullanıcıya "buton tepki vermiyor" gibi görünüyordu. Artık her
+      // durumda geri bildirim veriyoruz.
+      if(!SR || typeof SR.testNotification !== 'function'){
+        toast('Bildirim modülü yüklenemedi. Uygulamayı Play Store\'dan güncelleyin.', false);
+        return;
+      }
+      test.disabled = true;
+      const oldTxt = test.textContent;
+      test.textContent = 'Gönderiliyor…';
+      try{
+        const r = await SR.testNotification();
+        toast(r && r.sent
+          ? 'Test gönderildi. Bildirim gelmediyse izinleri kontrol edin.'
+          : 'Test gönderilemedi: ' + ((r && r.error) || 'bilinmeyen hata'), !!(r && r.sent));
+      }catch(e){
+        toast('Test gönderilemedi: ' + friendlyError(e), false);
+      }finally{
+        test.disabled = false;
+        test.textContent = oldTxt;
+      }
+    });
+    row.appendChild(test);
+    box.appendChild(row);
   }
 }
 
@@ -4132,6 +4715,7 @@ function applyReminderTime(v){
     await refreshNativeReminderInfo();
     syncLastRecordDateToNative();
     updateReminderStatusUI();
+    try{ renderSysWarnBanner(); }catch(e){}
     checkShiftReminder();
   });
 
@@ -4143,6 +4727,7 @@ function applyReminderTime(v){
   // (aksi halde aynı gün iki bildirim gösterilebilirdi).
   refreshNativeReminderInfo().then(async () => {
     updateReminderStatusUI();
+    try{ renderSysWarnBanner(); }catch(e){}
     // Varsayılan açık geldiği için ilk açılışta bildirim iznini bir kez isteriz.
     if(firstRun && !(await checkNotifGranted())){
       const BG = getSafePermPlugin();
@@ -4158,7 +4743,10 @@ function applyReminderTime(v){
       document.addEventListener('visibilitychange', () => {
         if(document.visibilityState === 'visible'){
           syncLastRecordDateToNative();
-          refreshNativeReminderInfo().then(updateReminderStatusUI);
+          refreshNativeReminderInfo().then(() => {
+            updateReminderStatusUI();
+            try{ renderSysWarnBanner(); }catch(e){}
+          });
         }
       });
       return;
@@ -4245,6 +4833,168 @@ function checkMaintenanceThresholds(){
   try{ localStorage.setItem('kurye_maint_notified_map', JSON.stringify(notifiedMap)); }catch(e){}
 }
 
+/* ============================================================
+   SİSTEM UYARI BANDI (ana sayfa)
+   ------------------------------------------------------------
+   "Bildirim gelmiyor" şikayetlerinin üç ana nedeni var ve üçü de
+   uygulamanın kontrolü dışında, cihaz ayarlarında:
+     1) Bildirim izni kapalı (Android 13+)
+     2) Pil optimizasyonu açık  <-- en sık sebep
+     3) Kesin alarm izni yok (Android 12+)
+
+   Bu uyarıları sadece Garaj sayfasında göstermek yetmiyordu; kullanıcı
+   oraya hiç gitmeyebiliyor. Artık ana sayfada, çözüm butonuyla birlikte
+   gösteriliyor. Kullanıcı kapatırsa 14 gün boyunca tekrar gösterilmez
+   (rahatsız etmemek için), ama hatırlatma açıkken sorun sürüyorsa
+   süre dolunca yeniden hatırlatılır.
+   ============================================================ */
+/* #region 17-SISTEM-UYARI ====================================================
+   [17-SISTEM-UYARI]  SİSTEM UYARI BANDI
+   Bildirim izni / pil optimizasyonu / kesin alarm sorunlarını
+   tespit edip ana sayfada çözüm butonuyla gösterir.
+   İlgili: [16-BILDIRIM] izin durumunu oradan okur
+   ====================================================================== */
+const SYSWARN_SNOOZE_KEY = 'kurye_syswarn_snooze';
+const SYSWARN_SNOOZE_DAYS = 14;
+
+function _sysWarnSnoozed(key){
+  try{
+    const m = JSON.parse(localStorage.getItem(SYSWARN_SNOOZE_KEY) || '{}');
+    const until = m[key];
+    return until && Date.now() < until;
+  }catch(e){ return false; }
+}
+function _sysWarnSnooze(key){
+  try{
+    const m = JSON.parse(localStorage.getItem(SYSWARN_SNOOZE_KEY) || '{}');
+    m[key] = Date.now() + SYSWARN_SNOOZE_DAYS * 86400000;
+    localStorage.setItem(SYSWARN_SNOOZE_KEY, JSON.stringify(m));
+  }catch(e){}
+}
+
+function renderSysWarnBanner(){
+  const el = document.getElementById('sysWarnBanner');
+  if(!el) return;
+
+  const info = _nativeReminderInfo;
+  // Native eklenti yoksa (tarayıcı/eski sürüm) bu uyarıların anlamı yok.
+  // Hatırlatma kapalıysa da kullanıcıyı meşgul etmiyoruz.
+  if(!info.available || !reminderIsEnabled()){
+    el.style.display = 'none'; el.innerHTML = ''; return;
+  }
+
+  const items = [];
+  if(!info.notificationsAllowed && !_sysWarnSnoozed('notif')){
+    items.push({
+      key:'notif', crit:true, ico:'🔕',
+      title:'Bildirim izni kapalı',
+      desc:'Vardiya sonu hatırlatması ve bakım uyarıları görünmeyecek.',
+      btn:'Bildirim iznini ver',
+      act: async () => {
+        const BG = getSafePermPlugin();
+        if(BG && typeof BG.requestNotificationPermission === 'function'){
+          try{ await BG.requestNotificationPermission(); }catch(e){}
+        }
+        await refreshNativeReminderInfo();
+        renderSysWarnBanner(); updateReminderStatusUI();
+      }
+    });
+  }
+  if(!info.battery && !_sysWarnSnoozed('battery')){
+    items.push({
+      key:'battery', crit:false, ico:'🔋',
+      title:'Pil optimizasyonu açık',
+      desc:'Telefonunuz uygulamayı arka planda durdurabilir; hatırlatma geç gelebilir veya hiç gelmeyebilir. Bu ayarı kapatmak pil ömrünü belirgin şekilde etkilemez.',
+      btn:'Kısıtlamayı kaldır',
+      act: async () => {
+        const SR = getShiftReminderPlugin();
+        if(SR && typeof SR.requestBatteryExemption === 'function'){
+          try{ await SR.requestBatteryExemption(); }catch(e){}
+          toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+        }
+      }
+    });
+  }
+  if(!info.exact && !_sysWarnSnoozed('exact')){
+    items.push({
+      key:'exact', crit:false, ico:'⏰',
+      title:'Kesin alarm izni yok',
+      desc:'Hatırlatma birkaç dakika sapabilir.',
+      btn:'İzin ver',
+      act: async () => {
+        const SR = getShiftReminderPlugin();
+        if(SR && typeof SR.openExactAlarmSettings === 'function'){
+          try{ await SR.openExactAlarmSettings(); }catch(e){}
+          toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+        }
+      }
+    });
+  }
+
+  if(!items.length){ el.style.display = 'none'; el.innerHTML = ''; return; }
+
+  el.style.display = '';
+  el.innerHTML = '';
+  items.forEach(it => {
+    const box = document.createElement('div');
+    box.className = 'sys-warn' + (it.crit ? ' crit' : '');
+    box.innerHTML =
+      `<span class="sys-warn-ico">${it.ico}</span>
+       <div class="sys-warn-body">
+         <div class="sys-warn-title">${escapeHtml(it.title)}</div>
+         <div class="sys-warn-desc">${escapeHtml(it.desc)}</div>
+         <div class="sys-warn-actions"></div>
+       </div>
+       <button type="button" class="sys-warn-x" aria-label="Bu uyarıyı gizle">✕</button>`;
+
+    const fix = document.createElement('button');
+    fix.type = 'button';
+    fix.className = 'btn btn-primary btn-sm';
+    fix.textContent = it.btn;
+    fix.addEventListener('click', it.act);
+    box.querySelector('.sys-warn-actions').appendChild(fix);
+
+    const how = document.createElement('button');
+    how.type = 'button';
+    how.className = 'btn btn-ghost btn-sm';
+    how.textContent = 'Nasıl yapılır?';
+    how.addEventListener('click', () => showBatteryHelp(it.key));
+    box.querySelector('.sys-warn-actions').appendChild(how);
+
+    box.querySelector('.sys-warn-x').addEventListener('click', () => {
+      _sysWarnSnooze(it.key);
+      renderSysWarnBanner();
+      toast('Bu uyarı 14 gün boyunca gösterilmeyecek.', true);
+    });
+    el.appendChild(box);
+  });
+}
+
+// Marka bazlı yönlendirme: otomatik izin ekranı bazı cihazlarda
+// açılmıyor ya da yetmiyor; kullanıcıya elle yolu tarif ediyoruz.
+function showBatteryHelp(kind){
+  let msg;
+  if(kind === 'notif'){
+    msg = 'Telefon Ayarları → Uygulamalar → Kurye OS → Bildirimler → '
+        + '"Bildirimlere izin ver" seçeneğini açın.';
+  } else if(kind === 'exact'){
+    msg = 'Telefon Ayarları → Uygulamalar → Kurye OS → Alarmlar ve hatırlatıcılar → '
+        + 'izni açın.';
+  } else {
+    msg = 'Telefon Ayarları → Uygulamalar → Kurye OS → Pil → "Kısıtlama yok" '
+        + 'veya "Optimize etme" seçin.\n\n'
+        + 'Markaya göre değişebilir:\n'
+        + '• Xiaomi/POCO: Ayarlar → Uygulamalar → Kurye OS → Pil tasarrufu → Kısıtlama yok. '
+        + 'Ayrıca "Otomatik başlatma"yı açın.\n'
+        + '• Samsung: Ayarlar → Pil → Arka plan kullanım sınırları → Kurye OS\'u '
+        + '"Uyuyan uygulamalar" listesinden çıkarın.\n'
+        + '• Huawei: Ayarlar → Pil → Uygulama başlatma → Kurye OS → Elle yönet '
+        + '(üçünü de açık bırakın).\n'
+        + '• Oppo/Realme: Ayarlar → Pil → Arka plan pil optimizasyonu → Kurye OS → İzin ver.';
+  }
+  showInfoDialog({ title: 'Nasıl yapılır?', message: msg, icon: '🔧' });
+}
+
 // Ana sayfadaki (Özet Panel) küçük uyarı banner'ını günceller
 function renderMaintWarningBanner(){
   const el = document.getElementById('maintWarningBanner');
@@ -4266,32 +5016,238 @@ function renderMaintWarningBanner(){
     </div>`;
   }).join('');
 }
+/* Talimatlar: "Bildirim sorunlarını gider" butonu.
+   Kullanıcı ana sayfadaki uyarıyı kapatmış olsa bile buradan
+   her zaman duruma bakıp izinleri düzeltebilir. */
+const btnBatteryHelpEl = document.getElementById('btnBatteryHelp');
+if(btnBatteryHelpEl){
+  btnBatteryHelpEl.addEventListener('click', async () => {
+    await refreshNativeReminderInfo();
+    const i = _nativeReminderInfo;
+    if(!i.available){
+      showInfoDialog({
+        title:'Bildirim durumu',
+        icon:'ℹ️',
+        message:'Bu özellik uygulamanın Play Store sürümünde çalışır. '
+              + 'Güncel sürümü yüklediğinizden emin olun.'
+      });
+      return;
+    }
+    const sorunlar = [];
+    if(!i.notificationsAllowed) sorunlar.push('• Bildirim izni KAPALI');
+    if(!i.battery)              sorunlar.push('• Pil optimizasyonu AÇIK (bildirimi engelleyebilir)');
+    if(!i.exact)                sorunlar.push('• Kesin alarm izni yok (birkaç dakika sapabilir)');
+
+    if(!sorunlar.length){
+      showInfoDialog({
+        title:'Her şey yolunda',
+        icon:'✅',
+        message:'Bildirim ayarlarınızda sorun görünmüyor. '
+              + 'Hatırlatma açıksa belirlediğiniz saatte bildirim alacaksınız.\n\n'
+              + 'Yine de gelmiyorsa Garaj sayfasındaki "Test bildirimi" butonunu deneyin.'
+      });
+      return;
+    }
+    // Sorun varsa: uyarıların gizlemesini kaldır ve kullanıcıyı ana sayfaya yönlendir.
+    try{ localStorage.removeItem(SYSWARN_SNOOZE_KEY); }catch(e){}
+    try{ renderSysWarnBanner(); }catch(e){}
+    showInfoDialog({
+      title:'Bildirim sorunları',
+      icon:'🔧',
+      message:'Şu ayarlar bildirimleri engelliyor olabilir:\n\n' + sorunlar.join('\n')
+            + '\n\nÖzet Panel sayfasının en üstünde bu sorunlar için düzeltme '
+            + 'butonları gösterilecek.'
+    });
+  });
+}
+
 /* İSTEK / ÖNERİ FORMU */
+/* ============================================================
+   GÜNCELLEME NOTLARI (sürüm geçmişi)
+   ------------------------------------------------------------
+   Yayınlanan her OTA sürümü appUpdate/history/<key> altında
+   saklanır. Kullanıcılar hangi sürümde ne değiştiğini, notların
+   kategorili hâliyle ve yayın tarihiyle görebilir.
+   ============================================================ */
+/* #region 18-CHANGELOG ====================================================
+   [18-CHANGELOG]  GÜNCELLEME NOTLARI SAYFASI
+   appUpdate/history düğümünden sürüm geçmişini okur.
+   İlgili: [25-OTA-YAYIN] kayıtları oradan yazılır
+   ====================================================================== */
+function _clFormatDate(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  if(isNaN(d)) return '';
+  const gun = d.getDate();
+  const ay = MONTHS_SHORT[d.getMonth()];
+  const yil = d.getFullYear();
+  const sa = String(d.getHours()).padStart(2,'0');
+  const dk = String(d.getMinutes()).padStart(2,'0');
+  return gun + ' ' + ay + ' ' + yil + ' · ' + sa + ':' + dk;
+}
+
+let _clLoaded = false;
+async function renderChangelog(force){
+  const list = document.getElementById('clList');
+  const curEl = document.getElementById('clCurrentVer');
+  if(!list) return;
+  if(curEl) curEl.textContent = 'v' + CURRENT_APP_VERSION;
+  if(_clLoaded && !force) return;
+
+  list.innerHTML = '<div class="cl-empty">Yükleniyor…</div>';
+  let items = [];
+  try{
+    const snap = await firebase.database().ref('appUpdate/history').once('value');
+    const val = snap.val() || {};
+    items = Object.keys(val).map(k => Object.assign({ _key: k }, val[k]));
+  }catch(e){
+    list.innerHTML = '<div class="cl-empty">⚠️ Notlar yüklenemedi. İnternet bağlantınızı kontrol edin.</div>';
+    return;
+  }
+
+  // Geçmiş boşsa en azından yayındaki sürümü göster.
+  if(!items.length){
+    try{
+      const s2 = await firebase.database().ref('appUpdate/latest').once('value');
+      const l = s2.val();
+      if(l && l.version) items = [{ version: l.version, notes: l.notes, publishedAt: l.publishedAt }];
+    }catch(e){}
+  }
+  if(!items.length){
+    list.innerHTML = '<div class="cl-empty"><div style="font-size:2rem;opacity:.5;margin-bottom:.5rem;">📋</div>'
+      + 'Henüz yayınlanmış bir güncelleme notu yok.</div>';
+    _clLoaded = true;
+    return;
+  }
+
+  items.sort(function(a,b){ return cmpVersions(b.version || '0', a.version || '0'); });
+
+  list.innerHTML = items.map(function(it){
+    const isCur = it.version === CURRENT_APP_VERSION;
+    const tarih = _clFormatDate(it.publishedAt);
+    const notes = it.notes ? formatUpdateNotes(it.notes)
+      : '<p style="margin:0;color:var(--muted);font-size:.8rem;">Not girilmemiş.</p>';
+    return '<div class="cl-entry' + (isCur ? ' is-current' : '') + '">'
+      + '<div class="cl-head">'
+      + '<span class="cl-ver">v' + escapeHtml(it.version || '?') + '</span>'
+      + (isCur ? '<span class="cl-badge">KULLANDIĞINIZ</span>' : '')
+      + (tarih ? '<span class="cl-date">' + escapeHtml(tarih) + '</span>' : '')
+      + '</div><div class="cl-body">' + notes + '</div></div>';
+  }).join('');
+  _clLoaded = true;
+}
+
+/* ============================================================
+   İSTEK / ÖNERİ — SPAM KORUMASI
+   ------------------------------------------------------------
+   Admin panelinde aynı mesajın 10+ kez tekrarlandığı görüldü.
+   Sebep: butonda hiçbir koruma yoktu; ağ yavaşken kullanıcı
+   üst üste basınca her dokunuş ayrı kayıt oluşturuyordu.
+
+   Dört katmanlı koruma:
+     1) Buton gönderim sırasında kilitlenir (çift tıklama)
+     2) Aynı metin tekrar gönderilemez (kopya kontrolü)
+     3) Saatte en fazla 3 gönderim (kota)
+     4) Ardışık gönderimler arası en az 30 saniye
+   Not: Bu istemci tarafı korumadır; sunucu tarafı sınır
+   database.rules.json içinde ayrıca tanımlıdır.
+   ============================================================ */
+/* #region 19-GERIBILDIRIM ====================================================
+   [19-GERIBILDIRIM]  İSTEK / ÖNERİ + SPAM KORUMASI
+   Dört katman: çift tıklama kilidi, kopya kontrolü, saatlik kota,
+   30sn bekleme. Sunucu sınırı database.rules.json içinde.
+   ====================================================================== */
+const FB_HISTORY_KEY = 'kurye_feedback_history';
+const FB_MAX_PER_HOUR = 3;
+const FB_MIN_GAP_MS = 30000;
+
+function _fbHistory(){
+  try{
+    const arr = JSON.parse(localStorage.getItem(FB_HISTORY_KEY) || '[]');
+    const cutoff = Date.now() - 3600000;
+    return Array.isArray(arr) ? arr.filter(x => x && x.at > cutoff) : [];
+  }catch(e){ return []; }
+}
+function _fbRecord(message){
+  try{
+    const h = _fbHistory();
+    h.push({ at: Date.now(), msg: String(message).slice(0, 200) });
+    localStorage.setItem(FB_HISTORY_KEY, JSON.stringify(h));
+  }catch(e){}
+}
+// Gönderilebilir mi? Değilse kullanıcıya gösterilecek sebebi döndürür.
+function _fbCheckLimit(message){
+  const h = _fbHistory();
+  if(h.some(x => x.msg === String(message).slice(0, 200))){
+    return 'Bu mesajı zaten gönderdiniz. Farklı bir şey yazabilirsiniz.';
+  }
+  if(h.length >= FB_MAX_PER_HOUR){
+    const oldest = Math.min(...h.map(x => x.at));
+    const dk = Math.max(1, Math.ceil((oldest + 3600000 - Date.now()) / 60000));
+    return `Saatte en fazla ${FB_MAX_PER_HOUR} mesaj gönderebilirsiniz. ${dk} dakika sonra tekrar deneyin.`;
+  }
+  if(h.length){
+    const last = Math.max(...h.map(x => x.at));
+    const kalan = Math.ceil((last + FB_MIN_GAP_MS - Date.now()) / 1000);
+    if(kalan > 0) return `Çok hızlı gönderiyorsunuz. ${kalan} saniye bekleyin.`;
+  }
+  return null;
+}
+
 const btnSendFeedbackEl = document.getElementById('btnSendFeedback');
 if(btnSendFeedbackEl){
-  btnSendFeedbackEl.addEventListener('click', () => {
+  let _fbSending = false;
+  btnSendFeedbackEl.addEventListener('click', async () => {
+    if(_fbSending) return;                       // 1) çift tıklama kilidi
     const nameEl = document.getElementById('fbName');
     const msgEl = document.getElementById('fbMessage');
     const name = (nameEl.value || '').trim();
     const message = (msgEl.value || '').trim();
     if(!message){ toast('Lütfen istek/öneri metnini yazın.', false); return; }
+    if(message.length < 5){ toast('Mesajınız çok kısa. Lütfen biraz açıklayın.', false); return; }
     if(!currentUser){ toast('Gönderim için giriş yapmış olmalısınız.', false); return; }
-    db.ref('feedback').push({
-      name: name || null,
-      message: message,
-      uid: currentUser.uid,
-      email: currentUser.email,
-      createdAt: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => {
+
+    const limitMsg = _fbCheckLimit(message);     // 2-3-4) kopya / kota / bekleme
+    if(limitMsg){ toast(limitMsg, false); return; }
+
+    _fbSending = true;
+    btnSendFeedbackEl.disabled = true;
+    const oldTxt = btnSendFeedbackEl.textContent;
+    btnSendFeedbackEl.textContent = 'Gönderiliyor…';
+    try{
+      await db.ref('feedback').push({
+        name: name || null,
+        message: message,
+        uid: currentUser.uid,
+        email: currentUser.email,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      // Sunucu tarafı hız sınırı için son gönderim zamanını işaretle.
+      // (localStorage silinse bile 30 sn kuralı kurallarda uygulanır.)
+      try{
+        await db.ref('feedbackMeta/' + currentUser.uid + '/lastAt')
+                .set(firebase.database.ServerValue.TIMESTAMP);
+      }catch(e){}
+      _fbRecord(message);
       toast('Teşekkürler! İstek/öneriniz iletildi.', true);
       nameEl.value = '';
       msgEl.value = '';
-    }).catch(err => toast(friendlyError(err), false));
+    }catch(err){
+      toast(friendlyError(err), false);
+    }finally{
+      _fbSending = false;
+      btnSendFeedbackEl.disabled = false;
+      btnSendFeedbackEl.textContent = oldTxt;
+    }
   });
 }
 
 // "Yakıt Detayı Gizle" butonu kaldırıldı; yakıt sütunları her zaman görünür.
 // Eski tercih kaydı ne olursa olsun gizleme sınıfını temizliyoruz.
+/* #region 20-GARAJ ====================================================
+   [20-GARAJ]  GARAJ & BAKIM TAKİBİ
+   Araç yönetimi, yakıt verimliliği, periyodik bakım hatırlatmaları.
+   ====================================================================== */
 function applyFuelColsPreference(){
   const scroll = document.getElementById('dailyTableScroll');
   if(!scroll) return;
@@ -4333,15 +5289,18 @@ function renderGarage() {
 
   const list = document.getElementById('maintenanceList');
   const bakimlar = av.bakimlar || [];
-  if(!bakimlar.length) { list.innerHTML = '<div class="empty-period" style="grid-column: 1/-1">Bakım kaydı yok</div>'; return; }
+  if(!bakimlar.length) { list.innerHTML = '<div class="empty-period" style="grid-column:1/-1;text-align:center;padding:2rem 1rem;line-height:1.6;">'
+    + '<div style="font-size:1.9rem;opacity:.5;margin-bottom:.4rem;">🔧</div>Henüz bakım hedefi yok.'
+    + '<br><span style="font-size:.75rem;">Yağ, zincir gibi periyodik bakımları ekleyin; km dolunca sizi uyaralım.</span></div>'; return; }
   
   list.innerHTML = bakimlar.map((b, i) => {
     const remaining = (b.sonKm + b.periyot) - totalKm;
-    let statusClass = 'green', statusText = fmtInt(remaining) + ' km kaldı';
-    if(remaining <= 0) { statusClass = 'red'; statusText = fmtInt(Math.abs(remaining)) + ' km GEÇTİ!'; } else if (remaining <= 300) { statusClass = 'amber'; }
+    let statusClass = 'green', statusText = fmtInt(remaining) + ' km kaldı', statusIco = '✅';
+    if(remaining <= 0) { statusClass = 'red'; statusText = fmtInt(Math.abs(remaining)) + ' km GEÇTİ!'; statusIco = '🚨'; }
+    else if (remaining <= 300) { statusClass = 'amber'; statusIco = '⚠️'; }
     const pct = Math.min(100, Math.max(0, ((totalKm - b.sonKm) / b.periyot) * 100));
-    return `<div class="best-card"><div style="display:flex; justify-content:space-between; margin-bottom:0.7rem;">
-        <div class="tag" style="margin:0">${escapeHtml(b.ad)}</div>
+    return `<div class="best-card maint-card ${statusClass}"><div style="display:flex; justify-content:space-between; margin-bottom:0.7rem;">
+        <div class="tag" style="margin:0"><i>${statusIco}</i>${escapeHtml(b.ad)}</div>
         <div style="display:flex; gap:0.3rem;"><button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="color:var(--green); border-color:transparent;">🔄 Sıfırla</button><button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="color:var(--red); border-color:transparent;">✕ Sil</button></div>
       </div>
       <div class="big ${statusClass}" style="font-size:1.3rem; margin-bottom:0.6rem">${statusText}</div>
@@ -4551,6 +5510,12 @@ document.getElementById('btnSaveTiers').addEventListener('click', ()=>{
    üretip cihazın kendi "Yazdır → PDF olarak kaydet" akışını
    kullanıyoruz. Android ve iOS'ta yerleşik olarak desteklenir.
    ============================================================ */
+/* #region 21-DISA-AKTARIM ====================================================
+   [21-DISA-AKTARIM]  DIŞA AKTARIM (PDF / CSV)
+   Aylık PDF raporu, CSV dışa aktarım, Capacitor WebView uyumlu
+   dosya kaydetme (Filesystem > Share > indirme > kurtarma ekranı).
+   İlgili: [11-HESAPLAMA] rapor rakamları calc() ile üretilir
+   ====================================================================== */
 function buildMonthlyReportHtml(monthKeyStr, recs){
   const t = totalsOf(recs);
   const sorted = recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
@@ -4662,7 +5627,22 @@ function exportMonthlyPdf(){
   if(!cur || !cur.recs.length) return toast('Bu ayda kayıt yok', false);
 
   const html = buildMonthlyReportHtml(cur.key, cur.recs);
-  // Gizli iframe içinde yazdır: sayfadan ayrılmadan, pop-up engeline takılmadan.
+  const fname = 'kurye-os-' + cur.key + '-ozet.html';
+
+  // ANDROID: window.print() Capacitor WebView'da desteklenmez (sessizce
+  // hiçbir şey olmaz). Bu yüzden native uygulamada raporu DOSYA olarak
+  // kaydediyoruz; kullanıcı isterse tarayıcıda açıp PDF'e yazdırabilir.
+  if(isNativeApp()){
+    toast('Rapor hazırlanıyor…', true);
+    saveTextFile(fname, html, 'text/html;charset=utf-8;').then(res => {
+      if(res.how === 'documents')     toast('Rapor Belgeler klasörüne kaydedildi. Tarayıcıda açıp PDF yapabilirsiniz.', true);
+      else if(res.how === 'share')    toast('Rapor paylaşıldı.', true);
+      else if(res.how === 'share-cancel') { /* sessiz */ }
+    }).catch(err => toast(friendlyError(err), false));
+    return;
+  }
+
+  // MASAÜSTÜ/TARAYICI: gizli iframe içinde yazdır.
   const old = document.getElementById('pdfFrame');
   if(old) old.remove();
   const f = document.createElement('iframe');
@@ -4673,11 +5653,15 @@ function exportMonthlyPdf(){
   doc.open(); doc.write(html); doc.close();
   const go = () => {
     try{
+      if(typeof f.contentWindow.print !== 'function') throw new Error('print yok');
       f.contentWindow.focus();
       f.contentWindow.print();
       toast('Yazdırma ekranında "PDF olarak kaydet" seçin.', true);
     }catch(e){
-      toast('PDF oluşturulamadı: ' + friendlyError(e), false);
+      // Yazdırma yoksa dosya olarak kaydetmeye düş.
+      saveTextFile(fname, html, 'text/html;charset=utf-8;').then(res => {
+        if(res.how === 'download') toast('Rapor indirildi. Tarayıcıda açıp PDF yapabilirsiniz.', true);
+      }).catch(() => toast('Rapor oluşturulamadı.', false));
     }
   };
   if(doc.readyState === 'complete') setTimeout(go, 250);
@@ -4685,6 +5669,162 @@ function exportMonthlyPdf(){
 }
 const btnMonthlyPdfEl = document.getElementById('btnMonthlyPdf');
 if(btnMonthlyPdfEl) btnMonthlyPdfEl.addEventListener('click', exportMonthlyPdf);
+
+/* ============================================================
+   DOSYA KAYDETME (Capacitor WebView uyumlu)
+   ------------------------------------------------------------
+   SORUN: <a download> + URL.createObjectURL ikilisi masaüstü
+   tarayıcıda çalışır ama Android WebView'da SESSİZCE hiçbir şey
+   yapmaz — Capacitor varsayılan olarak DownloadListener kurmaz.
+   Eski kod buna rağmen "indirildi" diyordu; kullanıcı dosyayı
+   arıyor, bulamıyordu.
+
+   Aşağıdaki katmanlar sırayla denenir ve SADECE gerçekten
+   başarılı olan yol için başarı mesajı gösterilir:
+     1) Capacitor Filesystem eklentisi (kuruluysa) -> Documents
+     2) Web Share API (dosya paylaşımı destekliyorsa)
+     3) Klasik <a download>  (yalnızca gerçek tarayıcıda)
+     4) Hiçbiri yoksa: uygulama içi görüntüleyici + panoya kopyala
+   ============================================================ */
+function isNativeApp(){
+  try{
+    if(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function'){
+      return window.Capacitor.isNativePlatform();
+    }
+    return !!(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation);
+  }catch(e){ return false; }
+}
+function getFilesystemPlugin(){
+  return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem) || null;
+}
+function getSharePlugin(){
+  return (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) || null;
+}
+
+// UTF-8 metni base64'e çevirir (Filesystem eklentisi base64 bekler).
+function _utf8ToBase64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  const CH = 0x8000;
+  for(let i = 0; i < bytes.length; i += CH){
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+  }
+  return btoa(bin);
+}
+
+// Kaydedilemeyen içeriği kaybetmemek için uygulama içinde gösterir.
+function showFileFallback(filename, text, mime){
+  const isHtml = /html/i.test(mime || '');
+  const ov = document.getElementById('fileFallbackOverlay');
+  if(!ov) return;
+  document.getElementById('ffTitle').textContent = filename;
+  const body = document.getElementById('ffBody');
+  const hint = document.getElementById('ffHint');
+
+  if(isHtml){
+    // Rapor: okunabilir biçimde göster (yazdırma/ekran görüntüsü için).
+    body.innerHTML = '';
+    const fr = document.createElement('iframe');
+    fr.style.cssText = 'width:100%;height:58vh;border:1px solid var(--border);border-radius:10px;background:#fff';
+    body.appendChild(fr);
+    const doc = fr.contentDocument || fr.contentWindow.document;
+    doc.open(); doc.write(text); doc.close();
+    hint.textContent = 'Dosya cihaza kaydedilemedi. Raporu buradan görüntüleyebilir, ekran görüntüsü alabilir veya metni kopyalayabilirsiniz.';
+  } else {
+    body.innerHTML = '';
+    const pre = document.createElement('textarea');
+    pre.readOnly = true;
+    pre.value = text;
+    pre.style.cssText = 'width:100%;height:52vh;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.7rem;line-height:1.45;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:.7rem;resize:none';
+    body.appendChild(pre);
+    hint.textContent = 'Dosya cihaza kaydedilemedi. İçeriği kopyalayıp e-posta veya not uygulamasına yapıştırabilirsiniz.';
+  }
+
+  const copyBtn = document.getElementById('ffCopy');
+  copyBtn.onclick = async () => {
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = body.querySelector('textarea');
+        if(ta){ ta.select(); document.execCommand('copy'); }
+      }
+      toast('Panoya kopyalandı', true);
+    }catch(e){ toast('Kopyalanamadı', false); }
+  };
+  ov.classList.add('show');
+}
+
+/**
+ * Metin tabanlı dosyayı cihaza kaydetmeye çalışır.
+ * @returns {Promise<{ok:boolean, how:string}>}
+ */
+// Filesystem eklentisi bir kez çökerse/başarısız olursa bir daha
+// denemiyoruz. Kotlin sınıfı eksik olan sürümlerde native taraf
+// NoClassDefFoundError fırlatıyordu; bu hata JS try/catch ile
+// yakalanamayıp uygulamayı komple düşürebiliyor.
+let _fsBroken = false;
+
+async function saveTextFile(filename, text, mime){
+  // 1) Capacitor Filesystem (en doğru yol; eklenti kuruluysa)
+  const FS = _fsBroken ? null : getFilesystemPlugin();
+  if(FS && typeof FS.writeFile === 'function'){
+    try{
+      const res = await FS.writeFile({
+        path: filename,
+        data: _utf8ToBase64(text),
+        directory: 'DOCUMENTS',
+        recursive: true
+      });
+      // Kaydedildi; mümkünse paylaşım sayfasını da aç.
+      const SH = getSharePlugin();
+      if(SH && typeof SH.share === 'function' && res && res.uri){
+        try{ await SH.share({ title: filename, url: res.uri }); }catch(e){}
+      }
+      return { ok: true, how: 'documents' };
+    }catch(e){
+      // Sınıf/köprü hatasıysa bir daha deneme: her denemede çökme riski var.
+      const msg = String((e && (e.message || e.code)) || '');
+      if(/NoClassDefFound|ClassNotFound|SpillingKt|not implemented|UNIMPLEMENTED/i.test(msg)){
+        _fsBroken = true;
+        console.warn('Filesystem eklentisi kullanılamıyor, yedek yola geçiliyor:', msg);
+      }
+      /* sıradaki yola geç */
+    }
+  }
+
+  // 2) Web Share API (dosya destekliyorsa)
+  try{
+    if(navigator.canShare && navigator.share){
+      const file = new File([text], filename, { type: mime });
+      if(navigator.canShare({ files: [file] })){
+        await navigator.share({ files: [file], title: filename });
+        return { ok: true, how: 'share' };
+      }
+    }
+  }catch(e){
+    // Kullanıcı paylaşım sayfasını kapattıysa hata sayma.
+    if(e && e.name === 'AbortError') return { ok: true, how: 'share-cancel' };
+  }
+
+  // 3) Klasik indirme — WebView'da sessizce başarısız olduğu için
+  //    SADECE gerçek tarayıcıda deniyoruz.
+  if(!isNativeApp()){
+    try{
+      const blob = new Blob([text], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      return { ok: true, how: 'download' };
+    }catch(e){}
+  }
+
+  // 4) Kurtarma: içeriği uygulama içinde göster
+  showFileFallback(filename, text, mime);
+  return { ok: false, how: 'fallback' };
+}
 
 // --- CSV DIŞA AKTARIM (muhasebe / vergi için) ---
 function exportCsv(){
@@ -4695,7 +5835,12 @@ function exportCsv(){
   };
   const head = ['Tarih','Gun','Arac','KM','Saat','Mola(dk)','Yakit(TL)','Litre','km/L','DigerGider(TL)','ToplamGider(TL)','Gelir(TL)','Bonus(TL)','ToplamGelir(TL)','Net(TL)','Paket','TL/km','TL/paket','Not'];
   const q = (v) => {
-    const t = (v==null?'':String(v));
+    let t = (v==null?'':String(v));
+    // CSV FORMÜL ENJEKSİYONU KORUMASI:
+    // = + - @ ile başlayan hücreler Excel/Sheets'te FORMÜL olarak çalışır.
+    // Not alanına "=cmd|..." yazan biri, dosyayı açan kişinin bilgisayarında
+    // komut çalıştırabilir. Başına tek tırnak koyarak metin olmaya zorluyoruz.
+    if(/^[=+\-@\t\r]/.test(t)) t = "'" + t;
     return /[";\n]/.test(t) ? '"' + t.replace(/"/g,'""') + '"' : t;
   };
   const num = (n,d=2) => (n==null||isNaN(n)) ? '' : Number(n).toFixed(d).replace('.', ',');
@@ -4713,21 +5858,25 @@ function exportCsv(){
 
   // BOM: Excel'in Türkçe karakterleri doğru göstermesi için şart.
   const csv = '\uFEFF' + [head.map(q).join(';')].concat(rows).join('\r\n');
-  try{
-    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'kurye-os-kayitlar-' + todayISO() + '.csv';
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1500);
-    toast('CSV dosyası indirildi', true);
-  }catch(err){ toast(friendlyError(err), false); }
+  const fname = 'kurye-os-kayitlar-' + todayISO() + '.csv';
+  toast('CSV hazırlanıyor…', true);
+  saveTextFile(fname, csv, 'text/csv;charset=utf-8;').then(res => {
+    // Başarı mesajı SADECE gerçekten kaydedildiyse gösterilir.
+    if(res.how === 'documents')      toast('CSV, Belgeler klasörüne kaydedildi.', true);
+    else if(res.how === 'share')     toast('CSV paylaşıldı.', true);
+    else if(res.how === 'download')  toast('CSV dosyası indirildi.', true);
+    else if(res.how === 'share-cancel') { /* kullanıcı vazgeçti: sessiz */ }
+  }).catch(err => toast(friendlyError(err), false));
 }
 const btnExportCsv = document.getElementById('btnExportCsv');
 if(btnExportCsv) btnExportCsv.addEventListener('click', exportCsv);
 const btnUndoEl = document.getElementById('btnUndo');
 if(btnUndoEl) btnUndoEl.addEventListener('click', performUndo);
 
+/* #region 22-HESAP ====================================================
+   [22-HESAP]  HESABIM SAYFASI
+   Şifre değiştirme, hesap silme.
+   ====================================================================== */
 function fillAccountPage(){
   const el = document.getElementById('accEmail');
   if(el) el.textContent = (currentUser && currentUser.email) || '—';
@@ -4791,6 +5940,10 @@ if(btnDeleteAccount){
 }
 
 // --- ADMIN PANELİ FONKSİYONLARI ---
+/* #region 23-ADMIN ====================================================
+   [23-ADMIN]  ADMIN PANELİ
+   Kullanıcı listesi ve istatistikleri, geri bildirim yönetimi.
+   ====================================================================== */
 function mergeAndRenderAdmin() {
     const finalUsers = {};
     
@@ -4933,8 +6086,8 @@ window.viewUserStats = function(uid, email) {
         
         document.getElementById('adminStatsContent').innerHTML = `
             <div class="metrics" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
-                <div class="metric cyan"><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
-                <div class="metric"><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(tes)}</div></div>
+                <div class="metric cyan"><div class="metric-ico">🛣️</div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
+                <div class="metric"><div class="metric-ico">📦</div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(tes)}</div></div>
                 <div class="metric green"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(net)} ₺</div><div class="metric-sub">Bonus Dahil: ${fmtInt(totalBonus)} ₺</div></div>
                 <div class="metric violet"><div class="metric-label">Toplam Çalışma</div><div class="metric-value">${fmt(hours, 1)} sa</div><div class="metric-sub">${userRecs.length} gün kayıtlı</div></div>
             </div>
@@ -4958,6 +6111,9 @@ window.deleteUserDatabase = function(uid, email) {
 };
 </script>
 
+<!-- #region 24-GPS ==================================================
+     [24-GPS]  GPS ARKA PLAN TAKİBİ
+     ====================================================================== -->
 <!-- GPS Sayacı: Kalıcı Sabit Bildirim (Native Kronometre), Senkronize Sayaç ve Android 13+ İzinleri -->
 <script>
 (function (global) {
@@ -5664,6 +6820,10 @@ window.deleteUserDatabase = function(uid, email) {
 })();
 </script>
 
+<!-- #region 25-OTA-YAYIN ==================================================
+     [25-OTA-YAYIN]  ADMIN: OTA YAYINLAMA & SÜRÜM GEÇMİŞİ
+   İlgili: [18-CHANGELOG] yayınlanan sürüm geçmişe eklenir
+     ====================================================================== -->
 <!-- GÜNCELLEME YÖNETİMİ (OTA) VE ROLLBACK -->
 <script>
 (function () {
@@ -5759,6 +6919,177 @@ window.deleteUserDatabase = function(uid, email) {
     });
   }
 
+  // --- ADMIN İÇ SEKMELERİ ---
+  function initAdminTabs(){
+    const nav = document.getElementById('admNav');
+    if(!nav) return;
+    nav.addEventListener('click', (e) => {
+      const btn = e.target.closest('.adm-tab');
+      if(!btn) return;
+      const key = btn.dataset.adm;
+      nav.querySelectorAll('.adm-tab').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.adm-pane').forEach(p =>
+        p.classList.toggle('active', p.id === 'adm-' + key));
+      // Sürüm geçmişi sekmesi açılınca listeyi tazele.
+      if(key === 'clog'){ try{ renderClAdminList(); }catch(e){} }
+      try{ window.scrollTo({top:0, behavior:'instant'}); }catch(e){ window.scrollTo(0,0); }
+    });
+  }
+
+  // --- SÜRÜM GEÇMİŞİ YÖNETİMİ ---
+  function _clStatus(msg, ok){
+    const el = document.getElementById('clAdminStatus');
+    if(!el) return;
+    el.textContent = msg;
+    el.style.color = ok === true ? 'var(--green,#34d399)'
+                   : ok === false ? 'var(--red,#f87171)' : 'var(--muted)';
+  }
+  // ISO <-> datetime-local dönüşümü (yerel saat dilimini korur)
+  function _isoToLocalInput(iso){
+    const d = iso ? new Date(iso) : new Date();
+    if(isNaN(d)) return '';
+    const p = n => String(n).padStart(2,'0');
+    return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes());
+  }
+
+  async function renderClAdminList(){
+    const box = document.getElementById('clAdminList');
+    if(!box) return;
+    box.innerHTML = '<div style="color:var(--muted);font-size:.8rem;">Yükleniyor…</div>';
+    let items = [];
+    try{
+      const snap = await firebase.database().ref('appUpdate/history').once('value');
+      const val = snap.val() || {};
+      items = Object.keys(val).map(k => Object.assign({ _key:k }, val[k]));
+    }catch(e){
+      box.innerHTML = '<div style="color:var(--red);font-size:.8rem;">Okunamadı: '+escapeHtml(e.message||'')+'</div>';
+      return;
+    }
+    if(!items.length){
+      box.innerHTML = '<div style="color:var(--muted);font-size:.8rem;">Henüz kayıt yok. OTA yayınladığınızda otomatik eklenir.</div>';
+      return;
+    }
+    items.sort((a,b) => cmpVersions(b.version||'0', a.version||'0'));
+    box.innerHTML = '';
+    items.forEach(it => {
+      const row = document.createElement('div');
+      row.className = 'cl-adm-row';
+      const tarih = it.publishedAt ? _clFormatDate(it.publishedAt) : '—';
+      row.innerHTML = '<b>v'+escapeHtml(it.version||'?')+'</b>'
+        + '<span style="color:var(--muted);font-size:.74rem;">'+escapeHtml(tarih)+'</span>'
+        + '<span class="sp"></span>';
+      const edit = document.createElement('button');
+      edit.type='button'; edit.className='btn btn-ghost btn-sm'; edit.textContent='✎';
+      edit.title = 'Düzenle';
+      edit.addEventListener('click', () => {
+        document.getElementById('clEditVersion').value = it.version || '';
+        document.getElementById('clEditNotes').value = it.notes || '';
+        document.getElementById('clEditDate').value = _isoToLocalInput(it.publishedAt);
+        _clStatus('v'+(it.version||'?')+' düzenleniyor. Kaydet ile güncelleyin.');
+        try{ document.getElementById('clEditVersion').scrollIntoView({block:'center'}); }catch(e){}
+      });
+      const del = document.createElement('button');
+      del.type='button'; del.className='btn btn-ghost btn-sm'; del.style.color='var(--red)';
+      del.textContent='✕'; del.title = 'Sil';
+      del.addEventListener('click', () => {
+        showConfirm('v'+(it.version||'?')+' kaydı sürüm geçmişinden silinecek. Kullanıcılar bu notu artık göremeyecek.',
+          async () => {
+            try{
+              await firebase.database().ref('appUpdate/history/'+it._key).remove();
+              _clStatus('v'+it.version+' silindi.', true);
+              renderClAdminList();
+            }catch(e){ _clStatus('Silinemedi: '+e.message, false); }
+          }, { title:'Kaydı sil', okText:'Sil', icon:'🗑️' });
+      });
+      row.querySelector('.sp').appendChild(edit);
+      row.querySelector('.sp').appendChild(del);
+      box.appendChild(row);
+    });
+  }
+
+  function initChangelogAdmin(){
+    const btnSave = document.getElementById('btnClSave');
+    const btnNew  = document.getElementById('btnClNew');
+    if(!btnSave) return;
+
+    btnSave.addEventListener('click', async () => {
+      const v = (document.getElementById('clEditVersion').value || '').trim();
+      const notes = (document.getElementById('clEditNotes').value || '').trim();
+      const dateVal = document.getElementById('clEditDate').value;
+      if(!/^\d+\.\d+\.\d+$/.test(v)){
+        _clStatus('Sürüm biçimi hatalı. Örnek: 6.0.1', false); return;
+      }
+      const publishedAt = dateVal ? new Date(dateVal).toISOString() : new Date().toISOString();
+      btnSave.disabled = true;
+      try{
+        await firebase.database().ref('appUpdate/history/' + v.replace(/\./g,'_'))
+          .set({ version: v, notes: notes, publishedAt: publishedAt });
+        _clStatus('✓ v'+v+' kaydedildi.', true);
+        toast('Sürüm notu kaydedildi.', true);
+        renderClAdminList();
+      }catch(e){
+        _clStatus('Kaydedilemedi: '+e.message, false);
+      }finally{ btnSave.disabled = false; }
+    });
+
+    btnNew.addEventListener('click', () => {
+      document.getElementById('clEditVersion').value = '';
+      document.getElementById('clEditNotes').value = '';
+      document.getElementById('clEditDate').value = _isoToLocalInput(null);
+      _clStatus('Yeni kayıt: sürüm, tarih ve notları girip Kaydet deyin.');
+    });
+  }
+
+  /* ---- OTA DOSYA SEÇİMİ ----
+     Seçilen dosyalar tek bir listede toplanır (dosya + klasör seçimi
+     birleştirilebilir). Zip'e eklenirken klasör yolu korunur. */
+  let _otaFiles = [];
+
+  // Zip içindeki hedef yolu üretir. Klasör seçiminde webkitRelativePath
+  // "kurye/public/js/app.js" gibi gelir; ilk klasörü atarız çünkü
+  // paketin kökünde index.html bulunmalıdır.
+  function otaZipPath(file){
+    let p = file.webkitRelativePath || file.name;
+    p = p.replace(/\\/g, '/');
+    const parts = p.split('/').filter(Boolean);
+    if (parts.length > 1) parts.shift();   // en dıştaki klasör adını at
+    return parts.join('/') || file.name;
+  }
+
+  function renderOtaFileList(){
+    const box = document.getElementById('updFileList');
+    if (!box) return;
+    if (!_otaFiles.length) {
+      box.textContent = 'Henüz dosya seçilmedi.';
+      return;
+    }
+    const paths = _otaFiles.map(otaZipPath);
+    const hasIndex = paths.some(p => p.toLowerCase() === 'index.html');
+    const toplamKb = Math.round(_otaFiles.reduce((a, f) => a + f.size, 0) / 1024);
+    box.innerHTML =
+      '<div class="' + (hasIndex ? 'ok' : 'warn') + '">'
+      + (hasIndex ? '✓ index.html pakette' : '⚠ index.html YOK — paket çalışmaz')
+      + ' · ' + paths.length + ' dosya · ' + toplamKb + ' KB</div>'
+      + paths.slice(0, 40).map(p => escapeHtml(p)).join('<br>')
+      + (paths.length > 40 ? '<br>… ve ' + (paths.length - 40) + ' dosya daha' : '');
+  }
+
+  function initOtaFilePickers(){
+    const fileInp = document.getElementById('updFiles');
+    const dirInp  = document.getElementById('updFolder');
+    const add = (list) => {
+      // Aynı hedef yol iki kez eklenmesin (dosya + klasör karışık seçilirse).
+      const seen = new Set(_otaFiles.map(otaZipPath));
+      Array.from(list || []).forEach(f => {
+        const p = otaZipPath(f);
+        if (!seen.has(p)) { _otaFiles.push(f); seen.add(p); }
+      });
+      renderOtaFileList();
+    };
+    if (fileInp) fileInp.addEventListener('change', e => { _otaFiles = []; add(e.target.files); });
+    if (dirInp)  dirInp.addEventListener('change',  e => { _otaFiles = []; add(e.target.files); });
+  }
+
   function initUpdatePanel() {
     const btnPublish = document.getElementById('btnPublishUpdate');
     const btnRollback = document.getElementById('btnRollback');
@@ -5829,11 +7160,17 @@ window.deleteUserDatabase = function(uid, email) {
     refreshCurrentInfo();
 
     btnPublish.addEventListener('click', async function () {
-      const files = fileInput.files;
+      const files = _otaFiles;   // dosya + klasör seçimlerinin birleşik listesi
       const version = versionInput.value.trim();
       const notes = notesInput.value.trim();
 
       if (!files || files.length === 0) { toast('Lütfen en az bir dosya seçin.', false); return; }
+      // Paketin kökünde index.html yoksa uygulama beyaz ekranda açılır.
+      const zipPaths = Array.from(files).map(otaZipPath);
+      if (!zipPaths.some(p => p.toLowerCase() === 'index.html')) {
+        toast('Pakette index.html bulunmalı. Seçimi kontrol edin.', false);
+        return;
+      }
       if (!version || !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(version)) { toast('Sürüm numarasını "1.0.1" formatında girin.', false); return; }
 
       btnPublish.disabled = true;
@@ -5843,7 +7180,11 @@ window.deleteUserDatabase = function(uid, email) {
         const zip = new JSZip();
         for (const file of files) {
           const content = await file.arrayBuffer();
-          zip.file(file.name, content);
+          // ÖNEMLİ: file.name yalnızca dosya adını verir; klasör yapısı kaybolur.
+          // "js/app.js" seçilirse zip'e "app.js" olarak girer ve index.html
+          // içindeki <script src="js/app.js"> paket içinde bulunamaz -> beyaz ekran.
+          // webkitRelativePath klasör yolunu korur (klasör seçiminde dolu gelir).
+          zip.file(otaZipPath(file), content);
         }
         const zipBlob = await zip.generateAsync({ type: 'blob' }, (meta) => {
           statusEl.textContent = 'Paketleniyor... %' + Math.round(meta.percent);
@@ -5869,16 +7210,31 @@ window.deleteUserDatabase = function(uid, email) {
           await firebase.database().ref('appUpdate/previous').set(currentLatest);
         }
 
+        const publishedAt = new Date().toISOString();
         await firebase.database().ref('appUpdate/latest').set({
           version: version,
           url: downloadUrl,
           notes: notes || '',
-          publishedAt: new Date().toISOString()
+          publishedAt: publishedAt
         });
+
+        // Sürüm geçmişine yaz (kullanıcıların "Güncelleme Notları"
+        // sayfasında görünür). Anahtar olarak sürümü kullanıyoruz:
+        // aynı sürüm tekrar yayınlanırsa kayıt çoğalmaz, güncellenir.
+        try{
+          await firebase.database()
+            .ref('appUpdate/history/' + version.replace(/\./g, '_'))
+            .set({ version: version, notes: notes || '', publishedAt: publishedAt });
+        }catch(e){ console.log('Geçmişe yazılamadı:', e); }
 
         statusEl.textContent = '';
         toast('v' + version + ' başarıyla yayınlandı!', true);
-        fileInput.value = ''; versionInput.value = ''; notesInput.value = ''; refreshNotesPreview();
+        _otaFiles = [];
+        try{ renderOtaFileList(); }catch(e){}
+        if(fileInput) fileInput.value = '';
+        const dirInp = document.getElementById('updFolder');
+        if(dirInp) dirInp.value = '';
+        versionInput.value = ''; notesInput.value = ''; refreshNotesPreview();
         refreshCurrentInfo();
       } catch (err) {
         statusEl.textContent = '';
@@ -5919,6 +7275,9 @@ window.deleteUserDatabase = function(uid, email) {
   function initAdminPanels(){
     try{ initUpdatePanel(); }catch(e){ console.log('update panel:', e); }
     try{ initStoreGatePanel(); }catch(e){ console.log('store gate panel:', e); }
+    try{ initAdminTabs(); }catch(e){ console.log('admin tabs:', e); }
+    try{ initOtaFilePickers(); }catch(e){ console.log('ota file picker:', e); }
+    try{ initChangelogAdmin(); }catch(e){ console.log('changelog admin:', e); }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAdminPanels);
@@ -5928,6 +7287,9 @@ window.deleteUserDatabase = function(uid, email) {
 })();
 </script>
 
+<!-- #region 26-SIFRE-GOZ ==================================================
+     [26-SIFRE-GOZ]  ŞİFRE GÖSTER / GİZLE
+     ====================================================================== -->
 <!-- ŞİFRE GÖSTER/GİZLE (GÖZ İKONU) -->
 <script>
 (function () {
@@ -5980,5 +7342,5 @@ window.deleteUserDatabase = function(uid, email) {
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3530236ce0e2c88',t:'MTc4ODQyMDIwMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3570eb5cacced5e',t:'MTc4ODQ2MjY1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

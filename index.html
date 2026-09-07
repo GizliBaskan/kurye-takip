@@ -551,6 +551,18 @@ textarea:focus{border-color:var(--accent)}
 .goal-dots{display:flex;justify-content:center;gap:6px;margin-top:.75rem}
 .goal-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:background .2s}
 .goal-dot.active{background:var(--accent)}
+.goal-3{display:flex;justify-content:space-around;align-items:flex-start;gap:.4rem;flex-wrap:wrap;margin:.4rem 0 .6rem}
+.goal-mini-ring{position:relative;width:72px;height:72px;flex:0 0 auto;text-align:center}
+.goal-mini-ring svg{width:100%;height:100%;display:block}
+.goal-mini-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.goal-mini-pct{font-family:var(--mono);font-size:.95rem;font-weight:700;line-height:1}
+.goal-mini-label{font-size:.52rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em;margin-top:.1rem}
+.goal-mini-sub{font-size:.58rem;color:var(--sec);margin-top:.2rem;line-height:1.3;white-space:nowrap}
+.goal-mini-ring.empty .goal-mini-label{font-size:.52rem;margin-top:0}
+.goal-mini-sub.muted{color:var(--muted)}
+.goal-info-row{display:flex;align-items:center;justify-content:center;gap:.6rem;margin:.3rem 0 .6rem;color:var(--muted);font-size:.75rem;font-weight:600}
+.goal-days{flex:1;text-align:center}
+.goal-projection{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.55rem .7rem;font-size:.75rem;color:var(--sec);text-align:center;line-height:1.45}
 .goal-type-row{display:flex;gap:.5rem}
 .goal-type-btn{flex:1;min-height:44px;border:1px solid var(--border);background:var(--bg);color:var(--sec);border-radius:10px;font-family:inherit;font-weight:600;font-size:.82rem;cursor:pointer;transition:.15s}
 .goal-type-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
@@ -756,7 +768,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .setup-alert-act{display:flex;flex-direction:column;gap:.3rem;flex:0 0 auto}
 .setup-alert-act .btn{min-height:34px;white-space:nowrap}
 @media(prefers-reduced-motion:reduce){.setup-alert-banner{animation:none}}
-@media(max-width:560px){.setup-alert-banner{flex-wrap:wrap}.setup-alert-act{flex-direction:row;width:100%;justify-content:flex-end}}
+@media(max-width:560px){.setup-alert-banner{flex-wrap:wrap}.setup-alert-act{flex-direction:row;width:100%;justify-content:flex-end}.goal-3{flex-direction:column;align-items:center;gap:.7rem}.goal-info-row{flex-wrap:wrap;justify-content:center}}
 
 /* --- Yönetici duyuru banner'ı --- */
 .announcement-banner{display:flex;gap:.7rem;align-items:flex-start;max-width:100%;margin:0 0 .9rem;padding:.7rem .8rem;
@@ -766,6 +778,52 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .announcement-banner.ann-warning{border-color:var(--amber)}.announcement-banner.ann-warning::before{background:var(--amber)}
 .announcement-banner.ann-success{border-color:var(--green)}.announcement-banner.ann-success::before{background:var(--green)}
 .announcement-banner[hidden]{display:none}
+.anomaly-banner{display:flex;align-items:flex-start;gap:.6rem;background:var(--elev);border:1px solid var(--amber);border-left:3px solid var(--amber);border-radius:12px;padding:.7rem .85rem;margin:0 0 .9rem;color:var(--sec);font-size:.8rem;line-height:1.45}
+.anomaly-banner:empty{display:none}
+.anomaly-banner .dismiss{appearance:none;border:none;background:transparent;color:var(--muted);font-size:1rem;line-height:1;margin-left:auto;cursor:pointer;padding:0 .2rem}
+.anomaly-banner.warning{border-color:var(--amber);border-left-color:var(--amber)}
+.anomaly-banner.danger{border-color:var(--red);border-left-color:var(--red);background:rgba(248,113,113,.08)}
+.anomaly-banner.hidden{display:none}
+.dash-head-actions{display:flex;gap:.5rem;align-items:flex-start;flex-wrap:wrap;justify-content:flex-end}
+.dashboard-head{flex-wrap:wrap;gap:.8rem .5rem}
+.btn-sos{background:var(--red);color:#fff;border:1px solid var(--red);border-radius:10px;font-weight:700;padding:0 .9rem;min-height:44px;animation:sos-pulse 2s infinite}
+@keyframes sos-pulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.45)}50%{box-shadow:0 0 0 6px rgba(248,113,113,0)}}
+.sos-modal{max-width:420px}
+.sos-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin-bottom:1rem}
+.sos-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.7rem .4rem;text-decoration:none;color:var(--text);min-height:64px;transition:.15s}
+.sos-btn:hover{background:var(--hover)}
+.sos-btn span{font-size:1.1rem;font-weight:700}
+.sos-btn small{font-size:.62rem;color:var(--muted);text-align:center}
+.sos-actions{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.4rem}
+.sos-actions .btn{justify-content:center}
+.maint-history-table-wrap{overflow-x:auto}
+.maint-history-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.maint-history-table th,.maint-history-table td{padding:.45rem .5rem;border-bottom:1px solid var(--border);text-align:left}
+.maint-history-table th{color:var(--muted);font-weight:600}
+.maint-history-table td.num{text-align:right;font-family:var(--mono)}
+.maint-history-table tr:last-child td{border-bottom:none}
+.mh-summary{display:flex;gap:.6rem;flex-wrap:wrap}
+.mh-stat{flex:1;min-width:90px;background:var(--elev);border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;text-align:center}
+.mh-stat span{display:block;font-size:.65rem;color:var(--muted);margin-bottom:.15rem}
+.mh-stat b{font-size:.95rem;color:var(--sec)}
+.badges-summary{display:flex;align-items:center;gap:.6rem;margin:-.4rem 0 .6rem;color:var(--muted);font-size:.78rem;font-weight:600}
+.badges-summary .count{background:var(--accent);color:#fff;border-radius:999px;padding:.15rem .55rem;font-size:.7rem}
+.badges-panel{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem;margin-bottom:1.5rem}
+.badge-card{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.75rem .5rem;text-align:center;opacity:.55;transition:opacity .2s}
+.badge-card.unlocked{opacity:1;border-color:var(--accent);background:var(--accent-dim)}
+.badge-ico{font-size:1.6rem;margin-bottom:.4rem}
+.badge-title{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
+.badge-desc{font-size:.62rem;color:var(--muted);line-height:1.35}
+.badge-state{font-size:.6rem;margin-top:.35rem;font-weight:600;color:var(--accent)}
+.shift-list{display:flex;flex-direction:column;gap:.55rem}
+.shift-row{display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;background:var(--elev);border:1px solid var(--border);border-radius:10px;padding:.45rem .5rem}
+.shift-row .fg{flex:1;min-width:80px;margin:0}
+.shift-row input[type="time"]{font-family:var(--mono);font-size:.85rem;padding:.45rem .4rem}
+.shift-row input[type="number"]{padding:.45rem .4rem}
+.shift-row .btn-sm{padding:.35rem .5rem;font-size:.7rem;margin-bottom:.35rem}
+.shift-row.empty{opacity:.7}
+.shift-overlap{background:rgba(248,113,113,.08);border-color:var(--red)}
+#shiftTotalHint{font-size:.72rem;color:var(--muted);margin:0}
 .ann-ico{font-size:1.05rem;line-height:1.2;flex:0 0 auto}
 .ann-body{min-width:0;flex:1 1 auto}
 .ann-body b{display:block;font-size:.84rem;color:var(--text);margin-bottom:.14rem}
@@ -1310,7 +1368,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
   </div>
   <!-- ÖZET PANEL -->
   <section class="page active" id="page-dashboard">
-    <div class="page-head dashboard-head"><div><h1>Genel özet</h1><p>Kazancın, emeğin ve katettiğin yol.</p></div><button type="button" class="btn btn-primary" id="btnDashAdd" onclick="openDashboardRecord()">+ Yeni kayıt</button></div>
+    <div class="page-head dashboard-head"><div><h1>Genel özet</h1><p>Kazancın, emeğin ve katettiğin yol.</p></div><div class="dash-head-actions"><button type="button" class="btn btn-sos" id="btnSos" title="Acil Durum">SOS</button><button type="button" class="btn btn-primary" id="btnDashAdd" onclick="openDashboardRecord()">+ Yeni kayıt</button></div></div>
 
     <div id="dashGpsLive" class="dash-gps" role="region" aria-label="Aktif GPS takibi">
       <div class="dash-gps-left">
@@ -1385,6 +1443,33 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
           <span class="goal-dot" data-goal-dot="monthly"></span>
         </div>
       </div>
+
+      <!-- ANOMALİ UYARISI -->
+      <div id="anomalyBanner" class="anomaly-banner" style="display:none;"></div>
+
+      <!-- AKILLI GÜN SONU ANALİZİ -->
+      <div class="insights" id="todayInsightsCard" style="margin-bottom:1.5rem;">
+        <div class="insight" style="background:linear-gradient(135deg,var(--card),var(--elev));border-color:var(--border2);">
+          <div class="insight-icon g">📈</div>
+          <div style="flex:1;">
+            <h4>Bugünkü Performans</h4>
+            <div class="val pos" id="todayPerfVal" style="font-size:1.2rem;">—</div>
+            <div class="desc" id="todayPerfDesc">Yeterli veri yok</div>
+          </div>
+        </div>
+        <div class="insight" style="background:linear-gradient(135deg,var(--card),var(--elev));border-color:var(--border2);">
+          <div class="insight-icon c">💡</div>
+          <div style="flex:1;">
+            <h4>Öne Çıkan Alan</h4>
+            <div class="val" id="todayTopVal" style="font-size:1.2rem;color:var(--accent);">—</div>
+            <div class="desc" id="todayTopDesc">Bugünkü veriye göre</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"><h2>Rozetlerim</h2></div>
+      <div class="badges-summary" id="badgesSummary"></div>
+      <div class="badges-panel" id="badgesPanel"></div>
     </div>
 
     <!-- TAB 2: DETAYLI ANALİZ -->
@@ -1576,6 +1661,12 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
     </div>
 
     <div class="best-grid" id="maintenanceList"></div>
+
+    <div class="section-divider"><h2>Bakım Geçmişi</h2></div>
+    <div class="panel" style="margin-bottom:1.4rem;">
+      <div id="maintenanceHistorySummary" class="mh-summary" style="display:flex; gap:.6rem; flex-wrap:wrap; margin-bottom:1rem;"></div>
+      <div id="maintenanceHistoryList"></div>
+    </div>
   </section>
 
   <section class="page" id="page-settings">
@@ -2351,11 +2442,11 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
       <details class="form-details" id="formDetails">
         <summary>Detaylar <span style="font-weight:400; color:var(--muted);">(Mesai, Yakıt, Not)</span><span class="form-details-chevron">▾</span></summary>
         <div class="form-details-body">
-          <div class="fg-row">
-            <div class="fg"><label>Mesai Başlangıç</label><input type="time" id="fBaslangic" /></div>
-            <div class="fg"><label>Mesai Bitiş</label><input type="time" id="fBitis" /></div>
+          <div class="fg"><label>Çalışma Vardiyaları</label>
+            <div id="shiftList" class="shift-list"></div>
+            <button type="button" class="btn btn-ghost btn-sm" id="btnAddShift" style="margin-top:.4rem;">+ Vardiya Ekle</button>
+            <p class="field-hint" id="shiftTotalHint" style="margin-top:.4rem;">Toplam çalışma süresi: —</p>
           </div>
-          <div class="fg"><label>Mola Süresi (dakika)</label><input type="number" id="fMolaDk" min="0" step="5" value="0"/></div>
           <div class="fg-row">
             <div class="fg"><label>Yakıt (₺)</label><input type="number" id="fYakit" min="0" max="100000" step="0.01" value="0" inputmode="decimal"/></div>
             <div class="fg"><label>Diğer (₺)</label><input type="number" id="fDiger" min="0" max="100000" step="0.01" value="0" inputmode="decimal"/></div>
@@ -2390,8 +2481,9 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
     <div class="fg">
       <label>Hedef Türü</label>
       <div class="goal-type-row">
-        <button type="button" class="goal-type-btn active" data-goal-type="net">₺ Net Kazanç</button>
-        <button type="button" class="goal-type-btn" data-goal-type="paket">📦 Paket</button>
+        <button type="button" class="goal-type-btn active" data-goal-type="money">₺ Net Kazanç</button>
+        <button type="button" class="goal-type-btn" data-goal-type="packages">📦 Paket</button>
+        <button type="button" class="goal-type-btn" data-goal-type="hours">⏱️ Çalışma Saati</button>
       </div>
     </div>
     <div class="fg">
@@ -2530,6 +2622,45 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
   </div>
 </div>
 
+<!-- Modal: SOS Acil Durum İkincil Onay -->
+<div class="overlay" id="sosConfirmOverlay">
+  <div class="modal" style="max-width:340px;">
+    <h2 style="color:var(--red);">Acil Durum Paneli</h2>
+    <p style="color:var(--muted);font-size:.85rem;line-height:1.55;margin:-.3rem 0 1.2rem;">Gerçek bir acil durumda SOS panelini açmak istediğinize emin misiniz?</p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="btnSosConfirmCancel">İptal</button>
+      <button type="button" class="btn btn-danger" id="btnSosConfirmOpen">Evet, Aç</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: SOS Acil Durum Paneli -->
+<div class="overlay" id="sosOverlay">
+  <div class="modal sos-modal">
+    <h2 style="color:var(--red);">Acil Durum</h2>
+    <p style="color:var(--muted);font-size:.82rem;margin:-.4rem 0 1rem;line-height:1.45;">Sadece gerçek acil durumlarda kullanın.</p>
+    <div class="sos-grid">
+      <a class="sos-btn sos-call" href="tel:112"><span>112</span><small>Ambulans / İtfaiye</small></a>
+      <a class="sos-btn sos-call" href="tel:155"><span>155</span><small>Polis</small></a>
+      <a class="sos-btn sos-call" href="tel:154"><span>154</span><small>Jandarma</small></a>
+      <a class="sos-btn sos-call" href="tel:183"><span>183</span><small>Çekici</small></a>
+    </div>
+    <div class="sos-actions">
+      <button type="button" class="btn btn-danger" id="btnSosSms">📍 Konumumu SMS ile gönder</button>
+      <button type="button" class="btn btn-ghost" id="btnSosTow">🚛 Yakındaki çekici</button>
+      <button type="button" class="btn btn-ghost" id="btnSosRepair">🔧 Yakındaki tamirci</button>
+    </div>
+    <div class="fg" style="margin-top:1rem;">
+      <label>Acil Kişiler (virgülle ayırın)</label>
+      <input type="text" id="sosContacts" placeholder="Örn: 0555 123 45 67, 0532 987 65 43" />
+      <p style="font-size:.72rem;color:var(--muted);margin:.35rem 0 0;line-height:1.45;">Konum SMS'i bu numaralara gönderilir. Boş bırakırsanız mesaj uygulamanızda elle seçebilirsiniz.</p>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="btnSosCancel">Kapat</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Admin Kullanıcı İstatistikleri -->
 <div class="overlay" id="adminStatsOverlay">
   <div class="modal" style="max-width: 540px;">
@@ -2587,7 +2718,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.1.0";
+const CURRENT_APP_VERSION = "6.2.0";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -3524,7 +3655,7 @@ function closeTopUi(){
     else confirmOv.classList.remove('show');
     return true;
   }
-  const ids = ['maintResetOverlay','fileFallbackOverlay','infoOverlay','otaUpdateOverlay','vehicleOverlay','maintenanceOverlay','adminStatsOverlay','goalOverlay','overlay'];
+  const ids = ['sosConfirmOverlay','sosOverlay','maintResetOverlay','fileFallbackOverlay','infoOverlay','otaUpdateOverlay','vehicleOverlay','maintenanceOverlay','adminStatsOverlay','goalOverlay','overlay'];
   for(let i=0;i<ids.length;i++){
     const el = document.getElementById(ids[i]);
     if(isOverlayShown(el)){
@@ -3710,6 +3841,18 @@ function migrateGarageData() {
   if(!garageData.goals) garageData.goals = { weekly: {}, monthly: {} };
   if(!garageData.goals.weekly) garageData.goals.weekly = {};
   if(!garageData.goals.monthly) garageData.goals.monthly = {};
+  // Eski tek-tip hedefleri (type+amount) yeni 3 kategorili yapıya taşı.
+  ['weekly','monthly'].forEach(period => {
+    Object.keys(garageData.goals[period]).forEach(k => {
+      const g = garageData.goals[period][k];
+      if(g && g.type != null && g.amount != null){
+        const n = {};
+        if(g.type === 'paket') n.packages = +g.amount || 0;
+        else n.money = +g.amount || 0;
+        garageData.goals[period][k] = n;
+      }
+    });
+  });
 }
 // Savunma: migrateGarageData() normalde en az bir araç garanti eder, ama
 // beklenmedik bir veri durumunda (boş dizi) render zincirinin komple
@@ -3792,7 +3935,7 @@ function calc(r){
   const kmPkg = r.teslimat>0 ? r.km/r.teslimat : 0;
   const yakitPkg = r.teslimat>0 ? (r.yakit||0)/r.teslimat : 0;
   const kmPerLitre = (r.yakitLitre>0 && r.km>0) ? r.km/r.yakitLitre : null;
-  const netSaat = r.saat!=null ? Math.max(0, r.saat - (r.molaDk||0)/60) : null;
+  const netSaat = r.saat!=null ? (r.shifts && r.shifts.length ? r.saat : Math.max(0, r.saat - (r.molaDk||0)/60)) : null;
   return { gider, net, tlkm, perPkg, kmPkg, yakitPkg, bonus, toplamGelir, kmPerLitre, netSaat };
 }
 
@@ -3952,11 +4095,13 @@ function updateOfflineBadge(){
   const n = offlinePendingCount();
   const off = (typeof navigator !== 'undefined') && navigator.onLine === false;
   el.title = _syncState && _syncState.lastSyncAt ? 'Son senkron: ' + new Date(_syncState.lastSyncAt).toLocaleString('tr-TR', { timeZone:'Europe/Istanbul' }) : '';
-  if(_syncStorageError){ el.textContent = 'Cihaza kaydedilemedi · uygulamayı kapatmayın'; el.style.display = ''; return; }
-  if(n && _syncState.error){ el.textContent = n + ' işlem bekliyor · senkron hatası'; el.title = _syncState.error; el.style.display = ''; return; }
-  if(off){ el.textContent = '⛈ Çevrimdışı' + (n ? ' · ' + n + ' veri bekliyor' : ''); el.style.display = ''; }
-  else if(n){ el.textContent = '↻ ' + n + ' veri senkron bekliyor'; el.style.display = ''; }
-  else el.style.display = 'none';
+  // Renkleri duruma göre ayarla: yeşil=sentez, sarı=bekleyen, kırmızı=çevrimdışı/hata
+  el.style.color = '#111';
+  if(_syncStorageError){ el.textContent = '⛈ Cihaza kaydedilemedi · uygulamayı kapatmayın'; el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; return; }
+  if(n && _syncState.error){ el.textContent = '⚠ ' + n + ' işlem bekliyor · senkron hatası'; el.title = _syncState.error; el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; return; }
+  if(off){ el.textContent = '⛈ Çevrimdışı' + (n ? ' · ' + n + ' veri bekliyor' : ''); el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; }
+  else if(n){ el.textContent = '↻ ' + n + ' veri senkron bekliyor'; el.style.background = 'var(--amber,#f59e0b)'; el.style.display = ''; }
+  else { el.style.display = 'none'; }
 }
 // Sunucu kuralları henüz 'id' alanına izin vermiyorsa yazma reddedilir. Bu durumda
 // veriyi kaybetmemek için id'siz bir kopya göndeririz (uyumluluk modu). Kurallar
@@ -4295,22 +4440,24 @@ document.getElementById('sidebarBackdrop').addEventListener('click',closeSidebar
 })();
 
 function totals(){
-  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0,litre=0,kmLitre=0;
+  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0,litre=0,kmLitre=0,hours=0;
   records.forEach(r=>{
     const c=calc(r); km+=r.km||0; gelir+=c.toplamGelir; yakit+=r.yakit||0; diger+=r.diger||0; tes+=r.teslimat||0; net+=c.net; totalBonus+=c.bonus;
     if(r.yakitLitre>0){ litre+=r.yakitLitre; kmLitre+=r.km||0; }
+    if(r.saat!=null && !isNaN(r.saat)) hours += (+r.saat || 0);
   });
   const gider=yakit+diger,workDays=records.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;
-  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus,totalLitre:litre,avgKmPerLitre:litre>0?kmLitre/litre:null,avgFuelPrice:litre>0?yakit/litre:null}
+  return{km,gelir,yakit,diger,gider,net,tes,workDays,hours,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus,totalLitre:litre,avgKmPerLitre:litre>0?kmLitre/litre:null,avgFuelPrice:litre>0?yakit/litre:null}
 }
 function totalsOf(recs){
-  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0,litre=0,kmLitre=0;
+  let km=0,gelir=0,yakit=0,diger=0,tes=0,totalBonus=0,net=0,litre=0,kmLitre=0,hours=0;
   recs.forEach(r=>{
     const c=calc(r); km+=r.km||0; gelir+=c.toplamGelir; yakit+=r.yakit||0; diger+=r.diger||0; tes+=r.teslimat||0; net+=c.net; totalBonus+=c.bonus;
     if(r.yakitLitre>0){ litre+=r.yakitLitre; kmLitre+=r.km||0; }
+    if(r.saat!=null && !isNaN(r.saat)) hours += (+r.saat || 0);
   });
   const gider=yakit+diger,workDays=recs.filter(r=>(r.km||0)>0||(r.teslimat||0)>0).length||1;
-  return{km,gelir,yakit,diger,gider,net,tes,workDays,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus,totalLitre:litre,avgKmPerLitre:litre>0?kmLitre/litre:null,avgFuelPrice:litre>0?yakit/litre:null}
+  return{km,gelir,yakit,diger,gider,net,tes,workDays,hours,tlkm:km>0?net/km:0,giderKm:km>0?gider/km:0,gunOrt:net/workDays,perPkg:tes>0?net/tes:0,gelirPkg:tes>0?gelir/tes:0,kmPkg:tes>0?km/tes:0,yakitPkg:tes>0?yakit/tes:0,totalBonus,totalLitre:litre,avgKmPerLitre:litre>0?kmLitre/litre:null,avgFuelPrice:litre>0?yakit/litre:null}
 }
 function bestOf(){if(!records.length)return{};let bestNet=records[0],bestTlkm=records[0],bestTes=records[0];records.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
 function bestOfRecs(recs){if(!recs.length)return{};let bestNet=recs[0],bestTlkm=recs[0],bestTes=recs[0];recs.forEach(r=>{const c=calc(r);if(c.net>calc(bestNet).net)bestNet=r;if(r.km>0&&c.tlkm>calc(bestTlkm).tlkm)bestTlkm=r;if((r.teslimat||0)>(bestTes.teslimat||0))bestTes=r});return{bestNet,bestTlkm,bestTes}}
@@ -4586,6 +4733,164 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+function getRecentRecords(days, excludeToday){
+  const today = todayISO();
+  const cutoff = new Date(today + 'T00:00:00+03:00');
+  cutoff.setUTCDate(cutoff.getUTCDate() - days);
+  const end = new Date(today + 'T23:59:59+03:00');
+  return records.filter(r => {
+    if(!r.tarih || r.tarih > today) return false;
+    if(excludeToday && r.tarih === today) return false;
+    const d = new Date(r.tarih + 'T00:00:00+03:00');
+    return d >= cutoff && d <= end;
+  });
+}
+function avgField(recs, fn){
+  if(!recs.length) return 0;
+  let sum = 0, count = 0;
+  for(const r of recs){ const v = fn(r); if(typeof v === 'number' && !isNaN(v)){ sum += v; count++; } }
+  return count > 0 ? sum / count : 0;
+}
+function detectAnomalies(){
+  const today = todayISO();
+  const todayRec = records.find(r => r.tarih === today);
+  if(!todayRec) return [];
+  const past = getRecentRecords(14, true).filter(r => r.km > 0 || r.teslimat > 0);
+  if(past.length < 3) return [];
+  const cToday = calc(todayRec);
+  const avg = {
+    km: avgField(past, r => r.km || 0),
+    yakit: avgField(past, r => r.yakit || 0),
+    gelir: avgField(past, r => r.gelir || 0),
+    gider: avgField(past, r => (r.yakit || 0) + (r.diger || 0)),
+    net: avgField(past, r => calc(r).net)
+  };
+  const anomalies = [];
+  if(avg.km > 0 && (todayRec.km || 0) > avg.km * 1.4)
+    anomalies.push({field:'KM', pct: Math.round((todayRec.km / avg.km - 1) * 100), type:'high'});
+  if(avg.yakit > 0 && (todayRec.yakit || 0) > avg.yakit * 1.5)
+    anomalies.push({field:'yakıt maliyeti', pct: Math.round((todayRec.yakit / avg.yakit - 1) * 100), type:'high'});
+  if(avg.gider > 0 && cToday.gider > avg.gider * 1.4)
+    anomalies.push({field:'gider', pct: Math.round((cToday.gider / avg.gider - 1) * 100), type:'high'});
+  if(avg.net > 0 && cToday.net < avg.net * 0.6)
+    anomalies.push({field:'net kazanç', pct: Math.round((1 - cToday.net / avg.net) * 100), type:'low'});
+  return anomalies;
+}
+function renderAnomalyBanner(){
+  const box = document.getElementById('anomalyBanner');
+  if(!box) return;
+  const today = todayISO();
+  let dismissed = {};
+  try { dismissed = JSON.parse(localStorage.getItem('kurye_anomaly_dismissed_v1') || '{}'); } catch(e){}
+  if(dismissed[today]){ box.style.display = 'none'; return; }
+  const anomalies = detectAnomalies();
+  if(!anomalies.length){ box.style.display = 'none'; return; }
+  const top = anomalies[0];
+  box.className = 'anomaly-banner ' + (top.type === 'low' ? 'danger' : 'warning');
+  box.innerHTML = `<span>⚠️</span><span>Bugünkü <b>${escapeHtml(top.field)}</b> değeriniz son 14 günlük ortalamanın <b>%${top.pct}</b> ${top.type==='low'?'altında':'üzerinde'}.</span><button type="button" class="dismiss" aria-label="Kapat">×</button>`;
+  box.style.display = '';
+  const btn = box.querySelector('.dismiss');
+  if(btn) btn.onclick = () => {
+    dismissed[today] = true;
+    try { localStorage.setItem('kurye_anomaly_dismissed_v1', JSON.stringify(dismissed)); } catch(e){}
+    box.style.display = 'none';
+  };
+}
+function renderTodayInsights(){
+  const valEl = document.getElementById('todayPerfVal');
+  const descEl = document.getElementById('todayPerfDesc');
+  const topValEl = document.getElementById('todayTopVal');
+  const topDescEl = document.getElementById('todayTopDesc');
+  if(!valEl || !descEl || !topValEl || !topDescEl) return;
+  const today = todayISO();
+  const todayRec = records.find(r => r.tarih === today);
+  if(!todayRec){
+    valEl.textContent = '—'; descEl.textContent = 'Bugün için henüz kayıt yok';
+    topValEl.textContent = '—'; topDescEl.textContent = 'Kayıt girildiğinde yorumlanacak';
+    return;
+  }
+  const cToday = calc(todayRec);
+  const past = getRecentRecords(30, true).filter(r => r.km > 0 || r.teslimat > 0);
+  valEl.textContent = fmt(cToday.net) + ' ₺';
+  if(past.length < 3){
+    descEl.textContent = 'Bugünkü net kazancın';
+    topValEl.textContent = '—'; topDescEl.textContent = 'Daha fazla veri biriktiğinde kıyaslama yapılacak';
+    return;
+  }
+  const avgNet = avgField(past, r => calc(r).net);
+  const diffPct = avgNet > 0 ? Math.round((cToday.net / avgNet - 1) * 100) : 0;
+  descEl.textContent = `Son 30 günlük ortalamanın %${Math.abs(diffPct)} ${diffPct >= 0 ? 'üzerinde' : 'altında'}`;
+  const ranked = [todayRec, ...past].sort((a,b) => calc(b).net - calc(a).net);
+  const rank = ranked.findIndex(r => r === todayRec) + 1;
+
+  const avgPerPkg = avgField(past.filter(r => r.teslimat > 0), r => calc(r).perPkg);
+  const avgTlkm = avgField(past.filter(r => r.km > 0), r => calc(r).tlkm);
+  const avgGiderKm = avgField(past.filter(r => r.km > 0), r => calc(r).gider / (r.km || 1));
+  let topArea = '', topSub = '';
+  if(todayRec.teslimat > 0 && avgPerPkg > 0 && cToday.perPkg >= avgPerPkg * 1.1){ topArea = 'Paket başına net'; topSub = `Ortalamanın %${Math.round(cToday.perPkg / avgPerPkg * 100 - 100)} üzerinde`; }
+  else if(todayRec.km > 0 && avgTlkm > 0 && cToday.tlkm >= avgTlkm * 1.1){ topArea = 'TL / km'; topSub = 'Yakıt verimliliği iyi'; }
+  else if((todayRec.km || 0) > 0 && avgGiderKm > 0 && (cToday.gider / todayRec.km) <= avgGiderKm * 0.9){ topArea = 'Düşük gider / km'; topSub = 'Maliyet kontrolü iyi'; }
+  else if(diffPct >= 0){ topArea = 'Net kazanç'; topSub = 'Ortalamanın üzerinde'; }
+  else { topArea = 'Daha verimli olunabilir'; topSub = 'Ortalamanın altında kaldı'; }
+  topValEl.textContent = topArea;
+  topDescEl.textContent = rank <= 5 ? `Son 30 günün en iyi ${rank}. günü ⭐` : topSub;
+}
+
+/* ---- GAMIFICATION / ROZET SİSTEMİ ---- */
+function longestStreak(recs){
+  const dates = [...new Set(recs.map(r => r.tarih).filter(Boolean))].sort();
+  if(!dates.length) return 0;
+  const today = todayISO();
+  let max = 1, cur = 1, prevTs = null;
+  for(const d of dates){
+    const ts = new Date(d + 'T00:00:00+03:00').getTime();
+    if(prevTs && (ts - prevTs) === 86400000) cur++;
+    else if(!prevTs || (ts - prevTs) > 86400000) cur = 1;
+    if(cur > max) max = cur;
+    prevTs = ts;
+  }
+  const lastTs = new Date(dates[dates.length-1] + 'T00:00:00+03:00').getTime();
+  if(lastTs < new Date(today + 'T00:00:00+03:00').getTime() - 86400000) return max; // streak broken
+  return max;
+}
+function effRecordsForFuel(recs){ return recs.filter(r => Number(r.yakitLitre) > 0 && Number(r.km) > 0); }
+
+const BADGES = [
+  { id:'first-step', title:'İlk Adım', icon:'👟', desc:'İlk kaydını ekle.', check: () => records.length >= 1 },
+  { id:'spark', title:'Çakmak', icon:'🔥', desc:'7 gün üst üste kayıt ekle.', check: () => longestStreak(records) >= 7 },
+  { id:'steel-horse', title:'Çelik At', icon:'🐴', desc:'30 gün üst üste kayıt ekle.', check: () => longestStreak(records) >= 30 },
+  { id:'meter-man', title:'Metre Adam', icon:'📏', desc:'Toplam 1.000 km.', check: () => records.reduce((s,r)=>s+(+r.km||0),0) >= 1000 },
+  { id:'iron-saddle', title:'Demir Sele', icon:'🛵', desc:'Toplam 10.000 km.', check: () => records.reduce((s,r)=>s+(+r.km||0),0) >= 10000 },
+  { id:'team-iron', title:'Demir Ekip', icon:'🏍️', desc:'Toplam 50.000 km.', check: () => records.reduce((s,r)=>s+(+r.km||0),0) >= 50000 },
+  { id:'package-starter', title:'Paket Acemi', icon:'📦', desc:'Toplam 100 paket.', check: () => records.reduce((s,r)=>s+(+r.teslimat||0),0) >= 100 },
+  { id:'package-beast', title:'Paket Canavarı', icon:'📦', desc:'Toplam 5.000 paket.', check: () => records.reduce((s,r)=>s+(+r.teslimat||0),0) >= 5000 },
+  { id:'package-legend', title:'Elmas Paket', icon:'💎', desc:'Toplam 10.000 paket.', check: () => records.reduce((s,r)=>s+(+r.teslimat||0),0) >= 10000 },
+  { id:'earner-bronze', title:'Bronz Kurye', icon:'🥉', desc:'Toplam 10.000 ₺ net.', check: () => records.reduce((s,r)=>s+((typeof calc === 'function'? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0) >= 10000 },
+  { id:'earner-silver', title:'Gümüş Kurye', icon:'🥈', desc:'Toplam 50.000 ₺ net.', check: () => records.reduce((s,r)=>s+((typeof calc === 'function'? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0) >= 50000 },
+  { id:'earner-gold', title:'Altın Kurye', icon:'🥇', desc:'Toplam 100.000 ₺ net.', check: () => records.reduce((s,r)=>s+((typeof calc === 'function'? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0) >= 100000 },
+  { id:'marathon', title:'Maratoncu', icon:'⏱️', desc:'Toplam 100 saat çalışma.', check: () => records.reduce((s,r)=>s+(+r.saat||0),0) >= 100 },
+  { id:'economy-master', title:'Ekonomi Ustası', icon:'⛽', desc:'10 kayıtta ortalama 30 km/L üzeri verim.', check: () => {
+      const list = effRecordsForFuel(records); if(list.length < 10) return false;
+      const avg = list.reduce((s,r)=>s + ((+r.km||0)/(+r.yakitLitre||1)),0) / list.length;
+      return avg >= 30;
+  }},
+  { id:'night-owl', title:'Gece Kartalı', icon:'🦉', desc:'Gece vardiyasına ait en az bir kayıt.', check: () => records.some(r => {
+      const [h] = (r.baslangic || '').split(':').map(Number); return r.baslangic && (h >= 20 || h < 6);
+  })}
+];
+function renderBadges(){
+  const box = document.getElementById('badgesPanel');
+  const summary = document.getElementById('badgesSummary');
+  if(!box) return;
+  let unlocked = 0;
+  const html = BADGES.map(b => {
+    try{ if(b.check()){ unlocked++; return `<div class="badge-card unlocked"><div class="badge-ico">${b.icon}</div><div class="badge-title">${escapeHtml(b.title)}</div><div class="badge-desc">${escapeHtml(b.desc)}</div><div class="badge-state">Kazanıldı</div></div>`; } }catch(e){}
+    return `<div class="badge-card"><div class="badge-ico">${b.icon}</div><div class="badge-title">${escapeHtml(b.title)}</div><div class="badge-desc">${escapeHtml(b.desc)}</div><div class="badge-state">Kilitli</div></div>`;
+  }).join('');
+  box.innerHTML = html;
+  if(summary) summary.innerHTML = `<span>Kazanılan</span><span class="count">${unlocked} / ${BADGES.length}</span>`;
+}
+
 function renderProjections() {
   const weeks = weeksList(); 
   const weekValEl = document.getElementById('weekProjectionVal');
@@ -4802,8 +5107,117 @@ function renderDash(){
     if(!byM[k])byM[k]={gelir:0,gider:0};
     byM[k].gelir+=c.toplamGelir; byM[k].gider+=(r.yakit||0)+(r.diger||0);
   });
-  
+
+  if(typeof renderAnomalyBanner === 'function') renderAnomalyBanner();
+  if(typeof renderTodayInsights === 'function') renderTodayInsights();
+  if(typeof renderBadges === 'function') renderBadges();
 }
+
+/* ---- SOS / ACİL DURUM PANELİ ---- */
+function getSosContacts(){
+  try{
+    const raw = localStorage.getItem('kurye_sos_contacts_v1') || '';
+    return raw.split(/[,;]+/).map(s => s.replace(/\D/g, '')).filter(Boolean);
+  } catch(e){ return []; }
+}
+function saveSosContacts(contacts){
+  try{ localStorage.setItem('kurye_sos_contacts_v1', contacts.join(', ')); } catch(e){}
+}
+function setSosContactsInput(){
+  const inp = document.getElementById('sosContacts');
+  if(inp) inp.value = (localStorage.getItem('kurye_sos_contacts_v1') || '');
+}
+function closeSosPanels(){
+  const c = document.getElementById('sosConfirmOverlay');
+  const o = document.getElementById('sosOverlay');
+  if(c) c.classList.remove('show');
+  if(o) o.classList.remove('show');
+}
+function openSosConfirm(){
+  if(!currentUser){
+    toast('SOS panelini kullanabilmek için giriş yapmalısınız.', false);
+    return;
+  }
+  const ov = document.getElementById('sosConfirmOverlay');
+  if(ov) ov.classList.add('show');
+}
+function openSosPanel(){
+  closeSosPanels();
+  const ov = document.getElementById('sosOverlay');
+  if(ov) ov.classList.add('show');
+  setSosContactsInput();
+}
+function sosBodyWithLocation(lat, lng){
+  const maps = lat != null && lng != null ? ` https://maps.google.com/?q=${lat.toFixed(5)},${lng.toFixed(5)}` : '';
+  return `Yardıma ihtiyacım var.${maps ? ' Son konumum:' + maps : ' Konum alınamadı.'}`;
+}
+function sendSosSms(){
+  const contacts = getSosContacts();
+  if(typeof navigator !== 'undefined' && navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+      _doSendSosSms(latitude, longitude);
+    }, err => {
+      _doSendSosSms(null, null);
+      toast('Konum alınamadı; SMS uygulamanızda konum paylaşabilirsiniz.', false);
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+  } else {
+    _doSendSosSms(null, null);
+  }
+}
+function _doSendSosSms(lat, lng){
+  const body = encodeURIComponent(sosBodyWithLocation(lat, lng));
+  const contacts = getSosContacts();
+  let url;
+  if(contacts.length){
+    url = 'sms:' + contacts.join(',') + (contacts.length > 1 ? '?body=' + body : ';body=' + body);
+  } else {
+    url = 'sms:?body=' + body;
+  }
+  try{ window.location.href = url; } catch(e){ toast('SMS uygulaması açılamadı.', false); }
+}
+function openNearbyTowing(){
+  openNearbySearch('çekici');
+}
+function openNearbyRepair(){
+  openNearbySearch('motosiklet tamircisi');
+}
+function openNearbySearch(term){
+  if(typeof navigator !== 'undefined' && navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+      const url = `https://www.google.com/maps/search/${encodeURIComponent(term)}/@${latitude.toFixed(5)},${longitude.toFixed(5)},15z`;
+      try{ window.open(url, '_blank'); } catch(e){ window.location.href = url; }
+    }, () => {
+      const url = `https://www.google.com/maps/search/${encodeURIComponent(term)}`;
+      try{ window.open(url, '_blank'); } catch(e){ window.location.href = url; }
+    }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 120000 });
+  } else {
+    const url = `https://www.google.com/maps/search/${encodeURIComponent(term)}`;
+    try{ window.open(url, '_blank'); } catch(e){ window.location.href = url; }
+  }
+}
+(function initSosPanel(){
+  const btnSos = document.getElementById('btnSos');
+  const btnConfirmOpen = document.getElementById('btnSosConfirmOpen');
+  const btnConfirmCancel = document.getElementById('btnSosConfirmCancel');
+  const btnCancel = document.getElementById('btnSosCancel');
+  const btnSms = document.getElementById('btnSosSms');
+  const btnTow = document.getElementById('btnSosTow');
+  const btnRepair = document.getElementById('btnSosRepair');
+  const inp = document.getElementById('sosContacts');
+  if(btnSos) btnSos.addEventListener('click', openSosConfirm);
+  if(btnConfirmOpen) btnConfirmOpen.addEventListener('click', openSosPanel);
+  if(btnConfirmCancel) btnConfirmCancel.addEventListener('click', closeSosPanels);
+  if(btnCancel) btnCancel.addEventListener('click', closeSosPanels);
+  if(btnSms) btnSms.addEventListener('click', sendSosSms);
+  if(btnTow) btnTow.addEventListener('click', openNearbyTowing);
+  if(btnRepair) btnRepair.addEventListener('click', openNearbyRepair);
+  if(inp) inp.addEventListener('change', () => {
+    const list = inp.value.split(/[,;]+/).map(s => s.trim()).filter(Boolean);
+    saveSosContacts(list);
+  });
+})();
 
 function renderDaily(){
   applyFuelColsPreference();
@@ -4824,7 +5238,7 @@ function renderDaily(){
     let bonusTag = c.bonus > 0 ? `<div style="font-size:0.65rem; color:var(--accent); margin-top:3px; font-weight:700;">+${fmt(c.bonus)} ₺ ${getBonusMode() === 'weekly' ? 'Haftalık bonus payı' : 'Günlük bonus payı'}</div>` : '';
     return`<tr data-id="${escapeHtml(r.id||'')}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
     <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
-    <td class="num" title="${r.molaDk>0?fmt(r.molaDk,0)+' dk mola':'Mola girilmedi'}">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}${r.molaDk>0?`<br><span style="font-size:0.65rem;color:var(--muted)">☕ ${fmt(r.molaDk,0)}dk mola</span>`:''}</td>
+    <td class="num">${typeof formatShifts === 'function' ? formatShifts(r) : (r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—'))}</td>
     <td class="num"><input class="editable" type="number" data-f="yakit" value="${r.yakit||0}" min="0" step="0.01"/></td>
     <td class="num fuel-col"><input class="editable" type="number" data-f="yakitLitre" value="${r.yakitLitre||0}" min="0" step="0.01" aria-label="Yakıt litre"/></td>
     <td class="num computed fuel-col">${c.kmPerLitre!=null?fmt(c.kmPerLitre,1):'—'}</td>
@@ -4950,6 +5364,134 @@ document.getElementById('filterMonth').addEventListener('change',renderDaily);
 document.querySelectorAll('.q-tag').forEach(btn=>{ btn.addEventListener('click', e => { const inp = document.getElementById('fNote'); inp.value = inp.value ? inp.value + ' · ' + btn.dataset.tag : btn.dataset.tag; }); });
 
 let editingIndex=null, editingId=null;
+
+/* ---- ÇALIŞMA VARDİYALARI / PARÇALI MESAİ ---- */
+function parseTimeToHours(t){
+  if(!t) return null;
+  const [h,m] = t.split(':').map(Number);
+  if(isNaN(h) || isNaN(m)) return null;
+  return h + m/60;
+}
+function shiftHours(s){
+  const start = parseTimeToHours(s.baslangic);
+  const end = parseTimeToHours(s.bitis);
+  if(start==null || end==null) return 0;
+  let e = end;
+  if(e < start) e += 24; // gece yarısını geçen vardiya
+  const raw = e - start;
+  const mola = Math.max(0, parseFloat(s.molaDk) || 0) / 60;
+  return Math.max(0, raw - mola);
+}
+function totalShiftHours(shifts){ return shifts.reduce((sum, s) => sum + shiftHours(s), 0); }
+function totalShiftBreak(shifts){ return shifts.reduce((sum, s) => sum + Math.max(0, parseFloat(s.molaDk) || 0), 0); }
+function normalizeShift(s){
+  const start = parseTimeToHours(s.baslangic);
+  let end = parseTimeToHours(s.bitis);
+  if(start != null && end != null && end < start) end += 24;
+  return { start: start==null ? 0 : start, end: end==null ? 0 : end, valid: start!=null && end!=null && end > start };
+}
+function findShiftOverlap(shifts){
+  const list = shifts.map((s,i)=>({i, ...normalizeShift(s)})).filter(x=>x.valid).sort((a,b)=>a.start-b.start);
+  for(let i=1;i<list.length;i++){
+    if(list[i].start < list[i-1].end) return { a: list[i-1].i, b: list[i].i };
+  }
+  return null;
+}
+function validateShifts(shifts){
+  for(let i=0;i<shifts.length;i++){
+    const s = shifts[i];
+    if(!s.baslangic || !s.bitis) continue;
+    const h = shiftHours(s);
+    if(h <= 0) return `Vardiya ${i+1}: mola süresi vardiya süresinden uzun veya saatler geçersiz.`;
+  }
+  const overlap = findShiftOverlap(shifts);
+  if(overlap) return `Vardiya ${overlap.a+1} ile Vardiya ${overlap.b+1} çakışıyor. Lütfen saatleri kontrol edin.`;
+  return null;
+}
+function formatShifts(r){
+  const shifts = r.shifts && r.shifts.length ? r.shifts : (r.baslangic && r.bitis ? [{baslangic:r.baslangic, bitis:r.bitis, molaDk:r.molaDk||0}] : []);
+  if(!shifts.length) return '—';
+  return shifts.map((s,i)=>{
+    const br = (parseFloat(s.molaDk)||0) > 0 ? `<span style="font-size:0.6rem;color:var(--muted)"> ☕ ${fmt(s.molaDk,0)}dk</span>` : '';
+    return `<div>${s.baslangic}-${s.bitis}${br}</div>`;
+  }).join('') + `<div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">Toplam: ${fmt(totalShiftHours(shifts),1)} sa</div>`;
+}
+function renderShiftEditor(shifts){
+  const box = document.getElementById('shiftList');
+  if(!box) return;
+  box.innerHTML = (shifts.length ? shifts : [{baslangic:'',bitis:'',molaDk:0}]).map((s,i) => `
+    <div class="shift-row ${!s.baslangic && !s.bitis ? 'empty' : ''}" data-shift-index="${i}">
+      <div class="fg"><input type="time" class="shift-start" value="${escapeHtml(s.baslangic||'')}" aria-label="Başlangıç"/></div>
+      <div class="fg"><input type="time" class="shift-end" value="${escapeHtml(s.bitis||'')}" aria-label="Bitiş"/></div>
+      <div class="fg"><input type="number" class="shift-break" min="0" step="5" value="${fmt(s.molaDk||0,0)}" aria-label="Mola dk"/></div>
+      <button type="button" class="btn btn-ghost btn-sm shift-remove" ${shifts.length<=1?'disabled style="opacity:.4;cursor:not-allowed;"':''}>✕</button>
+    </div>`).join('');
+  bindShiftRowEvents();
+  updateShiftTotal();
+}
+function getShiftsFromForm(){
+  const rows = document.querySelectorAll('#shiftList .shift-row');
+  const shifts = [];
+  rows.forEach(row => {
+    const bas = row.querySelector('.shift-start').value;
+    const bit = row.querySelector('.shift-end').value;
+    const mola = parseFloat(row.querySelector('.shift-break').value) || 0;
+    if(bas || bit || mola > 0) shifts.push({baslangic: bas, bitis: bit, molaDk: mola});
+  });
+  return shifts;
+}
+function updateShiftTotal(){
+  const hint = document.getElementById('shiftTotalHint');
+  if(!hint) return;
+  const shifts = getShiftsFromForm();
+  const total = totalShiftHours(shifts);
+  const brk = totalShiftBreak(shifts);
+  hint.textContent = `Toplam çalışma süresi: ${total > 0 ? fmt(total,1) + ' saat' : '—'}${brk > 0 ? ' (' + fmt(brk,0) + ' dk mola)' : ''}`;
+  highlightOverlaps();
+}
+function highlightOverlaps(){
+  const rows = document.querySelectorAll('#shiftList .shift-row');
+  const shifts = getShiftsFromForm();
+  rows.forEach(r => r.classList.remove('shift-overlap'));
+  const overlap = findShiftOverlap(shifts);
+  if(overlap && rows[overlap.a] && rows[overlap.b]){
+    rows[overlap.a].classList.add('shift-overlap');
+    rows[overlap.b].classList.add('shift-overlap');
+  }
+}
+function bindShiftRowEvents(){
+  const box = document.getElementById('shiftList');
+  if(!box) return;
+  box.querySelectorAll('.shift-start, .shift-end, .shift-break').forEach(inp => {
+    inp.oninput = () => updateShiftTotal();
+  });
+  box.querySelectorAll('.shift-remove').forEach(btn => {
+    btn.onclick = () => {
+      const row = btn.closest('.shift-row');
+      const rows = box.querySelectorAll('.shift-row');
+      if(rows.length <= 1) return;
+      row.remove();
+      updateShiftTotal();
+    };
+  });
+}
+function addShiftRow(prefill=null){
+  const box = document.getElementById('shiftList');
+  if(!box) return;
+  const div = document.createElement('div');
+  div.className = 'shift-row empty';
+  div.dataset.shiftIndex = box.querySelectorAll('.shift-row').length;
+  div.innerHTML = `
+    <div class="fg"><input type="time" class="shift-start" value="${escapeHtml(prefill && prefill.baslangic || '')}" aria-label="Başlangıç"/></div>
+    <div class="fg"><input type="time" class="shift-end" value="${escapeHtml(prefill && prefill.bitis || '')}" aria-label="Bitiş"/></div>
+    <div class="fg"><input type="number" class="shift-break" min="0" step="5" value="${fmt(prefill && prefill.molaDk || 0,0)}" aria-label="Mola dk"/></div>
+    <button type="button" class="btn btn-ghost btn-sm shift-remove">✕</button>`;
+  box.appendChild(div);
+  bindShiftRowEvents();
+  updateShiftTotal();
+}
+document.getElementById('btnAddShift').addEventListener('click', () => addShiftRow());
+
 function populateAracSelect(selectedId){
   const row = document.getElementById('fAracRow'), sel = document.getElementById('fArac');
   if(!garageData.vehicles || garageData.vehicles.length <= 1){ row.style.display = 'none'; return; }
@@ -4961,12 +5503,12 @@ document.getElementById('btnAdd').addEventListener('click',()=>{
   editingIndex=null;document.getElementById('modalTitle').textContent='Yeni Kayıt';
   // Takvimde gelecek günleri kapat (her açılışta güncellenmeli: gün değişir).
   try{ document.getElementById('fDate').max = todayISO(); }catch(e){}
-  document.getElementById('fDate').value=todayISO();['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes','fMolaDk'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fNote').value='';populateAracSelect(garageData.activeVehicleId);
+  document.getElementById('fDate').value=todayISO();['fKm','fYakit','fYakitLitre','fDiger','fGelir','fTes'].forEach(id=>document.getElementById(id).value=0);document.getElementById('fNote').value='';populateAracSelect(garageData.activeVehicleId);
 
   // AKILLI VARSAYILAN: son mesai saatlerini bir önceki kayıttan doldur (kullanıcı isterse değiştirebilir)
-  const lastWithHours = [...records].filter(r => r.baslangic && r.bitis).sort((a,b)=>b.tarih.localeCompare(a.tarih))[0];
-  document.getElementById('fBaslangic').value = lastWithHours ? lastWithHours.baslangic : '';
-  document.getElementById('fBitis').value = lastWithHours ? lastWithHours.bitis : '';
+  const lastWithHours = [...records].filter(r => (r.shifts && r.shifts.length) || (r.baslangic && r.bitis)).sort((a,b)=>b.tarih.localeCompare(a.tarih))[0];
+  const defaultShift = lastWithHours ? { baslangic: lastWithHours.baslangic || '', bitis: lastWithHours.bitis || '', molaDk: 0 } : {baslangic:'',bitis:'',molaDk:0};
+  renderShiftEditor([defaultShift]);
 
   document.getElementById('formDetails').open = false;
   document.getElementById('overlay').classList.add('show')
@@ -4974,10 +5516,13 @@ document.getElementById('btnAdd').addEventListener('click',()=>{
 
 function openEditModalById(id){ const i = indexOfRecordId(id); if(i>=0) openEditModal(i); }
 function openEditModal(i){
-  const r=records[i];if(!r)return;editingIndex=i;editingId=r.id||null;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fBaslangic').value=r.baslangic||'';document.getElementById('fBitis').value=r.bitis||'';document.getElementById('fMolaDk').value=r.molaDk||0;document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fYakitLitre').value=r.yakitLitre||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';populateAracSelect(r.arac||fallbackVehicleId());
+  const r=records[i];if(!r)return;editingIndex=i;editingId=r.id||null;document.getElementById('modalTitle').textContent='Kaydı Düzenle';document.getElementById('fDate').value=r.tarih;document.getElementById('fKm').value=r.km||0;document.getElementById('fTes').value=r.teslimat||0;document.getElementById('fYakit').value=r.yakit||0;document.getElementById('fYakitLitre').value=r.yakitLitre||0;document.getElementById('fDiger').value=r.diger||0;document.getElementById('fGelir').value=r.gelir||0;document.getElementById('fNote').value=r.aciklama||'';populateAracSelect(r.arac||fallbackVehicleId());
+
+  const shifts = r.shifts && r.shifts.length ? r.shifts : (r.baslangic && r.bitis ? [{baslangic:r.baslangic, bitis:r.bitis, molaDk:r.molaDk||0}] : []);
+  renderShiftEditor(shifts.length ? shifts : [{baslangic:'',bitis:'',molaDk:0}]);
 
   // Detay alanlarından herhangi biri doluysa, düzenlerken bölüm otomatik açılsın
-  const hasDetails = r.baslangic || r.bitis || (r.molaDk||0)>0 || (r.yakit||0)>0 || (r.diger||0)>0 || (r.yakitLitre||0)>0 || r.aciklama;
+  const hasDetails = shifts.length || (r.baslangic || r.bitis || (r.molaDk||0)>0) || (r.yakit||0)>0 || (r.diger||0)>0 || (r.yakitLitre||0)>0 || r.aciklama;
   document.getElementById('formDetails').open = !!hasDetails;
 
   document.getElementById('overlay').classList.add('show')
@@ -4986,16 +5531,12 @@ document.getElementById('btnCancel').addEventListener('click',()=>{ editingIndex
 
 document.getElementById('form').addEventListener('submit',e=>{
   e.preventDefault();
-  const bas = document.getElementById('fBaslangic').value; const bit = document.getElementById('fBitis').value;
-  let computedSaat = null;
-  if(bas && bit) {
-    let [bh, bm] = bas.split(':').map(Number); let [eh, em] = bit.split(':').map(Number);
-    let start = bh + bm/60, end = eh + em/60;
-    if (end < start) end += 24;
-    computedSaat = end - start;
-  }
-  const molaDk = Math.max(0, parseInt(document.getElementById('fMolaDk').value) || 0);
-  if(computedSaat!=null && molaDk > computedSaat*60){ toast('Mola süresi, mesai süresinden uzun olamaz', false); return; }
+  const shifts = getShiftsFromForm();
+  const shiftErr = validateShifts(shifts);
+  if(shiftErr){ toast(shiftErr, false); return; }
+  const hasAnyShift = shifts.some(s => s.baslangic && s.bitis);
+  const computedSaat = hasAnyShift ? totalShiftHours(shifts) : null;
+  const molaDk = hasAnyShift ? totalShiftBreak(shifts) : 0;
 
   const tarih = document.getElementById('fDate').value;
   if(!tarih){ toast('Lütfen tarih seçin', false); return; }
@@ -5004,7 +5545,22 @@ document.getElementById('form').addEventListener('submit',e=>{
   if(tarih > todayISO()){ toast('Gelecek tarihli kayıt eklenemez. Lütfen tarihi kontrol edin.', false); return; }
   
   const arac = (garageData.vehicles.length > 1 && document.getElementById('fArac').value) ? document.getElementById('fArac').value : (garageData.activeVehicleId || fallbackVehicleId());
-  const rec={tarih,arac,km:Math.max(0,parseFloat(document.getElementById('fKm').value)||0), baslangic: bas, bitis: bit, saat: computedSaat, molaDk, yakit:Math.max(0,parseFloat(document.getElementById('fYakit').value)||0),yakitLitre:Math.max(0,parseFloat(document.getElementById('fYakitLitre').value)||0),diger:Math.max(0,parseFloat(document.getElementById('fDiger').value)||0),gelir:Math.max(0,parseFloat(document.getElementById('fGelir').value)||0),teslimat:Math.max(0,parseInt(document.getElementById('fTes').value)||0),aciklama:document.getElementById('fNote').value.trim()};
+  const firstShift = shifts[0] || {};
+  const rec={
+    tarih, arac,
+    km: Math.max(0, parseFloat(document.getElementById('fKm').value) || 0),
+    baslangic: firstShift.baslangic || '',
+    bitis: firstShift.bitis || '',
+    saat: computedSaat,
+    molaDk,
+    shifts,
+    yakit: Math.max(0, parseFloat(document.getElementById('fYakit').value) || 0),
+    yakitLitre: Math.max(0, parseFloat(document.getElementById('fYakitLitre').value) || 0),
+    diger: Math.max(0, parseFloat(document.getElementById('fDiger').value) || 0),
+    gelir: Math.max(0, parseFloat(document.getElementById('fGelir').value) || 0),
+    teslimat: Math.max(0, parseInt(document.getElementById('fTes').value) || 0),
+    aciklama: document.getElementById('fNote').value.trim()
+  };
 
   function finishSave(mutator){
     pushUndo();
@@ -5015,22 +5571,38 @@ document.getElementById('form').addEventListener('submit',e=>{
     renderDaily();
     toast('Kaydedildi',true);
   }
+  function getMissingRecordFields(){
+    const missing=[];
+    if(document.getElementById('fKm').value.trim()==='') missing.push('KM');
+    if(document.getElementById('fTes').value.trim()==='') missing.push('Paket');
+    if(document.getElementById('fGelir').value.trim()==='') missing.push('Saf Gelir');
+    if(bas && !bit) missing.push('Bitiş saati');
+    return missing;
+  }
+  function maybeFinishSave(mutator){
+    const missing = getMissingRecordFields();
+    if(missing.length){
+      showConfirm(`Kayıtta şu alanlar boş bırakıldı: ${missing.join(', ')}. TL/km ve paket başına net hesapları etkilenebilir. Yine de kaydetmek istiyor musunuz?`, () => finishSave(mutator), {title:'Eksik Alan Uyarısı', icon:'⚠️', warn:true, okText:'Yine de Kaydet'});
+      return;
+    }
+    finishSave(mutator);
+  }
 
   if(editingId!==null && editingId!==undefined) {
     // İndeks yerine id ile çöz: onay beklerken dizi yeniden sıralanmış olabilir.
     rec.id = editingId;
-    finishSave(() => { const i = indexOfRecordId(editingId); if(i>=0) records[i]=rec; else records.push(rec); });
+    maybeFinishSave(() => { const i = indexOfRecordId(editingId); if(i>=0) records[i]=rec; else records.push(rec); });
   } else {
     const exId = (records.find(r=>r.tarih===rec.tarih && (r.arac||fallbackVehicleId())===rec.arac)||{}).id;
     if(exId){
       showConfirm(rec.tarih+' için bu araçta kayıt var. Üzerine yazılsın mı?', () => {
         rec.id = exId;
-        finishSave(() => { const i = indexOfRecordId(exId); if(i>=0) records[i]=rec; else records.push(rec); });
+        maybeFinishSave(() => { const i = indexOfRecordId(exId); if(i>=0) records[i]=rec; else records.push(rec); });
       }, {title:'Kayıt var', icon:'⚠️', warn:true, okText:'Üzerine Yaz'});
       return;
     }
     rec.id = newRecordId();
-    finishSave(() => { records.push(rec); });
+    maybeFinishSave(() => { records.push(rec); });
   }
 });
 
@@ -5081,7 +5653,7 @@ function goalRingColor(p){
   return 'rgb(34,197,94)';
 }
 let goalModalPeriod = 'weekly';
-let goalModalType = 'net';
+let goalModalType = 'money';
 
 function todayISO(){
   // Cihazın saat diliminden bağımsız olarak İstanbul (UTC+3) saat dilimindeki bugünü YYYY-MM-DD olarak döndürür.
@@ -5117,52 +5689,71 @@ function lastStoredGoal(kind){
 }
 function goalSlideHTML(kind){
   if(!garageData.goals) garageData.goals = { weekly: {}, monthly: {} };
-  const isWeekly = kind === 'weekly';
-  const key = isWeekly ? currentWeekKey() : currentMonthKey();
-  const goal = (garageData.goals[kind] || {})[key];
-  const recs = isWeekly ? recsForCurrentWeek() : recsForCurrentMonth();
+  const key = kind === 'weekly' ? currentWeekKey() : currentMonthKey();
+  const storedGoal = typeof lastStoredGoal === 'function' ? lastStoredGoal(kind) : null;
+  const goalRaw = (garageData.goals[kind] || {})[key] || storedGoal || {};
+  const goal = { money: +goalRaw.money || 0, packages: +goalRaw.packages || 0, hours: +goalRaw.hours || 0 };
+  const recs = kind === 'weekly' ? recsForCurrentWeek() : recsForCurrentMonth();
   const tot = totalsOf(recs);
-  const title = isWeekly ? 'Bu Haftanın Hedefi' : 'Bu Ayın Hedefi';
-  const daysTxt = (isWeekly ? daysLeftInWeek() : daysLeftInMonth()) + ' gün kaldı';
-  if(!goal || !goal.amount){
+  const daysTxt = (kind === 'weekly' ? daysLeftInWeek() : daysLeftInMonth()) + ' gün kaldı';
+  const hasAny = goal.money > 0 || goal.packages > 0 || goal.hours > 0;
+
+  const ring = (label, unit, current, target, color) => {
+    if(target <= 0) return `<div class="goal-mini-ring empty">
+      <svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true"><circle class="goal-ring-bg" cx="36" cy="36" r="30"></circle></svg>
+      <div class="goal-mini-center"><div class="goal-mini-label">${escapeHtml(label)}</div><div class="goal-mini-sub muted">Belirlenmedi</div></div>
+    </div>`;
+    const pct = Math.max(0, Math.min(1, current / target));
+    const done = pct >= 1;
+    const circ = 2 * Math.PI * 30;
+    const offset = circ * (1 - pct);
+    const pctLabel = Math.round(pct * 100);
+    const curTxt = unit === 'paket' ? fmtInt(current) : (unit === 'saat' ? fmt(current,1) : fmt(current,0));
+    const tgtTxt = unit === 'paket' ? fmtInt(target) : (unit === 'saat' ? fmt(target,1) : fmt(target,0));
+    return `<div class="goal-mini-ring">
+      <svg viewBox="0 0 72 72" width="72" height="72" aria-hidden="true">
+        <circle class="goal-ring-bg" cx="36" cy="36" r="30"></circle>
+        <circle class="goal-ring-fg${done?' done':''}" cx="36" cy="36" r="30" stroke-dasharray="${circ.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" style="stroke:${color}"></circle>
+      </svg>
+      <div class="goal-mini-center">
+        <div class="goal-mini-pct">${pctLabel}%</div>
+        <div class="goal-mini-label">${escapeHtml(label)}</div>
+      </div>
+      <div class="goal-mini-sub">${curTxt} / ${tgtTxt}</div>
+    </div>`;
+  };
+
+  const projectionHTML = (() => {
+    if(!hasAny) return '';
+    const todayD = new Date(todayISO() + 'T12:00:00+03:00');
+    const totalDays = kind === 'weekly' ? 7 : new Date(Date.UTC(todayD.getUTCFullYear(), todayD.getUTCMonth()+1, 0)).getUTCDate();
+    const daysLeft = kind === 'weekly' ? daysLeftInWeek() : daysLeftInMonth();
+    const elapsed = Math.max(1, totalDays - daysLeft + 1);
+    const moneyProj = elapsed > 0 ? (tot.net / elapsed) * totalDays : 0;
+    const pkgProj = elapsed > 0 ? (tot.tes / elapsed) * totalDays : 0;
+    const hourProj = elapsed > 0 ? (tot.hours / elapsed) * totalDays : 0;
+    const lines = [];
+    if(goal.money > 0 && moneyProj >= goal.money * 0.5) lines.push(`net kazanç hedefinizin <b>%${Math.round(moneyProj/goal.money*100)}</b>'üne`);
+    if(goal.packages > 0 && pkgProj >= goal.packages * 0.5) lines.push(`paket hedefinizin <b>%${Math.round(pkgProj/goal.packages*100)}</b>'üne`);
+    if(goal.hours > 0 && hourProj >= goal.hours * 0.5) lines.push(`çalışma saati hedefinizin <b>%${Math.round(hourProj/goal.hours*100)}</b>'üne`);
+    if(!lines.length) return '';
+    return `<div class="goal-projection">Mevcut tempoyla ${lines[0]} ulaşabilirsiniz.</div>`;
+  })();
+
+  if(!hasAny){
     return `<div class="goal-empty">
       <div class="goal-empty-icon">🎯</div>
-      <p>${isWeekly ? 'Bu hafta' : 'Bu ay'} henüz hedef belirlemediniz.</p>
+      <p>${kind === 'weekly' ? 'Bu hafta' : 'Bu ay'} henüz hedef belirlemediniz.</p>
       <button type="button" class="btn btn-primary btn-set-goal" data-goal-period="${kind}">🎯 Hedef Belirle</button>
     </div>`;
   }
-  const isNet = goal.type !== 'paket';
-  const current = isNet ? tot.net : tot.tes;
-  const target = +goal.amount || 1;
-  const pct = Math.max(0, Math.min(1, current / target));
-  const pctLabel = Math.round(pct * 100);
-  const offset = GOAL_CIRC * (1 - pct);
-  const done = pct >= 1;
-  const remain = Math.max(0, target - current);
-  const typeLabel = isNet ? 'Net' : 'Paket';
-  const curTxt = isNet ? (fmt(current,0) + ' ₺') : (fmtInt(current) + ' paket');
-  const tgtTxt = isNet ? (fmt(target,0) + ' ₺') : (fmtInt(target) + ' paket');
-  const remainTxt = done
-    ? (isWeekly ? 'Tebrikler, haftalık hedefe ulaştınız! 🎉' : 'Tebrikler, aylık hedefe ulaştınız! 🎉')
-    : (isNet ? (fmt(remain,0) + ' ₺ kaldı · ' + daysTxt) : (fmtInt(remain) + ' paket kaldı · ' + daysTxt));
-  return `<div class="goal-slide-inner">
-    <div class="goal-ring-wrap">
-      <svg viewBox="0 0 120 120" aria-hidden="true">
-        <circle class="goal-ring-bg" cx="60" cy="60" r="52"></circle>
-        <circle class="goal-ring-fg${done?' done':''}" cx="60" cy="60" r="52" stroke-dasharray="${GOAL_CIRC.toFixed(2)}" stroke-dashoffset="${offset.toFixed(2)}" style="stroke:${goalRingColor(pct)}"></circle>
-      </svg>
-      <div class="goal-ring-center">
-        <div class="goal-pct">${pctLabel}%</div>
-        <div class="goal-pct-label">${typeLabel}</div>
-      </div>
-    </div>
-    <div class="goal-info">
-      <div class="goal-info-title">${title}</div>
-      <div class="goal-info-value">${curTxt} / ${tgtTxt}</div>
-      <div class="goal-info-sub">${remainTxt}</div>
-      <button type="button" class="btn btn-ghost btn-set-goal" data-goal-period="${kind}">🎯 Hedefi Düzenle</button>
-    </div>
-  </div>`;
+  return `<div class="goal-slide-inner goal-3">
+    ${ring('Net Kazanç', '₺', tot.net, goal.money, 'var(--accent)')}
+    ${ring('Paket', 'paket', tot.tes, goal.packages, 'var(--amber)')}
+    ${ring('Çalışma Saati', 'saat', tot.hours, goal.hours, 'var(--violet)')}
+  </div>
+  <div class="goal-info-row"><span class="goal-days">${daysTxt}</span><button type="button" class="btn btn-ghost btn-sm btn-set-goal" data-goal-period="${kind}">🎯 Düzenle</button></div>
+  ${projectionHTML}`;
 }
 function bindGoalButtons(){
   document.querySelectorAll('.btn-set-goal').forEach(btn => {
@@ -5178,10 +5769,12 @@ function renderGoals(){
   requestAnimationFrame(() => {
     document.querySelectorAll('.goal-ring-fg').forEach(el => {
       const target = el.getAttribute('stroke-dashoffset');
-      el.style.strokeDashoffset = String(GOAL_CIRC);
+      const full = parseFloat(el.getAttribute('stroke-dasharray')) || 0;
+      el.style.strokeDashoffset = String(full);
       requestAnimationFrame(() => { el.style.strokeDashoffset = target; });
     });
   });
+  if(typeof checkGoalNotifications === 'function') checkGoalNotifications();
 }
 function setGoalPeriodUI(kind){
   document.querySelectorAll('.goal-seg').forEach(b => b.classList.toggle('active', b.dataset.goalPeriod === kind));
@@ -5195,25 +5788,35 @@ function updateGoalAmountLabel(){
   const lab = document.getElementById('goalAmountLabel');
   const inp = document.getElementById('goalAmount');
   if(!lab || !inp) return;
-  if(goalModalType === 'paket'){
+  if(goalModalType === 'packages'){
     lab.textContent = 'Hedef Paket Sayısı';
     inp.placeholder = 'Örn: 1500';
+    inp.step = '1';
+  } else if(goalModalType === 'hours'){
+    lab.textContent = 'Hedef Çalışma Saati';
+    inp.placeholder = 'Örn: 45';
+    inp.step = '0.5';
   } else {
     lab.textContent = 'Hedef Net Kazanç (₺)';
     inp.placeholder = 'Örn: 50000';
+    inp.step = '1';
   }
 }
 function openGoalModal(kind){
   if(!garageData.goals) garageData.goals = { weekly: {}, monthly: {} };
   goalModalPeriod = kind === 'monthly' ? 'monthly' : 'weekly';
   const key = goalModalPeriod === 'weekly' ? currentWeekKey() : currentMonthKey();
-  const existing = (garageData.goals[goalModalPeriod] || {})[key] || lastStoredGoal(goalModalPeriod) || { type: 'net', amount: '' };
-  goalModalType = existing.type === 'paket' ? 'paket' : 'net';
+  const existing = (garageData.goals[goalModalPeriod] || {})[key] || (typeof lastStoredGoal === 'function' ? lastStoredGoal(goalModalPeriod) : null) || {};
+  if(existing.packages > 0) goalModalType = 'packages';
+  else if(existing.money > 0) goalModalType = 'money';
+  else if(existing.hours > 0) goalModalType = 'hours';
+  else goalModalType = 'money';
   document.getElementById('goalModalTitle').textContent = goalModalPeriod === 'weekly' ? 'Haftalık Hedef' : 'Aylık Hedef';
   document.getElementById('goalModalHint').textContent = goalModalPeriod === 'weekly'
-    ? 'Bu hafta için net kazanç veya paket hedefi belirleyin.'
-    : 'Bu ay için net kazanç veya paket hedefi belirleyin.';
-  document.getElementById('goalAmount').value = existing.amount || '';
+    ? 'Bu hafta için net kazanç, paket veya çalışma saati hedefi belirleyin.'
+    : 'Bu ay için net kazanç, paket veya çalışma saati hedefi belirleyin.';
+  const existingVal = goalModalType === 'packages' ? (existing.packages || '') : (goalModalType === 'hours' ? (existing.hours || '') : (existing.money || ''));
+  document.getElementById('goalAmount').value = existingVal || '';
   document.querySelectorAll('.goal-type-btn').forEach(b => b.classList.toggle('active', b.dataset.goalType === goalModalType));
   updateGoalAmountLabel();
   document.getElementById('goalOverlay').classList.add('show');
@@ -5225,10 +5828,16 @@ function saveCurrentGoal(){
   if(!garageData.goals) garageData.goals = { weekly: {}, monthly: {} };
   if(!garageData.goals[goalModalPeriod]) garageData.goals[goalModalPeriod] = {};
   const key = goalModalPeriod === 'weekly' ? currentWeekKey() : currentMonthKey();
-  garageData.goals[goalModalPeriod][key] = { type: goalModalType, amount };
+  const current = garageData.goals[goalModalPeriod][key] || {};
+  const updated = { money: current.money || 0, packages: current.packages || 0, hours: current.hours || 0 };
+  if(goalModalType === 'packages') updated.packages = amount;
+  else if(goalModalType === 'hours') updated.hours = amount;
+  else updated.money = amount;
+  garageData.goals[goalModalPeriod][key] = updated;
   saveGarage();
   document.getElementById('goalOverlay').classList.remove('show');
   renderGoals();
+  checkGoalNotifications();
   toast('Hedef kaydedildi', true);
 }
 function clearCurrentGoal(){
@@ -5266,6 +5875,75 @@ function clearCurrentGoal(){
     });
   });
 })();
+
+/* ---- DİNAMİK HEDEF BİLDİRİMLERİ ---- */
+const GOAL_NOTIF_KEY = 'kurye_goal_notif_v1';
+const GOAL_NOTIF_MIN_GAP_MS = 5 * 60 * 1000; // aynı eşik için en fazla 5 dk'da bir
+
+function readGoalNotifState(){
+  try { return JSON.parse(localStorage.getItem(GOAL_NOTIF_KEY) || '{}'); } catch(e){ return {}; }
+}
+function writeGoalNotifState(s){
+  try { localStorage.setItem(GOAL_NOTIF_KEY, JSON.stringify(s)); } catch(e){}
+}
+
+function goalNotifKey(period, kind, threshold){ return period + ':' + kind + ':' + threshold; }
+
+async function sendGoalNotification(title, body){
+  const BG = getSafePermPlugin();
+  if(BG && typeof BG.showNotification === 'function'){
+    try { await BG.showNotification({ title, body }); return true; } catch(e){}
+  }
+  if(typeof Notification !== 'undefined' && Notification.permission === 'granted'){
+    try { new Notification(title, { body }); return true; } catch(e){}
+  }
+  toast(body, true);
+  return false;
+}
+
+function checkGoalNotifications(){
+  if(!currentUser) return;
+  if(typeof Notification !== 'undefined' && Notification.permission !== 'granted' && Notification.permission !== 'denied'){
+    try { Notification.requestPermission(); } catch(e){}
+  }
+  const now = Date.now();
+  const state = readGoalNotifState();
+  const periods = ['weekly','monthly'];
+  const labels = { money: 'net kazanç', packages: 'paket', hours: 'çalışma saati' };
+  const unitNames = { money: '₺', packages: 'paket', hours: 'saat' };
+  for(const period of periods){
+    const key = period === 'weekly' ? currentWeekKey() : currentMonthKey();
+    const goalRaw = (garageData.goals && garageData.goals[period] && garageData.goals[period][key]) || (typeof lastStoredGoal === 'function' ? lastStoredGoal(period) : null) || {};
+    const goal = { money: +goalRaw.money || 0, packages: +goalRaw.packages || 0, hours: +goalRaw.hours || 0 };
+    const recs = period === 'weekly' ? recsForCurrentWeek() : recsForCurrentMonth();
+    const tot = totalsOf(recs);
+    const current = { money: tot.net, packages: tot.tes, hours: tot.hours };
+    for(const kind of ['money','packages','hours']){
+      const target = goal[kind];
+      if(target <= 0) continue;
+      const pct = current[kind] / target;
+      const threshold = pct >= 1 ? 100 : (pct >= 0.9 ? 90 : 0);
+      if(!threshold) continue;
+      const k = goalNotifKey(period, kind, threshold);
+      const last = state[k] || 0;
+      if(now - last < GOAL_NOTIF_MIN_GAP_MS) continue;
+      const periodName = period === 'weekly' ? 'Haftalık' : 'Aylık';
+      let title, body;
+      if(threshold === 100){
+        title = 'Hedef Tamamlandı 🎉';
+        body = `${periodName} ${labels[kind]} hedefinize ulaştınız!`;
+      } else {
+        const remain = Math.max(0, target - current[kind]);
+        title = 'Hedefe Çok Yakınsınız 🚀';
+        const remainTxt = kind === 'money' ? fmt(remain,0) + ' ₺' : (kind === 'packages' ? fmtInt(remain) + ' paket' : fmt(remain,1) + ' saat');
+        body = `${periodName.toLowerCase()} ${labels[kind]} hedefinize sadece ${remainTxt} kaldı.`;
+      }
+      sendGoalNotification(title, body);
+      state[k] = now;
+    }
+  }
+  writeGoalNotifState(state);
+}
 
 /* BAKIM BİLDİRİMLERİNİ ETKİNLEŞTİR/DEVRE DIŞI BIRAK */
 const btnEnableNotifEl = document.getElementById('btnEnableNotif');
@@ -6941,9 +7619,8 @@ function renderGarage() {
   const bakimlar = av.bakimlar || [];
   if(!bakimlar.length) { list.innerHTML = '<div class="empty-period" style="grid-column:1/-1;text-align:center;padding:2rem 1rem;line-height:1.6;">'
     + '<div style="font-size:1.9rem;opacity:.5;margin-bottom:.4rem;">🔧</div>Henüz bakım hedefi yok.'
-    + '<br><span style="font-size:.75rem;">Yağ, zincir gibi periyodik bakımları ekleyin; km dolunca sizi uyaralım.</span></div>'; return; }
-  
-  list.innerHTML = bakimlar.map((b, i) => {
+    + '<br><span style="font-size:.75rem;">Yağ, zincir gibi periyodik bakımları ekleyin; km dolunca sizi uyaralım.</span></div>'; }
+  else { list.innerHTML = bakimlar.map((b, i) => {
     const remaining = maintenanceState(b, totalKm).remaining;
     let statusClass = 'green', statusText = fmtInt(remaining) + ' km kaldı', statusIco = '✅';
     if(remaining <= 0) { statusClass = 'red'; statusText = remaining === 0 ? 'Bakım zamanı geldi' : fmtInt(Math.abs(remaining)) + ' km GEÇTİ!'; statusIco = '🚨'; }
@@ -6957,7 +7634,33 @@ function renderGarage() {
       <div style="background:var(--elev); height:6px; border-radius:3px; margin-bottom:0.8rem; overflow:hidden;"><div style="background:var(--${statusClass}); height:100%; width:${pct}%"></div></div>
       <div class="meta" style="display:flex; justify-content:space-between;"><span>İşlem: <strong>${fmtInt(b.sonKm)} km</strong></span><span>Periyot: <strong>${fmtInt(b.periyot)} km</strong></span></div>
     </div>`;
-  }).join('');
+  }).join(''); }
+
+  renderMaintenanceHistory();
+}
+
+function renderMaintenanceHistory(){
+  const box = document.getElementById('maintenanceHistoryList');
+  if(!box) return;
+  const av = activeVehicle();
+  // Bakım sıfırlarken günlük kayda eklenen 'Bakım' açıklamalı giderleri geçmiş olarak göster.
+  const today = todayISO();
+  const sixMonthsAgo = new Date(today + 'T00:00:00+03:00');
+  sixMonthsAgo.setUTCMonth(sixMonthsAgo.getUTCMonth() - 6);
+  const all = records.filter(r => r && r.arac === av.id && (r.aciklama || '').startsWith('Bakım') && (r.diger || 0) > 0)
+    .map(r => ({ date: r.tarih, km: r.km || 0, cost: r.diger || 0, note: r.aciklama }))
+    .sort((a,b) => String(b.date || '').localeCompare(String(a.date || '')));
+  const recentCost = all.filter(h => new Date(h.date + 'T00:00:00+03:00') >= sixMonthsAgo).reduce((s,h) => s + h.cost, 0);
+  const totalCost = all.reduce((s,h) => s + h.cost, 0);
+  if(!all.length){
+    box.innerHTML = '<div class="empty-period" style="text-align:center;padding:1.5rem 1rem;"><div style="font-size:1.6rem;opacity:.5;margin-bottom:.3rem;">📋</div><p style="margin:0 0 .6rem;color:var(--muted);font-size:.8rem;">Henüz bakım geçmişi yok.</p><p style="margin:0;color:var(--muted);font-size:.7rem;">Bakım sıfırlarken tutulan maliyet burada listelenir.</p></div>';
+  } else {
+    box.innerHTML = '<div class="maint-history-table-wrap"><table class="maint-history-table"><thead><tr><th>Tarih</th><th>Açıklama</th><th>KM</th><th>Tutar</th></tr></thead><tbody>'
+      + all.map(h => `<tr><td>${escapeHtml(h.date || '')}</td><td>${escapeHtml(h.note || 'Bakım')}</td><td class="num">${fmtInt(h.km)} km</td><td class="num">${fmt(h.cost)} ₺</td></tr>`).join('')
+      + '</tbody></table></div>';
+  }
+  const summary = document.getElementById('maintenanceHistorySummary');
+  if(summary) summary.innerHTML = `<div class="mh-stat"><span>Toplam kayıt</span><b>${all.length}</b></div><div class="mh-stat"><span>Son 6 ay</span><b>${fmt(recentCost)} ₺</b></div><div class="mh-stat"><span>Toplam maliyet</span><b>${fmt(totalCost)} ₺</b></div>`;
 }
 
 document.getElementById('vehicleSelect').addEventListener('change', (e) => { garageData.activeVehicleId = e.target.value; saveGarage(); renderGarage(); });
@@ -9707,7 +10410,7 @@ window.admStoreImpact = function (minVer) {
   /* ---- YAYIN ÖNCESİ KONTROLLER ----
      Üç kontrol, yayının ORTADA patlamasını engelliyor: index.html eksikse
      uygulama beyaz ekranda açılır; sürüm eski/aynıysa OTA hiç indirilmez;
-     500 karakteri aşan notu Firebase kuralı reddeder (zip yüklenmiş ama sürüm
+     2000 karakteri aşan notu Firebase kuralı reddeder (zip yüklenmiş ama sürüm
      yazılamamış olur → yarım yayın). */
   let _otaLatestVersion = '';
   function renderOtaChecks(){
@@ -9728,7 +10431,7 @@ window.admStoreImpact = function (minVer) {
       + chip(paths.length > 0, paths.length + ' dosya · ' + kb + ' KB')
       + chip(bicim, ver ? ('sürüm ' + ver) : 'sürüm girilmedi')
       + (yeni === null ? '' : chip(yeni, yeni ? 'v' + _otaLatestVersion + '\'den yeni' : 'v' + _otaLatestVersion + ' ile aynı/eski'))
-      + chip(notes.length <= 500, notes.length <= 500 ? notes.length + '/500 not karakteri' : 'not ' + notes.length + ' karakter — kural 500 ile sınırlı');
+      + chip(notes.length <= 2000, notes.length <= 2000 ? notes.length + '/2000 not karakteri' : 'not ' + notes.length + ' karakter — kural 2000 ile sınırlı');
   }
 
   function renderOtaFileList(){
@@ -9869,10 +10572,10 @@ window.admStoreImpact = function (minVer) {
       if (!version || !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(version)) { toast('Sürüm numarasını "1.0.1" formatında girin.', false); return; }
       try{ renderOtaChecks(); }catch(e){}
 
-      // KURAL SINIRI: appUpdate/latest/notes en fazla 500 karakter. Uzun not
+      // KURAL SINIRI: appUpdate/latest/notes en fazla 2000 karakter. Uzun not
       // yayını yarıda patlatır (zip yüklendi, sürüm yazılamadı) → önce uyar.
-      if (notes && notes.length > 500) {
-        toast('Yayın notu ' + notes.length + ' karakter. Firebase kuralı en fazla 500 diyor; lütfen kısaltın.', false);
+      if (notes && notes.length > 2000) {
+        toast('Yayın notu ' + notes.length + ' karakter. Firebase kuralı en fazla 2000 diyor; lütfen kısaltın.', false);
         return;
       }
       // Aynı/daha eski sürüm yayınlamak OTA'nın sessizce uygulanmamasıyla biter.

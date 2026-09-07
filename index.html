@@ -742,6 +742,38 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .fbx-tag.t-no{color:var(--muted)}
 @media(prefers-reduced-motion:reduce){.fbx-banner{animation:none}}
 @media(max-width:560px){.fbx-banner{flex-wrap:wrap}.fbx-act{flex-direction:row;width:100%;justify-content:flex-end}}
+
+/* --- Kurulum uyarı banner'ı --- */
+.setup-alert-banner{display:flex;gap:.7rem;align-items:flex-start;max-width:100%;margin:0 0 .9rem;padding:.7rem .8rem;
+  background:var(--card);border:1px solid var(--amber);border-radius:16px;box-shadow:0 8px 26px rgba(0,0,0,.14);
+  animation:rise .22s ease;position:relative;overflow:hidden}
+.setup-alert-banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--amber)}
+.setup-alert-banner[hidden]{display:none}
+.setup-alert-ico{font-size:1.05rem;line-height:1.2;flex:0 0 auto}
+.setup-alert-body{min-width:0;flex:1 1 auto}
+.setup-alert-body b{display:block;font-size:.84rem;color:var(--text);margin-bottom:.14rem}
+.setup-alert-body p{margin:0;font-size:.79rem;line-height:1.55;color:var(--sec);overflow-wrap:anywhere;white-space:pre-wrap}
+.setup-alert-act{display:flex;flex-direction:column;gap:.3rem;flex:0 0 auto}
+.setup-alert-act .btn{min-height:34px;white-space:nowrap}
+@media(prefers-reduced-motion:reduce){.setup-alert-banner{animation:none}}
+@media(max-width:560px){.setup-alert-banner{flex-wrap:wrap}.setup-alert-act{flex-direction:row;width:100%;justify-content:flex-end}}
+
+/* --- Yönetici duyuru banner'ı --- */
+.announcement-banner{display:flex;gap:.7rem;align-items:flex-start;max-width:100%;margin:0 0 .9rem;padding:.7rem .8rem;
+  background:var(--card);border:1px solid var(--accent);border-radius:16px;box-shadow:0 8px 26px rgba(0,0,0,.14);
+  animation:rise .22s ease;position:relative;overflow:hidden}
+.announcement-banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.announcement-banner.ann-warning{border-color:var(--amber)}.announcement-banner.ann-warning::before{background:var(--amber)}
+.announcement-banner.ann-success{border-color:var(--green)}.announcement-banner.ann-success::before{background:var(--green)}
+.announcement-banner[hidden]{display:none}
+.ann-ico{font-size:1.05rem;line-height:1.2;flex:0 0 auto}
+.ann-body{min-width:0;flex:1 1 auto}
+.ann-body b{display:block;font-size:.84rem;color:var(--text);margin-bottom:.14rem}
+.ann-body p{margin:0;font-size:.79rem;line-height:1.55;color:var(--sec);overflow-wrap:anywhere;white-space:pre-wrap}
+.ann-act{display:flex;flex-direction:column;gap:.3rem;flex:0 0 auto}
+.ann-act .btn{min-height:34px;white-space:nowrap}
+@media(prefers-reduced-motion:reduce){.announcement-banner{animation:none}}
+@media(max-width:560px){.announcement-banner{flex-wrap:wrap}.ann-act{flex-direction:row;width:100%;justify-content:flex-end}}
 /* Geçmiş yönetimi satırları */
 .cl-adm-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--border);border-radius:9px;margin-bottom:.4rem;background:var(--bg);font-size:.82rem}
 .cl-adm-row b{font-family:var(--mono)}
@@ -1236,6 +1268,31 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
        .active sınıfı taşınarak gösterilir.
        ====================================================================== -->
   <main class="main">
+  <!-- KURULUM UYARISI · henüz araç/bakım kaydı yoksa ana sayfa üstünde gösterilir -->
+  <div class="setup-alert-banner" id="setupAlertBanner" role="alert" hidden>
+    <span class="setup-alert-ico" aria-hidden="true">⚠️</span>
+    <div class="setup-alert-body">
+      <b id="setupAlertTitle">Kurulumu tamamlayın</b>
+      <p id="setupAlertText"></p>
+    </div>
+    <div class="setup-alert-act">
+      <button type="button" class="btn btn-primary btn-sm" id="setupAlertAction">Kurulumu yap</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="setupAlertClose">Kapat</button>
+    </div>
+  </div>
+
+  <!-- YÖNETİCİ DUYURUSU · tüm kullanıcılara gönderilen duyurular -->
+  <div class="announcement-banner" id="announcementBanner" role="alert" hidden>
+    <span class="ann-ico" id="announcementIcon" aria-hidden="true">📢</span>
+    <div class="ann-body">
+      <b id="announcementTitle"></b>
+      <p id="announcementText"></p>
+    </div>
+    <div class="ann-act">
+      <button type="button" class="btn btn-primary btn-sm" id="announcementClose">Kapat</button>
+    </div>
+  </div>
+
   <!-- ÖNERİ YANITI BİLDİRİMİ · yönetici önerini işaretleyince/yanıtlayınca belirir;
        “Kapat”a basmadan kaybolmaz. İçerik: [19-ONERI-BILDIRIM] -->
   <div class="fbx-banner" id="fbBanner" role="status" aria-live="polite" hidden>
@@ -1917,6 +1974,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         <button class="adm-tab active" data-adm="dash"  role="tab" aria-selected="true">📈 <span>Genel Bakış</span></button>
         <button class="adm-tab"        data-adm="users"  role="tab" aria-selected="false">👥 <span>Kullanıcılar</span> <span class="adm-badge" id="admBadgeUsers" hidden>0</span></button>
         <button class="adm-tab"        data-adm="feed"   role="tab" aria-selected="false">💡 <span>İstek / Öneri</span> <span class="adm-badge" id="admBadgeFeed" hidden>0</span></button>
+        <button class="adm-tab"        data-adm="announcements" role="tab" aria-selected="false">📢 <span>Duyurular</span></button>
         <button class="adm-tab"        data-adm="ota"    role="tab" aria-selected="false">📦 <span>OTA Yayın</span></button>
         <button class="adm-tab"        data-adm="clog"   role="tab" aria-selected="false">📋 <span>Sürüm Geçmişi</span></button>
         <button class="adm-tab"        data-adm="store"  role="tab" aria-selected="false">🔒 <span>Zorunlu Güncelleme</span></button>
@@ -2038,6 +2096,43 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
           <div id="updateStatus" style="margin-top:10px; font-size:13px; color:var(--muted);"></div>
         </div>
 
+        </div>
+
+        <div class="adm-pane" id="adm-announcements" role="tabpanel">
+          <div class="panel" style="padding:.75rem;">
+            <h3 style="margin:0 0 .4rem;font-size:.95rem;">📢 Duyuru Yayınla</h3>
+            <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
+              Buradan yayınladığınız duyurular, uygulamayı açan tüm kullanıcılara ana ekranın üstünde gösterilir.
+              Kullanıcı “Kapat” dediğinde aynı duyuruyu bir daha görmez.
+            </p>
+            <div class="fg">
+              <label>Başlık</label>
+              <input type="text" id="admAnnTitle" maxlength="120" placeholder="örn. Yeni özellik yayında"/>
+            </div>
+            <div class="fg">
+              <label>Mesaj</label>
+              <textarea id="admAnnBody" rows="3" maxlength="500" placeholder="Kullanıcılara iletmek istediğiniz kısa mesaj"></textarea>
+            </div>
+            <div class="fg">
+              <label>Tip</label>
+              <select id="admAnnType" class="auth-input">
+                <option value="info">ℹ️ Bilgi</option>
+                <option value="warning">⚠️ Uyarı</option>
+                <option value="success">✅ Başarı</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label>Bitiş tarihi (isteğe bağlı)</label>
+              <input type="date" id="admAnnExpires"/>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:.5rem;">
+              <button type="button" id="btnAdmAnnPublish" class="btn btn-primary" style="flex:1;min-width:140px;">📢 Yayınla</button>
+            </div>
+            <div id="admAnnStatus" style="margin-top:10px;font-size:13px;color:var(--muted);"></div>
+
+            <div class="adm-sec" style="margin-top:1.2rem;">Yayında ve geçmiş duyurular</div>
+            <div id="admAnnList"><div class="adm-empty">Yükleniyor…</div></div>
+          </div>
         </div>
 
         <div class="adm-pane" id="adm-clog" role="tabpanel">
@@ -2492,7 +2587,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.0.9";
+const CURRENT_APP_VERSION = "6.1.0";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -3186,6 +3281,7 @@ auth.onAuthStateChanged(user => {
   if(adminDataListenerRef) { adminDataListenerRef.off(); adminDataListenerRef = null; }
   if(adminFeedbackListenerRef) { adminFeedbackListenerRef.off(); adminFeedbackListenerRef = null; }
   if(typeof oneriSubscribe === 'function'){ try{ oneriSubscribe(null); }catch(e){} }
+  if(typeof subscribeAnnouncements === 'function'){ try{ subscribeAnnouncements(null); }catch(e){} }
   if(user) {
     currentUser = user; 
     document.getElementById('userEmailDisplay').textContent = user.email;
@@ -3270,6 +3366,7 @@ auth.onAuthStateChanged(user => {
     // [19-ONERI-BILDIRIM] kendi önerilerim + yönetici yanıtları. Ayrı dinleyici:
     // senkronizasyon kuyruğu yalnızca kayitlar/garaj yazar, bu dalga dokunmaz.
     try{ if (typeof oneriSubscribe === 'function') oneriSubscribe(user.uid); }catch(e){}
+    try{ if (typeof subscribeAnnouncements === 'function') subscribeAnnouncements(user.uid); }catch(e){}
 
     currentListenerRef = db.ref('kullanicilar/' + currentUser.uid);
     // Firebase'in kendi çevrimdışı önbelleği: bağlantı yokken de son veri elde olur.
@@ -3509,7 +3606,9 @@ function dayName(t){return DAYS[new Date(t+'T12:00:00').getDay()]}
 // ISO-8601 hafta anahtarı. Eskiden sabit 2026-06-22 başlangıcına göre sayılıyordu;
 // o tarihten önceki kayıtlarda hafta numarası negatif çıkıp bonusu bozuyordu.
 function weekOf(t){
-  const d = new Date(t + 'T12:00:00');
+  // Tarihi Türkiye saat diliminde (UTC+3) 12:00 olarak yorumla; böylece hafta sınırında
+  // cihaz saat diliminin farklı olduğu durumlarda bile TR'ye göre doğru hafta hesaplanır.
+  const d = new Date(t + 'T12:00:00+03:00');
   if(isNaN(d)) return 0;
   const target = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   const dayNum = (target.getUTCDay() + 6) % 7;       // Pazartesi = 0
@@ -3852,7 +3951,7 @@ function updateOfflineBadge(){
   if(!el) return;
   const n = offlinePendingCount();
   const off = (typeof navigator !== 'undefined') && navigator.onLine === false;
-  el.title = _syncState && _syncState.lastSyncAt ? 'Son senkron: ' + new Date(_syncState.lastSyncAt).toLocaleString('tr-TR') : '';
+  el.title = _syncState && _syncState.lastSyncAt ? 'Son senkron: ' + new Date(_syncState.lastSyncAt).toLocaleString('tr-TR', { timeZone:'Europe/Istanbul' }) : '';
   if(_syncStorageError){ el.textContent = 'Cihaza kaydedilemedi · uygulamayı kapatmayın'; el.style.display = ''; return; }
   if(n && _syncState.error){ el.textContent = n + ' işlem bekliyor · senkron hatası'; el.title = _syncState.error; el.style.display = ''; return; }
   if(off){ el.textContent = '⛈ Çevrimdışı' + (n ? ' · ' + n + ' veri bekliyor' : ''); el.style.display = ''; }
@@ -4985,15 +5084,30 @@ let goalModalPeriod = 'weekly';
 let goalModalType = 'net';
 
 function todayISO(){
-  const d = new Date();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return d.getFullYear() + '-' + m + '-' + day;
+  // Cihazın saat diliminden bağımsız olarak İstanbul (UTC+3) saat dilimindeki bugünü YYYY-MM-DD olarak döndürür.
+  try {
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date());
+  } catch(e){
+    const d = new Date();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
 }
 function currentWeekKey(){ return String(weekOf(todayISO())); }
 function currentMonthKey(){ return todayISO().slice(0,7); }
-function daysLeftInWeek(){ const day = (new Date().getDay() + 6) % 7; return 7 - day; }
-function daysLeftInMonth(){ const d = new Date(); const last = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate(); return last - d.getDate() + 1; }
+function daysLeftInWeek(){
+  const d = new Date(todayISO() + 'T12:00:00+03:00');
+  if(isNaN(d)) return 7;
+  const day = (d.getUTCDay() + 6) % 7; // Pazartesi = 0
+  return 7 - day;
+}
+function daysLeftInMonth(){
+  const d = new Date(todayISO() + 'T12:00:00+03:00');
+  if(isNaN(d)) return 1;
+  const last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()+1, 0)).getUTCDate();
+  return last - d.getUTCDate() + 1;
+}
 function recsForCurrentWeek(){ const w = +currentWeekKey(); return records.filter(r => weekOf(r.tarih) === w); }
 function recsForCurrentMonth(){ const k = currentMonthKey(); return records.filter(r => monthKey(r.tarih) === k); }
 function lastStoredGoal(kind){
@@ -6026,6 +6140,16 @@ function _clFormatDate(iso){
   if(!iso) return '';
   const d = new Date(iso);
   if(isNaN(d)) return '';
+  try {
+    const parts = new Intl.DateTimeFormat('tr-TR', { timeZone:'Europe/Istanbul', day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit', hour12:false }).formatToParts(d);
+    const get = type => (parts.find(p => p.type === type) || {}).value || '';
+    const gun = get('day');
+    const ay = get('month');
+    const yil = get('year');
+    const sa = get('hour');
+    const dk = get('minute');
+    if(gun && ay && yil) return gun + ' ' + ay + ' ' + yil + ' · ' + (sa || '00') + ':' + (dk || '00');
+  } catch(e){}
   const gun = d.getDate();
   const ay = MONTHS_SHORT[d.getMonth()];
   const yil = d.getFullYear();
@@ -6300,7 +6424,7 @@ function fbxSinif(t){ return (FBX_DURUM[t] && FBX_DURUM[t].sinif) || ''; }
 function fbxFmt(ts){
   const n = Number(ts);
   if(!n || isNaN(n)) return '—';
-  try { return new Date(n).toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+  try { return new Date(n).toLocaleString('tr-TR', { timeZone:'Europe/Istanbul', day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
   catch(e){ return new Date(n).toISOString().slice(0,16).replace('T',' '); }
 }
 
@@ -6416,6 +6540,153 @@ window.fbxKapat = function(oid){
       if(w){ try{ w.scrollIntoView({ block:'start', behavior:'smooth' }); }catch(e){} }
     }, 120);
   });
+})();
+
+/* ---- DUYURU BANNER (kullanıcı tarafı) ---- */
+let _announcementsRef = null;
+let _announcementsData = {};
+const SEEN_ANN_KEY = 'kurye_seen_announcements_v1';
+
+function subscribeAnnouncements(uid){
+  if(_announcementsRef){ try{ _announcementsRef.off(); }catch(e){} _announcementsRef = null; }
+  _announcementsData = {};
+  renderAnnouncementBanner();
+  if(!uid) return;
+  _announcementsRef = db.ref('announcements');
+  _announcementsRef.on('value', snap => {
+    _announcementsData = snap.val() || {};
+    renderAnnouncementBanner();
+  }, () => { /* okunamazsa sessiz kal */ });
+}
+
+function renderAnnouncementBanner(){
+  const box = document.getElementById('announcementBanner');
+  const title = document.getElementById('announcementTitle');
+  const text = document.getElementById('announcementText');
+  const icon = document.getElementById('announcementIcon');
+  if(!box) return;
+  const now = Date.now();
+  let seen = {};
+  try{ seen = JSON.parse(localStorage.getItem(SEEN_ANN_KEY) || '{}'); }catch(e){}
+  let active = null, activeKey = null;
+  Object.keys(_announcementsData || {}).forEach(key => {
+    const a = _announcementsData[key];
+    if(!a || !a.title) return;
+    if(a.expiresAt && Date.parse(a.expiresAt + 'T23:59:59') < now) return;
+    if(seen[key]) return;
+    if(!active || (a.createdAt || 0) > (active.createdAt || 0)){ active = a; activeKey = key; }
+  });
+  if(!active){ box.hidden = true; box.dataset.key = ''; return; }
+  box.className = 'announcement-banner ann-' + (active.type || 'info');
+  icon.textContent = active.type === 'warning' ? '⚠️' : active.type === 'success' ? '✅' : '📢';
+  title.textContent = active.title;
+  text.textContent = active.body || '';
+  box.dataset.key = activeKey;
+  box.hidden = false;
+}
+
+function dismissAnnouncement(){
+  const box = document.getElementById('announcementBanner');
+  if(!box) return;
+  const key = box.dataset.key;
+  if(key){
+    let seen = {};
+    try{ seen = JSON.parse(localStorage.getItem(SEEN_ANN_KEY) || '{}'); }catch(e){}
+    seen[key] = Date.now();
+    try{ localStorage.setItem(SEEN_ANN_KEY, JSON.stringify(seen)); }catch(e){}
+  }
+  box.hidden = true;
+}
+
+(function bindAnnouncementBanner(){
+  const close = document.getElementById('announcementClose');
+  if(close) close.addEventListener('click', dismissAnnouncement);
+})();
+
+/* ---- KURULUM UYARISI (ana sayfa üstü) ---- */
+const DISMISSED_SETUP_KEY = 'kurye_dismissed_setup_alerts_v1';
+
+function getSetupMissing(){
+  const onboarding = garageData && garageData.onboarding;
+  if(onboarding && onboarding.step !== 'complete'){
+    return {
+      key: 'onboarding',
+      title: 'Kurulumu tamamlayın',
+      text: 'Aracınızı ve bonus sisteminizi ayarlamak için kurulumu tamamlamanız gerekiyor.',
+      action: 'Kuruluma devam et',
+      cb: () => { if(garageData.onboarding) syncOnboardingUI(); else startSetupFromGuide(); }
+    };
+  }
+  const vehicles = garageData && garageData.vehicles;
+  if(!vehicles || !vehicles.length){
+    return {
+      key: 'vehicle',
+      title: 'Henüz bir araç kaydı yapmadınız',
+      text: 'Günlük kayıtlarınızı ve bakım takibinizi başlatmak için bir araç ekleyin.',
+      action: 'Araç ekle',
+      page: 'garage'
+    };
+  }
+  const hasMaintenance = vehicles.some(v => v && v.bakimlar && v.bakimlar.length);
+  if(!hasMaintenance){
+    return {
+      key: 'maintenance',
+      title: 'Henüz bir bakım kaydı girmediniz',
+      text: 'Yaklaşan bakımları takip etmek için bir bakım hedefi ekleyin.',
+      action: 'Bakım ekle',
+      page: 'garage',
+      cb: () => { setTimeout(() => { const btn = document.getElementById('btnAddMaintenance'); if(btn) btn.click(); }, 180); }
+    };
+  }
+  return null;
+}
+
+function checkSetupAlerts(){
+  const box = document.getElementById('setupAlertBanner');
+  const title = document.getElementById('setupAlertTitle');
+  const text = document.getElementById('setupAlertText');
+  const btn = document.getElementById('setupAlertAction');
+  if(!box) return;
+  const dialog = document.getElementById('onboardingDialog');
+  if(dialog && dialog.open){ box.hidden = true; return; }
+  const missing = getSetupMissing();
+  if(!missing){ box.hidden = true; box.dataset.key = ''; return; }
+  let dismissed = {};
+  try{ dismissed = JSON.parse(localStorage.getItem(DISMISSED_SETUP_KEY) || '{}'); }catch(e){}
+  if(dismissed[missing.key]){ box.hidden = true; return; }
+  title.textContent = missing.title;
+  text.textContent = missing.text;
+  btn.textContent = missing.action;
+  btn.onclick = () => {
+    if(missing.cb) missing.cb();
+    else if(missing.page) switchToPage(missing.page);
+    box.hidden = true;
+  };
+  box.dataset.key = missing.key;
+  box.hidden = false;
+}
+
+function dismissSetupAlert(){
+  const box = document.getElementById('setupAlertBanner');
+  if(!box) return;
+  const key = box.dataset.key || (getSetupMissing() || {}).key;
+  if(key){
+    let dismissed = {};
+    try{ dismissed = JSON.parse(localStorage.getItem(DISMISSED_SETUP_KEY) || '{}'); }catch(e){}
+    dismissed[key] = Date.now();
+    try{ localStorage.setItem(DISMISSED_SETUP_KEY, JSON.stringify(dismissed)); }catch(e){}
+  }
+  box.hidden = true;
+}
+
+(function bindSetupAlert(){
+  const close = document.getElementById('setupAlertClose');
+  if(close) close.addEventListener('click', dismissSetupAlert);
+  // Veri değişince veya sayfa geçince tekrar kontrol edilsin.
+  const origRenderDash = renderDash;
+  renderDash = function(){ origRenderDash(); checkSetupAlerts(); };
+  const origRenderGarage = renderGarage;
+  renderGarage = function(){ origRenderGarage(); checkSetupAlerts(); };
 })();
 
 // "Yakıt Detayı Gizle" butonu kaldırıldı; yakıt sütunları her zaman görünür.
@@ -7459,7 +7730,7 @@ function admRelTime(ts) {
 function admAbsTime(ts) {
   const n = Number(ts);
   if (!n || isNaN(n)) return '—';
-  try { return new Date(n).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  try { return new Date(n).toLocaleString('tr-TR', { timeZone:'Europe/Istanbul', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
   catch (e) { return new Date(n).toISOString().replace('T', ' ').slice(0, 16); }
 }
 
@@ -7998,6 +8269,109 @@ window.deleteFeedback = function(id) {
     }, {title:'İsteği Sil', icon:'💬'});
 }
 
+/* ---- DUYURULAR (announcements) ---- */
+let _admAnnRef = null;
+let _admAnnData = {};
+
+function admAnnStatus(msg, ok) {
+  const el = document.getElementById('admAnnStatus');
+  if (!el) return;
+  el.textContent = msg || '';
+  el.style.color = ok === true ? 'var(--green)' : ok === false ? 'var(--red)' : 'var(--muted)';
+}
+
+function loadAdminAnnouncements() {
+  const box = document.getElementById('admAnnList');
+  if (!box) return;
+  if (_admAnnRef) { try { _admAnnRef.off(); } catch (e) {} _admAnnRef = null; }
+  _admAnnRef = db.ref('announcements');
+  box.innerHTML = '<div class="adm-empty">Yükleniyor…</div>';
+  _admAnnRef.on('value', snap => {
+    const val = snap.val() || {};
+    _admAnnData = val;
+    renderAdminAnnouncementsList();
+  }, err => {
+    box.innerHTML = '<div class="adm-empty" style="color:var(--red)">Duyurular okunamadı: ' + escapeHtml(friendlyError(err)) + '</div>';
+  });
+}
+
+function renderAdminAnnouncementsList() {
+  const box = document.getElementById('admAnnList');
+  if (!box) return;
+  const items = Object.keys(_admAnnData || {}).map(k => Object.assign({ _key: k }, _admAnnData[k]))
+    .filter(x => x.title || x.body)
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  if (!items.length) {
+    box.innerHTML = '<div class="adm-empty">Henüz duyuru yok.</div>';
+    return;
+  }
+  const now = Date.now();
+  box.innerHTML = items.map(it => {
+    const expired = it.expiresAt && Date.parse(it.expiresAt + 'T23:59:59') < now;
+    const typeLabel = it.type === 'warning' ? 'Uyarı' : it.type === 'success' ? 'Başarı' : 'Bilgi';
+    const badgeClass = it.type === 'warning' ? 'b-amber' : it.type === 'success' ? 'b-green' : '';
+    return `<div class="adm-row" style="align-items:flex-start;">
+      <span class="adm-avatar ${badgeClass}" aria-hidden="true">${escapeHtml(typeLabel[0])}</span>
+      <div class="adm-who">
+        <b>${escapeHtml(it.title || '')}</b>
+        <span>${escapeHtml(typeLabel)} · ${escapeHtml(admAbsTime(it.createdAt))}${it.expiresAt ? ' · bitiş: ' + escapeHtml(it.expiresAt) : ''}${expired ? ' (süresi doldu)' : ''}</span>
+        <div style="margin-top:.3rem;font-size:.79rem;line-height:1.55;color:var(--sec);white-space:pre-wrap;overflow-wrap:anywhere;">${escapeHtml(it.body || '')}</div>
+      </div>
+      <div class="adm-act">
+        <button type="button" class="btn btn-danger btn-sm adm-ann-del" data-key="${escapeHtml(it._key)}">Sil</button>
+      </div>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('.adm-ann-del').forEach(btn => {
+    btn.addEventListener('click', () => deleteAdminAnnouncement(btn.dataset.key));
+  });
+}
+
+function publishAdminAnnouncement() {
+  const title = document.getElementById('admAnnTitle').value.trim();
+  const body = document.getElementById('admAnnBody').value.trim();
+  const type = document.getElementById('admAnnType').value || 'info';
+  const expires = document.getElementById('admAnnExpires').value || null;
+  if (!title) { admAnnStatus('Başlık girin.', false); return; }
+  if (!body) { admAnnStatus('Mesaj girin.', false); return; }
+  if (title.length > 120) { admAnnStatus('Başlık en fazla 120 karakter olabilir.', false); return; }
+  if (body.length > 500) { admAnnStatus('Mesaj en fazla 500 karakter olabilir.', false); return; }
+  const btn = document.getElementById('btnAdmAnnPublish');
+  if (btn) btn.disabled = true;
+  const data = {
+    title: title,
+    body: body,
+    type: type,
+    createdAt: firebase.database.ServerValue.TIMESTAMP,
+    createdBy: ADMIN_EMAIL || currentUser.email || currentUser.uid,
+    expiresAt: expires
+  };
+  db.ref('announcements').push(data).then(() => {
+    document.getElementById('admAnnTitle').value = '';
+    document.getElementById('admAnnBody').value = '';
+    document.getElementById('admAnnType').value = 'info';
+    document.getElementById('admAnnExpires').value = '';
+    admAnnStatus('Duyuru yayınlandı.', true);
+    loadAdminAnnouncements();
+  }).catch(err => {
+    admAnnStatus('Yayınlanamadı: ' + friendlyError(err), false);
+  }).finally(() => { if (btn) btn.disabled = false; });
+}
+
+function deleteAdminAnnouncement(key) {
+  if (!key) return;
+  showConfirm('Bu duyuru kalıcı olarak silinsin mi?', () => {
+    db.ref('announcements/' + key).remove()
+      .then(() => { toast('Duyuru silindi.', true); loadAdminAnnouncements(); })
+      .catch(err => toast('Silinemedi: ' + friendlyError(err), false));
+  }, { title: 'Duyuruyu Sil', icon: '📢', okText: 'Sil' });
+}
+
+(function initAdminAnnouncements(){
+  const btn = document.getElementById('btnAdmAnnPublish');
+  if (btn) btn.addEventListener('click', publishAdminAnnouncement);
+})();
+
 window.viewUserStats = function(uid, email, focusNote) {
     document.getElementById('adminStatsTitle').textContent = (email || uid) + ' — İstatistikler';
     document.getElementById('adminStatsContent').innerHTML = '<div class="adm-empty">Yükleniyor…</div>';
@@ -8044,7 +8418,7 @@ window.viewUserStats = function(uid, email, focusNote) {
         }
 
         let km=0, gelir=0, yakit=0, diger=0, tes=0, net=0, totalBonus=0, hours=0;
-        const aylar = {};
+        const aylar = {}, haftalar = {}, gunlukler = {};
         userRecs.forEach(r => {
             const b = localBonusMap[r.tarih] || 0;
             const g = (r.yakit||0) + (r.diger||0);
@@ -8057,10 +8431,23 @@ window.viewUserStats = function(uid, email, focusNote) {
               if(!aylar[ay]) aylar[ay] = { gun:0, km:0, gelir:0, net:0, paket:0 };
               aylar[ay].gun++; aylar[ay].km += r.km||0; aylar[ay].gelir += toGelir; aylar[ay].net += n; aylar[ay].paket += r.teslimat||0;
             }
+            const w = weekOf(r.tarih);
+            if(w){
+              if(!haftalar[w]) haftalar[w] = { w, gun:0, km:0, gelir:0, net:0, paket:0 };
+              haftalar[w].gun++; haftalar[w].km += r.km||0; haftalar[w].gelir += toGelir; haftalar[w].net += n; haftalar[w].paket += r.teslimat||0;
+            }
+            const trh = String(r.tarih || '');
+            if(/^\d{4}-\d{2}-\d{2}$/.test(trh)){
+              if(!gunlukler[trh]) gunlukler[trh] = { tarih: trh, km:0, gelir:0, net:0, paket:0, gider:0 };
+              gunlukler[trh].km += r.km||0; gunlukler[trh].gelir += toGelir; gunlukler[trh].net += n;
+              gunlukler[trh].paket += r.teslimat||0; gunlukler[trh].gider += g;
+            }
         });
 
         const gunler = admLast14(userRecs);
         const ayKeys = Object.keys(aylar).sort().reverse().slice(0, 6);
+        const haftaKeys = Object.keys(haftalar).sort((a,b)=>+b - +a).slice(0, 12);
+        const gunKeys = Object.keys(gunlukler).sort().reverse().slice(0, 31);
         const son = userRecs.slice().sort((a,b)=>String(b.tarih).localeCompare(String(a.tarih))).slice(0, 10);
         const bakimSatirlari = araclar.map(v => {
           const bs = (v && v.bakimlar && (Array.isArray(v.bakimlar) ? v.bakimlar : Object.values(v.bakimlar))) || [];
@@ -8095,6 +8482,16 @@ window.viewUserStats = function(uid, email, focusNote) {
             ${ayKeys.length ? `<div class="adm-sec">Aylar</div>
             <table class="adm-tbl"><thead><tr><th>Ay</th><th style="text-align:right">Gün</th><th style="text-align:right">KM</th><th style="text-align:right">Paket</th><th style="text-align:right">Net</th></tr></thead><tbody>
             ${ayKeys.map(k => `<tr><td>${escapeHtml(k)}</td><td class="num">${aylar[k].gun}</td><td class="num">${fmtInt(aylar[k].km)}</td><td class="num">${fmtInt(aylar[k].paket)}</td><td class="num">${fmtInt(aylar[k].net)} ₺</td></tr>`).join('')}
+            </tbody></table>` : ''}
+
+            ${haftaKeys.length ? `<div class="adm-sec">Haftalar</div>
+            <table class="adm-tbl"><thead><tr><th>Hafta</th><th style="text-align:right">Gün</th><th style="text-align:right">KM</th><th style="text-align:right">Paket</th><th style="text-align:right">Net</th></tr></thead><tbody>
+            ${haftaKeys.map(k => `<tr><td>${escapeHtml(String(haftalar[k].w))}</td><td class="num">${haftalar[k].gun}</td><td class="num">${fmtInt(haftalar[k].km)}</td><td class="num">${fmtInt(haftalar[k].paket)}</td><td class="num">${fmtInt(haftalar[k].net)} ₺</td></tr>`).join('')}
+            </tbody></table>` : ''}
+
+            ${gunKeys.length ? `<div class="adm-sec">Son 30 gün</div>
+            <table class="adm-tbl"><thead><tr><th>Tarih</th><th style="text-align:right">KM</th><th style="text-align:right">Paket</th><th style="text-align:right">Gelir</th><th style="text-align:right">Gider</th><th style="text-align:right">Net</th></tr></thead><tbody>
+            ${gunKeys.map(k => `<tr><td>${escapeHtml(k)}</td><td class="num">${fmtInt(gunlukler[k].km)}</td><td class="num">${fmtInt(gunlukler[k].paket)}</td><td class="num">${fmtInt(gunlukler[k].gelir)} ₺</td><td class="num">${fmtInt(gunlukler[k].gider)} ₺</td><td class="num">${fmtInt(gunlukler[k].net)} ₺</td></tr>`).join('')}
             </tbody></table>` : ''}
 
             ${araclar.length ? `<div class="adm-sec">Araçlar ve bakım</div>
@@ -9178,6 +9575,7 @@ window.admStoreImpact = function (minVer) {
         p.classList.toggle('active', p.id === 'adm-' + key));
       // Sürüm geçmişi sekmesi açılınca listeyi tazele.
       if(key === 'clog'){ try{ renderClAdminList(); }catch(e){} }
+      if(key === 'announcements'){ try{ loadAdminAnnouncements(); }catch(e){} }
       // Genel bakış yeniden hesaplansın; kapı sekmesi etkisini tazelesin.
       if(key === 'dash'){ try{ renderAdminDash(); }catch(e){} }
       if(key === 'users'){ try{ renderAdminUsers(); }catch(e){} }

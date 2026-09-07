@@ -175,6 +175,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .nav-item{display:flex;align-items:center;gap:.7rem;padding:.7rem .9rem;border:none;background:transparent;color:var(--sec);font-size:.875rem;font-weight:500;border-radius:10px;cursor:pointer;transition:all .15s;text-align:left;font-family:inherit;width:100%}
 .nav-item:hover{background:var(--hover);color:var(--text)}
 .nav-item.active{background:var(--accent-dim);color:var(--accent)}
+.nav-item[data-page="daily"]{position:relative;color:var(--accent);font-weight:700}
+.nav-item[data-page="daily"]::before{content:'';position:absolute;left:0;top:.55rem;bottom:.55rem;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
 .nav-item svg{width:18px;height:18px;flex-shrink:0;opacity:.85}
 .nav-item.active svg{opacity:1}
 .foot{padding:1rem 1.1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem}
@@ -361,6 +363,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .auth-legal a{color:var(--accent)}
 .bn-item.active{color:var(--accent)}
 .bn-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:2px;border-radius:99px;background:var(--accent)}
+.bn-item[data-page="daily"]{color:var(--accent);font-weight:700}
+.bn-item[data-page="daily"] svg{stroke-width:2.4}
 
 /* YENİ KAYIT FORMU - DARALTILABİLİR DETAYLAR */
 .form-details{margin:0 0 1rem;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;background:var(--bg)}
@@ -405,6 +409,7 @@ tbody tr:hover{background:var(--hover)}
 .fg label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.25rem}
 .fg input,.fg select{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.6rem .8rem;border-radius:var(--rs);font-size:16px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
 .fg input:focus,.fg select:focus,textarea:focus,.auth-input:focus,.toolbar input:focus,.toolbar select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.fg input.input-error,.fg select.input-error,textarea.input-error{border-color:var(--red)!important;box-shadow:0 0 0 3px rgba(248,113,113,.25)!important}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
 .quick-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
 .q-tag { background: var(--hover); border: 1px solid var(--border); color: var(--sec); font-size: 0.72rem; padding: 0.38rem 0.65rem; border-radius: 8px; cursor: pointer; transition: 0.15s; font-family: inherit; min-height: 34px; }
@@ -523,15 +528,15 @@ textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:va
 textarea:focus{border-color:var(--accent)}
 
 /* HEDEF KARTI */
-.goal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.05rem 1.15rem 1.1rem;margin-bottom:1.4rem;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.05rem 1.15rem 1.1rem;margin-bottom:1.4rem;position:relative;overflow:hidden;box-shadow:var(--shadow);width:100%;box-sizing:border-box}
 .goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--green));opacity:.75}
-.goal-seg-row{display:flex;background:var(--elev);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;margin-bottom:.95rem;width:fit-content;max-width:100%}
+.goal-seg-row{display:flex;background:var(--elev);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;margin:0 auto .95rem;width:fit-content;max-width:100%}
 .goal-seg{border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:.8rem;font-weight:600;padding:.4rem 1rem;border-radius:999px;cursor:pointer;transition:.2s}
 .goal-seg.active{background:var(--accent-dim);color:var(--accent)}
-.goal-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.goal-track{display:flex;overflow:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .goal-track::-webkit-scrollbar{display:none}
-.goal-slide{min-width:100%;scroll-snap-align:start;flex-shrink:0}
-.goal-slide-inner{display:flex;align-items:center;gap:1.2rem}
+.goal-slide{min-width:100%;width:100%;scroll-snap-align:start;flex-shrink:0}
+.goal-slide-inner{display:flex;align-items:center;justify-content:center;width:100%;padding:0 .2rem;box-sizing:border-box}
 .goal-ring-wrap{position:relative;width:132px;height:132px;flex-shrink:0}
 .goal-ring-wrap svg{width:100%;height:100%;display:block}
 .goal-ring-bg{fill:none;stroke:var(--border);stroke-width:10}
@@ -551,18 +556,20 @@ textarea:focus{border-color:var(--accent)}
 .goal-dots{display:flex;justify-content:center;gap:6px;margin-top:.75rem}
 .goal-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:background .2s}
 .goal-dot.active{background:var(--accent)}
-.goal-3{display:flex;justify-content:space-around;align-items:flex-start;gap:.4rem;flex-wrap:wrap;margin:.4rem 0 .6rem}
+.goal-3{display:grid;grid-template-columns:repeat(3,1fr);justify-items:center;gap:.5rem;margin:.4rem auto .6rem;max-width:320px;width:100%}
+.goal-3.no-goals .goal-mini-ring.empty{opacity:.55}
+.goal-3.no-goals .goal-mini-ring.empty circle{stroke-dasharray:4 4}
 .goal-mini-ring{position:relative;width:72px;height:72px;flex:0 0 auto;text-align:center}
 .goal-mini-ring svg{width:100%;height:100%;display:block}
 .goal-mini-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
 .goal-mini-pct{font-family:var(--mono);font-size:.95rem;font-weight:700;line-height:1}
 .goal-mini-label{font-size:.52rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.02em;margin-top:.1rem}
-.goal-mini-sub{font-size:.58rem;color:var(--sec);margin-top:.2rem;line-height:1.3;white-space:nowrap}
+.goal-mini-sub{font-size:.58rem;color:var(--sec);margin-top:.2rem;line-height:1.3;white-space:normal;word-break:break-word;max-width:100%}
 .goal-mini-ring.empty .goal-mini-label{font-size:.52rem;margin-top:0}
 .goal-mini-sub.muted{color:var(--muted)}
-.goal-info-row{display:flex;align-items:center;justify-content:center;gap:.6rem;margin:.3rem 0 .6rem;color:var(--muted);font-size:.75rem;font-weight:600}
-.goal-days{flex:1;text-align:center}
-.goal-projection{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.55rem .7rem;font-size:.75rem;color:var(--sec);text-align:center;line-height:1.45}
+.goal-info-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin:.5rem 0 .7rem;color:var(--muted);font-size:.75rem;font-weight:600;width:100%;padding:0 .2rem;box-sizing:border-box}
+.goal-days{text-align:left}
+.goal-projection{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.55rem .7rem;font-size:.75rem;color:var(--sec);text-align:center;line-height:1.45;width:100%;box-sizing:border-box}
 .goal-type-row{display:flex;gap:.5rem}
 .goal-type-btn{flex:1;min-height:44px;border:1px solid var(--border);background:var(--bg);color:var(--sec);border-radius:10px;font-family:inherit;font-weight:600;font-size:.82rem;cursor:pointer;transition:.15s}
 .goal-type-btn.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
@@ -768,7 +775,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .setup-alert-act{display:flex;flex-direction:column;gap:.3rem;flex:0 0 auto}
 .setup-alert-act .btn{min-height:34px;white-space:nowrap}
 @media(prefers-reduced-motion:reduce){.setup-alert-banner{animation:none}}
-@media(max-width:560px){.setup-alert-banner{flex-wrap:wrap}.setup-alert-act{flex-direction:row;width:100%;justify-content:flex-end}.goal-3{flex-direction:column;align-items:center;gap:.7rem}.goal-info-row{flex-wrap:wrap;justify-content:center}}
+@media(max-width:560px){.setup-alert-banner{flex-wrap:wrap}.setup-alert-act{flex-direction:row;width:100%;justify-content:flex-end}.goal-3{grid-template-columns:repeat(3,1fr);align-items:start}.goal-info-row{flex-wrap:wrap;justify-content:center}}
 
 /* --- Yönetici duyuru banner'ı --- */
 .announcement-banner{display:flex;gap:.7rem;align-items:flex-start;max-width:100%;margin:0 0 .9rem;padding:.7rem .8rem;
@@ -815,6 +822,21 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .badge-title{font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.2rem}
 .badge-desc{font-size:.62rem;color:var(--muted);line-height:1.35}
 .badge-state{font-size:.6rem;margin-top:.35rem;font-weight:600;color:var(--accent)}
+.badge-category{margin-bottom:.8rem;border:1px solid var(--border);border-radius:14px;background:var(--elev);overflow:hidden}
+.badge-category-title{display:flex;align-items:center;justify-content:space-between;padding:.7rem .85rem;font-size:.85rem;font-weight:700;color:var(--text);cursor:pointer;list-style:none;background:var(--elev)}
+.badge-category-title::-webkit-details-marker{display:none}
+.badge-category-title .chevron{transition:transform .2s;font-size:.7rem;color:var(--muted)}
+.badge-category[open] .chevron{transform:rotate(180deg)}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:.55rem;padding:.6rem .75rem .75rem}
+.badge-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:.65rem .45rem .55rem;text-align:center;opacity:.55;transition:opacity .2s,transform .15s}
+.badge-card.unlocked{opacity:1;border-color:var(--accent);background:var(--accent-dim);transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.badge-card.unlocked .badge-ico{filter:none}
+.badge-ico{font-size:1.5rem;margin-bottom:.35rem;filter:grayscale(100%);transition:filter .2s}
+.badge-title{font-size:.72rem;font-weight:700;color:var(--text);margin-bottom:.2rem;line-height:1.25}
+.badge-desc{font-size:.58rem;color:var(--muted);line-height:1.35;min-height:2.3em;margin-bottom:.35rem}
+.badge-progress{height:5px;background:var(--border);border-radius:999px;margin:.25rem .2rem .35rem;overflow:hidden}
+.badge-progress-bar{height:100%;background:var(--accent);border-radius:999px;transition:width .5s ease}
+.badge-card.unlocked .badge-state{color:var(--green)}
 .shift-list{display:flex;flex-direction:column;gap:.55rem}
 .shift-row{display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap;background:var(--elev);border:1px solid var(--border);border-radius:10px;padding:.45rem .5rem}
 .shift-row .fg{flex:1;min-width:80px;margin:0}
@@ -964,7 +986,6 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
   .daily-cards{display:flex}
   .garage-info-flex { flex-direction: column; align-items: stretch; }
   .garage-inputs { display: grid; grid-template-columns: 1fr; }
-  .goal-slide-inner { flex-direction: column; text-align: center; }
   .goal-info-sub { margin-bottom: .7rem; }
   .goal-seg-row { margin-left: auto; margin-right: auto; }
   .dash-tabs { gap: 3px; padding: 3px; }
@@ -1157,7 +1178,6 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .garage-inputs .btn{width:100%}
 .fg-row{grid-template-columns:minmax(0,1fr)}
 .period-nav{padding:.85rem}.period-nav-btns{width:100%;justify-content:space-between}.period-jump-btn{flex:1;justify-content:center}
-.goal-slide-inner{flex-direction:row;align-items:center;text-align:left;gap:1rem}.goal-seg-row{margin-left:0;margin-right:0}
 .goal-ring-wrap{width:90px;height:90px}.goal-info-title{font-size:.78rem}.goal-info-value{font-size:1rem}.goal-pct{font-size:1.2rem}
 .goal-info .btn{white-space:normal}.goal-info-sub{margin-bottom:.6rem}
 .auth-box{padding:1.5rem}.modal{padding:1.25rem}
@@ -1173,7 +1193,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .metric.swipeable .metric-slide{padding:.85rem .8rem 1.5rem}
 .dashboard-hero{padding:1.1rem}.dashboard-breakdown dd{font-size:.95rem}.dashboard-hero-head .ui-icon{display:none}
 .bn-item{font-size:.64rem;min-height:56px}.bn-item svg{width:19px;height:19px}
-.goal-slide-inner{flex-direction:column;text-align:center}.goal-seg-row{margin-left:auto;margin-right:auto}
+.goal-seg-row{margin-left:auto;margin-right:auto}
 #mainMetrics .metric-value{font-size:1.25rem}.metric-sub{font-size:.72rem}
 }
 .onboarding-dialog{margin:auto;width:calc(100% - 2rem);max-width:540px;max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 2rem);overflow-y:auto;padding:1.75rem;border:1px solid var(--border2);border-radius:24px;background:var(--card);color:var(--text);box-shadow:0 20px 80px rgba(0,0,0,.3)}
@@ -1286,6 +1306,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
       <button class="nav-item" data-page="monthly"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Aylık Özet</button>
       <button class="nav-item" data-page="garage"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linejoin="round" stroke-linecap="round"></path></svg>Garaj & Bakım</button>
       <button class="nav-item" data-page="settings"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>Bonus Sistemi</button>
+      <button class="nav-item" data-page="badges"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1 1 0 00.7 1.7l.9.2a3.7 3.7 0 012.7 3.8 1 1 0 01-.6 1l-1.5 1.1a1 1 0 00-.4 1.1 4.8 4.8 0 01-.6 2.3 1 1 0 01-1.2.4l-1.8-.7a1 1 0 00-1.1.2 4.6 4.6 0 01-2.7 1.1 1 1 0 01-1-.6l-.8-1.7a1 1 0 00-.9-.6 4.5 4.5 0 01-2.6-1.2 1 1 0 01-.3-1.1l.5-1.8a1 1 0 00-.2-1 4.4 4.4 0 01-.8-2.5 1 1 0 01.6-1l1.5-1.1a1 1 0 00.4-1.1 4.8 4.8 0 01.6-2.3 1 1 0 011.2-.4l1.8.7a1 1 0 001.1-.2 4.6 4.6 0 012.7-1.1 1 1 0 011 .6l.8 1.7a1 1 0 00.9.6 4.5 4.5 0 012.6 1.2 1 1 0 01.3 1.1l-.5 1.8a1 1 0 00.2 1z"/></svg>Rozetlerim</button>
       <button class="nav-item" data-page="account"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Hesabım</button>
       <button class="nav-item" data-page="instructions"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Talimatlar</button>
       <button class="nav-item" data-page="changelog"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>Güncelleme Notları</button>
@@ -1417,6 +1438,35 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         <div class="metric"><div class="skeleton-block" style="height:72px"></div></div>
         <div class="metric"><div class="skeleton-block" style="height:72px"></div></div>
       </div>
+      <!-- ANOMALİ UYARISI -->
+      <div id="anomalyBanner" class="anomaly-banner" style="display:none;"></div>
+
+      <!-- BUGÜNKÜ PERFORMANS & ÖNE ÇIKANLAR -->
+      <div class="panel" id="highlightsPanel" style="margin-bottom:1.2rem;">
+        <div class="section-divider" style="margin-bottom:.7rem;"><h2>Bugünkü Performans & Öne Çıkanlar</h2></div>
+        <div class="insights" id="todayInsightsCard" style="margin-bottom:.9rem;">
+          <div class="insight" style="background:linear-gradient(135deg,var(--card),var(--elev));border-color:var(--border2);">
+            <div class="insight-icon g">📈</div>
+            <div style="flex:1;">
+              <h4>Bugünkü Performans</h4>
+              <div class="val pos" id="todayPerfVal" style="font-size:1.2rem;">—</div>
+              <div class="desc" id="todayPerfDesc">Yeterli veri yok</div>
+            </div>
+          </div>
+          <div class="insight" style="background:linear-gradient(135deg,var(--card),var(--elev));border-color:var(--border2);">
+            <div class="insight-icon c">💡</div>
+            <div style="flex:1;">
+              <h4>Öne Çıkan Alan</h4>
+              <div class="val" id="todayTopVal" style="font-size:1.2rem;color:var(--accent);">—</div>
+              <div class="desc" id="todayTopDesc">Bugünkü veriye göre</div>
+            </div>
+          </div>
+        </div>
+        <div class="best-grid" id="bestDays"></div>
+      </div>
+
+      <!-- HAFTALIK / AYLIK HEDEFLER -->
+      <div class="section-divider" style="margin-top:0;"><h2>Hedeflerim</h2></div>
       <div class="goal-card" id="goalCard">
         <div class="goal-seg-row">
           <button type="button" class="goal-seg active" data-goal-period="weekly">Haftalık</button>
@@ -1444,32 +1494,6 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         </div>
       </div>
 
-      <!-- ANOMALİ UYARISI -->
-      <div id="anomalyBanner" class="anomaly-banner" style="display:none;"></div>
-
-      <!-- AKILLI GÜN SONU ANALİZİ -->
-      <div class="insights" id="todayInsightsCard" style="margin-bottom:1.5rem;">
-        <div class="insight" style="background:linear-gradient(135deg,var(--card),var(--elev));border-color:var(--border2);">
-          <div class="insight-icon g">📈</div>
-          <div style="flex:1;">
-            <h4>Bugünkü Performans</h4>
-            <div class="val pos" id="todayPerfVal" style="font-size:1.2rem;">—</div>
-            <div class="desc" id="todayPerfDesc">Yeterli veri yok</div>
-          </div>
-        </div>
-        <div class="insight" style="background:linear-gradient(135deg,var(--card),var(--elev));border-color:var(--border2);">
-          <div class="insight-icon c">💡</div>
-          <div style="flex:1;">
-            <h4>Öne Çıkan Alan</h4>
-            <div class="val" id="todayTopVal" style="font-size:1.2rem;color:var(--accent);">—</div>
-            <div class="desc" id="todayTopDesc">Bugünkü veriye göre</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section-divider"><h2>Rozetlerim</h2></div>
-      <div class="badges-summary" id="badgesSummary"></div>
-      <div class="badges-panel" id="badgesPanel"></div>
     </div>
 
     <!-- TAB 2: DETAYLI ANALİZ -->
@@ -1486,8 +1510,6 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         </div>
       </div>
       <div class="insights" id="insights"></div>
-      <div class="section-divider" style="margin-top:1rem;"><h2>Rekor Kırılan Günler</h2></div>
-      <div class="best-grid" id="bestDays"></div>
     </div>
 
   </section>
@@ -1918,6 +1940,20 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
     </div>
   </section>
 
+  <!-- ROZETLER -->
+  <section class="page" id="page-badges">
+    <div class="page-head">
+      <h1>Rozetlerim</h1>
+      <p>Kazandığınız başarımlar ve kilitli olanların ilerlemesi.</p>
+    </div>
+    <div class="panel" style="max-width:680px;">
+      <div style="padding:1.1rem;">
+        <div class="badges-summary" id="badgesSummary"></div>
+        <div id="badgesPanel"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- GÜNCELLEME NOTLARI (sürüm geçmişi) -->
   <section class="page" id="page-changelog">
     <div class="page-head">
@@ -2069,6 +2105,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         <button class="adm-tab"        data-adm="ota"    role="tab" aria-selected="false">📦 <span>OTA Yayın</span></button>
         <button class="adm-tab"        data-adm="clog"   role="tab" aria-selected="false">📋 <span>Sürüm Geçmişi</span></button>
         <button class="adm-tab"        data-adm="store"  role="tab" aria-selected="false">🔒 <span>Zorunlu Güncelleme</span></button>
+        <button class="adm-tab"        data-adm="badges" role="tab" aria-selected="false">🏅 <span>Rozetler</span></button>
       </nav>
 
       <div class="adm-body">
@@ -2168,6 +2205,16 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
             <textarea id="updNotes" rows="6" placeholder="[yeni] Bonus sistemi haftalık/günlük seçilebiliyor&#10;[duzeltme] Şifremi unuttum bildirimi görünmüyordu&#10;[iyilestirme] Kayıt listesi büyük verilerde hızlandı"></textarea>
             <p style="font-size:.72rem;color:var(--muted);margin:.45rem 0 0;line-height:1.5;">
               Etiket yazmazsanız sistem içerikten tahmin eder; tahmin edemezse "Diğer Değişiklikler" altında gösterir.
+            </p>
+          </div>
+
+          <div class="fg">
+            <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;">
+              <input type="checkbox" id="updSilent" style="width:18px;height:18px;"/>
+              <span><b>Sessiz güncelleme</b> — kullanıcıya bildirim göstermeden arka planda indir ve kur</span>
+            </label>
+            <p style="font-size:.72rem;color:var(--muted);margin:.35rem 0 0;line-height:1.5;">
+              Ufak düzeltmelerde seçilebilir. Kullanıcı uygulamayı kapatıp açtığında güncelleme zaten uygulanmış olur.
             </p>
           </div>
 
@@ -2288,6 +2335,36 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
             </p>
           </div>
         </div>
+
+        <div class="adm-pane" id="adm-badges" role="tabpanel">
+          <div style="padding:1.1rem;">
+            <h3 style="margin:0 0 .4rem;font-size:.95rem;">🏅 Rozet Yönetimi</h3>
+            <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
+              Yeni rozet ekleyin veya var olanları düzenleyin. Değişiklikler sadece bu cihazda geçerli kalır; tüm kullanıcılara dağıtmak için güncellenmiş uygulama kodunun OTA veya Play Store ile yayınlanması gerekir.
+            </p>
+            <div id="adminBadgeEditor" class="fg" style="margin-bottom:1rem;">
+              <label>ID (benzersiz, boşluk yok)</label>
+              <input type="text" id="admBadgeId" placeholder="örn. pkg-100"/>
+              <label>Kategori</label>
+              <select id="admBadgeCat"></select>
+              <label>Başlık</label>
+              <input type="text" id="admBadgeTitle" placeholder="örn. Paket Acemi"/>
+              <label>İkon</label>
+              <input type="text" id="admBadgeIcon" placeholder="örn. 📦"/>
+              <label>Eşik</label>
+              <input type="number" id="admBadgeThreshold" placeholder="0" step="any"/>
+              <label>Açıklama (boş bırakılırsa otomatik)</label>
+              <input type="text" id="admBadgeDesc" placeholder="örn. 100 paket hedefi."/>
+              <div style="display:flex;gap:.5rem;margin-top:.5rem;">
+                <button type="button" class="btn btn-primary" id="btnAdmBadgeSave" style="flex:1;">Kaydet</button>
+                <button type="button" class="btn btn-ghost" id="btnAdmBadgeReset" style="flex:1;">Sıfırla</button>
+              </div>
+            </div>
+            <div class="adm-list" id="adminBadgesBody"></div>
+            <div id="adminBadgesStatus" style="margin-top:.5rem;font-size:.78rem;color:var(--muted);"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -2646,7 +2723,10 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
       <a class="sos-btn sos-call" href="tel:183"><span>183</span><small>Çekici</small></a>
     </div>
     <div class="sos-actions">
-      <button type="button" class="btn btn-danger" id="btnSosSms">📍 Konumumu SMS ile gönder</button>
+      <div class="sos-msg-row" style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button type="button" class="btn btn-danger" id="btnSosSms">💬 SMS ile gönder</button>
+        <button type="button" class="btn btn-ghost" id="btnSosWa" style="border-color:var(--border);">💬 WhatsApp ile gönder</button>
+      </div>
       <button type="button" class="btn btn-ghost" id="btnSosTow">🚛 Yakındaki çekici</button>
       <button type="button" class="btn btn-ghost" id="btnSosRepair">🔧 Yakındaki tamirci</button>
     </div>
@@ -2718,7 +2798,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.2.0";
+const CURRENT_APP_VERSION = "6.2.2";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -2903,8 +2983,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const skippedVersion = localStorage.getItem('skipped_version');
         if (skippedVersion === updateData.version) return;
 
-        // Güncelleme modalı GİRİŞ YAPMADAN, auth ekranının üstünde gösterilir.
-        showOtaUpdateModal(updateData);
+        if(updateData.silent){
+          // Ufak güncelleme: bildirim göstermeden arka planda indir ve kur.
+          applyOtaSilently(updateData);
+        } else {
+          // Güncelleme modalı GİRİŞ YAPMADAN, auth ekranının üstünde gösterilir.
+          showOtaUpdateModal(updateData);
+        }
       }
     }).catch(err => console.log("Güncelleme kontrol hatası:", err));
   }
@@ -3003,6 +3088,18 @@ function formatUpdateNotes(notes){
   return html + '</div>';
 }
 
+async function applyOtaSilently(updateData){
+  const CapacitorUpdater = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater;
+  if(!CapacitorUpdater || !updateData.url) return;
+  try{
+    const dl = await CapacitorUpdater.download({ version: updateData.version, url: updateData.url });
+    await CapacitorUpdater.set({ id: dl.id });
+    // Kurulum tamamlandıktan sonra uygulamayı yeniden başlat.
+    // Kullanıcı arada bildirim görmez; bir sonraki açılışta güncel sürüm çalışır.
+    if(CapacitorUpdater.reload) await CapacitorUpdater.reload();
+    else location.reload();
+  }catch(e){ console.log('Sessiz OTA hatası:', e); }
+}
 function showOtaUpdateModal(updateData){
   const overlay = document.getElementById('otaUpdateOverlay');
   const iconWrap = document.getElementById('otaIconWrap');
@@ -4366,6 +4463,7 @@ function switchToPage(pageName, dir){
   if(pageName==='garage')renderGarage();
   if(pageName==='settings')renderBonusTiers();
   if(pageName==='account') fillAccountPage();
+  if(pageName==='badges') renderBadges();
 }
 
 document.querySelectorAll('.nav-item').forEach(btn=>{
@@ -4853,42 +4951,271 @@ function longestStreak(recs){
   if(lastTs < new Date(today + 'T00:00:00+03:00').getTime() - 86400000) return max; // streak broken
   return max;
 }
-function effRecordsForFuel(recs){ return recs.filter(r => Number(r.yakitLitre) > 0 && Number(r.km) > 0); }
+function longestStreakWithHourRange(recs, startH, startM, endH, endM){
+  const startMinutes = startH * 60 + startM;
+  const endMinutes = endH * 60 + endM;
+  const inRange = minutes => {
+    if(startMinutes <= endMinutes) return minutes >= startMinutes && minutes < endMinutes;
+    return minutes >= startMinutes || minutes < endMinutes;
+  };
+  const dates = [...new Set(recs.filter(r => {
+    const times = [];
+    if(r.baslangic) times.push(r.baslangic);
+    if(r.shifts && r.shifts.length) r.shifts.forEach(s => { if(s.baslangic) times.push(s.baslangic); });
+    return times.some(t => {
+      const [h,m] = t.split(':').map(Number);
+      return inRange(h * 60 + (m || 0));
+    });
+  }).map(r => r.tarih))].sort();
+  if(!dates.length) return 0;
+  let max = 1, cur = 1, prevTs = null;
+  for(const d of dates){
+    const ts = new Date(d + 'T00:00:00+03:00').getTime();
+    if(prevTs && (ts - prevTs) === 86400000) cur++;
+    else if(!prevTs || (ts - prevTs) > 86400000) cur = 1;
+    if(cur > max) max = cur;
+    prevTs = ts;
+  }
+  return max;
+}
 
-const BADGES = [
-  { id:'first-step', title:'İlk Adım', icon:'👟', desc:'İlk kaydını ekle.', check: () => records.length >= 1 },
-  { id:'spark', title:'Çakmak', icon:'🔥', desc:'7 gün üst üste kayıt ekle.', check: () => longestStreak(records) >= 7 },
-  { id:'steel-horse', title:'Çelik At', icon:'🐴', desc:'30 gün üst üste kayıt ekle.', check: () => longestStreak(records) >= 30 },
-  { id:'meter-man', title:'Metre Adam', icon:'📏', desc:'Toplam 1.000 km.', check: () => records.reduce((s,r)=>s+(+r.km||0),0) >= 1000 },
-  { id:'iron-saddle', title:'Demir Sele', icon:'🛵', desc:'Toplam 10.000 km.', check: () => records.reduce((s,r)=>s+(+r.km||0),0) >= 10000 },
-  { id:'team-iron', title:'Demir Ekip', icon:'🏍️', desc:'Toplam 50.000 km.', check: () => records.reduce((s,r)=>s+(+r.km||0),0) >= 50000 },
-  { id:'package-starter', title:'Paket Acemi', icon:'📦', desc:'Toplam 100 paket.', check: () => records.reduce((s,r)=>s+(+r.teslimat||0),0) >= 100 },
-  { id:'package-beast', title:'Paket Canavarı', icon:'📦', desc:'Toplam 5.000 paket.', check: () => records.reduce((s,r)=>s+(+r.teslimat||0),0) >= 5000 },
-  { id:'package-legend', title:'Elmas Paket', icon:'💎', desc:'Toplam 10.000 paket.', check: () => records.reduce((s,r)=>s+(+r.teslimat||0),0) >= 10000 },
-  { id:'earner-bronze', title:'Bronz Kurye', icon:'🥉', desc:'Toplam 10.000 ₺ net.', check: () => records.reduce((s,r)=>s+((typeof calc === 'function'? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0) >= 10000 },
-  { id:'earner-silver', title:'Gümüş Kurye', icon:'🥈', desc:'Toplam 50.000 ₺ net.', check: () => records.reduce((s,r)=>s+((typeof calc === 'function'? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0) >= 50000 },
-  { id:'earner-gold', title:'Altın Kurye', icon:'🥇', desc:'Toplam 100.000 ₺ net.', check: () => records.reduce((s,r)=>s+((typeof calc === 'function'? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0) >= 100000 },
-  { id:'marathon', title:'Maratoncu', icon:'⏱️', desc:'Toplam 100 saat çalışma.', check: () => records.reduce((s,r)=>s+(+r.saat||0),0) >= 100 },
-  { id:'economy-master', title:'Ekonomi Ustası', icon:'⛽', desc:'10 kayıtta ortalama 30 km/L üzeri verim.', check: () => {
-      const list = effRecordsForFuel(records); if(list.length < 10) return false;
-      const avg = list.reduce((s,r)=>s + ((+r.km||0)/(+r.yakitLitre||1)),0) / list.length;
-      return avg >= 30;
-  }},
-  { id:'night-owl', title:'Gece Kartalı', icon:'🦉', desc:'Gece vardiyasına ait en az bir kayıt.', check: () => records.some(r => {
-      const [h] = (r.baslangic || '').split(':').map(Number); return r.baslangic && (h >= 20 || h < 6);
-  })}
+const BADGE_CATEGORIES = [
+  { id:'packages',  title:'Paketler',            icon:'📦', color:'#f59e0b', unit:'paket', metric:'pkg' },
+  { id:'distance',  title:'Kilometre',           icon:'🛣️', color:'#3b82f6', unit:'km',    metric:'km' },
+  { id:'earnings',  title:'Kazanç',              icon:'💵', color:'#10b981', unit:'₺',     metric:'net' },
+  { id:'fuel',      title:'Yakıt',               icon:'⛽', color:'#8b5cf6', unit:'L',     metric:'fuelLitre' },
+  { id:'hours',     title:'Çalışma Saati',       icon:'⏱️', color:'#ec4899', unit:'sa',    metric:'hours' },
+  { id:'streak',    title:'Seri Gün',            icon:'🔥', color:'#f97316', unit:'gün',   metric:'streak' },
+  { id:'special',   title:'Özel',                icon:'🌟', color:'#6366f1', unit:'',      metric:'custom' }
 ];
+const BADGE_DEFINITIONS = [
+  // Paketler
+  {id:'pkg-100',  cat:'packages', title:'Paket Acemi',     icon:'📦', threshold:100},
+  {id:'pkg-500',  cat:'packages', title:'Paket Çırak',     icon:'📦', threshold:500},
+  {id:'pkg-2k',   cat:'packages', title:'Paket Ustası',    icon:'📦', threshold:2000},
+  {id:'pkg-5k',   cat:'packages', title:'Paket Canavarı',  icon:'📦', threshold:5000},
+  {id:'pkg-10k',  cat:'packages', title:'Paket Efsanesi',  icon:'📦', threshold:10000},
+  {id:'pkg-25k',  cat:'packages', title:'Paket Mitolojisi',icon:'📦', threshold:25000},
+  // Kilometre
+  {id:'km-1k',    cat:'distance', title:'İlk Adımlar',       icon:'🛣️', threshold:1000},
+  {id:'km-5k',    cat:'distance', title:'Asfalt Sever',      icon:'🛣️', threshold:5000},
+  {id:'km-10k',   cat:'distance', title:'Yol Müdavimi',      icon:'🛣️', threshold:10000},
+  {id:'km-25k',   cat:'distance', title:'Kilometre Canavarı',icon:'🛣️', threshold:25000},
+  {id:'km-50k',   cat:'distance', title:'Mesafe Efsanesi',   icon:'🛣️', threshold:50000},
+  {id:'km-100k',  cat:'distance', title:'Asfaltın Efendisi', icon:'🛣️', threshold:100000},
+  // Kazanç
+  {id:'earn-5k',  cat:'earnings', title:'Bronz Kurye',   icon:'🥉', threshold:5000},
+  {id:'earn-10k', cat:'earnings', title:'Gümüş Kurye',   icon:'🥈', threshold:10000},
+  {id:'earn-25k', cat:'earnings', title:'Altın Kurye',   icon:'🥇', threshold:25000},
+  {id:'earn-50k', cat:'earnings', title:'Platin Kurye',  icon:'💠', threshold:50000},
+  {id:'earn-100k',cat:'earnings', title:'Elmas Kurye',   icon:'💎', threshold:100000},
+  {id:'earn-250k',cat:'earnings', title:'Efsanevi Kurye',icon:'👑', threshold:250000},
+  // Yakıt (doldurulan toplam litre)
+  {id:'fuel-10',  cat:'fuel', title:'İlk Depo',       icon:'⛽', threshold:10},
+  {id:'fuel-50',  cat:'fuel', title:'Benzin Dostu',   icon:'🍃', threshold:50},
+  {id:'fuel-100', cat:'fuel', title:'Depo Ustası',    icon:'🛢️', threshold:100},
+  {id:'fuel-250', cat:'fuel', title:'Akaryakıt Ustası',icon:'🚚', threshold:250},
+  {id:'fuel-500', cat:'fuel', title:'Pompa Kralı',    icon:'👑', threshold:500},
+  {id:'fuel-1k',  cat:'fuel', title:'Benzin Müdavimi',icon:'🏁', threshold:1000},
+  // Çalışma saati
+  {id:'hour-50',  cat:'hours', title:'İlk Mesai',          icon:'⏱️', threshold:50},
+  {id:'hour-100', cat:'hours', title:'Maratoncu',          icon:'🏃', threshold:100},
+  {id:'hour-250', cat:'hours', title:'Demir At',           icon:'🐴', threshold:250},
+  {id:'hour-500', cat:'hours', title:'Çalışma Canavarı',   icon:'🦾', threshold:500},
+  {id:'hour-1k',  cat:'hours', title:'Mesaiyi Seven',      icon:'🕰️', threshold:1000},
+  // Seri gün
+  {id:'str-3',    cat:'streak', title:'Düzenli',         icon:'✅', threshold:3},
+  {id:'str-7',    cat:'streak', title:'Disiplinli',      icon:'🔥', threshold:7},
+  {id:'str-14',   cat:'streak', title:'Pes Etmeyen',     icon:'💪', threshold:14},
+  {id:'str-30',   cat:'streak', title:'Mükemmel Seri',   icon:'🌟', threshold:30},
+  {id:'str-60',   cat:'streak', title:'Efsanevi Seri',   icon:'⚡', threshold:60},
+  // Özel
+  {id:'night-owl', cat:'special', title:'Gece Kartalı', icon:'🦉', custom:true,
+    check:()=>longestStreakWithHourRange(records, 0,0, 3,0) >= 7,
+    desc:'00:00 - 03:00 arası 7 gün üst üste vardiya.'},
+  {id:'early-bird', cat:'special', title:'Sabah Kuşu', icon:'🐦', custom:true,
+    check:()=>longestStreakWithHourRange(records, 7,30, 9,0) >= 7,
+    desc:'07:30 - 09:00 arası 7 gün üst üste vardiya.'},
+  {id:'first-record', cat:'special', title:'Başlangıç', icon:'👟', custom:true,
+    check:()=>records.length>=1, desc:'İlk kaydını ekle.'},
+  {id:'double-shift', cat:'special', title:'Çift Vardiya', icon:'🔄', custom:true,
+    check:()=>records.some(r=>r.shifts && r.shifts.length>=2), desc:'Bir güne iki vardiya kaydet.'}
+];
+function badgeMetricValues(){
+  const km = records.reduce((s,r)=>s+(+r.km||0),0);
+  const pkg = records.reduce((s,r)=>s+(+r.teslimat||0),0);
+  const net = records.reduce((s,r)=>s+((typeof calc === 'function' ? calc(r).net : (+r.gelir||0)-(+r.yakit||0)-(+r.diger||0))),0);
+  const hours = records.reduce((s,r)=>s+(+r.saat||0),0);
+  const fuelLitre = records.reduce((s,r)=>s+(+r.yakitLitre||0),0);
+  const streak = longestStreak(records);
+  return { km, pkg, net, hours, fuelLitre, streak, records: records.length };
+}
+function badgeDesc(b){
+  if(b.desc) return b.desc;
+  const cat = BADGE_CATEGORIES.find(c => c.id === b.cat);
+  const unit = cat ? cat.unit : '';
+  return `${b.threshold.toLocaleString('tr-TR')} ${unit} hedefi.`;
+}
+function badgeValue(b, m){
+  if(b.custom) return b.check() ? 1 : 0;
+  const cat = BADGE_CATEGORIES.find(c => c.id === b.cat);
+  const val = m[cat.metric] || 0;
+  return Math.min(val, b.threshold);
+}
+function badgeUnlocked(b, m){
+  if(b.custom) return !!b.check();
+  if(b.minRecords && m.records < b.minRecords) return false;
+  const cat = BADGE_CATEGORIES.find(c => c.id === b.cat);
+  return (m[cat.metric] || 0) >= b.threshold;
+}
+function badgePct(b, current){
+  if(b.custom) return current > 0 ? 100 : 0;
+  if(!b.threshold) return 0;
+  return Math.min(100, Math.floor((current / b.threshold) * 100));
+}
+function fmtBadgeNum(n, unit){
+  if(unit === '₺') return fmt(n,0) + ' ₺';
+  if(unit === 'km/L') return n.toFixed(1) + ' km/L';
+  if(unit === 'sa') return fmt(n,1) + ' sa';
+  return fmt(n,0) + ' ' + unit;
+}
+function badgeCardHTML(b, m){
+  const unlocked = badgeUnlocked(b,m);
+  const current = badgeValue(b,m);
+  const pct = badgePct(b, current);
+  const cat = BADGE_CATEGORIES.find(c => c.id === b.cat);
+  const progressText = unlocked
+    ? 'Kazanıldı!'
+    : (b.custom ? 'Kilitli' : `%${pct} tamamlandı (${fmtBadgeNum(current, cat.unit)} / ${fmtBadgeNum(b.threshold, cat.unit)})`);
+  const bar = !unlocked && !b.custom ? `<div class="badge-progress"><div class="badge-progress-bar" style="width:${pct}%"></div></div>` : '';
+  return `<div class="badge-card ${unlocked?'unlocked':'locked'}">
+    <div class="badge-ico">${unlocked?b.icon:'🔒'}</div>
+    <div class="badge-title">${escapeHtml(b.title)}</div>
+    <div class="badge-desc">${escapeHtml(badgeDesc(b))}</div>
+    ${bar}
+    <div class="badge-state">${escapeHtml(progressText)}</div>
+  </div>`;
+}
+const ADMIN_BADGES_KEY = 'kurye_admin_badges_v1';
+function loadAdminBadgeOverrides(){
+  try{ const raw = localStorage.getItem(ADMIN_BADGES_KEY); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
+}
+function saveAdminBadgeOverrides(list){
+  try{ localStorage.setItem(ADMIN_BADGES_KEY, JSON.stringify(list)); }catch(e){}
+}
+function getEffectiveBadges(){
+  const overrides = loadAdminBadgeOverrides();
+  if(!overrides.length) return BADGE_DEFINITIONS;
+  const map = {};
+  BADGE_DEFINITIONS.forEach(b => map[b.id] = {...b});
+  overrides.forEach(o => {
+    if(o && o.id) map[o.id] = { ...(map[o.id] || {}), ...o };
+  });
+  return Object.values(map);
+}
 function renderBadges(){
   const box = document.getElementById('badgesPanel');
   const summary = document.getElementById('badgesSummary');
   if(!box) return;
-  let unlocked = 0;
-  const html = BADGES.map(b => {
-    try{ if(b.check()){ unlocked++; return `<div class="badge-card unlocked"><div class="badge-ico">${b.icon}</div><div class="badge-title">${escapeHtml(b.title)}</div><div class="badge-desc">${escapeHtml(b.desc)}</div><div class="badge-state">Kazanıldı</div></div>`; } }catch(e){}
-    return `<div class="badge-card"><div class="badge-ico">${b.icon}</div><div class="badge-title">${escapeHtml(b.title)}</div><div class="badge-desc">${escapeHtml(b.desc)}</div><div class="badge-state">Kilitli</div></div>`;
+  const m = badgeMetricValues();
+  const defs = getEffectiveBadges();
+  let unlocked = 0, total = 0;
+  const html = BADGE_CATEGORIES.map(cat => {
+    const catDefs = defs.filter(b => b.cat === cat.id);
+    total += catDefs.length;
+    const catUnlocked = catDefs.filter(b => badgeUnlocked(b, m)).length;
+    unlocked += catUnlocked;
+    const rows = catDefs.map(b => badgeCardHTML(b, m)).join('');
+    return `<details class="badge-category" open>
+      <summary class="badge-category-title"><span style="display:flex;align-items:center;gap:.5rem;"><span style="font-size:1.15rem;">${cat.icon}</span><span>${escapeHtml(cat.title)} <small style="color:var(--muted);font-weight:500;">(${catUnlocked}/${catDefs.length})</small></span></span><span class="chevron">▾</span></summary>
+      <div class="badges-grid">${rows}</div>
+    </details>`;
   }).join('');
   box.innerHTML = html;
-  if(summary) summary.innerHTML = `<span>Kazanılan</span><span class="count">${unlocked} / ${BADGES.length}</span>`;
+  if(summary) summary.innerHTML = `<span>Kazanılan rozet</span><span class="count">${unlocked} / ${total}</span>`;
+}
+function renderAdminBadgesList(){
+  const box = document.getElementById('adminBadgesBody');
+  const status = document.getElementById('adminBadgesStatus');
+  if(!box) return;
+  const defs = getEffectiveBadges();
+  if(!defs.length){ box.innerHTML = '<div class="adm-empty">Rozet yok.</div>'; return; }
+  box.innerHTML = defs.map(b => `
+    <div class="adm-row">
+      <div class="adm-avatar">${b.icon || '🏅'}</div>
+      <div class="adm-who"><b>${escapeHtml(b.title || b.id)}</b><span>${escapeHtml(b.cat)} · ${escapeHtml(badgeDesc(b))}</span></div>
+      <div class="adm-meta" style="flex-direction:row;gap:.4rem;">
+        <button type="button" class="btn btn-ghost btn-sm" data-badge-edit="${escapeHtml(b.id)}">Düzenle</button>
+        ${BADGE_DEFINITIONS.some(x => x.id === b.id) ? '' : `<button type="button" class="btn btn-danger btn-sm" data-badge-del="${escapeHtml(b.id)}">Sil</button>`}
+      </div>
+    </div>
+  `).join('');
+  box.querySelectorAll('[data-badge-edit]').forEach(btn => {
+    btn.onclick = () => {
+      const b = getEffectiveBadges().find(x => x.id === btn.dataset.badgeEdit);
+      if(!b) return;
+      document.getElementById('admBadgeId').value = b.id || '';
+      document.getElementById('admBadgeCat').value = b.cat || '';
+      document.getElementById('admBadgeTitle').value = b.title || '';
+      document.getElementById('admBadgeIcon').value = b.icon || '';
+      document.getElementById('admBadgeThreshold').value = (b.threshold != null ? b.threshold : '');
+      document.getElementById('admBadgeDesc').value = b.desc || '';
+      document.getElementById('admBadgeId').readOnly = true;
+      if(status) status.textContent = 'Düzenleme modu: ID değiştirilemez.';
+    };
+  });
+  box.querySelectorAll('[data-badge-del]').forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.badgeDel;
+      let overrides = loadAdminBadgeOverrides();
+      overrides = overrides.filter(o => o.id !== id);
+      saveAdminBadgeOverrides(overrides);
+      renderAdminBadgesList();
+      renderBadges();
+      if(status) status.textContent = 'Rozet kaldırıldı.';
+    };
+  });
+}
+function initAdminBadgeEditor(){
+  const catSel = document.getElementById('admBadgeCat');
+  if(catSel){
+    catSel.innerHTML = BADGE_CATEGORIES.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.title)}</option>`).join('');
+  }
+  const reset = () => {
+    ['admBadgeId','admBadgeTitle','admBadgeIcon','admBadgeThreshold','admBadgeDesc'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+    const idEl = document.getElementById('admBadgeId'); if(idEl) idEl.readOnly = false;
+    const status = document.getElementById('adminBadgesStatus'); if(status) status.textContent = '';
+  };
+  const save = () => {
+    const id = (document.getElementById('admBadgeId').value || '').trim();
+    const cat = document.getElementById('admBadgeCat').value;
+    const title = document.getElementById('admBadgeTitle').value.trim();
+    const icon = document.getElementById('admBadgeIcon').value.trim();
+    const thresholdRaw = document.getElementById('admBadgeThreshold').value.trim();
+    const desc = document.getElementById('admBadgeDesc').value.trim();
+    const status = document.getElementById('adminBadgesStatus');
+    if(!id || !cat || !title){ if(status) status.textContent='ID, kategori ve başlık zorunlu.'; return; }
+    if(!/^[A-Za-z0-9_-]{1,64}$/.test(id)){ if(status) status.textContent='ID yalnızca harf, rakam, tire, alt çizgi olabilir.'; return; }
+    const threshold = thresholdRaw === '' ? 0 : parseFloat(thresholdRaw);
+    if(!Number.isFinite(threshold) || threshold < 0){ if(status) status.textContent='Eşik geçerli bir sayı olmalı.'; return; }
+    let overrides = loadAdminBadgeOverrides();
+    const idx = overrides.findIndex(o => o.id === id);
+    const entry = { id, cat, title, icon, threshold, desc };
+    if(idx >= 0) overrides[idx] = entry; else overrides.push(entry);
+    saveAdminBadgeOverrides(overrides);
+    renderAdminBadgesList();
+    renderBadges();
+    reset();
+    if(status) status.textContent = 'Rozet kaydedildi.';
+  };
+  const saveBtn = document.getElementById('btnAdmBadgeSave');
+  const resetBtn = document.getElementById('btnAdmBadgeReset');
+  if(saveBtn) saveBtn.onclick = save;
+  if(resetBtn) resetBtn.onclick = reset;
+}
+function renderAdminBadgesPane(){
+  renderAdminBadgesList();
+  initAdminBadgeEditor();
 }
 
 function renderProjections() {
@@ -5110,14 +5437,13 @@ function renderDash(){
 
   if(typeof renderAnomalyBanner === 'function') renderAnomalyBanner();
   if(typeof renderTodayInsights === 'function') renderTodayInsights();
-  if(typeof renderBadges === 'function') renderBadges();
 }
 
 /* ---- SOS / ACİL DURUM PANELİ ---- */
 function getSosContacts(){
   try{
     const raw = localStorage.getItem('kurye_sos_contacts_v1') || '';
-    return raw.split(/[,;]+/).map(s => s.replace(/\D/g, '')).filter(Boolean);
+    return raw.split(/[,;]+/).map(s => normalizePhoneNumber(s)).filter(Boolean);
   } catch(e){ return []; }
 }
 function saveSosContacts(contacts){
@@ -5151,30 +5477,62 @@ function sosBodyWithLocation(lat, lng){
   const maps = lat != null && lng != null ? ` https://maps.google.com/?q=${lat.toFixed(5)},${lng.toFixed(5)}` : '';
   return `Yardıma ihtiyacım var.${maps ? ' Son konumum:' + maps : ' Konum alınamadı.'}`;
 }
-function sendSosSms(){
-  const contacts = getSosContacts();
+function sendSosMessage(type){
+  const isSms = type === 'sms';
   if(typeof navigator !== 'undefined' && navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos => {
       const { latitude, longitude } = pos.coords;
-      _doSendSosSms(latitude, longitude);
+      _doSendSosMessage(type, latitude, longitude);
     }, err => {
-      _doSendSosSms(null, null);
-      toast('Konum alınamadı; SMS uygulamanızda konum paylaşabilirsiniz.', false);
+      _doSendSosMessage(type, null, null);
+      toast('Konum alınamadı; mesaj uygulamanızda konum paylaşabilirsiniz.', false);
     }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
   } else {
-    _doSendSosSms(null, null);
+    _doSendSosMessage(type, null, null);
   }
 }
-function _doSendSosSms(lat, lng){
+function _doSendSosMessage(type, lat, lng){
   const body = encodeURIComponent(sosBodyWithLocation(lat, lng));
   const contacts = getSosContacts();
   let url;
-  if(contacts.length){
-    url = 'sms:' + contacts.join(',') + (contacts.length > 1 ? '?body=' + body : ';body=' + body);
+  if(type === 'whatsapp'){
+    // WhatsApp deep link: tek numaralıysa doğrudan, yoksa kişi seçim ekranı.
+    // Çoklu alıcı WhatsApp desteklemez; o durumda genel paylaşım linki açılır.
+    const waBody = body;
+    if(contacts.length === 1){
+      const phone = contacts[0].replace(/\D/g, '');
+      url = 'https://wa.me/' + encodeURIComponent(phone) + '?text=' + waBody;
+    } else {
+      url = 'https://wa.me/?text=' + waBody;
+    }
   } else {
-    url = 'sms:?body=' + body;
+    // SMS: Android için ?body, iOS için ;body ayrımı.
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || '');
+    if(contacts.length){
+      const separator = isIOS ? ';' : ',';
+      const paramSep = isIOS ? ';' : '?';
+      url = 'sms:' + contacts.join(separator) + paramSep + 'body=' + body;
+    } else {
+      url = 'sms:' + (isIOS ? ';' : '?') + 'body=' + body;
+    }
   }
-  try{ window.location.href = url; } catch(e){ toast('SMS uygulaması açılamadı.', false); }
+  try{
+    if(type === 'whatsapp') window.open(url, '_blank');
+    else window.location.href = url;
+  } catch(e){ toast('Mesaj uygulaması açılamadı.', false); }
+}
+function normalizePhoneNumber(raw){
+  if(!raw) return '';
+  const digits = String(raw).replace(/[\s\-\(\)]/g, '');
+  // Uluslararası + ile başlayan veya sadece rakam; en az 7, en fazla 15 hane.
+  if(/^\+?\d{7,15}$/.test(digits)) return digits;
+  return '';
+}
+function validateSosContactsInput(value){
+  const rawList = value.split(/[,;]+/).map(s => s.trim()).filter(Boolean);
+  const valid = [], invalid = [];
+  rawList.forEach(r => { const n = normalizePhoneNumber(r); if(n) valid.push(n); else invalid.push(r); });
+  return { valid, invalid };
 }
 function openNearbyTowing(){
   openNearbySearch('çekici');
@@ -5203,6 +5561,7 @@ function openNearbySearch(term){
   const btnConfirmCancel = document.getElementById('btnSosConfirmCancel');
   const btnCancel = document.getElementById('btnSosCancel');
   const btnSms = document.getElementById('btnSosSms');
+  const btnWa = document.getElementById('btnSosWa');
   const btnTow = document.getElementById('btnSosTow');
   const btnRepair = document.getElementById('btnSosRepair');
   const inp = document.getElementById('sosContacts');
@@ -5210,12 +5569,23 @@ function openNearbySearch(term){
   if(btnConfirmOpen) btnConfirmOpen.addEventListener('click', openSosPanel);
   if(btnConfirmCancel) btnConfirmCancel.addEventListener('click', closeSosPanels);
   if(btnCancel) btnCancel.addEventListener('click', closeSosPanels);
-  if(btnSms) btnSms.addEventListener('click', sendSosSms);
+  if(btnSms) btnSms.addEventListener('click', () => sendSosMessage('sms'));
+  if(btnWa) btnWa.addEventListener('click', () => sendSosMessage('whatsapp'));
   if(btnTow) btnTow.addEventListener('click', openNearbyTowing);
   if(btnRepair) btnRepair.addEventListener('click', openNearbyRepair);
   if(inp) inp.addEventListener('change', () => {
-    const list = inp.value.split(/[,;]+/).map(s => s.trim()).filter(Boolean);
-    saveSosContacts(list);
+    const { valid, invalid } = validateSosContactsInput(inp.value);
+    if(invalid.length){
+      toast('Geçersiz telefon numarası: ' + invalid.slice(0,3).join(', ') + (invalid.length > 3 ? '...' : ''), false);
+      inp.classList.add('input-error');
+    } else {
+      inp.classList.remove('input-error');
+    }
+    // Geçersiz numaraları içermeyen temiz listeyi kaydet
+    saveSosContacts(valid);
+    if(valid.length !== inp.value.split(/[,;]+/).filter(Boolean).length){
+      inp.value = valid.join(', ');
+    }
   });
 })();
 
@@ -5576,7 +5946,8 @@ document.getElementById('form').addEventListener('submit',e=>{
     if(document.getElementById('fKm').value.trim()==='') missing.push('KM');
     if(document.getElementById('fTes').value.trim()==='') missing.push('Paket');
     if(document.getElementById('fGelir').value.trim()==='') missing.push('Saf Gelir');
-    if(bas && !bit) missing.push('Bitiş saati');
+    if(shifts.some(s => s.baslangic && !s.bitis)) missing.push('Bitiş saati');
+    if(shifts.some(s => !s.baslangic && s.bitis)) missing.push('Başlangıç saati');
     return missing;
   }
   function maybeFinishSave(mutator){
@@ -5740,19 +6111,13 @@ function goalSlideHTML(kind){
     return `<div class="goal-projection">Mevcut tempoyla ${lines[0]} ulaşabilirsiniz.</div>`;
   })();
 
-  if(!hasAny){
-    return `<div class="goal-empty">
-      <div class="goal-empty-icon">🎯</div>
-      <p>${kind === 'weekly' ? 'Bu hafta' : 'Bu ay'} henüz hedef belirlemediniz.</p>
-      <button type="button" class="btn btn-primary btn-set-goal" data-goal-period="${kind}">🎯 Hedef Belirle</button>
-    </div>`;
-  }
-  return `<div class="goal-slide-inner goal-3">
+  // Hedef belirlenmemiş olsa bile 3 boş daire göster; görseller simetrik kalsın.
+  return `<div class="goal-slide-inner goal-3 ${hasAny ? 'has-goals' : 'no-goals'}">
     ${ring('Net Kazanç', '₺', tot.net, goal.money, 'var(--accent)')}
     ${ring('Paket', 'paket', tot.tes, goal.packages, 'var(--amber)')}
     ${ring('Çalışma Saati', 'saat', tot.hours, goal.hours, 'var(--violet)')}
   </div>
-  <div class="goal-info-row"><span class="goal-days">${daysTxt}</span><button type="button" class="btn btn-ghost btn-sm btn-set-goal" data-goal-period="${kind}">🎯 Düzenle</button></div>
+  <div class="goal-info-row"><span class="goal-days">${daysTxt}</span><button type="button" class="btn btn-ghost btn-sm btn-set-goal" data-goal-period="${kind}">${hasAny ? '🎯 Düzenle' : '🎯 Hedef Belirle'}</button></div>
   ${projectionHTML}`;
 }
 function bindGoalButtons(){
@@ -6873,7 +7238,7 @@ async function publishRelease(currentLatest, release){
   const changes = {
     latest: release,
     ['history/' + release.version.replace(/\./g, '_')]: {
-      version: release.version, notes: release.notes || '', publishedAt: release.publishedAt
+      version: release.version, notes: release.notes || '', publishedAt: release.publishedAt, silent: !!release.silent
     }
   };
   if(currentLatest){
@@ -8353,6 +8718,7 @@ function fillAccountPage(){
   });
   const ack = document.getElementById('deleteAccountAck');
   if(ack) ack.checked = false;
+  if(typeof renderBadges === 'function') renderBadges();
 }
 
 const btnGoAccount = document.getElementById('btnGoAccount');
@@ -10283,6 +10649,7 @@ window.admStoreImpact = function (minVer) {
       if(key === 'dash'){ try{ renderAdminDash(); }catch(e){} }
       if(key === 'users'){ try{ renderAdminUsers(); }catch(e){} }
       if(key === 'store'){ try{ window.admPaintStoreImpact && window.admPaintStoreImpact(); }catch(e){} }
+      if(key === 'badges'){ try{ renderAdminBadgesPane(); }catch(e){} }
       try{ window.scrollTo({top:0, behavior:'instant'}); }catch(e){ window.scrollTo(0,0); }
     });
   }
@@ -10626,7 +10993,8 @@ window.admStoreImpact = function (minVer) {
           version: version,
           url: downloadUrl,
           notes: notes || '',
-          publishedAt: publishedAt
+          publishedAt: publishedAt,
+          silent: document.getElementById('updSilent').checked === true
         };
 
         // Sürüm geçmişine yaz (kullanıcıların "Güncelleme Notları"
@@ -10642,6 +11010,7 @@ window.admStoreImpact = function (minVer) {
         const dirInp = document.getElementById('updFolder');
         if(dirInp) dirInp.value = '';
         versionInput.value = ''; notesInput.value = ''; refreshNotesPreview();
+        const silentInp = document.getElementById('updSilent'); if(silentInp) silentInp.checked = false;
         refreshCurrentInfo();
       } catch (err) {
         statusEl.textContent = '';

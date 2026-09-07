@@ -620,6 +620,128 @@ textarea:focus{border-color:var(--accent)}
 .adm-pane{display:none;animation:rise .2s ease}
 .adm-pane.active{display:block}
 .adm-pane > .panel{margin-top:0!important}
+
+/* ---- ADMIN PANELİ · modern katman ----
+   Yalnızca tema değişkenlerini kullanır: koyu ve açık temada kendiliğinden
+   doğru görünür (sabit renk yok). Eski .adm-* kurallarının üstüne yazar. */
+.adm-hero{display:flex;flex-wrap:wrap;gap:.55rem;align-items:stretch;margin:.15rem 0 .85rem}
+.adm-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:.5rem;width:100%}
+.adm-kpi{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:15px;padding:.6rem .7rem .62rem;box-shadow:var(--shadow)}
+.adm-kpi::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent 70%)}
+.adm-kpi.k-green::after{background:linear-gradient(90deg,var(--green),transparent 70%)}
+.adm-kpi.k-violet::after{background:linear-gradient(90deg,var(--violet),transparent 70%)}
+.adm-kpi.k-amber::after{background:linear-gradient(90deg,var(--amber),transparent 70%)}
+.adm-kpi-k{font-size:.61rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.adm-kpi-v{font-family:var(--mono);font-size:1.16rem;font-weight:700;color:var(--text);line-height:1.3}
+.adm-kpi-s{font-size:.66rem;color:var(--sec);line-height:1.45}
+.adm-toolbar{display:flex;flex-wrap:wrap;gap:.42rem;align-items:center;margin:0 0 .7rem}
+.adm-search{position:relative;flex:1 1 190px;min-width:0}
+.adm-search input{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:.82rem;padding:.55rem .65rem .55rem 1.9rem}
+.adm-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.adm-search::before{content:"🔍";position:absolute;left:.6rem;top:50%;transform:translateY(-50%);font-size:.72rem;opacity:.7;pointer-events:none}
+.adm-chips{display:flex;gap:.3rem;flex-wrap:wrap;align-items:center}
+.adm-chip{background:var(--elev);border:1px solid var(--border);color:var(--sec);border-radius:999px;font-family:inherit;font-size:.7rem;font-weight:600;padding:.45rem .6rem;cursor:pointer;transition:.16s;min-height:36px}
+.adm-chip:hover{border-color:var(--border2);color:var(--text)}
+.adm-chip.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
+.adm-badge{min-width:1.1rem;text-align:center;padding:0 .3rem;border-radius:999px;background:var(--hover);color:var(--sec);font-family:var(--mono);font-size:.63rem;font-weight:700;line-height:1.5}
+.adm-badge.hot{background:var(--amber-dim);color:var(--amber)}
+.adm-tab .adm-badge{margin-left:auto}
+.adm-list{display:grid;gap:.4rem}
+.adm-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.4rem .65rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:15px;padding:.58rem .66rem;transition:border-color .16s,background .16s,transform .16s}
+.adm-row:hover{border-color:var(--border2);background:var(--elev)}
+.adm-avatar{width:2rem;height:2rem;border-radius:11px;display:grid;place-items:center;background:var(--accent-dim);color:var(--accent);font-family:var(--mono);font-size:.72rem;font-weight:700;text-transform:uppercase;flex:0 0 auto}
+.adm-avatar.b-green{background:var(--green-dim);color:var(--green)}
+.adm-avatar.b-amber{background:var(--amber-dim);color:var(--amber)}
+.adm-who{min-width:0}
+.adm-who b{display:block;font-size:.83rem;color:var(--text);overflow-wrap:anywhere}
+.adm-who span{display:block;font-family:var(--mono);font-size:.67rem;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
+.adm-meta{display:flex;flex-direction:column;gap:.16rem;align-items:flex-end;text-align:right;font-size:.71rem;color:var(--sec)}
+.adm-meta i{font-style:normal;font-family:var(--mono);font-size:.75rem;color:var(--text)}
+.adm-note{margin-top:.34rem;font-size:.72rem;line-height:1.45;color:var(--amber);background:var(--amber-dim);border:1px solid var(--border);border-radius:9px;padding:.26rem .45rem;overflow-wrap:anywhere}
+.adm-act{display:flex;gap:.28rem;flex-wrap:wrap;justify-content:flex-end}
+.adm-act .btn{min-height:36px}
+.adm-empty{padding:1rem .8rem;text-align:center;color:var(--muted);font-size:.79rem;border:1px dashed var(--border2);border-radius:15px;background:var(--card);line-height:1.55}
+.adm-hint{font-size:.71rem;color:var(--muted);line-height:1.5}
+.adm-warn{display:flex;gap:.5rem;align-items:flex-start;background:var(--amber-dim);border:1px solid var(--border);border-radius:12px;padding:.5rem .6rem;font-size:.73rem;line-height:1.55;color:var(--sec)}
+.adm-warn b{color:var(--amber)}
+.adm-bars{display:flex;align-items:flex-end;gap:3px;height:58px;padding:.3rem 0 0}
+.adm-bars i{flex:1 1 0;min-width:3px;min-height:3px;background:var(--accent);opacity:.6;border-radius:3px 3px 0 0}
+.adm-bars i.on{opacity:1}
+.adm-bars i.zero{background:var(--border2);opacity:.8}
+.adm-tbl{width:100%;border-collapse:separate;border-spacing:0;font-size:.75rem}
+.adm-tbl th{text-align:left;font-size:.61rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:.28rem .38rem;border-bottom:1px solid var(--border);white-space:nowrap}
+.adm-tbl td{padding:.32rem .38rem;border-bottom:1px solid var(--border);color:var(--sec);vertical-align:middle}
+.adm-tbl tr:last-child td{border-bottom:0}
+.adm-tbl td.num{text-align:right;font-family:var(--mono);color:var(--text);white-space:nowrap}
+.adm-sec{margin:.85rem 0 .4rem;font-size:.66rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.adm-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:.38rem}
+.adm-kv > div{background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.42rem .5rem}
+.adm-kv small{display:block;font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.adm-kv b{font-family:var(--mono);font-size:.86rem;color:var(--text);font-weight:700}
+.adm-checks{display:flex;flex-wrap:wrap;gap:.28rem;margin:.45rem 0 0}
+.adm-check{display:inline-flex;align-items:center;gap:.26rem;font-size:.68rem;font-weight:600;border-radius:999px;padding:.22rem .48rem;border:1px solid var(--border);color:var(--muted);background:var(--elev)}
+.adm-check.ok{color:var(--green);border-color:var(--green)}
+.adm-check.no{color:var(--red);border-color:var(--red)}
+.adm-dist{display:grid;gap:.26rem}
+.adm-dist-row{display:grid;grid-template-columns:minmax(0,7rem) minmax(0,1fr) auto;gap:.45rem;align-items:center;font-size:.72rem}
+.adm-dist-row code{font-family:var(--mono);color:var(--text);overflow-wrap:anywhere}
+.adm-dist-bar{height:7px;border-radius:999px;background:var(--hover);overflow:hidden}
+.adm-dist-bar span{display:block;height:100%;background:var(--accent);border-radius:999px}
+.adm-actbar{display:flex;gap:.5rem;flex-wrap:wrap;position:sticky;bottom:0;padding:.55rem 0 .1rem;background:linear-gradient(to top,var(--card) 62%,transparent)}
+.adm-feed-row{grid-template-columns:auto minmax(0,1fr);align-items:start}
+.adm-fbx{grid-column:1 / -1;display:grid;gap:.35rem;margin-top:.45rem;padding-top:.45rem;border-top:1px solid var(--border)}
+.adm-fbx-top{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.adm-fbx textarea{width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);
+  border-radius:11px;color:var(--text);font-family:inherit;font-size:.79rem;line-height:1.5;padding:.45rem .55rem;resize:vertical}
+.adm-fbx textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.adm-fbx-act{display:flex;gap:.32rem;flex-wrap:wrap;align-items:center}
+.adm-fbx-act .btn{min-height:34px}
+.fbx-tags{display:flex;gap:.28rem;flex-wrap:wrap;margin-top:.3rem}
+.fbx-tags .fbx-tag{font-size:.65rem;font-weight:700;border-radius:999px;padding:.15rem .45rem;border:1px solid var(--border);color:var(--sec);background:var(--elev)}
+.fbx-tags .t-ok{color:var(--green);border-color:var(--green)}
+.fbx-tags .t-wait{color:var(--amber);border-color:var(--amber)}
+@media(max-width:720px){
+  .adm-row{grid-template-columns:auto minmax(0,1fr)}
+  .adm-meta,.adm-act{grid-column:1 / -1;justify-content:flex-start;text-align:left;align-items:flex-start}
+  .adm-kpis{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))}
+}
+@media(prefers-reduced-motion:reduce){
+  .adm-row,.adm-chip,.adm-tab,.adm-kpi{transition:none}
+}
+
+/* ---- ÖNERİ YANITI BİLDİRİMİ (kullanıcı tarafı) ----
+   Yönetici öneriyi işaretleyince/yanıtlayınca belirir; kullanıcı “Kapat”a
+   basana kadar ekranda kalır (kendiliğinden kaybolmaz, kaydırmayla uçmaz). */
+.fbx-banner{display:flex;gap:.7rem;align-items:flex-start;max-width:100%;margin:0 0 .9rem;padding:.7rem .8rem;
+  background:var(--card);border:1px solid var(--accent);border-radius:16px;box-shadow:0 8px 26px rgba(0,0,0,.14);
+  animation:rise .22s ease;position:relative;overflow:hidden}
+.fbx-banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
+.fbx-ico{font-size:1.05rem;line-height:1.2;flex:0 0 auto}
+.fbx-body{min-width:0;flex:1 1 auto}
+.fbx-body b{display:block;font-size:.84rem;color:var(--text);margin-bottom:.14rem}
+.fbx-body p{margin:0;font-size:.79rem;line-height:1.55;color:var(--sec);overflow-wrap:anywhere;white-space:pre-wrap}
+.fbx-act{display:flex;flex-direction:column;gap:.3rem;flex:0 0 auto}
+.fbx-act .btn{min-height:34px;white-space:nowrap}
+.fbx-chip{display:inline-flex;align-items:center;gap:.25rem;margin-top:.36rem;font-size:.66rem;font-weight:700;
+  border-radius:999px;padding:.16rem .48rem;background:var(--accent-dim);color:var(--accent);border:1px solid var(--border)}
+.fbx-count{font-size:.66rem;color:var(--muted);margin-top:.2rem}
+.fbx-list-wrap{margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--border)}
+.fbx-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.3rem .6rem;background:var(--card);
+  border:1px solid var(--border);border-radius:14px;padding:.55rem .62rem}
+.fbx-row[data-durum="cozuldu"],.fbx-row[data-durum="gelistirildi"]{border-color:var(--green)}
+.fbx-row[data-durum="reddedildi"]{border-color:var(--border2);opacity:.85}
+.fbx-row-t{font-size:.79rem;line-height:1.5;color:var(--text);overflow-wrap:anywhere;white-space:pre-wrap;grid-column:1 / -1}
+.fbx-row-m{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;font-size:.68rem;color:var(--muted)}
+.fbx-yanit{grid-column:1 / -1;font-size:.76rem;line-height:1.55;color:var(--sec);background:var(--elev);
+  border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:.4rem .55rem;margin-top:.15rem}
+.fbx-yanit b{color:var(--accent);font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.16rem}
+.fbx-tag{font-size:.66rem;font-weight:700;border-radius:999px;padding:.16rem .48rem;border:1px solid var(--border);color:var(--sec);background:var(--elev);white-space:nowrap}
+.fbx-tag.t-ok{color:var(--green);border-color:var(--green)}
+.fbx-tag.t-wait{color:var(--amber);border-color:var(--amber)}
+.fbx-tag.t-no{color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.fbx-banner{animation:none}}
+@media(max-width:560px){.fbx-banner{flex-wrap:wrap}.fbx-act{flex-direction:row;width:100%;justify-content:flex-end}}
 /* Geçmiş yönetimi satırları */
 .cl-adm-row{display:flex;align-items:center;gap:.6rem;padding:.55rem .7rem;border:1px solid var(--border);border-radius:9px;margin-bottom:.4rem;background:var(--bg);font-size:.82rem}
 .cl-adm-row b{font-family:var(--mono)}
@@ -1114,6 +1236,21 @@ textarea:focus{border-color:var(--accent)}
        .active sınıfı taşınarak gösterilir.
        ====================================================================== -->
   <main class="main">
+  <!-- ÖNERİ YANITI BİLDİRİMİ · yönetici önerini işaretleyince/yanıtlayınca belirir;
+       “Kapat”a basmadan kaybolmaz. İçerik: [19-ONERI-BILDIRIM] -->
+  <div class="fbx-banner" id="fbBanner" role="status" aria-live="polite" hidden>
+    <span class="fbx-ico" aria-hidden="true">💬</span>
+    <div class="fbx-body">
+      <b id="fbBannerTitle">Önerinle ilgili bir güncelleme var</b>
+      <p id="fbBannerText"></p>
+      <span class="fbx-chip" id="fbBannerTag" hidden></span>
+      <div class="fbx-count" id="fbBannerMore" hidden></div>
+    </div>
+    <div class="fbx-act">
+      <button type="button" class="btn btn-ghost btn-sm" id="fbBannerOpen">Önerilerim</button>
+      <button type="button" class="btn btn-primary btn-sm" id="fbBannerClose">Kapat</button>
+    </div>
+  </div>
   <!-- ÖZET PANEL -->
   <section class="page active" id="page-dashboard">
     <div class="page-head dashboard-head"><div><h1>Genel özet</h1><p>Kazancın, emeğin ve katettiğin yol.</p></div><button type="button" class="btn btn-primary" id="btnDashAdd" onclick="openDashboardRecord()">+ Yeni kayıt</button></div>
@@ -1624,6 +1761,11 @@ textarea:focus{border-color:var(--accent)}
           <textarea id="fbMessage" rows="6" placeholder="Ne eklenmesini veya değişmesini istersiniz?" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.7rem .9rem;border-radius:var(--rs);font-family:inherit;font-size:.85rem;outline:none;resize:vertical;"></textarea>
         </div>
         <button class="btn btn-primary" id="btnSendFeedback" style="width:100%;">Gönder</button>
+        <div class="fbx-list-wrap" id="fbMyListWrap" hidden>
+          <div class="adm-sec" style="margin-top:0">Önerilerim ve yanıtlar</div>
+          <div class="adm-list" id="fbMyList"></div>
+          <div class="adm-hint" id="fbMyHint"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1758,59 +1900,76 @@ textarea:focus{border-color:var(--accent)}
       <h1>Admin Paneli</h1>
       <p>Sistemdeki tüm kullanıcıları, geçmiş verilerini ve istatistiklerini yönetin.</p>
     </div>
+
+    <!-- ÖZET ŞERİDİ: değerler JS ile dolar (renderAdminKpis) -->
+    <div class="adm-hero">
+      <div class="adm-kpis" id="admKpis">
+        <div class="adm-kpi"><div class="adm-kpi-k">Kullanıcı</div><div class="adm-kpi-v" id="admKpiUsers">—</div><div class="adm-kpi-s" id="admKpiUsersSub">yükleniyor…</div></div>
+        <div class="adm-kpi k-green"><div class="adm-kpi-k">Aktif</div><div class="adm-kpi-v" id="admKpiActive">—</div><div class="adm-kpi-s" id="admKpiActiveSub">son 7 gün</div></div>
+        <div class="adm-kpi k-violet"><div class="adm-kpi-k">Günlük kayıt</div><div class="adm-kpi-v" id="admKpiRecs">—</div><div class="adm-kpi-s" id="admKpiRecsSub">tüm kullanıcılar</div></div>
+        <div class="adm-kpi k-amber"><div class="adm-kpi-k">Öneri kutusu</div><div class="adm-kpi-v" id="admKpiFeed">—</div><div class="adm-kpi-s" id="admKpiFeedSub">—</div></div>
+      </div>
+    </div>
+
     <!-- ADMIN İÇ SEKMELERİ -->
     <div class="adm-wrap">
       <nav class="adm-nav" id="admNav" role="tablist" aria-label="Admin bölümleri">
-        <button class="adm-tab active" data-adm="users"  role="tab">👥 <span>Kullanıcılar</span></button>
-        <button class="adm-tab"        data-adm="feed"   role="tab">💡 <span>İstek / Öneri</span></button>
-        <button class="adm-tab"        data-adm="ota"    role="tab">📦 <span>OTA Yayın</span></button>
-        <button class="adm-tab"        data-adm="clog"   role="tab">📋 <span>Sürüm Geçmişi</span></button>
-        <button class="adm-tab"        data-adm="store"  role="tab">🔒 <span>Zorunlu Güncelleme</span></button>
+        <button class="adm-tab active" data-adm="dash"  role="tab" aria-selected="true">📈 <span>Genel Bakış</span></button>
+        <button class="adm-tab"        data-adm="users"  role="tab" aria-selected="false">👥 <span>Kullanıcılar</span> <span class="adm-badge" id="admBadgeUsers" hidden>0</span></button>
+        <button class="adm-tab"        data-adm="feed"   role="tab" aria-selected="false">💡 <span>İstek / Öneri</span> <span class="adm-badge" id="admBadgeFeed" hidden>0</span></button>
+        <button class="adm-tab"        data-adm="ota"    role="tab" aria-selected="false">📦 <span>OTA Yayın</span></button>
+        <button class="adm-tab"        data-adm="clog"   role="tab" aria-selected="false">📋 <span>Sürüm Geçmişi</span></button>
+        <button class="adm-tab"        data-adm="store"  role="tab" aria-selected="false">🔒 <span>Zorunlu Güncelleme</span></button>
       </nav>
 
       <div class="adm-body">
-        <div class="adm-pane active" id="adm-users" role="tabpanel">
-        <div class="panel">
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>UID</th>
-                  <th>E-posta</th>
-                  <th>Kayıt Sayısı</th>
-                  <th>Son Etkinlik</th>
-                  <th style="text-align:right">İşlemler</th>
-                </tr>
-              </thead>
-              <tbody id="adminUsersBody">
-                <!-- JS ile doldurulacak -->
-              </tbody>
-            </table>
+        <div class="adm-pane active" id="adm-dash" role="tabpanel">
+          <div class="panel" style="padding:.75rem;">
+            <div id="admDashBody"><div class="adm-empty">Veriler bekleniyor…</div></div>
           </div>
         </div>
 
+        <div class="adm-pane" id="adm-users" role="tabpanel">
+          <div class="panel" style="padding:.75rem;">
+            <div class="adm-toolbar">
+              <div class="adm-search">
+                <input type="search" id="admUserSearch" placeholder="e-posta veya UID ara" autocomplete="off" aria-label="Kullanıcı ara"/>
+              </div>
+              <div class="adm-chips" id="admUserFilters" role="group" aria-label="Kullanıcı filtresi">
+                <button type="button" class="adm-chip active" data-uf="all">Tümü</button>
+                <button type="button" class="adm-chip" data-uf="active">Son 7 gün</button>
+                <button type="button" class="adm-chip" data-uf="silent">Sessiz</button>
+                <button type="button" class="adm-chip" data-uf="empty">Kaydı yok</button>
+              </div>
+              <select class="adm-chip" id="admUserSort" aria-label="Sıralama">
+                <option value="last">Son etkinlik</option>
+                <option value="recs">Kayıt sayısı</option>
+                <option value="email">E-posta A→Z</option>
+              </select>
+              <button type="button" class="btn btn-ghost btn-sm" id="btnAdmUsersCsv" title="Filtrelenmiş listeyi CSV olarak indir">⬇ CSV</button>
+            </div>
+            <div class="adm-list" id="adminUsersBody"><!-- JS ile doldurulacak --></div>
+            <div class="adm-hint" id="admUsersCount" style="margin-top:.5rem;"></div>
+          </div>
         </div>
 
         <div class="adm-pane" id="adm-feed" role="tabpanel">
-          <div class="panel" id="feedbackPanel">
-          <h3 style="margin:0; padding:16px 16px 8px;">💡 Kullanıcı İstek / Önerileri</h3>
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Tarih</th>
-                  <th>İsim</th>
-                  <th>Mesaj</th>
-                  <th style="text-align:right">İşlemler</th>
-                </tr>
-              </thead>
-              <tbody id="adminFeedbackBody">
-                <!-- JS ile doldurulacak -->
-              </tbody>
-            </table>
+          <div class="panel" id="feedbackPanel" style="padding:.75rem;">
+            <div class="adm-toolbar">
+              <div class="adm-search">
+                <input type="search" id="admFeedSearch" placeholder="isim veya mesajda ara" autocomplete="off" aria-label="Öneri ara"/>
+              </div>
+              <div class="adm-chips" id="admFeedFilters" role="group" aria-label="Öneri filtresi">
+                <button type="button" class="adm-chip active" data-ff="all">Tümü</button>
+                <button type="button" class="adm-chip" data-ff="open">Açık</button>
+                <button type="button" class="adm-chip" data-ff="unread">Okunmamış bildirim</button>
+                <button type="button" class="adm-chip" data-ff="answered">İşaretlenen</button>
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm" id="btnAdmFeedCsv" title="Önerileri CSV olarak indir">⬇ CSV</button>
+            </div>
+            <div id="feedNotice" style="margin:0 0 .5rem;"></div>
+            <div class="adm-list" id="adminFeedbackBody"><!-- JS ile doldurulacak --></div>
           </div>
-        </div>
-
         </div>
 
         <div class="adm-pane" id="adm-ota" role="tabpanel">
@@ -1839,6 +1998,7 @@ textarea:focus{border-color:var(--accent)}
               </label>
             </div>
             <div id="updFileList" class="upd-filelist">Henüz dosya seçilmedi.</div>
+            <div class="adm-checks" id="otaChecks"></div>
             <p style="font-size:.72rem;color:var(--muted);line-height:1.5;margin:.5rem 0 0;">
               Pakette mutlaka <b>index.html</b> bulunmalı. Klasör seçerseniz alt
               klasörlerdeki dosyalar da yolları korunarak eklenir.
@@ -1870,7 +2030,7 @@ textarea:focus{border-color:var(--accent)}
           </div>
       
           <!-- Yayınla ve Rollback Butonları -->
-          <div style="display:flex; gap:10px; margin-top:8px;">
+          <div class="adm-actbar" style="display:flex; gap:10px; margin-top:8px;">
             <button type="button" id="btnPublishUpdate" class="btn btn-primary" style="flex:1;">🚀 Yayınla</button>
             <button type="button" id="btnRollback" class="btn btn-danger" style="flex:1;" title="Son güncellemeyi iptal edip bir önceki sürüme döner">↩️ Eski Sürüme Dön</button>
           </div>
@@ -1922,6 +2082,7 @@ textarea:focus{border-color:var(--accent)}
               <label>Minimum Zorunlu Sürüm (bundan eskisi kilitlenir)</label>
               <input type="text" id="storeMinVersion" placeholder="örn. 2.0.0"/>
             </div>
+            <div class="adm-warn" id="storeGateImpact" hidden></div>
             <div class="fg">
               <label>Mağazadaki Güncel Sürüm (bilgi amaçlı gösterilir)</label>
               <input type="text" id="storeLatestVersion" placeholder="örn. 2.0.0"/>
@@ -2331,7 +2492,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.0.7";
+const CURRENT_APP_VERSION = "6.0.9";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -3024,6 +3185,7 @@ auth.onAuthStateChanged(user => {
   if(adminUsersListenerRef) { adminUsersListenerRef.off(); adminUsersListenerRef = null; }
   if(adminDataListenerRef) { adminDataListenerRef.off(); adminDataListenerRef = null; }
   if(adminFeedbackListenerRef) { adminFeedbackListenerRef.off(); adminFeedbackListenerRef = null; }
+  if(typeof oneriSubscribe === 'function'){ try{ oneriSubscribe(null); }catch(e){} }
   if(user) {
     currentUser = user; 
     document.getElementById('userEmailDisplay').textContent = user.email;
@@ -3059,6 +3221,27 @@ auth.onAuthStateChanged(user => {
     db.ref('usersList/' + user.uid).update({ email: user.email, lastLogin: firebase.database.ServerValue.TIMESTAMP }).catch(err => {
       if(epoch === _syncEpoch) toast('Son giriş bilgisi kaydedilemedi. ' + friendlyError(err), false);
     });
+    /* ADMIN PANELİ · web sürümü bildirimi.
+       BİLİNÇLİ OLARAK AYRI bir update(): canlı kurallarda usersList/$uid için
+       `$other: false` gibi kapalı bir şema varsa bu yazı reddedilir; giriş
+       bilgisi (e-posta + son oturum) bundan etkilenmez, hata sessizce geçer. */
+    db.ref('usersList/' + user.uid).update({
+      reportedAt: firebase.database.ServerValue.TIMESTAMP,
+      webVersion: String(typeof CURRENT_APP_VERSION !== 'undefined' ? CURRENT_APP_VERSION : '').slice(0, 20)
+    }).catch(() => {});
+    /* ADMIN PANELİ · native sürüm bildirimi
+       Zorunlu güncelleme kapısını (appUpdate/store) doğru ayarlayabilmek için
+       cihazların hangi Play Store sürümünde olduğu gerekiyor. usersList/$uid'i
+       yönetici zaten okuyor; kurallar bu düğümde ek alanlara izin veriyor
+       (`$other: false` yok). Alınamazsa sessizce geçilir — takip akışıyla
+       ilgisi yok, sürüm alanı boş kalır. */
+    try {
+      Promise.resolve(getNativeAppVersion()).then(v => {
+        if (!v) return;
+        if (epoch !== _syncEpoch) return;
+        return db.ref('usersList/' + user.uid).update({ nativeVersion: String(v).slice(0, 20) });
+      }).catch(() => {});
+    } catch (e) {}
 
     if (isAdmin) {
         adminUsersListenerRef = db.ref('usersList');
@@ -3077,8 +3260,16 @@ auth.onAuthStateChanged(user => {
         adminFeedbackListenerRef.on('value', snap => {
             if(epoch !== _syncEpoch) return;
             renderAdminFeedback(snap.val() || {});
+        }, err => {
+            // Okuma reddedilirse panel "boş" görünmesin; nedeni yazılıyor.
+            if(epoch !== _syncEpoch) return;
+            try { renderAdminFeedbackError(err); } catch (e) {}
         });
     }
+
+    // [19-ONERI-BILDIRIM] kendi önerilerim + yönetici yanıtları. Ayrı dinleyici:
+    // senkronizasyon kuyruğu yalnızca kayitlar/garaj yazar, bu dalga dokunmaz.
+    try{ if (typeof oneriSubscribe === 'function') oneriSubscribe(user.uid); }catch(e){}
 
     currentListenerRef = db.ref('kullanicilar/' + currentUser.uid);
     // Firebase'in kendi çevrimdışı önbelleği: bağlantı yokken de son veri elde olur.
@@ -6049,21 +6240,30 @@ if(btnSendFeedbackEl){
     const oldTxt = btnSendFeedbackEl.textContent;
     btnSendFeedbackEl.textContent = 'Gönderiliyor…';
     try{
-      await db.ref('feedback').push({
-        name: name || null,
-        message: message,
-        uid: currentUser.uid,
-        email: currentUser.email,
-        createdAt: firebase.database.ServerValue.TIMESTAMP
+      // ÖNERİ ARTIK KENDİ DÜĞÜMÜNDE: kullanicilar/$uid/oneriler/$oid
+      //   • sahibi yazar/okur  • yönetici `kullanicilar`'ı zaten okuduğu için görür
+      //   • durum/yanıt bildirimi de aynı yerden döner
+      // yani EK BİR FIREBASE KURALI GEREKMİYOR. (Eski `feedback` yolu gönderdiğin
+      // kurallarda hiç tanımlı değildi: yazım reddediliyor, öneri sessizce düşüyordu.)
+      await db.ref(oneriPath(currentUser.uid)).push({
+        metin: message,
+        ad: name || null,
+        email: currentUser.email || null,
+        tarih: firebase.database.ServerValue.TIMESTAMP,
+        durum: 'yeni'
       });
-      // Sunucu tarafı hız sınırı için son gönderim zamanını işaretle.
-      // (localStorage silinse bile 30 sn kuralı kurallarda uygulanır.)
-      try{
-        await db.ref('feedbackMeta/' + currentUser.uid + '/lastAt')
-                .set(firebase.database.ServerValue.TIMESTAMP);
-      }catch(e){}
+      // Eski toplu kutuya da yazmayı dene: canlı kurallarında `feedback` tanımlıysa
+      // orası da dolsun; değilse sessizce geçer (asıl kayıt yukarıda yazıldı).
+      db.ref('feedback').push({
+        name: name || null, message: message, uid: currentUser.uid,
+        email: currentUser.email, createdAt: firebase.database.ServerValue.TIMESTAMP
+      }).catch(() => {});
+      db.ref('feedbackMeta/' + currentUser.uid + '/lastAt')
+        .set(firebase.database.ServerValue.TIMESTAMP).catch(() => {});
+      db.ref('kullanicilar/' + currentUser.uid + '/oneriMeta/lastAt')
+        .set(firebase.database.ServerValue.TIMESTAMP).catch(() => {});
       _fbRecord(message);
-      toast('Teşekkürler! İstek/öneriniz iletildi.', true);
+      toast('Teşekkürler! İstek/önerin iletildi. Yanıt gelince ekranda göreceksin.', true);
       nameEl.value = '';
       msgEl.value = '';
     }catch(err){
@@ -6075,6 +6275,148 @@ if(btnSendFeedbackEl){
     }
   });
 }
+
+/* #region 19-ONERI-BILDIRIM ==============================================
+   [19-ONERI-BILDIRIM]  ÖNERİ DURUMU + YANIT BİLDİRİMİ
+   Yönetici bir öneriyi işaretleyip yanıt yazdığında kullanıcıda, "Kapat"a
+   basana kadar ekranda kalan bir bildirim belirir. Veri: 
+   kullanicilar/$uid/oneriler/$oid { metin, ad, email, tarih, durum, durumAt,
+   durumKim, yanit, yanitAt, goruldu, gorulduAt }.
+   ====================================================================== */
+const FBX_DURUM = {
+  yeni:         { ad: 'Yeni',            sinif: 't-wait' },
+  okundu:       { ad: 'Okundu',          sinif: '' },
+  planlandi:    { ad: 'Planlandı',       sinif: '' },
+  gelistirildi: { ad: 'Yayına hazır',    sinif: 't-ok' },
+  cozuldu:      { ad: 'Çözüldü',         sinif: 't-ok' },
+  reddedildi:   { ad: 'Şimdilik yok',    sinif: 't-no' }
+};
+let oneriState = {};
+let _oneriRef = null;
+
+function oneriPath(uid){ return 'kullanicilar/' + uid + '/oneriler'; }
+function fbxAd(t){ return FBX_DURUM[t] ? FBX_DURUM[t].ad : (t ? String(t) : 'Yeni'); }
+function fbxSinif(t){ return (FBX_DURUM[t] && FBX_DURUM[t].sinif) || ''; }
+function fbxFmt(ts){
+  const n = Number(ts);
+  if(!n || isNaN(n)) return '—';
+  try { return new Date(n).toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+  catch(e){ return new Date(n).toISOString().slice(0,16).replace('T',' '); }
+}
+
+function oneriSubscribe(uid){
+  if(_oneriRef){ try{ _oneriRef.off(); }catch(e){} _oneriRef = null; }
+  oneriState = {};
+  if(!uid){ renderFbxMine(); renderFbxBanner(); return; }
+  _oneriRef = db.ref(oneriPath(uid));
+  _oneriRef.on('value', snap => {
+    oneriState = snap.val() || {};
+    renderFbxMine();
+    renderFbxBanner();
+  }, () => { /* çevrimdışı ya da izin sorunu: sessiz kal, veri gelince dolacak */ });
+}
+
+function oneriListesi(){
+  return Object.keys(oneriState || {}).map(id => Object.assign({ id: id }, oneriState[id] || {}))
+    .filter(o => o.metin || o.message)
+    .sort((a, b) => (Number(b.yanitAt) || Number(b.tarih) || 0) - (Number(a.yanitAt) || Number(a.tarih) || 0));
+}
+
+/* Bildirilecek şey: yönetici bir şey işaretlemiş ya da yanıt yazmış VE kullanıcı
+   henüz "Kapat"mamış olmalı. Yeni yanıt gelince yönetici goruldu:false yazar →
+   bildirim yeniden belirir. */
+function fbxPending(){
+  return oneriListesi().filter(o => {
+    if (o.goruldu) return false;
+    const yanitvar = !!(o.yanit && String(o.yanit).trim());
+    const isaretli = !!o.durum && o.durum !== 'yeni';
+    return yanitvar || (isaretli && (o.durumAt || o.yanitAt));
+  });
+}
+
+function renderFbxBanner(){
+  const box = document.getElementById('fbBanner');
+  if(!box) return;
+  const bekleyen = fbxPending();
+  const title = document.getElementById('fbBannerTitle');
+  const txt = document.getElementById('fbBannerText');
+  const tag = document.getElementById('fbBannerTag');
+  const more = document.getElementById('fbBannerMore');
+  if(!bekleyen.length){
+    box.hidden = true;
+    box.removeAttribute('data-oid');
+    if(txt) txt.textContent = '';
+    return;
+  }
+  const o = bekleyen[0];
+  const yanit = String(o.yanit || '').trim();
+  if(title) title.textContent = yanit ? 'Önerine yanıt var' : 'Önerinin durumu güncellendi';
+  if(txt) txt.textContent = yanit || ('Önerin “' + fbxAd(o.durum) + '” olarak işaretlendi.');
+  if(tag){
+    tag.hidden = false;
+    tag.textContent = '🏷 ' + fbxAd(o.durum) + (o.durumAt ? ' · ' + fbxFmt(o.durumAt) : '');
+  }
+  if(more){
+    more.hidden = bekleyen.length < 2;
+    more.textContent = bekleyen.length > 1 ? ('+ ' + (bekleyen.length - 1) + ' önerinde daha yanıt bekliyor') : '';
+  }
+  box.dataset.oid = o.id;
+  box.hidden = false;
+}
+
+function renderFbxMine(){
+  const wrap = document.getElementById('fbMyListWrap');
+  const list = document.getElementById('fbMyList');
+  if(!wrap || !list) return;
+  const items = oneriListesi();
+  if(!items.length){ wrap.hidden = true; return; }
+  wrap.hidden = false;
+  list.innerHTML = items.map(o => {
+    const durum = o.durum && o.durum !== 'yeni'
+      ? '<span class="fbx-tag ' + fbxSinif(o.durum) + '">🏷 ' + escapeHtml(fbxAd(o.durum)) + '</span>'
+      : '<span class="fbx-tag t-wait">sırada</span>';
+    const yanit = (o.yanit && String(o.yanit).trim())
+      ? '<div class="fbx-yanit"><b>Yanıt</b>' + escapeHtml(String(o.yanit)) + '</div>' : '';
+    return '<div class="fbx-row" data-durum="' + escapeHtml(o.durum || 'yeni') + '">'
+      + '<div class="fbx-row-t">' + escapeHtml(String(o.metin || o.message || '')) + '</div>'
+      + '<div class="fbx-row-m">' + durum + '<span>' + escapeHtml(fbxFmt(o.tarih)) + '</span>'
+      + (o.yanitAt ? '<span>yanıt: ' + escapeHtml(fbxFmt(o.yanitAt)) + '</span>' : '')
+      + (o.goruldu && (o.yanitAt || o.durumAt) ? '<span title="Kapatıldı">✓ kapattın</span>' : '')
+      + '</div>' + yanit + '</div>';
+  }).join('');
+  const bekleyen = fbxPending().length;
+  const hint = document.getElementById('fbMyHint');
+  if(hint) hint.textContent = bekleyen
+    ? bekleyen + ' önerinde okunmamış güncelleme var — ekranın üstündeki banttan kapatabilirsin.'
+    : 'Yanıt ya da işaret geldiğinde burada ve ekranın üstünde bildirim olarak görünür.';
+}
+
+/* Kullanıcı "Kapat"a basınca yalnızca o önerinin bildirimi susturulur; öneri ve
+   yanıt "Önerilerim" listesinde durmaya devam eder. */
+window.fbxKapat = function(oid){
+  if(!oid || !currentUser) return;
+  db.ref(oneriPath(currentUser.uid) + '/' + oid)
+    .update({ goruldu: true, gorulduAt: firebase.database.ServerValue.TIMESTAMP })
+    .catch(err => { toast('Bildirim kapatılamadı. ' + friendlyError(err), false); });
+};
+
+(function fbxBindBanner(){
+  const kapat = document.getElementById('fbBannerClose');
+  if(kapat) kapat.addEventListener('click', () => {
+    const box = document.getElementById('fbBanner');
+    const oid = box ? box.dataset.oid : '';
+    if(box) box.hidden = true;              // yerinde sönsün; sunucu teyidi kalıcı yapar
+    fbxKapat(oid);
+  });
+  const ac = document.getElementById('fbBannerOpen');
+  if(ac) ac.addEventListener('click', () => {
+    try{ switchToPage('feedback'); }catch(e){}
+    setTimeout(() => {
+      const w = document.getElementById('fbMyListWrap');
+      if(w){ try{ w.scrollIntoView({ block:'start', behavior:'smooth' }); }catch(e){} }
+    }, 120);
+  });
+})();
 
 // "Yakıt Detayı Gizle" butonu kaldırıldı; yakıt sütunları her zaman görünür.
 // Eski tercih kaydı ne olursa olsun gizleme sınıfını temizliyoruz.
@@ -7093,9 +7435,60 @@ if(btnDeleteAccount){
    [23-ADMIN]  ADMIN PANELİ
    Kullanıcı listesi ve istatistikleri, geri bildirim yönetimi.
    ====================================================================== */
+/* ---- ADMIN · arayüz durumu ve yardımcıları ---- */
+const admUi = { all: [], q: '', f: 'all', sort: 'last', feed: [], fq: '', ff: 'all' };
+let admStatsUid = '';
+
+function admRelTime(ts) {
+  const n = Number(ts);
+  if (!n || isNaN(n)) return 'hiç giriş yapmadı';
+  const d = Date.now() - n;
+  if (d < 0) return 'az önce';
+  const dk = Math.floor(d / 60000);
+  if (dk < 1) return 'az önce';
+  if (dk < 60) return dk + ' dk önce';
+  const sa = Math.floor(dk / 60);
+  if (sa < 24) return sa + ' sa önce';
+  const gun = Math.floor(sa / 24);
+  if (gun < 30) return gun + ' gün önce';
+  const ay = Math.floor(gun / 30);
+  if (ay < 12) return ay + ' ay önce';
+  return Math.floor(ay / 12) + ' yıl önce';
+}
+
+function admAbsTime(ts) {
+  const n = Number(ts);
+  if (!n || isNaN(n)) return '—';
+  try { return new Date(n).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); }
+  catch (e) { return new Date(n).toISOString().replace('T', ' ').slice(0, 16); }
+}
+
+function admInitials(email) {
+  const raw = String(email || '?');
+  const head = (raw.split('@')[0] || '?').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const parts = head.split(/\s+/).filter(Boolean);
+  const a = parts[0] ? parts[0][0] : '?';
+  const b = parts[1] ? parts[1][0] : (parts[0] && parts[0].length > 1 ? parts[0][1] : '');
+  return (a + b).toUpperCase();
+}
+
+function admFilteredUsers() {
+  let list = admUi.all.slice();
+  const q = admUi.q.trim().toLowerCase();
+  if (q) list = list.filter(u => String(u.email || '').toLowerCase().includes(q) || String(u.uid || '').toLowerCase().includes(q));
+  const gun = 86400000, now = Date.now();
+  if (admUi.f === 'active') list = list.filter(u => u.lastLogin && (now - u.lastLogin) <= 7 * gun);
+  else if (admUi.f === 'silent') list = list.filter(u => !u.lastLogin || (now - u.lastLogin) >= 14 * gun);
+  else if (admUi.f === 'empty') list = list.filter(u => !(u.recCount > 0));
+  if (admUi.sort === 'recs') list.sort((a, b) => (b.recCount || 0) - (a.recCount || 0));
+  else if (admUi.sort === 'email') list.sort((a, b) => String(a.email || '').localeCompare(String(b.email || ''), 'tr'));
+  else list.sort((a, b) => (b.lastLogin || 0) - (a.lastLogin || 0));
+  return list;
+}
+
 function mergeAndRenderAdmin() {
     const finalUsers = {};
-    
+
     Object.keys(adminDataState).forEach(uid => {
         const recs = adminDataState[uid].kayitlar || [];
         const recsLen = Array.isArray(recs) ? recs.length : Object.keys(recs).length;
@@ -7104,68 +7497,497 @@ function mergeAndRenderAdmin() {
 
     Object.keys(adminUsersState).forEach(uid => {
         if (!finalUsers[uid]) finalUsers[uid] = { uid: uid, recCount: 0 };
-        finalUsers[uid].email = adminUsersState[uid].email || finalUsers[uid].email;
-        finalUsers[uid].lastLogin = adminUsersState[uid].lastLogin || finalUsers[uid].lastLogin;
+        const u = adminUsersState[uid] || {};
+        finalUsers[uid].email = u.email || finalUsers[uid].email;
+        finalUsers[uid].lastLogin = u.lastLogin || finalUsers[uid].lastLogin;
+        // YENİ: cihaz sürüm bildirimi ve yönetici notu usersList/$uid altında durur.
+        finalUsers[uid].nativeVersion = typeof u.nativeVersion === 'string' ? u.nativeVersion : '';
+        finalUsers[uid].webVersion = typeof u.webVersion === 'string' ? u.webVersion : '';
+        finalUsers[uid].reportedAt = Number(u.reportedAt) || 0;
+        finalUsers[uid].adminNote = (u.adminNote && typeof u.adminNote === 'object') ? u.adminNote : null;
     });
 
-    renderAdminUsers(Object.values(finalUsers));
+    admUi.all = Object.values(finalUsers);
+    renderAdminUsers(admUi.all);
+    try { admBuildInbox(); renderAdminInbox(); } catch (e) {}
+    renderAdminKpis();
+    renderAdminDashIfActive();
 }
 
-function renderAdminUsers(users) {
+function renderAdminUsers() {
     const tb = document.getElementById('adminUsersBody');
     if (!tb) return;
-    
-    if (!users.length) { 
-        tb.innerHTML = '<tr><td colspan="5" class="empty">Kayıtlı kullanıcı bulunamadı.</td></tr>'; 
-        return; 
+
+    const list = admFilteredUsers();
+    const cnt = document.getElementById('admUsersCount');
+
+    if (!list.length) {
+        tb.innerHTML = '<div class="adm-empty">' + (admUi.all.length
+          ? 'Bu filtreye uyan kullanıcı yok. <button type="button" class="btn btn-ghost btn-sm" id="admClearFilters" style="margin-left:.4rem;">Filtreleri temizle</button>'
+          : 'Kayıtlı kullanıcı bulunamadı.') + '</div>';
+        const clr = document.getElementById('admClearFilters');
+        if (clr) clr.addEventListener('click', () => {
+          admUi.q = ''; admUi.f = 'all';
+          const s = document.getElementById('admUserSearch'); if (s) s.value = '';
+          document.querySelectorAll('#admUserFilters .adm-chip').forEach(b => b.classList.toggle('active', b.dataset.uf === 'all'));
+          renderAdminUsers();
+        });
+        if (cnt) cnt.textContent = '';
+        return;
     }
 
-    users.sort((a,b) => (b.lastLogin || 0) - (a.lastLogin || 0));
+    const gun = 86400000, now = Date.now();
+    tb.innerHTML = list.map(u => {
+      const sessiz = !u.lastLogin || (now - u.lastLogin) > 14 * gun;
+      const aktif = u.lastLogin && (now - u.lastLogin) <= 7 * gun;
+      const noteTxt = u.adminNote && u.adminNote.text ? String(u.adminNote.text) : '';
+      const surum = u.nativeVersion ? 'v' + u.nativeVersion : 'sürüm raporlanmadı';
+      return `
+        <div class="adm-row" data-uid="${escapeHtml(u.uid)}">
+          <span class="adm-avatar${aktif ? ' b-green' : (sessiz ? ' b-amber' : '')}" aria-hidden="true">${escapeHtml(admInitials(u.email))}</span>
+          <div class="adm-who">
+            <b>${escapeHtml(u.email || '—')}</b>
+            <span>${escapeHtml(u.uid.slice(0, 10))}… · ${escapeHtml(surum)}${u.webVersion ? ' · web v' + escapeHtml(u.webVersion) : ''}</span>
+            ${noteTxt ? '<div class="adm-note">🏷 ' + escapeHtml(noteTxt) + '</div>' : ''}
+          </div>
+          <div class="adm-meta">
+            <span><i>${u.recCount || 0}</i> gün kayıtlı</span>
+            <span title="${escapeHtml(admAbsTime(u.lastLogin))}">${escapeHtml(admRelTime(u.lastLogin))}</span>
+          </div>
+          <div class="adm-act">
+            <button type="button" class="btn btn-ghost btn-sm admin-view-user-btn" data-uid="${escapeHtml(u.uid)}" data-email="${escapeHtml(u.email || '')}" title="İstatistikler ve detaylar">📊 Detay</button>
+            <button type="button" class="btn btn-ghost btn-sm admin-note-user-btn" data-uid="${escapeHtml(u.uid)}" data-email="${escapeHtml(u.email || '')}" title="Yönetici notu ekle / düzenle">🏷 Not</button>
+            <button type="button" class="btn btn-ghost btn-sm admin-json-user-btn" data-uid="${escapeHtml(u.uid)}" data-email="${escapeHtml(u.email || '')}" title="Bu kullanıcının tüm verisini JSON olarak indir (destek için)">⬇</button>
+            <button type="button" class="btn btn-danger btn-sm admin-delete-user-btn" data-uid="${escapeHtml(u.uid)}" data-email="${escapeHtml(u.email || '')}" title="Kullanıcının tüm verilerini sıfırlar (öneriler dâhil).">Sıfırla</button>
+          </div>
+        </div>`;
+    }).join('');
 
-    tb.innerHTML = users.map(u => `
-        <tr>
-            <td><span style="font-family:var(--mono); font-size:0.75rem; color:var(--muted);">${escapeHtml(u.uid.slice(0,8))}...</span></td>
-            <td style="font-weight:600; color:var(--text);">${escapeHtml(u.email)}</td>
-            <td style="text-align:center;"><span style="background:var(--hover); padding:2px 6px; border-radius:4px; font-size:0.75rem;">${u.recCount || 0} Gün</span></td>
-            <td><span style="font-size:0.8rem;">${u.lastLogin ? escapeHtml(new Date(u.lastLogin).toISOString().replace('T', ' ').slice(0, 16)) : 'Giriş Yapmadı'}</span></td>
-            <td style="text-align:right;">
-                <button class="btn btn-ghost btn-sm admin-view-user-btn" data-uid="${escapeHtml(u.uid)}" data-email="${escapeHtml(u.email)}" title="İstatistikleri Gör" style="margin-right: 0.3rem;">📊 Gör</button>
-                <button class="btn btn-danger btn-sm admin-delete-user-btn" data-uid="${escapeHtml(u.uid)}" data-email="${escapeHtml(u.email)}" title="Kullanıcının tüm verilerini sıfırlar.">Sıfırla</button>
-            </td>
-        </tr>
-    `).join('');
+    if (cnt) cnt.textContent = list.length + ' / ' + admUi.all.length + ' kullanıcı gösteriliyor · sıklık: '
+      + (admUi.all.filter(u => u.lastLogin && (now - u.lastLogin) <= 7 * gun).length) + ' kullanıcı son 7 günde giriş yaptı';
 
     tb.querySelectorAll('.admin-view-user-btn').forEach(btn => {
         btn.addEventListener('click', () => viewUserStats(btn.dataset.uid, btn.dataset.email));
+    });
+    tb.querySelectorAll('.admin-note-user-btn').forEach(btn => {
+        btn.addEventListener('click', () => viewUserStats(btn.dataset.uid, btn.dataset.email, 'note'));
+    });
+    tb.querySelectorAll('.admin-json-user-btn').forEach(btn => {
+        btn.addEventListener('click', () => adminExportUserJson(btn.dataset.uid, btn.dataset.email));
     });
     tb.querySelectorAll('.admin-delete-user-btn').forEach(btn => {
         btn.addEventListener('click', () => deleteUserDatabase(btn.dataset.uid, btn.dataset.email));
     });
 }
 
+function setAdmBadge(id, n) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = n > 999 ? '999+' : String(n);
+  el.hidden = !(n > 0);
+  el.classList.toggle('hot', id === 'admBadgeFeed' && n > 0);
+}
+
+function renderAdminKpis() {
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  const gun = 86400000, now = Date.now();
+  const users = admUi.all;
+  const aktif = users.filter(u => u.lastLogin && (now - u.lastLogin) <= 7 * gun).length;
+  const sessiz = users.filter(u => !u.lastLogin || (now - u.lastLogin) > 14 * gun).length;
+  let kayit = 0;
+  users.forEach(u => { kayit += (u.recCount || 0); });
+  set('admKpiUsers', users.length);
+  set('admKpiUsersSub', sessiz ? sessiz + ' kullanıcı 14 günden uzun süredir sessiz' : 'hepsi son 14 günde giriş yaptı');
+  set('admKpiActive', aktif);
+  set('admKpiActiveSub', users.length ? '%'+Math.round(aktif / users.length * 100) + ' son 7 günde giriş yaptı' : 'kayıt yok');
+  set('admKpiRecs', fmtInt(kayit));
+  set('admKpiRecsSub', users.length && kayit ? 'kişi başı ' + (kayit / users.length).toFixed(1) + ' gün' : 'henüz kayıt yok');
+  const fs = admFeedSayilar();
+  set('admKpiFeed', fs.toplam);
+  set('admKpiFeedSub', fs.toplam ? fs.acik + ' açık · ' + fs.okunmamis + ' bildirim okunmadı' : 'kutu boş');
+  setAdmBadge('admBadgeUsers', users.length);
+  setAdmBadge('admBadgeFeed', fs.acik);
+}
+
+/* ARAÇ: kullanıcının son 14 günlük aktivitesi (hem liste hem detay için) */
+function admLast14(recs) {
+  const gunler = [];
+  const byKey = {};
+  const now = new Date();
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86400000);
+    const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    gunler.push({ k: k, km: 0, gelir: 0, n: 0 });
+    byKey[k] = gunler[gunler.length - 1];
+  }
+  (recs || []).forEach(r => {
+    const d = byKey[String((r && r.tarih) || '')];
+    if (!d) return;
+    d.n++; d.km += (+((r.km) || 0)) || 0; d.gelir += (+((r.gelir) || 0)) || 0;
+  });
+  return gunler;
+}
+
+function admBarsHtml(gunler, field) {
+  const max = Math.max.apply(null, [1].concat(gunler.map(d => d[field] || 0)));
+  return '<div class="adm-bars" role="img" aria-label="son 14 gün aktivite">' + gunler.map(d => {
+    const y = Math.max(4, Math.round((d[field] || 0) / max * 100));
+    const v = d[field] || 0;
+    return '<i class="' + (v ? 'on' : 'zero') + '" style="height:' + y + '%" title="' + escapeHtml(d.k + ': ' + fmtInt(v) + (field === 'gelir' ? ' ₺' : field === 'km' ? ' km' : ' kayıt')) + '"></i>';
+  }).join('') + '</div>';
+}
+
+function renderAdminDashIfActive() {
+  const pane = document.getElementById('adm-dash');
+  if (pane && pane.classList.contains('active')) { try { renderAdminDash(); } catch (e) { console.log('dash:', e); } }
+}
+
+function renderAdminDash() {
+  const box = document.getElementById('admDashBody');
+  if (!box) return;
+
+  const tum = [];
+  Object.keys(adminDataState).forEach(uid => {
+    let recs = adminDataState[uid] && adminDataState[uid].kayitlar;
+    if (recs && !Array.isArray(recs)) recs = Object.values(recs);
+    if (Array.isArray(recs)) tum.push.apply(tum, recs);
+  });
+  const gunler = admLast14(tum);
+  const toplamKm = gunler.reduce((a, d) => a + d.km, 0);
+  const toplamGelir = gunler.reduce((a, d) => a + d.gelir, 0);
+  const toplamKayit = gunler.reduce((a, d) => a + d.n, 0);
+
+  const dist = {};
+  admUi.all.forEach(u => { const v = u.nativeVersion || 'raporlanmadı'; dist[v] = (dist[v] || 0) + 1; });
+  const distKeys = Object.keys(dist).sort((a, b) => dist[b] - dist[a]);
+  const distMax = Math.max.apply(null, [1].concat(distKeys.map(k => dist[k])));
+
+  const enCok = admUi.all.slice().sort((a, b) => (b.recCount || 0) - (a.recCount || 0)).slice(0, 5);
+
+  box.innerHTML = `
+    <div class="adm-sec">Son 14 gün · tüm kullanıcılar</div>
+    ${admBarsHtml(gunler, 'km')}
+    <div class="adm-hint">${fmtInt(toplamKm)} km · ${fmtInt(toplamGelir)} ₺ gelir · ${toplamKayit} günlük kayıt (14 günde). Çubuğa basılı tutun: günün detayı.</div>
+
+    <div class="adm-sec">Sürüm dağılımı — zorunlu güncelleme kapısını buna göre ayarlayın</div>
+    <div class="adm-dist">
+      ${distKeys.length ? distKeys.map(k => `
+        <div class="adm-dist-row"><code>v${escapeHtml(String(k).replace(/^v/, ''))}</code>
+          <span class="adm-dist-bar"><span style="width:${Math.round(dist[k] / distMax * 100)}%"></span></span>
+          <b style="font-family:var(--mono);color:var(--text)">${dist[k]}</b></div>`).join('')
+        : '<div class="adm-hint">Henüz sürüm bildiren kullanıcı yok. Bu alan, OTA\u2019yı yükleyen sürümden sonra uygulamayı açan kullanıcılarda dolar.</div>'}
+    </div>
+
+    <div class="adm-sec">Şu an yayında olan</div>
+    <div id="admDashRelease"><div class="adm-hint">okunuyor…</div></div>
+
+    <div class="adm-sec">En çok kayıt giren kullanıcılar</div>
+    ${enCok.length ? `<table class="adm-tbl"><thead><tr><th>Kullanıcı</th><th style="text-align:right">Gün</th><th style="text-align:right">Son giriş</th></tr></thead><tbody>
+      ${enCok.map(u => `<tr><td>${escapeHtml(u.email || u.uid)}</td><td class="num">${u.recCount || 0}</td><td class="num">${escapeHtml(admRelTime(u.lastLogin))}</td></tr>`).join('')}
+    </tbody></table>` : '<div class="adm-empty">Kayıt yok.</div>'}
+  `;
+
+  const rel = document.getElementById('admDashRelease');
+  if (!rel) return;
+  Promise.all([
+    db.ref('appUpdate/latest').once('value').catch(() => null),
+    db.ref('appUpdate/store').once('value').catch(() => null)
+  ]).then(rs => {
+    const l = rs[0] && rs[0].val ? rs[0].val() : null;
+    const st = rs[1] && rs[1].val ? rs[1].val() : null;
+    rel.innerHTML = `<div class="adm-kv">
+      <div><small>OTA sürümü</small><b>${l && l.version ? 'v' + escapeHtml(l.version) : '—'}</b></div>
+      <div><small>Yayın tarihi</small><b>${l && l.publishedAt ? escapeHtml(String(l.publishedAt).slice(0, 10)) : '—'}</b></div>
+      <div><small>Minimum sürüm</small><b>${st && st.minVersion ? 'v' + escapeHtml(st.minVersion) : 'kapı yok'}</b></div>
+      <div><small>Mağazadaki</small><b>${st && st.latestVersion ? 'v' + escapeHtml(st.latestVersion) : '—'}</b></div>
+    </div>`;
+  }).catch(() => { rel.innerHTML = '<div class="adm-hint">okunamadı</div>'; });
+}
+
+/* ---- YÖNETİCİ NOTU (usersList/$uid/adminNote) ---- */
+window.adminSaveUserNote = function (uid, text) {
+  const v = String(text || '').trim().slice(0, 200);
+  const patch = {};
+  // Not silinirken alan kaldırılır: `$other` kısıtı olmadığı için ikisi de serbest.
+  patch[uid + '/adminNote'] = v ? { text: v, at: Date.now(), by: ADMIN_EMAIL } : null;
+  return db.ref('usersList').update(patch).then(() => {
+    toast(v ? 'Not kaydedildi.' : 'Not silindi.', true);
+  }).catch(err => { toast('Not kaydedilemedi. ' + friendlyError(err), false); throw err; });
+};
+
+/* ---- DIŞA AKTARMA ---- */
+function admCsvEsc(v) {
+  let t = (v == null ? '' : String(v));
+  if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;   // CSV formül enjeksiyonu koruması
+  return /[";\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+}
+function admDownloadText(fname, text, mime) {
+  toast('Dosya hazırlanıyor…', true);
+  return saveTextFile(fname, text, mime || 'text/plain;charset=utf-8').then(res => {
+    if (res && res.how === 'share-cancel') return;
+    toast(fname + ' hazır.', true);
+  }).catch(err => toast(friendlyError(err), false));
+}
+
+window.exportAdminUsersCsv = function () {
+  const list = admFilteredUsers();
+  if (!list.length) { toast('Dışa aktarılacak kullanıcı yok.', false); return; }
+  const head = ['Eposta', 'UID', 'GunSayisi', 'SonGiris', 'NativeSurum', 'WebSurum', 'YoneticiNotu'];
+  const rows = list.map(u => [
+    u.email || '', u.uid || '', u.recCount || 0,
+    u.lastLogin ? admAbsTime(u.lastLogin) : 'hiç',
+    u.nativeVersion ? 'v' + u.nativeVersion : '', u.webVersion ? 'v' + u.webVersion : '',
+    (u.adminNote && u.adminNote.text) ? u.adminNote.text : ''
+  ].map(admCsvEsc).join(';'));
+  const csv = '\uFEFF' + [head.map(admCsvEsc).join(';')].concat(rows).join('\r\n');
+  return admDownloadText('kurye-kullanicilar-' + todayISO() + '.csv', csv, 'text/csv;charset=utf-8;');
+};
+
+window.exportAdminFeedCsv = function () {
+  const list = admFilteredFeed();
+  if (!list.length) { toast('Dışa aktarılacak öneri yok.', false); return; }
+  const head = ['Tarih', 'Isim', 'Eposta', 'Mesaj', 'Durum', 'Yanit', 'YanitTarihi', 'KullaniciGordiMi', 'Kaynak'];
+  const rows = list.map(f => [
+    f.tarih ? admAbsTime(f.tarih) : '', f.ad || '', f.email || '',
+    String(f.metin || '').replace(/\r?\n/g, ' '),
+    f.durum || 'yeni', String(f.yanit || '').replace(/\r?\n/g, ' '),
+    f.yanitAt ? admAbsTime(f.yanitAt) : '', f.goruldu ? 'evet' : 'hayır', f.kaynak || ''
+  ].map(admCsvEsc).join(';'));
+  const csv = '\uFEFF' + [head.map(admCsvEsc).join(';')].concat(rows).join('\r\n');
+  return admDownloadText('kurye-oneriler-' + todayISO() + '.csv', csv, 'text/csv;charset=utf-8;');
+};
+
+window.adminExportUserJson = function (uid, email) {
+  const safe = String(email || uid).replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 40);
+  db.ref('kullanicilar/' + uid).once('value').then(snap => {
+    const data = snap.val();
+    if (!data) { toast('Bu kullanıcının kayıtlı verisi yok.', false); return; }
+    const dump = { _export: 'kurye-admin-veri', uid: uid, email: email || '', at: new Date().toISOString(), data: data };
+    return admDownloadText('kurye-veri-' + safe + '-' + todayISO() + '.json', JSON.stringify(dump, null, 2), 'application/json');
+  }).catch(err => toast('Okunamadı. ' + friendlyError(err), false));
+};
+
+/* ---- ÖNERİLER ---- */
+/* ---- ÖNERİ KUTUSU: iki kaynak birleştirilir ----
+   1) kullanicilar/$uid/oneriler/$oid → yeni yol. EK KURAL GEREKTİRMEZ:
+      yönetici `kullanicilar` düğümünü zaten okuyup yazabiliyor, kullanıcı da
+      kendi düğümünü okuyup yazıyor (bildirim kanalının kendisi de bu).
+   2) feedback/$fid → eski/toplu kutu. Kurallarında tanımlıysa okunur; değilse
+      panel bunun gerekçesini yazıyor (renderAdminFeedbackError). */
+let admFeedLegacy = {};
+
+function admBuildInbox() {
+  const out = [];
+  const users = adminDataState || {};
+  Object.keys(users).forEach(uid => {
+    const o = (users[uid] && users[uid].oneriler) || null;
+    if (!o) return;
+    const liste = Array.isArray(o) ? o.map((x, i) => Object.assign({ _k: String(i) }, x))
+                                   : Object.keys(o).map(k => Object.assign({ _k: k }, o[k]));
+    liste.forEach(it => {
+      if (!it || !(it.metin || it.message)) return;
+      out.push({
+        uid: uid, oid: it._k, kaynak: 'kullanici',
+        email: (adminUsersState[uid] && adminUsersState[uid].email) || '',
+        ad: it.ad || '', metin: String(it.metin || it.message || ''), tarih: Number(it.tarih) || 0,
+        durum: it.durum || 'yeni', durumAt: Number(it.durumAt) || 0, durumKim: it.durumKim || '',
+        yanit: it.yanit || '', yanitAt: Number(it.yanitAt) || 0,
+        goruldu: !!it.goruldu, gorulduAt: Number(it.gorulduAt) || 0
+      });
+    });
+  });
+  Object.keys(admFeedLegacy || {}).forEach(fid => {
+    const f = admFeedLegacy[fid] || {};
+    out.push({
+      uid: f.uid || '', oid: fid, kaynak: 'eski',
+      email: f.email || '', ad: f.name || '', metin: String(f.message || ''), tarih: Number(f.createdAt) || 0,
+      durum: f.durum || 'yeni', durumAt: Number(f.durumAt) || 0, durumKim: f.durumKim || '',
+      yanit: f.yanit || '', yanitAt: Number(f.yanitAt) || 0, goruldu: false, gorulduAt: 0
+    });
+  });
+  admUi.feed = out;
+  return out;
+}
+
+function admFeedSayilar(list) {
+  const l = list || admUi.feed;
+  return {
+    toplam: l.length,
+    acik: l.filter(x => !x.durum || x.durum === 'yeni').length,
+    okunmamis: l.filter(x => !x.goruldu && (x.yanitAt || x.durumAt)).length
+  };
+}
+
+function admFilteredFeed() {
+  let list = admUi.feed.slice();
+  const q = (admUi.fq || '').trim().toLowerCase();
+  if (q) list = list.filter(f => String(f.ad || '').toLowerCase().includes(q)
+    || String(f.metin || '').toLowerCase().includes(q)
+    || String(f.email || '').toLowerCase().includes(q)
+    || String(f.yanit || '').toLowerCase().includes(q));
+  if (admUi.ff === 'open') list = list.filter(f => !f.durum || f.durum === 'yeni');
+  else if (admUi.ff === 'answered') list = list.filter(f => f.durum && f.durum !== 'yeni');
+  else if (admUi.ff === 'unread') list = list.filter(f => !f.goruldu && (f.yanitAt || f.durumAt));
+  list.sort((a, b) => (b.tarih || 0) - (a.tarih || 0));
+  return list;
+}
+
 function renderAdminFeedback(feedbackObj) {
-    const tb = document.getElementById('adminFeedbackBody');
-    if (!tb) return;
+  admFeedLegacy = feedbackObj || {};
+  const notice = document.getElementById('feedNotice');
+  if (notice) notice.innerHTML = '';
+  admBuildInbox();
+  renderAdminInbox();
+  renderAdminKpis();
+}
 
-    const items = Object.keys(feedbackObj).map(id => ({ id, ...feedbackObj[id] }));
+function renderAdminInbox() {
+  const tb = document.getElementById('adminFeedbackBody');
+  if (!tb) return;
+  const sayilar = admFeedSayilar();
+  const list = admFilteredFeed();
 
-    if (!items.length) {
-        tb.innerHTML = '<tr><td colspan="4" class="empty">Henüz gelen istek/öneri yok.</td></tr>';
-        return;
-    }
+  if (!list.length) {
+    tb.innerHTML = '<div class="adm-empty">' + (sayilar.toplam
+      ? 'Bu filtreye uyan kayıt yok. <button type="button" class="btn btn-ghost btn-sm" id="admFeedClear" style="margin-left:.4rem;">Filtreyi kaldır</button>'
+      : 'Henüz gelen istek/öneri yok. Kullanıcı önerileri artık kendi düğümünde '
+        + '(<code>kullanicilar/$uid/oneriler</code>) tutuluyor; bu panel onları otomatik görür.') + '</div>';
+    const clr = document.getElementById('admFeedClear');
+    if (clr) clr.addEventListener('click', () => {
+      admUi.ff = 'all';
+      document.querySelectorAll('#admFeedFilters .adm-chip').forEach(b => b.classList.toggle('active', b.dataset.ff === 'all'));
+      renderAdminInbox();
+    });
+    return;
+  }
 
-    items.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const secenekler = ['yeni', 'okundu', 'planlandi', 'gelistirildi', 'cozuldu', 'reddedildi'];
+  tb.innerHTML = list.map(f => {
+    const etiket = (typeof FBX_DURUM !== 'undefined' && FBX_DURUM[f.durum]) ? FBX_DURUM[f.durum].ad : (f.durum || 'yeni');
+    const goruldu = f.yanitAt || f.durumAt
+      ? (f.goruldu ? '<span class="fbx-tag t-ok">✓ kullanıcı gördü' + (f.gorulduAt ? ' · ' + escapeHtml(admRelTime(f.gorulduAt)) : '') + '</span>'
+                   : '<span class="fbx-tag t-wait">bildirim beklemede</span>')
+      : '';
+    const yanitSatiri = f.yanit ? '<div class="fbx-yanit"><b>Kullanıcıya yazılan yanıt</b>' + escapeHtml(String(f.yanit)) + '</div>' : '';
+    const duzen = f.kaynak === 'kullanici' ? `
+      <div class="adm-fbx" data-uid="${escapeHtml(f.uid)}" data-oid="${escapeHtml(f.oid)}">
+        <div class="adm-fbx-top">
+          <select class="adm-chip fbx-durum" aria-label="Durum">
+            ${secenekler.map(x => `<option value="${x}"${x === (f.durum || 'yeni') ? ' selected' : ''}>${FBX_DURUM[x] ? FBX_DURUM[x].ad : x}</option>`).join('')}
+          </select>
+          <span class="adm-hint">“Kaydet ve bildirir” kullanıcının ekranında bildirim açar.</span>
+        </div>
+        <textarea class="fbx-yanit-inp" rows="2" maxlength="500" placeholder="İstersen kısa bir yanıt yaz (örn. “6.0.8 ile eklendi, mağazaya yüklendi”).">${escapeHtml(f.yanit || '')}</textarea>
+        <div class="adm-fbx-act">
+          <button type="button" class="btn btn-primary btn-sm fbx-save">💬 Kaydet ve bildirir</button>
+          <button type="button" class="btn btn-ghost btn-sm fbx-save-silent">Sadece işaretle</button>
+          <button type="button" class="btn btn-ghost btn-sm fbx-del">🗑 Sil</button>
+          <span class="adm-hint fbx-status"></span>
+        </div>
+      </div>` : `
+      <div class="adm-fbx" data-uid="${escapeHtml(f.uid)}" data-oid="${escapeHtml(f.oid)}">
+        <div class="adm-fbx-act">
+          <span class="adm-hint">eski <code>feedback</code> kutusu — kural gerekmediği için düzenlenemez.</span>
+          <button type="button" class="btn btn-ghost btn-sm fbx-migrate">→ kullanıcıya taşı</button>
+          <button type="button" class="btn btn-danger btn-sm admin-delete-feed-btn" data-id="${escapeHtml(f.oid)}">Sil</button>
+        </div>
+      </div>`;
+    return `
+      <div class="adm-row adm-feed-row">
+        <span class="adm-avatar${f.durum && f.durum !== 'yeni' ? ' b-green' : ' b-amber'}" aria-hidden="true">${escapeHtml(admInitials(f.email || f.ad))}</span>
+        <div class="adm-who">
+          <b>${f.ad ? escapeHtml(f.ad) : (f.email ? escapeHtml(f.email) : 'İsimsiz')}</b>
+          <span>${escapeHtml(admAbsTime(f.tarih))}${f.email && f.ad ? ' · ' + escapeHtml(f.email) : ''} · ${escapeHtml(etiket)}</span>
+          <div style="margin-top:.3rem;font-size:.79rem;line-height:1.55;color:var(--sec);white-space:pre-wrap;overflow-wrap:anywhere;">${escapeHtml(f.metin)}</div>
+          ${yanitSatiri}
+          ${goruldu ? '<div class="fbx-tags">' + goruldu + (f.durumKim ? '<span class="fbx-tag">imza: ' + escapeHtml(f.durumKim) + '</span>' : '') + '</div>' : ''}
+        </div>
+        ${duzen}
+      </div>`;
+  }).join('');
 
-    tb.innerHTML = items.map(f => `
-        <tr>
-            <td><span style="font-size:0.8rem;">${escapeHtml(f.createdAt ? new Date(f.createdAt).toISOString().replace('T',' ').slice(0,16) : '-')}</span></td>
-            <td style="font-weight:600; color:var(--text);">${f.name ? escapeHtml(f.name) : '<span style="color:var(--muted);font-weight:400;">İsimsiz</span>'}</td>
-            <td style="max-width:340px; white-space:pre-wrap; font-size:0.82rem;">${escapeHtml(f.message || '')}</td>
-            <td style="text-align:right;">
-                <button class="btn btn-danger btn-sm" onclick="deleteFeedback('${f.id}')" title="Bu isteği sil">Sil</button>
-            </td>
-        </tr>
-    `).join('');
+  tb.querySelectorAll('.fbx-save, .fbx-save-silent').forEach(btn => {
+    btn.addEventListener('click', () => adminFeedSave(btn.closest('.adm-fbx'), btn));
+  });
+  tb.querySelectorAll('.fbx-del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const box = btn.closest('.adm-fbx');
+      adminFeedDelete(box.dataset.uid, box.dataset.oid);
+    });
+  });
+  tb.querySelectorAll('.fbx-migrate').forEach(btn => {
+    btn.addEventListener('click', () => adminFeedMigrateOne(btn.closest('.adm-fbx').dataset.oid));
+  });
+  tb.querySelectorAll('.admin-delete-feed-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteFeedback(btn.dataset.id));
+  });
+}
+
+/* İşaret + yanıt + bildirim: tek yazımda. `goruldu:false` → kullanıcının
+   ekranında bildirim açılır; "sadece işaretle" → goruldu:true, sessiz. */
+function adminFeedSave(box, btn) {
+  if (!box) return;
+  const uid = box.dataset.uid, oid = box.dataset.oid;
+  if (!uid || !oid) { toast('Hedef öneri bulunamadı.', false); return; }
+  const sel = box.querySelector('.fbx-durum');
+  const yanitEl = box.querySelector('.fbx-yanit-inp');
+  const durum = sel ? sel.value : 'yeni';
+  const yanit = ((yanitEl && yanitEl.value) || '').trim().slice(0, 500);
+  const bildir = btn.classList.contains('fbx-save');
+  const TS = firebase.database.ServerValue.TIMESTAMP;
+  const patch = { durum: durum, durumAt: TS, durumKim: ADMIN_EMAIL || '', goruldu: bildir ? false : true };
+  if (yanit) { patch.yanit = yanit; patch.yanitAt = TS; }
+  else { patch.yanit = null; patch.yanitAt = null; }
+  btn.disabled = true;
+  db.ref('kullanicilar/' + uid + '/oneriler/' + oid).update(patch).then(() => {
+    btn.disabled = false;
+    const st = box.querySelector('.fbx-status');
+    if (st) st.textContent = bildir ? 'kaydedildi · kullanıcıya bildirildi ✓' : 'kaydedildi · bildirim gönderilmedi';
+    toast(bildir ? 'İşaretlendi ve kullanıcıya bildirildi.' : 'İşaretlendi (bildirim yok).', true);
+    try { admBuildInbox(); renderAdminInbox(); } catch (e) {}
+  }).catch(err => {
+    btn.disabled = false;
+    toast('Kaydedilemedi. ' + friendlyError(err), false);
+  });
+}
+
+function adminFeedDelete(uid, oid) {
+  if (!uid || !oid) return;
+  showConfirm('Bu öneri kullanıcının kaydından kalıcı olarak silinecek.', () => {
+    db.ref('kullanicilar/' + uid + '/oneriler/' + oid).remove()
+      .then(() => { toast('Öneri silindi.', true); try { mergeAndRenderAdmin(); } catch (e) {} })
+      .catch(err => toast('Silinemedi. ' + friendlyError(err), false));
+  }, { title: 'Öneriyi Sil', icon: '💬', okText: 'Sil' });
+}
+
+/* Eski toplu kutudaki bir öneriyi ilgili kullanıcının düğümüne taşır; böylece
+   bildirim/yanıt akışı eski kayıtlar için de çalışır. */
+function adminFeedMigrateOne(fid) {
+  const it = (admFeedLegacy || {})[fid];
+  if (!it) { toast('Kayıt bulunamadı.', false); return; }
+  if (!it.uid) { toast('Bu kayıtta kullanıcı kimliği yok; taşınamıyor.', false); return; }
+  db.ref('kullanicilar/' + it.uid + '/oneriler').push({
+    metin: String(it.message || ''), ad: it.name || null, email: it.email || null,
+    tarih: Number(it.createdAt) || firebase.database.ServerValue.TIMESTAMP,
+    durum: 'yeni'
+  }).then(() => {
+    toast('Taşındı. Eski kopyayı istersen “Sil” ile temizleyebilirsin.', true);
+    try { admBuildInbox(); renderAdminInbox(); } catch (e) {}
+  }).catch(err => toast('Taşınamadı. ' + friendlyError(err), false));
+}
+
+/* Öneri okuma izni yoksa (bugünkü kurallarda `feedback` düğümü tanımsız)
+   panel "boş" gösterip yöneticiyi yanıltmasın: nedeni burada yazıyoruz. */
+function renderAdminFeedbackError(err) {
+  const notice = document.getElementById('feedNotice');
+  const tb = document.getElementById('adminFeedbackBody');
+  const msg = err && (err.message || err.code) ? String(err.message || err.code) : 'okuma reddedildi';
+  if (notice) {
+    notice.innerHTML = '<div class="adm-warn"><span>⚠️</span><div><b>Öneriler okunamadı.</b> '
+      + escapeHtml(msg) + ' — Firebase kurallarınızda <code>feedback</code> düğümü için izin yoksa bu bölüm boş kalır; '
+      'kullanıcı tarafındaki gönderim de sessizce düşer.</div></div>';
+  }
+  if (tb && !tb.innerHTML.trim()) tb.innerHTML = '<div class="adm-empty">Öneri kutusuna erişilemiyor.</div>';
 }
 
 window.deleteFeedback = function(id) {
@@ -7176,26 +7998,25 @@ window.deleteFeedback = function(id) {
     }, {title:'İsteği Sil', icon:'💬'});
 }
 
-window.viewUserStats = function(uid, email) {
-    document.getElementById('adminStatsTitle').textContent = email + ' - İstatistikler';
-    document.getElementById('adminStatsContent').innerHTML = 'Yükleniyor...';
+window.viewUserStats = function(uid, email, focusNote) {
+    document.getElementById('adminStatsTitle').textContent = (email || uid) + ' — İstatistikler';
+    document.getElementById('adminStatsContent').innerHTML = '<div class="adm-empty">Yükleniyor…</div>';
     document.getElementById('adminStatsOverlay').classList.add('show');
-    
+    admStatsUid = uid;
+
     // Bonus ayarları da gerektiği için kullanıcının tüm düğümü okunur.
     db.ref('kullanicilar/' + uid).once('value').then(snap => {
         const userData = snap.val() || {};
         let userRecs = userData.kayitlar || [];
         if(!Array.isArray(userRecs)) userRecs = Object.values(userRecs);
-        
-        if(!userRecs.length) {
-            document.getElementById('adminStatsContent').innerHTML = '<div class="empty">Bu kullanıcının henüz veri kaydı yok.</div>';
-            return;
-        }
-        
+        userRecs = (userRecs || []).map((r, i) => Object.assign({ _k: String(i) }, r || {}));
+
+        const uGaraj = (userData && userData.garaj) || {};
+        const araclar = uGaraj.vehicles && (Array.isArray(uGaraj.vehicles) ? uGaraj.vehicles : Object.values(uGaraj.vehicles)) || [];
+
         // DÜZELTME: Eskiden herkes için sabit YS_BONUS_TIERS kullanılıyordu; bonus
         // baremini özelleştiren kullanıcıların kazancı admin panelinde yanlış
         // görünüyordu. Artık ilgili kullanıcının kendi ayarları okunur.
-        const uGaraj = (userData && userData.garaj) || {};
         const uMode = uGaraj.bonusMode === 'daily' ? 'daily' : 'weekly';
         const uTiers = (uMode === 'daily'
             ? (uGaraj.dailyBonusTiers && uGaraj.dailyBonusTiers.length ? uGaraj.dailyBonusTiers : DEFAULT_DAILY_TIERS)
@@ -7214,25 +8035,45 @@ window.viewUserStats = function(uid, email) {
                 const w = weekOf(r.tarih);
                 if(!wMap[w]) wMap[w] = { tes: 0, lastDate: r.tarih };
                 wMap[w].tes += (r.teslimat || 0);
-                if(r.tarih > wMap[w].lastDate) wMap[w].lastDate = r.tarih; 
+                if(r.tarih > wMap[w].lastDate) wMap[w].lastDate = r.tarih;
             });
             for(let w in wMap) {
                 const bns = uBonusFor(wMap[w].tes);
                 if(bns > 0) localBonusMap[wMap[w].lastDate] = bns;
             }
         }
-        
+
         let km=0, gelir=0, yakit=0, diger=0, tes=0, net=0, totalBonus=0, hours=0;
+        const aylar = {};
         userRecs.forEach(r => {
             const b = localBonusMap[r.tarih] || 0;
             const g = (r.yakit||0) + (r.diger||0);
             const toGelir = (r.gelir||0) + b;
             const n = toGelir - g;
-            
             km += r.km||0; gelir += toGelir; yakit += r.yakit||0; diger += r.diger||0; tes += r.teslimat||0; net += n; totalBonus += b;
             if(r.saat!=null && !isNaN(r.saat)) hours += (+r.saat || 0);
+            const ay = String(r.tarih||'').slice(0,7);
+            if(ay.length === 7){
+              if(!aylar[ay]) aylar[ay] = { gun:0, km:0, gelir:0, net:0, paket:0 };
+              aylar[ay].gun++; aylar[ay].km += r.km||0; aylar[ay].gelir += toGelir; aylar[ay].net += n; aylar[ay].paket += r.teslimat||0;
+            }
         });
-        
+
+        const gunler = admLast14(userRecs);
+        const ayKeys = Object.keys(aylar).sort().reverse().slice(0, 6);
+        const son = userRecs.slice().sort((a,b)=>String(b.tarih).localeCompare(String(a.tarih))).slice(0, 10);
+        const bakimSatirlari = araclar.map(v => {
+          const bs = (v && v.bakimlar && (Array.isArray(v.bakimlar) ? v.bakimlar : Object.values(v.bakimlar))) || [];
+          const sonrakiler = bs.map(m => {
+            const simdi = Number(v.odometerAtKm != null ? v.odometerAtKm : (v.odometerBase || 0));
+            const kalan = (Number(m.startKm) + Number(m.periyot||0)) - simdi;
+            return { ad: m.ad || 'Bakım', kalan: isFinite(kalan) ? kalan : null };
+          }).sort((a,b)=>(a.kalan==null?9e15:a.kalan)-(b.kalan==null?9e15:b.kalan));
+          return '<tr><td>' + escapeHtml((v && v.model) || 'Araç') + '</td><td class="num">' + fmtInt((v && (v.odometerAtKm != null ? v.odometerAtKm : v.odometerBase)) || 0)
+            + ' km</td><td>' + (sonrakiler.length ? sonrakiler.slice(0,3).map(m => escapeHtml(m.ad) + ' <b style="font-family:var(--mono)">'
+              + (m.kalan == null ? '—' : (m.kalan <= 0 ? 'geri kaldı' : fmtInt(m.kalan) + ' km')) + '</b>').join(' · ') : '<span style="color:var(--muted)">bakım tanımlı değil</span>') + '</td></tr>';
+        }).join('');
+
         document.getElementById('adminStatsContent').innerHTML = `
             <div class="metrics" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
                 <div class="metric cyan"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
@@ -7240,23 +8081,135 @@ window.viewUserStats = function(uid, email) {
                 <div class="metric green"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(net)} ₺</div><div class="metric-sub">Bonus Dahil: ${fmtInt(totalBonus)} ₺</div></div>
                 <div class="metric violet"><div class="metric-label">Toplam Çalışma</div><div class="metric-value">${fmt(hours, 1)} sa</div><div class="metric-sub">${userRecs.length} gün kayıtlı</div></div>
             </div>
+
+            <div class="adm-sec">Son 14 gün · km</div>
+            ${admBarsHtml(gunler, 'km')}
+
+            <div class="adm-kv" style="margin-top:.6rem">
+              <div><small>Yakıt gideri</small><b>${fmtInt(yakit)} ₺</b></div>
+              <div><small>Diğer gider</small><b>${fmtInt(diger)} ₺</b></div>
+              <div><small>Brüt gelir</small><b>${fmtInt(gelir)} ₺</b></div>
+              <div><small>Bonus modu</small><b>${uMode === 'daily' ? 'günlük' : 'haftalık'}</b></div>
+            </div>
+
+            ${ayKeys.length ? `<div class="adm-sec">Aylar</div>
+            <table class="adm-tbl"><thead><tr><th>Ay</th><th style="text-align:right">Gün</th><th style="text-align:right">KM</th><th style="text-align:right">Paket</th><th style="text-align:right">Net</th></tr></thead><tbody>
+            ${ayKeys.map(k => `<tr><td>${escapeHtml(k)}</td><td class="num">${aylar[k].gun}</td><td class="num">${fmtInt(aylar[k].km)}</td><td class="num">${fmtInt(aylar[k].paket)}</td><td class="num">${fmtInt(aylar[k].net)} ₺</td></tr>`).join('')}
+            </tbody></table>` : ''}
+
+            ${araclar.length ? `<div class="adm-sec">Araçlar ve bakım</div>
+            <table class="adm-tbl"><thead><tr><th>Araç</th><th style="text-align:right">Km</th><th>Sonraki bakım</th></tr></thead><tbody>${bakimSatirlari}</tbody></table>` : ''}
+
+            ${!userRecs.length ? '<div class="adm-empty" style="margin-top:.6rem">Bu kullanıcının henüz veri kaydı yok.</div>' : `
+            <div class="adm-sec">Son kayıtlar</div>
+            <table class="adm-tbl"><thead><tr><th>Tarih</th><th style="text-align:right">KM</th><th style="text-align:right">Paket</th><th style="text-align:right">Gelir</th><th></th></tr></thead><tbody>
+            ${son.map(r => `<tr><td>${escapeHtml(r.tarih || '—')}</td><td class="num">${fmtInt(r.km||0)}</td><td class="num">${r.teslimat||0}</td><td class="num">${fmtInt(r.gelir||0)} ₺</td>
+              <td style="text-align:right"><button type="button" class="btn btn-ghost btn-sm adm-rec-del" data-k="${escapeHtml(r._k)}" data-t="${escapeHtml(r.tarih||'')}" title="Bu günü sil" style="color:var(--red)">✕</button></td></tr>`).join('')}
+            </tbody></table>
+            <div class="adm-hint" style="margin-top:.35rem">Silme, kullanıcının buluttaki kaydını siler. Kullanıcının uygulaması açıksa bir sonraki yazımda kayıt geri gelebilir; önce kendisinden kapatmasını isteyin.</div>`}
+
+            <div class="adm-sec">Yönetici notu</div>
+            <textarea id="admNoteEdit" rows="2" maxlength="200" placeholder="Sadece sizin gördüğünüz not: örn. \u201cyeni kullanıcı, kurulumda yardım edildi\u201d" style="width:100%;box-sizing:border-box;background:var(--bg);border:1px solid var(--border);border-radius:11px;color:var(--text);font-family:inherit;font-size:.8rem;padding:.5rem .55rem;"></textarea>
+            <div style="display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap">
+              <button type="button" class="btn btn-primary btn-sm" id="admNoteSave" style="flex:1;min-width:120px;">💾 Notu kaydet</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="admJsonDump" style="flex:1;min-width:120px;">⬇ Veriyi JSON indir</button>
+            </div>
         `;
+
+        const ta = document.getElementById('admNoteEdit');
+        if (ta) {
+          const cur = admUi.all.filter(u => u.uid === uid)[0];
+          ta.value = cur && cur.adminNote && cur.adminNote.text ? String(cur.adminNote.text) : '';
+          if (focusNote === 'note') setTimeout(() => { try { ta.focus(); } catch (e) {} }, 40);
+        }
+        const btnSave = document.getElementById('admNoteSave');
+        if (btnSave) btnSave.addEventListener('click', () => {
+          btnSave.disabled = true;
+          Promise.resolve(adminSaveUserNote(uid, ta ? ta.value : '')).catch(()=>{}).then(() => {
+            btnSave.disabled = false;
+            try { mergeAndRenderAdmin(); } catch (e) {}
+          });
+        });
+        const btnJson = document.getElementById('admJsonDump');
+        if (btnJson) btnJson.addEventListener('click', () => adminExportUserJson(uid, email));
+        document.querySelectorAll('#adminStatsContent .adm-rec-del').forEach(btn => {
+          btn.addEventListener('click', () => adminDeleteUserRecord(uid, btn.dataset.k, btn.dataset.t, email));
+        });
     }).catch(err => {
-        document.getElementById('adminStatsContent').innerHTML = '<div class="empty" style="color:var(--red)">' + friendlyError(err) + '</div>';
+        document.getElementById('adminStatsContent').innerHTML = '<div class="empty" style="color:var(--red)">' + escapeHtml(friendlyError(err)) + '</div>';
     });
 }
 
+window.adminDeleteUserRecord = function(uid, key, tarih, email) {
+  if (key == null || key === '') { toast('Kayıt anahtarı belirsiz, silinmedi.', false); return; }
+  showConfirm(String(email || uid) + ' kullanıcısının ' + (tarih || '') + ' tarihli kaydı silinecek. Bu işlem geri alınamaz.', () => {
+    db.ref('kullanicilar/' + uid + '/kayitlar/' + key).remove().then(() => {
+      toast('Kayıt silindi.', true);
+      try { viewUserStats(uid, email); } catch (e) {}
+    }).catch(err => toast('Silinemedi. ' + friendlyError(err), false));
+  }, { title: 'Kaydı sil', icon: '🗑️', okText: 'Sil' });
+};
+
 window.deleteUserDatabase = function(uid, email) {
-    showConfirm(`${email} kullanıcısına ait tüm veritabanı kayıtları kalıcı olarak silinecek. Bu işlem geri alınamaz.`, () => {
+    const oneriSayisi = ((adminDataState[uid] || {}).oneriler || {});
+    const oneriAdedi = Object.keys(oneriSayisi).length;
+    showConfirm(`${email} kullanıcısına ait tüm veritabanı kayıtları kalıcı olarak silinecek. Bu işlem geri alınamaz.`
+      + (oneriAdedi ? ` Not: öneriler de bu düğümde durduğu için ${oneriAdedi} öneri kaydı da silinecek.`
+                    : ' Not: öneriler de kullanıcı düğümünde durur; bu işlem onları da siler.'), () => {
         Promise.all([
             db.ref('kullanicilar/' + uid).remove(),
             db.ref('usersList/' + uid).remove()
         ]).then(() => {
             toast(`Kullanıcı verileri başarıyla temizlendi.`, true);
+            try { document.getElementById('adminStatsOverlay').classList.remove('show'); } catch (e) {}
         }).catch(err => {
             toast(friendlyError(err), false);
         });
     }, {title:'Kullanıcı Verisini Sıfırla', icon:'⚠️'});
+};
+
+/* ---- ARAÇ ÇUBUĞU (arama / filtre / sıralama / dışa aktarma) ---- */
+function initAdminUi() {
+  const search = document.getElementById('admUserSearch');
+  if (search) search.addEventListener('input', () => { admUi.q = search.value || ''; renderAdminUsers(); });
+  const chips = document.getElementById('admUserFilters');
+  if (chips) chips.addEventListener('click', e => {
+    const b = e.target.closest('.adm-chip'); if (!b) return;
+    admUi.f = b.dataset.uf || 'all';
+    chips.querySelectorAll('.adm-chip').forEach(x => x.classList.toggle('active', x === b));
+    renderAdminUsers();
+  });
+  const sort = document.getElementById('admUserSort');
+  // 'change' + 'input': bazı webview/otomasyon yolları select için yalnızca birini yayınlıyor.
+  if (sort) {
+    const applySort = () => { admUi.sort = sort.value || 'last'; renderAdminUsers(); };
+    sort.addEventListener('change', applySort);
+    sort.addEventListener('input', applySort);
+  }
+  const csv = document.getElementById('btnAdmUsersCsv');
+  if (csv) csv.addEventListener('click', () => exportAdminUsersCsv());
+  const fsearch = document.getElementById('admFeedSearch');
+  if (fsearch) fsearch.addEventListener('input', () => { admUi.fq = fsearch.value || ''; renderAdminInbox(); });
+  const ff = document.getElementById('admFeedFilters');
+  if (ff) ff.addEventListener('click', e => {
+    const b = e.target.closest('.adm-chip'); if (!b) return;
+    admUi.ff = b.dataset.ff || 'all';
+    ff.querySelectorAll('.adm-chip').forEach(x => x.classList.toggle('active', x === b));
+    renderAdminInbox();
+  });
+  const fcsv = document.getElementById('btnAdmFeedCsv');
+  if (fcsv) fcsv.addEventListener('click', () => exportAdminFeedCsv());
+}
+
+/* Zorunlu güncelleme kapısının etkileyeceği kullanıcılar (usersList raporundan) */
+window.admStoreImpact = function (minVer) {
+  const list = [];
+  let bilinmeyen = 0;
+  admUi.all.forEach(u => {
+    if (!u.nativeVersion) { if (u.recCount || u.lastLogin) bilinmeyen++; return; }
+    try { if (cmpVersions(String(u.nativeVersion), minVer) < 0) list.push(u); } catch (e) {}
+  });
+  return { list: list, unknown: bilinmeyen, total: admUi.all.length };
 };
 </script>
 
@@ -7914,10 +8867,14 @@ window.deleteUserDatabase = function(uid, email) {
       if (idx >= 0) {
         records[idx].km = yeniToplam;
       } else {
+        // NOT: buraya kasıtlı olarak açıklama/not YAZMIYORUZ.
+        // Eskiden aciklama: 'GPS ile otomatik eklendi' yazılıyordu ve bu metin
+        // Günlük Kayıt tablosundaki "Diğer Gider Notu" sütununda (ve kartlarda
+        // 📝 satırında) beliriyordu; kullanıcı gider notu sanıyordu. km zaten
+        // "X km eklendi" toast'ıyla raporlanıyor, kayda yapay not gerekmez.
         records.push({
           tarih: today, arac, km: yeniToplam, saat: null, molaDk: 0,
-          yakit: 0, yakitLitre: 0, diger: 0, gelir: 0, teslimat: 0,
-          aciklama: 'GPS ile otomatik eklendi'
+          yakit: 0, yakitLitre: 0, diger: 0, gelir: 0, teslimat: 0
         });
       }
       commitRecords();
@@ -8105,6 +9062,29 @@ window.deleteUserDatabase = function(uid, email) {
                             : ok === false ? 'var(--red,#f87171)' : 'var(--muted)';
     };
 
+    /* KAPI ETKİSİ: cihazlar sürümlerini usersList/$uid/nativeVersion'a yazıyor.
+       Buradan kaç kullanıcının kilitleneceği görülür; "henüz yayınlanmamış
+       sürümü minimum yapma" kazası kaydetmeden önce fark edilir. */
+    window.admPaintStoreImpact = function(){
+      const box = document.getElementById('storeGateImpact');
+      if(!box) return;
+      const min = ((minEl && minEl.value) || '').trim();
+      if(!/^[0-9]+\.[0-9]+\.[0-9]+$/.test(min)){ box.hidden = true; box.innerHTML = ''; return; }
+      if(typeof admStoreImpact !== 'function'){ box.hidden = true; return; }
+      const im = admStoreImpact(min);
+      const adlar = im.list.slice(0, 6).map(u => escapeHtml(u.email || u.uid)).join(', ');
+      box.hidden = false;
+      box.innerHTML = '<span>🔒</span><div>'
+        + (im.list.length
+            ? '<b>' + im.list.length + ' kullanıcı</b> bu kapıyla kilitlenecek'
+              + (adlar ? ': ' + adlar + (im.list.length > 6 ? ' ve diğerleri' : '') : '')
+            : 'Bilinen sürümlere göre <b>hiçbir kullanıcı kilitlenmiyor</b>.')
+        + (im.unknown ? '<br>' + im.unknown + ' kullanıcı sürümünü bildirmedi (uygulamayı bir kez açınca görünür).' : '')
+        + '<br>Bu cihaz: <b>' + (_installedNativeVersion ? 'v' + escapeHtml(String(_installedNativeVersion)) : 'sürüm okunamadı') + '</b>'
+        + '</div>';
+    };
+    if(minEl) minEl.addEventListener('input', () => { try{ window.admPaintStoreImpact(); }catch(e){} });
+
     // Yüklü native sürümü bağımsız oku: checkForcedUpdate() yalnızca
     // appUpdate/store varsa çalışıyor, panel ise ilk kurulumda da uyarmalı.
     try{
@@ -8119,6 +9099,7 @@ window.deleteUserDatabase = function(uid, email) {
       if(latestEl) latestEl.value = d.latestVersion || '';
       if(notesEl) notesEl.value = d.notes || '';
       setStatus('Aktif: v' + (d.minVersion||'?') + ' altındaki sürümler kilitli.');
+      try{ window.admPaintStoreImpact && window.admPaintStoreImpact(); }catch(e){}
     }).catch(e => setStatus('Okunamadı: ' + e.message, false));
 
     btnSave.addEventListener('click', () => {
@@ -8188,11 +9169,19 @@ window.deleteUserDatabase = function(uid, email) {
       const btn = e.target.closest('.adm-tab');
       if(!btn) return;
       const key = btn.dataset.adm;
-      nav.querySelectorAll('.adm-tab').forEach(b => b.classList.toggle('active', b === btn));
+      nav.querySelectorAll('.adm-tab').forEach(b => {
+        const on = b === btn;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
       document.querySelectorAll('.adm-pane').forEach(p =>
         p.classList.toggle('active', p.id === 'adm-' + key));
       // Sürüm geçmişi sekmesi açılınca listeyi tazele.
       if(key === 'clog'){ try{ renderClAdminList(); }catch(e){} }
+      // Genel bakış yeniden hesaplansın; kapı sekmesi etkisini tazelesin.
+      if(key === 'dash'){ try{ renderAdminDash(); }catch(e){} }
+      if(key === 'users'){ try{ renderAdminUsers(); }catch(e){} }
+      if(key === 'store'){ try{ window.admPaintStoreImpact && window.admPaintStoreImpact(); }catch(e){} }
       try{ window.scrollTo({top:0, behavior:'instant'}); }catch(e){ window.scrollTo(0,0); }
     });
   }
@@ -8317,6 +9306,33 @@ window.deleteUserDatabase = function(uid, email) {
     return parts.join('/') || file.name;
   }
 
+  /* ---- YAYIN ÖNCESİ KONTROLLER ----
+     Üç kontrol, yayının ORTADA patlamasını engelliyor: index.html eksikse
+     uygulama beyaz ekranda açılır; sürüm eski/aynıysa OTA hiç indirilmez;
+     500 karakteri aşan notu Firebase kuralı reddeder (zip yüklenmiş ama sürüm
+     yazılamamış olur → yarım yayın). */
+  let _otaLatestVersion = '';
+  function renderOtaChecks(){
+    const box = document.getElementById('otaChecks');
+    if(!box) return;
+    const vInp = document.getElementById('updVersion');
+    const nInp = document.getElementById('updNotes');
+    const ver = ((vInp && vInp.value) || '').trim();
+    const notes = ((nInp && nInp.value) || '').trim();
+    const paths = _otaFiles.map(otaZipPath);
+    const kb = Math.round(_otaFiles.reduce((a, f) => a + (f.size || 0), 0) / 1024);
+    const chip = (gecer, txt) => '<span class="adm-check ' + (gecer ? 'ok' : 'no') + '">' + (gecer ? '✓ ' : '✕ ') + escapeHtml(txt) + '</span>';
+    const idx = paths.some(x => x.toLowerCase() === 'index.html');
+    const bicim = /^[0-9]+\.[0-9]+\.[0-9]+$/.test(ver);
+    const yeni = (bicim && _otaLatestVersion) ? cmpVersions(ver, _otaLatestVersion) > 0 : null;
+    box.innerHTML =
+      chip(idx, idx ? 'index.html pakette' : 'index.html YOK')
+      + chip(paths.length > 0, paths.length + ' dosya · ' + kb + ' KB')
+      + chip(bicim, ver ? ('sürüm ' + ver) : 'sürüm girilmedi')
+      + (yeni === null ? '' : chip(yeni, yeni ? 'v' + _otaLatestVersion + '\'den yeni' : 'v' + _otaLatestVersion + ' ile aynı/eski'))
+      + chip(notes.length <= 500, notes.length <= 500 ? notes.length + '/500 not karakteri' : 'not ' + notes.length + ' karakter — kural 500 ile sınırlı');
+  }
+
   function renderOtaFileList(){
     const box = document.getElementById('updFileList');
     if (!box) return;
@@ -8333,6 +9349,7 @@ window.deleteUserDatabase = function(uid, email) {
       + ' · ' + paths.length + ' dosya · ' + toplamKb + ' KB</div>'
       + paths.slice(0, 40).map(p => escapeHtml(p)).join('<br>')
       + (paths.length > 40 ? '<br>… ve ' + (paths.length - 40) + ' dosya daha' : '');
+    try{ renderOtaChecks(); }catch(e){}
   }
 
   function initOtaFilePickers(){
@@ -8371,6 +9388,7 @@ window.deleteUserDatabase = function(uid, email) {
         return;
       }
       previewEl.innerHTML = formatUpdateNotes(val) || '<span style="color:var(--muted);font-size:.78rem;">—</span>';
+      try{ renderOtaChecks(); }catch(e){}
     }
     if(notesInput) notesInput.addEventListener('input', refreshNotesPreview);
 
@@ -8409,6 +9427,7 @@ window.deleteUserDatabase = function(uid, email) {
       }
       firebase.database().ref('appUpdate/latest').once('value').then(snap => {
         const data = snap.val();
+        _otaLatestVersion = (data && data.version) ? String(data.version) : '';
         const serverInfo = data
           ? `Son yayınlanan: <strong>v${escapeHtml(data.version)}</strong> (${escapeHtml(data.publishedAt || '')})<div style="margin-top:8px">${data.notes ? formatUpdateNotes(data.notes) : 'Not: —'}</div>`
           : 'Henüz hiç OTA güncellemesi yayınlanmamış.';
@@ -8419,6 +9438,23 @@ window.deleteUserDatabase = function(uid, email) {
       });
     }
     refreshCurrentInfo();
+    try{ renderOtaChecks(); }catch(e){}
+    /* Yayın bilgisini CANLI izle: başka bir sekmeden/cihazdan yayın yapıldığında
+       panel eski sürümü göstermeye devam ediyordu; kontroller de yanılıyordu. */
+    try {
+      if (window.__otaLatestRef) window.__otaLatestRef.off();
+      window.__otaLatestRef = firebase.database().ref('appUpdate/latest');
+      window.__otaLatestRef.on('value', snap => {
+        const d = snap.val();
+        _otaLatestVersion = (d && d.version) ? String(d.version) : '';
+        try{ renderOtaChecks(); }catch(e){}
+        if (currentInfoEl && d) {
+          currentInfoEl.dataset.latest = String(d.version);
+        }
+      }, () => {});
+    } catch (e) {}
+    // Sürüm/not doldukça kontroller canlı güncellensin.
+    if (versionInput) versionInput.addEventListener('input', () => { try{ renderOtaChecks(); }catch(e){} });
 
     btnPublish.addEventListener('click', async function () {
       const files = _otaFiles;   // dosya + klasör seçimlerinin birleşik listesi
@@ -8433,6 +9469,23 @@ window.deleteUserDatabase = function(uid, email) {
         return;
       }
       if (!version || !/^[0-9]+\.[0-9]+\.[0-9]+$/.test(version)) { toast('Sürüm numarasını "1.0.1" formatında girin.', false); return; }
+      try{ renderOtaChecks(); }catch(e){}
+
+      // KURAL SINIRI: appUpdate/latest/notes en fazla 500 karakter. Uzun not
+      // yayını yarıda patlatır (zip yüklendi, sürüm yazılamadı) → önce uyar.
+      if (notes && notes.length > 500) {
+        toast('Yayın notu ' + notes.length + ' karakter. Firebase kuralı en fazla 500 diyor; lütfen kısaltın.', false);
+        return;
+      }
+      // Aynı/daha eski sürüm yayınlamak OTA'nın sessizce uygulanmamasıyla biter.
+      if (_otaLatestVersion && /^[0-9]+\.[0-9]+\.[0-9]+$/.test(_otaLatestVersion) && cmpVersions(version, _otaLatestVersion) <= 0) {
+        const devam = await new Promise(res => {
+          showConfirm('Sunucuda zaten v' + _otaLatestVersion + ' yayında. ' + version + ' onunla aynı veya daha eski; cihazlar bu paketi indirmeyebilir. Yine de yayınlayalım mı?',
+            () => res(true),
+            { title: 'Sürüm yeni görünmüyor', icon: '⚠️', warn: true, okText: 'Yine de yayınla', onCancel: () => res(false) });
+        });
+        if (!devam) return;
+      }
 
       btnPublish.disabled = true;
       statusEl.textContent = 'Dosyalar paketleniyor...';
@@ -8531,6 +9584,8 @@ window.deleteUserDatabase = function(uid, email) {
     try{ initAdminTabs(); }catch(e){ console.log('admin tabs:', e); }
     try{ initOtaFilePickers(); }catch(e){ console.log('ota file picker:', e); }
     try{ initChangelogAdmin(); }catch(e){ console.log('changelog admin:', e); }
+    try{ initAdminUi(); }catch(e){ console.log('admin toolbar:', e); }
+    try{ renderAdminDash(); }catch(e){ console.log('admin dash:', e); }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAdminPanels);
@@ -8595,5 +9650,5 @@ window.deleteUserDatabase = function(uid, email) {
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a371404c1cde656e',t:'MTc4ODczNzMxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

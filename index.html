@@ -2,7 +2,7 @@
 <html lang="tr">
 <!--
 ================================================================================
-  KURYE OS  ·  v6.0.3  ·  TEK DOSYA UYGULAMA
+  KURYE OS  ·  v6.1.1  ·  TEK DOSYA UYGULAMA
 ================================================================================
 
   NEDEN TEK DOSYA?
@@ -67,7 +67,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<meta name="theme-color" content="#0a0e14"/>
+<meta name="theme-color" content="#0c1018"/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="https://i.hizliresim.com/xkrylhbn.jpg">
 <title>Kurye OS</title>
@@ -91,32 +91,32 @@
    Bölüm sırası: değişkenler > yerleşim > kartlar > modaller > mobil.
    ====================================================================== */
 :root{
-  --bg:#0a0e14;--elev:#111820;--card:#151d28;--hover:#1a2433;
-  --border:#1e2a3a;--border2:#2a3a4f;
-  --text:#f0f4f8;--sec:#94a3b8;--muted:#64748b;
-  --accent:#38bdf8;--accent-dim:rgba(56,189,248,.15);
-  --green:#34d399;--green-dim:rgba(52,211,153,.12);
-  --red:#f87171;--red-dim:rgba(248,113,113,.12);
-  --amber:#fbbf24;--amber-dim:rgba(251,191,36,.12);
-  --violet:#a78bfa;--violet-dim:rgba(167,139,250,.12);
-  --orange:#fb923c;
-  --r:14px;--rs:10px;
-  --shadow: 0 0 0 1px rgba(255,255,255,.02);
+  --bg:#0c1018;--elev:#171e2b;--card:#141a26;--hover:#222c3e;
+  --border:#2b3445;--border2:#3b4960;
+  --text:#f0f3fb;--sec:#bec8db;--muted:#9aa8bf;
+  --accent:#83b6ff;--accent-dim:rgba(91,150,255,.15);
+  --green:#80dfb5;--green-dim:rgba(75,193,139,.12);
+  --red:#ffa0a8;--red-dim:rgba(242,107,130,.12);
+  --amber:#f7c36b;--amber-dim:rgba(233,175,70,.12);
+  --violet:#c0a4ff;--violet-dim:rgba(166,123,245,.13);
+  --orange:#ffb47b;--cyan:#6edbe4;--cyan-dim:rgba(72,193,205,.12);
+  --r:18px;--rs:11px;
+  --shadow:0 10px 32px rgba(0,0,0,.06);
   --font:'DM Sans',system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
 }
 
 :root[data-theme="light"] {
-  --bg: #f4f7fb; --elev: #ffffff; --card: #ffffff; --hover: #eef3f8;
-  --border: #e2e8f0; --border2: #cbd5e1;
-  --text: #0f172a; --sec: #334155; --muted: #64748b;
-  --accent: #0284c7; --accent-dim: rgba(2, 132, 199, 0.12);
-  --green: #059669; --green-dim: rgba(5, 150, 105, 0.1);
-  --red: #dc2626; --red-dim: rgba(220, 38, 38, 0.1);
-  --amber: #d97706; --amber-dim: rgba(217, 119, 6, 0.12);
-  --violet: #7c3aed; --violet-dim: rgba(124, 58, 237, 0.1);
-  --orange: #ea580c;
-  --shadow: 0 1px 2px rgba(15,23,42,.05), 0 4px 12px rgba(15,23,42,.04);
+  --bg:#f3f5fa;--elev:#f8f9fc;--card:#ffffff;--hover:#e9edf6;
+  --border:#dce2ed;--border2:#bdc9dc;
+  --text:#182338;--sec:#445570;--muted:#596a82;
+  --accent:#235fbd;--accent-dim:rgba(67,117,220,.10);
+  --green:#12734e;--green-dim:rgba(28,154,101,.10);
+  --red:#b53245;--red-dim:rgba(199,48,74,.09);
+  --amber:#8d5808;--amber-dim:rgba(221,153,31,.12);
+  --violet:#7546b8;--violet-dim:rgba(133,83,205,.10);
+  --orange:#a65114;--cyan:#0b6975;--cyan-dim:rgba(23,165,184,.10);
+  --shadow:0 8px 28px rgba(50,77,125,.04);
 }
 
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -446,8 +446,8 @@ tbody tr:hover{background:var(--hover)}
 .period-jump-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .period-jump-btn svg{width:15px;height:15px;flex-shrink:0;color:var(--muted)}
 /* Alt sayfa (bottom sheet) */
-.sheet-overlay{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s ease}
-.sheet-overlay.show{opacity:1;pointer-events:auto}
+.sheet-overlay{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.6);backdrop-filter:none;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease}
+.sheet-overlay.show{opacity:1;visibility:visible;pointer-events:auto;backdrop-filter:blur(2px)}
 .sheet{width:100%;max-width:520px;background:var(--elev);border:1px solid var(--border2);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,.45);transform:translateY(100%);transition:transform .26s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;max-height:78vh;padding-bottom:env(safe-area-inset-bottom,0)}
 .sheet-overlay.show .sheet{transform:translateY(0)}
 .sheet-grab{width:38px;height:4px;border-radius:99px;background:var(--border2);margin:.6rem auto .2rem}
@@ -628,13 +628,33 @@ textarea:focus{border-color:var(--accent)}
 .cl-current{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:.85rem 1rem;margin-bottom:1.1rem;box-shadow:var(--shadow)}
 .cl-current-cap{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
 .cl-current-ver{font-family:var(--mono);font-size:1.15rem;font-weight:700;color:var(--accent)}
-.cl-entry{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.8rem;box-shadow:var(--shadow);overflow:hidden}
+.cl-entry{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:.6rem;box-shadow:var(--shadow);overflow:hidden}
 .cl-entry.is-current{border-color:rgba(56,189,248,.45)}
-.cl-head{display:flex;align-items:center;gap:.6rem;padding:.85rem 1rem;flex-wrap:wrap}
+/* Başlık artık bir buton: dokununca açılıp kapanır */
+.cl-head{display:flex;align-items:center;gap:.55rem;padding:.85rem 1rem;flex-wrap:wrap;width:100%;
+  background:transparent;border:0;color:var(--text);font-family:inherit;text-align:left;cursor:pointer}
+.cl-head:active{background:var(--hover)}
 .cl-ver{font-family:var(--mono);font-size:1rem;font-weight:700}
 .cl-badge{font-size:.58rem;font-weight:800;letter-spacing:.06em;color:var(--accent);background:var(--accent-dim,rgba(56,189,248,.12));border:1px solid rgba(56,189,248,.35);border-radius:999px;padding:.12rem .45rem}
-.cl-date{margin-left:auto;font-size:.75rem;color:var(--muted);white-space:nowrap}
-.cl-body{padding:0 1rem 1rem}
+/* Kapalıyken kaç değişiklik olduğunu gösteren rozet */
+.cl-count{font-size:.62rem;font-weight:700;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:999px;padding:.1rem .42rem}
+.cl-count::after{content:' değişiklik'}
+.cl-date{margin-left:auto;font-size:.73rem;color:var(--muted);white-space:nowrap}
+.cl-arrow{width:16px;height:16px;flex-shrink:0;color:var(--muted);transition:transform .22s ease}
+.cl-entry.open .cl-arrow{transform:rotate(180deg)}
+/* Gövde: kapalıyken gizli. grid-template-rows ile yumuşak açılış. */
+/* YEDEK ÖNCE: grid-template-rows animasyonu Chrome 115+ ister.
+   Eski WebView'da kural düşerse gövde HİÇ görünmezdi; bu yüzden
+   önce basit display kuralı, destekleyen tarayıcıda animasyonlu sürüm. */
+.cl-head:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.cl-body{display:none;padding:0 1rem;visibility:hidden}
+.cl-entry.open .cl-body{display:block;padding-bottom:1rem;visibility:visible}
+@supports (grid-template-rows: 0fr){
+  .cl-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .24s ease}
+  .cl-body > *{overflow:hidden;min-height:0}
+  .cl-entry.open .cl-body{display:grid;grid-template-rows:1fr;padding-bottom:1rem}
+}
+@media (prefers-reduced-motion: reduce){ .cl-body{transition:none} }
 .cl-empty{text-align:center;padding:2.4rem 1rem;color:var(--muted);line-height:1.6}
 .sys-warn{display:flex;align-items:flex-start;gap:.7rem;background:var(--card);border:1px solid var(--amber);border-left:4px solid var(--amber);border-radius:var(--rs);padding:.8rem .9rem;margin-bottom:.55rem;font-size:.82rem;line-height:1.5}
 .sys-warn.crit{border-color:var(--red);border-left-color:var(--red)}
@@ -740,6 +760,240 @@ textarea:focus{border-color:var(--accent)}
   .modal { padding: 1.2rem 1.05rem; border-radius: 16px; }
   .period-nav { padding: .75rem .85rem; }
 }
+.ui-icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:middle}
+[hidden]{display:none!important}
+.main{min-width:0;max-width:1440px;padding:2rem 2.25rem 3rem}
+.page{--page-accent:var(--accent);--page-tint:var(--accent-dim);min-width:0}
+#page-weekly,#page-monthly,#page-changelog,#page-admin{--page-accent:var(--violet);--page-tint:var(--violet-dim)}
+#page-garage,#page-settings{--page-accent:var(--amber);--page-tint:var(--amber-dim)}
+.page-head{position:relative;padding-left:1rem;margin-bottom:1.5rem}
+.page-head::before{content:'';position:absolute;left:0;top:.2rem;width:4px;height:32px;background:var(--page-accent);border-radius:6px}
+.page-head h1{font-size:1.75rem;letter-spacing:-.045em;line-height:1.2}
+.page-head p{font-size:.83rem;color:var(--muted);max-width:65ch;line-height:1.6}
+.dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.dashboard-head .btn{flex-shrink:0}
+.btn,.btn-sm,.auth-btn,.q-tag,.sheet-close,.nav-arrow,.period-jump-btn,.pw-toggle-btn,.goal-seg,.goal-type-btn,.rem-chip,.ota-tag-btn,.btn-reset{min-height:44px}
+.btn{border-radius:11px;font-size:.84rem;padding:.65rem 1rem;transition:background-color .15s,border-color .15s,color .15s}
+.btn-sm{font-size:.78rem;padding:.45rem .7rem}
+.btn-primary,.auth-login-btn{background:linear-gradient(110deg,#3265cb,#5353c5);color:#fff;box-shadow:0 4px 12px rgba(50,91,200,.16)}
+.btn-primary:hover,.auth-login-btn:hover{filter:none;background:linear-gradient(110deg,#2854ad,#4544ac)}
+.btn-ghost{background:var(--card);border-color:var(--border)}
+.btn .ui-icon{width:18px;height:18px}
+.actions .btn-sm::after{display:none}
+.pw-toggle-btn,.sheet-close,.nav-arrow{min-width:44px}
+.auth-box{border-radius:24px;background:var(--card);box-shadow:var(--shadow);padding:2rem;max-width:410px}
+.auth-box::before{height:4px;background:linear-gradient(90deg,#548cff,#a079ef,#f7c36b)}
+.auth-box p,.auth-legal,#auth-error{font-size:.82rem}
+.auth-input{border-radius:12px}
+.nav-item{min-height:46px;border-radius:12px}
+.nav-item[data-page="weekly"].active,.nav-item[data-page="monthly"].active,.nav-item[data-page="changelog"].active{color:var(--violet);background:var(--violet-dim)}
+.nav-item[data-page="garage"].active,.nav-item[data-page="settings"].active{color:var(--amber);background:var(--amber-dim)}
+.sidebar{background:var(--bg)}
+.bottom-nav{background:var(--card);box-shadow:0 -6px 24px rgba(0,0,0,.06)}
+.bn-item{font-size:.7rem;min-height:58px;gap:.3rem;padding:.55rem .15rem}
+.bn-item.active{background:var(--accent-dim)}
+.bn-item.active::before{width:24px;height:3px}
+.bn-item[data-page="weekly"].active,.bn-item[data-page="monthly"].active{color:var(--violet);background:var(--violet-dim)}
+.bn-item[data-page="garage"].active{color:var(--amber);background:var(--amber-dim)}
+.metric,.insight,.best-card,.daily-card{border-radius:var(--r);min-width:0;transform:none;transition:border-color .15s}
+.metric{border-left-width:1px;border-left-color:var(--border);padding:1.1rem 1.15rem}
+.metric::after,.best-card::before{display:none}
+.metric:active,.insight:active,.best-card:active,.daily-card:active{transform:none}
+.metric:hover{box-shadow:var(--shadow);border-color:var(--border)}
+.metric-label{font-size:.78rem;text-transform:none;letter-spacing:0;line-height:1.4;color:var(--sec);font-weight:550}
+.metric-value{font-family:var(--font);font-variant-numeric:tabular-nums;font-weight:750;font-size:1.6rem;letter-spacing:-.035em;overflow-wrap:anywhere}
+.metric-sub{font-size:.75rem;line-height:1.55;overflow-wrap:anywhere}
+.metric-ico{width:33px;height:33px;top:1rem;right:1rem;border:0;background:var(--hover)}
+.metric-ico .ui-icon{width:20px;height:20px}
+.metric.swipeable .metric-label{padding-right:32px}
+.metric.swipeable .metric-slide{min-width:0;overflow-wrap:anywhere;padding:1.15rem 1.1rem 1.6rem}
+.metric.swipeable .metric-dots{bottom:10px}
+.metrics,.insights{grid-template-columns:repeat(4,minmax(0,1fr));gap:.85rem}
+.insight{align-items:flex-start;padding:1.1rem;gap:.7rem}
+.insight>div:last-child{min-width:0}
+.insight h4{font-size:.77rem;text-transform:none;letter-spacing:0;color:var(--sec)}
+.insight .val,.best-card .big{font-family:var(--font);font-variant-numeric:tabular-nums;font-weight:700;overflow-wrap:anywhere}
+.insight .desc,.best-card .meta,.best-card .date{font-size:.76rem;overflow-wrap:anywhere}
+.best-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.best-card .tag{font-size:.75rem;text-transform:none;letter-spacing:0;color:var(--sec)}
+.panel,.info-block,.gd-card{box-shadow:var(--shadow)}
+.toolbar{gap:.65rem;padding:1rem;background:var(--card)}
+.toolbar input,.toolbar select{min-height:44px;background:var(--elev);font-size:.88rem;min-width:0;max-width:100%}
+.toolbar input{flex:1 1 180px}
+.toolbar select{flex:0 1 auto}
+.fg label{font-size:.82rem;text-transform:none;letter-spacing:0;color:var(--sec);margin-bottom:.4rem}
+.fg input,.fg select,textarea{background:var(--card);min-height:46px}
+.fg-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.modal{padding:1.5rem;border-radius:22px;background:var(--card);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 1.5rem)}
+.modal h2{font-size:1.22rem;letter-spacing:-.035em}
+.form-details{border-radius:13px;background:var(--elev)}
+.form-details summary{background:var(--elev);min-height:48px}
+.daily-cards{gap:.8rem}
+.daily-card{padding:1.1rem;border-left-width:3px}
+.daily-card-net{font-family:var(--font);font-size:1.35rem;font-weight:750;font-variant-numeric:tabular-nums;white-space:normal;overflow-wrap:anywhere;text-align:right;min-width:0}
+.daily-card-top>div:first-child{min-width:0;overflow-wrap:anywhere}
+.daily-card-stats{gap:.4rem}
+.daily-card-stats span{border-radius:8px;background:var(--elev);font-size:.76rem;overflow-wrap:anywhere;max-width:100%}
+.daily-card-expand-btn{min-height:44px;padding:.6rem .2rem;font-size:.8rem}
+.daily-card-actions{border-top:1px solid var(--border);padding-top:.85rem}
+.daily-card-detail-row{gap:1rem;align-items:baseline}
+.daily-card-detail-row span{min-width:0;overflow-wrap:anywhere}
+.daily-card-note{overflow-wrap:anywhere}
+.period-nav{border-radius:16px;background:var(--card);padding:1rem}
+.period-badge{color:var(--page-accent,var(--accent));background:var(--page-tint,var(--accent-dim));text-transform:none;font-size:.73rem}
+.period-nav-title{font-size:1.1rem}
+.period-nav-sub{font-size:.76rem}
+.period-nav-btns{min-width:0}
+.period-jump-btn{min-width:0;max-width:100%;background:var(--elev)}
+.dash-tabs{background:var(--card);border-radius:13px}
+.dash-tab-btn{min-height:44px;white-space:normal;font-size:.82rem;line-height:1.35}
+.dash-tab-btn.active{background:var(--page-tint);color:var(--page-accent)}
+#page-weekly>.dash-tabs,#page-monthly>.dash-tabs{display:none}
+.delta-chip{font-size:.73rem;line-height:1.5;border-radius:7px;white-space:normal}
+.garage-inputs{flex:1 1 360px;justify-content:flex-end;min-width:0}
+.garage-inputs>*{max-width:100%}
+#page-garage .garage-info-flex{border-top:3px solid var(--amber)}
+#page-garage .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+.maint-card{border-left-width:3px}
+.bonus-mode-opt{padding:1.1rem;border-radius:15px;min-width:0}
+.bonus-mode-opt.active{border-color:var(--amber);background:var(--amber-dim)}
+.bmo-title{font-size:1rem;color:var(--text)}
+.bmo-desc{font-size:.83rem}
+.bonus-preview{background:var(--violet-dim);border:1px solid var(--border);border-radius:13px;font-size:.82rem;padding:1rem}
+#bonusTiersList input{min-height:44px;min-width:0;max-width:100%}
+#bonusTiersList .tier-row{min-width:0}
+#page-account .panel:last-child{border-color:var(--border2)}
+.gd-card{border-radius:16px}.gd-card:hover{transform:none}
+.gd-card p,.gd-list li{font-size:.83rem}
+.cl-current{border-radius:16px;background:var(--violet-dim)}
+.cl-entry{border-radius:16px}.cl-head{min-height:60px}
+.cl-badge{color:var(--violet);background:var(--violet-dim)}
+.adm-wrap{grid-template-columns:200px minmax(0,1fr)}.adm-wrap>*{min-width:0}
+.adm-nav{background:var(--card);max-width:100%}.adm-tab{min-height:44px}
+@media(max-width:820px){.adm-wrap{grid-template-columns:minmax(0,1fr)}}
+.sheet{background:var(--card);border-radius:24px 24px 0 0}
+.sheet-item{min-height:52px}
+.sheet-item.active{background:var(--violet-dim);border-color:var(--violet)}
+.toast{border-radius:13px;background:var(--card)}
+#offlineBadge{top:calc(env(safe-area-inset-top,0px) + 8px)!important;max-width:calc(100% - 120px);white-space:normal;text-align:center}
+.dashboard-hero{position:relative;isolation:isolate;overflow:hidden;border:1px solid #7188d757;border-radius:22px;background:linear-gradient(115deg,#173b6a,#23336e 54%,#443074);padding:1.75rem 2rem;color:#fff;margin-bottom:1.4rem}
+.dashboard-hero::after{content:'';position:absolute;right:-40px;top:-140px;width:360px;height:460px;border:1px solid #b7afff24;transform:rotate(30deg);border-radius:70px;box-shadow:0 0 0 35px #b7afff07;z-index:-1;pointer-events:none}
+.dashboard-hero-head{display:flex;align-items:center;justify-content:space-between;gap:.7rem;color:#d6e2fc;font-size:.84rem}
+.dashboard-hero-head h2{display:flex;align-items:center;gap:.65rem;font-size:inherit;font-weight:550;min-width:0}
+.dashboard-period{padding:.3rem .6rem;border:1px solid #ffffff30;background:#ffffff0a;border-radius:8px;font-size:.72rem;white-space:nowrap}
+.dashboard-net{font-family:var(--font);font-weight:750;font-size:clamp(2rem,4.5vw,3.5rem);letter-spacing:-.045em;line-height:1.2;margin:1.15rem 0 .65rem;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.dashboard-net.loss{color:#ffbac3}
+.dashboard-note,.dashboard-range{font-size:.78rem;color:#d0dcf5;line-height:1.5;overflow-wrap:anywhere}
+.dashboard-range{font-size:.73rem;margin-top:.45rem}
+.dashboard-breakdown{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.1rem;margin-top:1.35rem;border-top:1px solid #ffffff27;padding-top:1.1rem}
+.dashboard-breakdown>div+div{border-left:1px solid #ffffff27;padding-left:1.1rem}
+.dashboard-breakdown dt{color:#c7d5f0;font-size:.76rem;margin-bottom:.3rem}
+.dashboard-breakdown dd{font-size:1.2rem;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.dashboard-empty{padding:1rem 1.2rem;border:1px solid var(--border);border-radius:14px;background:var(--violet-dim);color:var(--sec);font-size:.85rem;margin-bottom:1rem}
+.dashboard-empty strong{display:block;color:var(--text);margin-bottom:.25rem}
+.dashboard-section-title{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin:.3rem 0 .85rem}
+.dashboard-section-title h2{font-size:.98rem;font-weight:650;letter-spacing:-.02em}
+.dashboard-section-title span{font-size:.75rem;color:var(--muted)}
+#mainMetrics .metric{padding:1.1rem;display:flex;flex-direction:column}
+#mainMetrics .metric-ico{position:static;margin-bottom:1rem;background:var(--violet-dim);color:var(--violet)}
+#mainMetrics .metric:nth-child(2) .metric-ico{background:var(--accent-dim);color:var(--accent)}
+#mainMetrics .metric:nth-child(3) .metric-ico{background:var(--cyan-dim);color:var(--cyan)}
+#mainMetrics .metric:nth-child(4) .metric-ico{background:var(--amber-dim);color:var(--amber)}
+#mainMetrics .metric-value{color:var(--text);font-size:1.55rem}
+#mainMetrics .metric-value.neg{color:var(--red)}
+#mainMetrics .metric-label{padding-right:0;margin:.4rem 0 0;order:2}
+#mainMetrics .metric-sub{order:3}
+.goal-card{padding:1.3rem;border-radius:20px}
+.goal-card::before{background:linear-gradient(90deg,var(--amber),var(--violet));height:3px}
+.goal-seg-row{border-radius:11px;background:var(--elev)}
+.goal-seg{border-radius:8px}.goal-seg.active{color:var(--amber);background:var(--amber-dim)}
+.goal-slide{min-width:0;flex:0 0 100%}
+.goal-info-value{font-family:var(--font);font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.goal-info-sub{font-size:.8rem}
+.goal-ring-wrap{width:110px;height:110px}.goal-pct{font-family:var(--font);font-weight:750}
+.dash-gps{background:linear-gradient(110deg,var(--card),var(--cyan-dim));border:1px solid var(--border);border-left:4px solid var(--cyan);border-radius:17px;padding:1rem 1.2rem;gap:1rem}
+.dash-gps-meta{font-size:.77rem}.dash-gps-title{font-size:.94rem}
+.dash-gps-dot{background:var(--cyan)!important;box-shadow:none;animation:none}
+.dash-gps .gps-meta{font-size:.74rem;color:var(--muted)}
+.dash-gps .gps-live{font-family:var(--font);font-size:1.45rem;line-height:1.25;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--text)}
+.dash-gps-stats{gap:1.4rem;flex-wrap:wrap}.dash-gps-actions .btn{min-height:44px}
+@media(max-width:1200px){.metrics,.insights{grid-template-columns:repeat(2,minmax(0,1fr))}.best-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:768px){
+.main{margin-left:0;padding:calc(env(safe-area-inset-top,0px) + 4.5rem) 1rem calc(env(safe-area-inset-bottom,0px) + 6rem);max-width:100%}
+.page-head{margin-bottom:1.25rem}.page-head h1{font-size:1.55rem}.page-head p{font-size:.8rem}
+.dashboard-head{align-items:flex-start}.dashboard-head .btn{padding:.55rem .7rem;font-size:.77rem}
+.metrics,.insights,.best-grid{gap:.75rem}
+.insights,.best-grid{grid-template-columns:minmax(0,1fr)}
+#projectionCard{grid-template-columns:minmax(0,1fr)!important}
+.metric{padding:1rem}.metric-value{font-size:1.4rem}.metric-label{font-size:.76rem;padding-right:28px}
+.metric-ico{width:27px;height:27px;right:.75rem;top:.85rem;font-size:.85rem}
+.metric-sub{font-size:.73rem}.metric-swipe{min-width:0}
+#mainMetrics .metric{padding:1rem}#mainMetrics .metric-value{font-size:1.4rem}
+.dashboard-hero{padding:1.3rem;border-radius:20px}.dashboard-net{font-size:clamp(1.8rem,8vw,2.75rem)}
+.dashboard-hero-head{font-size:.78rem}.dashboard-period{font-size:.65rem;padding:.25rem .4rem}
+.dashboard-breakdown{gap:.8rem}.dashboard-breakdown>div+div{padding-left:.8rem}.dashboard-breakdown dd{font-size:1.07rem}
+.dashboard-note{font-size:.75rem}.dashboard-range{font-size:.7rem}
+.dashboard-section-title h2{font-size:.92rem}.dashboard-section-title span{font-size:.68rem}
+.dash-gps{padding:1rem;display:none;gap:.85rem}.dash-gps.show{display:flex}
+.dash-gps-left{flex:1 1 100%}.dash-gps-stats{flex:1 1 100%;justify-content:space-between;gap:.8rem}
+.dash-gps-actions{width:100%}.dash-gps-actions .btn{flex:1}
+.dash-gps .gps-live{font-size:1.6rem}
+.toolbar{padding:.85rem}.toolbar input{flex-basis:100%}.toolbar select{flex:1}
+#page-garage .metrics{grid-template-columns:minmax(0,1fr)!important}
+.garage-inputs{width:100%;flex-basis:auto;grid-template-columns:minmax(0,1fr)}
+.garage-inputs .auth-input{width:100%!important}
+.garage-inputs .btn{width:100%}
+.fg-row{grid-template-columns:minmax(0,1fr)}
+.period-nav{padding:.85rem}.period-nav-btns{width:100%;justify-content:space-between}.period-jump-btn{flex:1;justify-content:center}
+.goal-slide-inner{flex-direction:row;align-items:center;text-align:left;gap:1rem}.goal-seg-row{margin-left:0;margin-right:0}
+.goal-ring-wrap{width:90px;height:90px}.goal-info-title{font-size:.78rem}.goal-info-value{font-size:1rem}.goal-pct{font-size:1.2rem}
+.goal-info .btn{white-space:normal}.goal-info-sub{margin-bottom:.6rem}
+.auth-box{padding:1.5rem}.modal{padding:1.25rem}
+.bonus-mode-row{grid-template-columns:minmax(0,1fr)}
+#bonusTiersList>div{flex-wrap:wrap}#bonusTiersList input{flex:1 1 70px}
+.section-divider h2{white-space:normal}.gd-grid{grid-template-columns:minmax(0,1fr)}
+.bmo-desc{font-size:.8rem}
+}
+@media(max-width:380px){
+.main{padding-left:.8rem;padding-right:.8rem}.dashboard-head{gap:.6rem}.dashboard-head .btn{max-width:90px;white-space:normal}
+#mainMetrics .metric{padding:.85rem}.metric-ico{position:static;margin-bottom:.65rem}.metric-label{padding-right:0}
+.metric-slide .metric-label{padding-right:0}.metric.swipeable .metric-ico{position:absolute;right:.65rem;top:.75rem}
+.metric.swipeable .metric-slide{padding:.85rem .8rem 1.5rem}
+.dashboard-hero{padding:1.1rem}.dashboard-breakdown dd{font-size:.95rem}.dashboard-hero-head .ui-icon{display:none}
+.bn-item{font-size:.64rem;min-height:56px}.bn-item svg{width:19px;height:19px}
+.goal-slide-inner{flex-direction:column;text-align:center}.goal-seg-row{margin-left:auto;margin-right:auto}
+#mainMetrics .metric-value{font-size:1.25rem}.metric-sub{font-size:.72rem}
+}
+.onboarding-dialog{margin:auto;width:calc(100% - 2rem);max-width:540px;max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 2rem);overflow-y:auto;padding:1.75rem;border:1px solid var(--border2);border-radius:24px;background:var(--card);color:var(--text);box-shadow:0 20px 80px rgba(0,0,0,.3)}
+.onboarding-dialog::backdrop{background:rgba(5,8,15,.85)}
+.onboarding-dialog:not([open]){display:none}
+.onboarding-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.74rem;color:var(--muted);margin-bottom:.8rem}
+.onboarding-kicker{font-weight:700;letter-spacing:.06em;color:var(--violet)}
+.onboarding-dialog h2{font-size:1.5rem;letter-spacing:-.035em;line-height:1.25;margin-bottom:.7rem}
+.onboarding-dialog h3{font-size:1.1rem;margin-bottom:.5rem}
+#onboardingIntro{font-size:.86rem;color:var(--sec);line-height:1.6}
+.onboarding-steps{display:flex;list-style:none;gap:.5rem;margin:1.2rem 0 1.4rem;padding:0}
+.onboarding-step{flex:1;padding:.6rem .35rem;font-size:.73rem;text-align:center;border-radius:9px;background:var(--elev);color:var(--muted);border:1px solid var(--border)}
+.onboarding-step.active{background:var(--violet-dim);color:var(--violet);border-color:var(--violet)}
+.onboarding-note{background:var(--amber-dim);padding:.85rem 1rem;border-radius:12px;color:var(--sec);font-size:.8rem;line-height:1.6;margin:.6rem 0 1rem}
+.onboarding-note p+p{margin-top:.6rem}
+.onboarding-next{width:100%;white-space:normal}
+.optional-label{font-size:.72rem;color:var(--muted);font-weight:400}
+.field-hint{font-size:.78rem;color:var(--muted);line-height:1.6;margin:.45rem 0 .8rem}
+.form-error{font-size:.82rem;color:var(--red);line-height:1.5;margin:.7rem 0;overflow-wrap:anywhere}
+.form-error:empty{display:none}
+.onboarding-options{display:grid;gap:.7rem;margin:1rem 0}
+.onboarding-options label{display:flex;align-items:flex-start;gap:.7rem;border:1px solid var(--border);border-radius:13px;padding:1rem;cursor:pointer;min-height:60px}
+.onboarding-options label:has(input:checked){background:var(--violet-dim);border-color:var(--violet)}
+.onboarding-options input{accent-color:var(--violet);width:20px;height:20px;flex:none;margin-top:.15rem}
+.onboarding-options strong,.onboarding-options small{display:block}.onboarding-options small{font-size:.79rem;color:var(--sec);margin-top:.3rem}
+.onboarding-ready-mark{width:52px;height:52px;display:grid;place-items:center;background:var(--green-dim);color:var(--green);border-radius:16px;font-size:1.8rem;margin-bottom:1rem}
+#onboardReadyStep>p{font-size:.88rem;color:var(--sec);line-height:1.7;margin-bottom:.8rem}
+#onboardingBack{margin-top:1rem}
+.garage-odometer{min-width:0;max-width:180px}.garage-odometer label{display:block;font-size:.76rem;color:var(--sec);margin-bottom:.3rem}.garage-odometer .auth-input{margin:0}
+.maint-card .meta{flex-wrap:wrap;gap:.5rem}.maint-card>div:first-child{flex-wrap:wrap;gap:.5rem}.maint-card .tag{white-space:normal;overflow-wrap:anywhere}
+@media(max-width:768px){.garage-odometer{max-width:none}}
+@media(max-width:400px){.onboarding-dialog{width:calc(100% - 1.25rem);padding:1.1rem;border-radius:19px}.onboarding-dialog h2{font-size:1.3rem}.onboarding-step{font-size:.68rem}.onboarding-steps{gap:.3rem}}
 </style>
 </head>
 <body>
@@ -862,9 +1116,9 @@ textarea:focus{border-color:var(--accent)}
   <main class="main">
   <!-- ÖZET PANEL -->
   <section class="page active" id="page-dashboard">
-    <div class="page-head"><h1>Özet Panel</h1><p>Performans, paket ekonomisi ve trendler</p></div>
+    <div class="page-head dashboard-head"><div><h1>Genel özet</h1><p>Kazancın, emeğin ve katettiğin yol.</p></div><button type="button" class="btn btn-primary" id="btnDashAdd" onclick="openDashboardRecord()">+ Yeni kayıt</button></div>
 
-    <div id="dashGpsLive" class="dash-gps">
+    <div id="dashGpsLive" class="dash-gps" role="region" aria-label="Aktif GPS takibi">
       <div class="dash-gps-left">
         <span class="gps-dot dash-gps-dot"></span>
         <div>
@@ -897,12 +1151,20 @@ textarea:focus{border-color:var(--accent)}
 
     <!-- SEKMELER -->
     <div class="dash-tabs">
-      <button class="dash-tab-btn active" data-tab="ozet">Temel Özet</button>
-      <button class="dash-tab-btn" data-tab="detay">Detaylı Analiz & İçgörüler</button>
+      <button type="button" class="dash-tab-btn active" data-tab="ozet" aria-pressed="true" aria-controls="tab-ozet">Genel özet</button>
+      <button type="button" class="dash-tab-btn" data-tab="detay" aria-pressed="false" aria-controls="tab-detay">Detaylı analiz</button>
     </div>
 
     <!-- TAB 1: TEMEL ÖZET -->
     <div id="tab-ozet" class="dash-tab-pane active">
+      <div id="dashboardSummary"><div class="skeleton-block" style="height:200px;margin-bottom:1.4rem" role="status" aria-label="Kazanç özeti yükleniyor"></div></div>
+      <div class="dashboard-section-title"><h2>Yolun rakamlarla özeti</h2><span>Tüm kayıtlar</span></div>
+      <div class="metrics" id="mainMetrics">
+        <div class="metric"><div class="skeleton-block" style="height:72px"></div></div>
+        <div class="metric"><div class="skeleton-block" style="height:72px"></div></div>
+        <div class="metric"><div class="skeleton-block" style="height:72px"></div></div>
+        <div class="metric"><div class="skeleton-block" style="height:72px"></div></div>
+      </div>
       <div class="goal-card" id="goalCard">
         <div class="goal-seg-row">
           <button type="button" class="goal-seg active" data-goal-period="weekly">Haftalık</button>
@@ -929,16 +1191,11 @@ textarea:focus{border-color:var(--accent)}
           <span class="goal-dot" data-goal-dot="monthly"></span>
         </div>
       </div>
-      <div class="metrics" id="mainMetrics">
-        <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div><div class="skeleton-block" style="height:10px;width:55%;margin-top:10px"></div></div>
-        <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div><div class="skeleton-block" style="height:10px;width:55%;margin-top:10px"></div></div>
-        <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div><div class="skeleton-block" style="height:10px;width:55%;margin-top:10px"></div></div>
-        <div class="metric"><div class="skeleton-block" style="height:10px;width:42%;margin-bottom:12px"></div><div class="skeleton-block" style="height:24px;width:70%"></div><div class="skeleton-block" style="height:10px;width:55%;margin-top:10px"></div></div>
-      </div>
     </div>
 
     <!-- TAB 2: DETAYLI ANALİZ -->
     <div id="tab-detay" class="dash-tab-pane">
+      <div class="metrics" id="detailMetrics"></div>
       <div class="insights" id="projectionCard" style="margin-bottom: 1.5rem; grid-template-columns: repeat(2, 1fr);">
         <div class="insight" style="background: linear-gradient(135deg, var(--card), var(--elev)); border-color: var(--border2);">
           <div class="insight-icon g">🎯</div>
@@ -1060,12 +1317,13 @@ textarea:focus{border-color:var(--accent)}
     <div class="info-block garage-info-flex">
       <div>
         <h3 style="margin-bottom:0.2rem">Araç Bilgisi & Toplam Kilometre</h3>
-        <p style="font-size:0.8rem">Toplam KM, seçili aracın günlük kayıtlarındaki kilometrelerin toplamından otomatik hesaplanır.</p>
+        <p style="font-size:0.8rem">Güncel kilometreye, bu ayardan sonra kaydettiğiniz mesafeler eklenir. Bu değeri düzeltmek bakım sayaçlarını değiştirmez.</p>
       </div>
       <div class="garage-inputs">
         <select id="vehicleSelect" class="auth-input" style="margin:0; width:170px;" aria-label="Araç seç"></select>
         <input type="text" id="garageModel" class="auth-input" maxlength="60" style="margin:0; width:190px;" placeholder="Model Adı" />
-        <button class="btn btn-primary" id="btnSaveGarageInfo">Modeli Kaydet</button>
+        <div class="garage-odometer"><label for="garageOdometer">Güncel kilometre</label><input id="garageOdometer" class="auth-input" type="number" min="0" max="2000000" step="0.01" inputmode="decimal" /></div>
+        <button class="btn btn-primary" id="btnSaveGarageInfo">Araç bilgisini kaydet</button>
       </div>
     </div>
     <div class="toolbar" style="margin-bottom: 1.5rem; background: transparent; border: none; padding: 0; gap:0.6rem; flex-wrap:wrap;">
@@ -1076,19 +1334,19 @@ textarea:focus{border-color:var(--accent)}
     <!-- YAKIT VERİMLİLİĞİ KARTLARI -->
     <div class="metrics" style="margin-bottom: 1.5rem; grid-template-columns: repeat(3, 1fr);">
       <div class="metric green">
-        <div class="metric-ico">⛽</div>
+        <div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h10v17M2 21h14M4 11h10m3-6 3 3v10a2 2 0 0 1-4 0v-5h-2"/></svg></div>
         <div class="metric-label">100 KM'de Yakıt (L)</div>
         <div class="metric-value" id="fuel100KmVal">0 L</div>
         <div class="metric-sub">100 kilometrede ortalama tüketim</div>
       </div>
       <div class="metric amber">
-        <div class="metric-ico">💸</div>
+        <div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16m-6 5h3"/></svg></div>
         <div class="metric-label">KM Başına Maliyet (TL/km)</div>
         <div class="metric-value" id="fuelTlKmVal">0 ₺</div>
         <div class="metric-sub">1 kilometrelik yakıt masrafı</div>
       </div>
       <div class="metric cyan">
-        <div class="metric-ico">🛣️</div>
+        <div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div>
         <div class="metric-label">1 Litre ile Yol (km/L)</div>
         <div class="metric-value" id="fuelKmLVal">0 km</div>
         <div class="metric-sub">1 litre benzinle gidilen ort. yol</div>
@@ -1098,9 +1356,9 @@ textarea:focus{border-color:var(--accent)}
     <div class="metrics" style="margin-bottom: 1.5rem;">
       <div class="metric cyan">
         <div class="metric-ico">🏍️</div>
-        <div class="metric-label">Toplam Motor KM</div>
+        <div class="metric-label">Güncel araç kilometresi</div>
         <div class="metric-value" id="totalMotorKmVal">0 km</div>
-        <div class="metric-sub">Günlük kayıtlardan otomatik hesaplanır</div>
+        <div class="metric-sub">Başlangıç kilometresi ve sonrasında kaydedilen yol</div>
       </div>
       <div class="metric green">
         <div class="metric-ico">🛢️</div>
@@ -1151,6 +1409,7 @@ textarea:focus{border-color:var(--accent)}
       </div>
     </div>
 
+    <p style="font-size:.8rem;color:var(--muted);line-height:1.6;">Mod seçimi hemen uygulanır. Baraj değişikliklerini aşağıdaki Kaydet düğmesiyle kaydedin. Bonus her araç için ayrı hesaplanır; haftalık bonus günlük kayıtlara paket payı oranında dağıtılır, her gün yeniden kazanılmaz.</p>
     <div class="info-block">
       <h3 style="margin-bottom:0.2rem" id="bonusTiersHeading">Paket Bonus Barajları</h3>
       <p style="font-size:0.8rem" id="bonusTiersHint">Haftalık paket sayınız "Eşik" değerine ulaştığında o satırdaki bonus tutarı uygulanır.</p>
@@ -1196,16 +1455,20 @@ textarea:focus{border-color:var(--accent)}
       <div class="gd-steps">
         <div class="gd-step">
           <div class="gd-step-n">1</div>
-          <div class="gd-step-t"><b>Aracınızı ekleyin.</b> Garaj sayfasından "Yeni Araç Ekle" ile motorunuzu tanımlayın. Yakıt ve bakım takibi bu araca işlenir.</div>
+          <div class="gd-step-t"><b>Aracınızı ekleyin.</b> İlk girişte açılan <b>“Hoş geldiniz” kurulumunda</b> aracınızı, güncel kilometresini ve bakım periyodunu girin (Garaj sayfasından da her zaman yapılabilir). Yakıt ve bakım takibi bu araca işlenir.</div>
         </div>
         <div class="gd-step">
           <div class="gd-step-n">2</div>
-          <div class="gd-step-t"><b>Bonus sisteminizi kurun.</b> Sol menüdeki "Bonus Sistemi" bölümünden bonusu <b>haftalık</b> mı <b>günlük</b> mü aldığınızı seçin ve barajları girin.</div>
+          <div class="gd-step-t"><b>Bonus sisteminizi kurun.</b> Kurulumun 2. adımında bonusu <b>haftalık</b> mı <b>günlük</b> mü aldığınızı seçin; sonradan “Bonus Sistemi” sayfasından barajları düzenleyebilirsiniz.</div>
         </div>
         <div class="gd-step">
           <div class="gd-step-n">3</div>
           <div class="gd-step-t"><b>Her gün kaydınızı girin.</b> Günlük Kayıt sayfasından KM, paket, yakıt ve gideri yazın. Tüm grafikler, özetler ve hedefler otomatik güncellenir.</div>
         </div>
+      </div>
+      <div style="margin-top:.7rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+        <button type="button" id="btnStartSetupFromGuide" class="btn btn-ghost btn-sm" onclick="startSetupFromGuide()">Kurulumu başlat</button>
+        <span style="font-size:.75rem;opacity:.7;">Kurulum sihirbazını istediğiniz zaman yeniden açabilirsiniz.</span>
       </div>
     </div>
 
@@ -1228,10 +1491,32 @@ textarea:focus{border-color:var(--accent)}
         <p>Uygulamanın kalbi. Günü bitirince buradan o günün verilerini girersiniz.</p>
         <ul class="gd-list">
           <li><b>GPS Sayacı:</b> "Takibi Başlat" deyip mesaiye çıkın; durdurduğunuzda ölçülen mesafe KM alanına kendiliğinden yazılır.</li>
+          <li><b>Ana ekran widget'ı:</b> Takibi uygulamayı açmadan başlatıp durdurabilirsiniz. Nasıl ekleneceği aşağıda anlatılıyor.</li>
           <li>Kayıtlara tıklayarak sonradan <b>düzenleyebilir</b> veya silebilirsiniz.</li>
           <li>Aynı tarihe ikinci kez kayıt girerseniz üzerine yazmak isteyip istemediğiniz sorulur.</li>
           <li>Bugünün kaydı listede <b>BUGÜN</b> etiketiyle işaretlenir; kartın sol kenarı kazançlı günlerde yeşil, zararlı günlerde kırmızı olur.</li>
           <li><b>⬇ CSV</b> ile tüm kayıtlarınızı dışa aktarabilirsiniz.</li>
+        </ul>
+      </div>
+
+      <div class="gd-card">
+        <div class="gd-card-head"><div class="gd-ico">🏠</div><h3>Ana Ekran Widget'ı</h3></div>
+        <p>Telefonunuzun ana ekranına küçük bir kumanda ekleyin: GPS takibini uygulamayı açmadan başlatıp durdurun.</p>
+        <div class="gd-steps" style="margin:.6rem 0 .2rem;">
+          <div class="gd-step"><div class="gd-step-n">1</div>
+            <div class="gd-step-t">Ana ekranda <b>boş bir alana uzun basın</b>.</div></div>
+          <div class="gd-step"><div class="gd-step-n">2</div>
+            <div class="gd-step-t">Açılan menüden <b>Widget'lar</b> (bazı telefonlarda "Araçlar" veya "Widgets") seçin.</div></div>
+          <div class="gd-step"><div class="gd-step-n">3</div>
+            <div class="gd-step-t">Listeden <b>Kurye OS</b>'u bulun ve <b>GPS Takip</b> widget'ını ana ekrana sürükleyin.</div></div>
+        </div>
+        <ul class="gd-list">
+          <li>Widget üzerinde <b>anlık mesafe</b> ve takibin açık olup olmadığı görünür.</li>
+          <li><b>BAŞLAT</b> / <b>DURDUR</b> düğmesine dokunmanız yeterli; uygulama açılıp işlemi yapar.</li>
+          <li>Durdurduğunuzda ölçülen KM her zamanki gibi o günün kaydına eklenir.</li>
+          <li>Widget'taki mesafe, takibi başlatıp durdurduğunuzda anında güncellenir. Arada bir kendiliğinden yenilenmesi Android tarafından sınırlanmıştır; en güncel değeri uygulamayı açarak görebilirsiniz.</li>
+          <li>Eklerken <b>“Widget/Araç yüklenemedi”</b> derseniz: ana ekrandan widget'ı kaldırıp telefonu bir kez yeniden başlatın, sonra tekrar ekleyin. Düzelmezse uygulamanın en güncel sürümünde olduğunuzu kontrol edin.</li>
+          <li>Dokunduğunuzda takip <b>hemen</b> başlamazsa uygulama açılırken bekleyin: izin sorunu veya devam eden bir oturum olabilir. Komut uygulamayı açınca tek seferliğine uygulanır.</li>
         </ul>
       </div>
 
@@ -1286,7 +1571,8 @@ textarea:focus{border-color:var(--accent)}
         <ul class="gd-list">
           <li>Her sürüm <b>yayın tarihiyle</b> birlikte listelenir, en yeni en üstte.</li>
           <li>Notlar türüne göre ayrılır: ✨ yeni özellik, 🛠️ düzeltme, ⚡ iyileştirme.</li>
-          <li>Kullandığınız sürüm <b>KULLANDIĞINIZ</b> etiketiyle işaretlenir.</li>
+          <li>Kullandığınız sürüm <b>KULLANDIĞINIZ</b> etiketiyle işaretlenir ve açık gelir.</li>
+          <li>Sürüm başlığına <b>dokunarak</b> o sürümün notlarını açıp kapatabilirsiniz; uzun listede kaydırmak zorunda kalmazsınız.</li>
         </ul>
       </div>
 
@@ -1311,6 +1597,7 @@ textarea:focus{border-color:var(--accent)}
         <li>Yanlış bir düzenleme yaptıysanız Günlük Kayıt sayfasındaki <b>↶ Geri Al</b> butonunu kullanın.</li>
         <li><b>⬇ CSV</b> ile tüm kayıtlarınızı Excel'de açılabilir biçimde indirebilir, <b>📄 PDF</b> ile aylık rapor alabilirsiniz.</li>
         <li><b>İki parmakla</b> ekranı yakınlaştırabilirsiniz.</li>
+        <li>Ana ekrana <b>GPS Takip widget'ı</b> ekleyip takibi uygulamayı açmadan yönetebilirsiniz.</li>
         <li>Verileriniz hesabınıza bağlı bulutta saklanır; <b>çevrimdışıyken</b> girdikleriniz cihazınıza kaydedilir ve bağlantı gelince otomatik yüklenir.</li>
       </ul>
     </div>
@@ -1351,6 +1638,12 @@ textarea:focus{border-color:var(--accent)}
       <span class="cl-current-cap">Kullandığınız sürüm</span>
       <span class="cl-current-ver" id="clCurrentVer">—</span>
     </div>
+    <div class="toolbar" style="flex-wrap:wrap;gap:.5rem;">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="setChangelogExpanded(true)">Tümünü genişlet</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="setChangelogExpanded(false)">Tümünü daralt</button>
+      <button type="button" class="btn btn-ghost btn-sm" onclick="renderChangelog(true)">Yenile</button>
+    </div>
+    <p id="clStatus" role="status" style="font-size:.8rem;color:var(--muted);"></p>
     <div id="clList"></div>
   </section>
 
@@ -1886,6 +2179,44 @@ textarea:focus{border-color:var(--accent)}
   </div>
 </div>
 
+<dialog id="onboardingDialog" class="onboarding-dialog" aria-labelledby="onboardingTitle" aria-describedby="onboardingIntro">
+  <div class="onboarding-heading"><span class="onboarding-kicker">KURYE OS'A HOŞ GELDİNİZ</span><span id="onboardingStepLabel">1 / 3</span></div>
+  <h2 id="onboardingTitle">Hesabınızı birlikte hazırlayalım.</h2>
+  <p id="onboardingIntro">Aracınızı tanımlayın, bonus sisteminizi seçin ve ilk kaydınıza hazır olun.</p>
+  <ol class="onboarding-steps" aria-label="Kurulum aşamaları"><li class="onboarding-step active" aria-current="step">1. Araç & bakım</li><li class="onboarding-step">2. Bonus</li><li class="onboarding-step">3. Hazır</li></ol>
+  <section id="onboardVehicleStep">
+    <form id="onboardingVehicleForm">
+      <div class="fg"><label for="onboardModel">Araç adı / modeli</label><input id="onboardModel" type="text" maxlength="60" required placeholder="Örn. Honda PCX 125" autocomplete="off"></div>
+      <div class="fg-row">
+        <div class="fg"><label for="onboardOdometer">Güncel kilometre</label><input id="onboardOdometer" type="number" min="0" max="2000000" step="0.01" required inputmode="decimal" placeholder="Örn. 25000"></div>
+        <div class="fg"><label for="onboardPeriod">Bakım periyodu (km)</label><input id="onboardPeriod" type="number" min="1" max="200000" step="0.01" required inputmode="decimal" placeholder="Örn. 2000"></div>
+      </div>
+      <div class="fg"><label for="onboardRemaining">Bakıma tahmini kaç kilometre kaldı? <span class="optional-label">İsteğe bağlı</span></label><input id="onboardRemaining" type="number" min="0" max="200000" step="0.01" inputmode="decimal" placeholder="Örn. 1500" aria-describedby="onboardRemainingHint"><p class="field-hint" id="onboardRemainingHint">Boş bırakırsanız sayaç bakım periyodundan başlar. Örneğin periyot 2.000 km, kalan mesafe 1.500 km ise sayaç 1.500 km'den ilerler. 0 girerseniz bakım zamanı gelmiş kabul edilir.</p></div>
+      <p class="onboarding-note">Güncel kilometre aracınızın göstergesidir; bakım sayacını değiştirmez. İlk bakım hedefiniz “Genel bakım” adıyla oluşturulur.</p>
+      <button class="btn btn-primary onboarding-next" type="submit">Aracı kaydet ve devam et</button>
+    </form>
+  </section>
+  <section id="onboardBonusStep" hidden>
+    <form id="onboardingBonusForm">
+      <h3>Bonusunuz nasıl hesaplanıyor?</h3><p class="field-hint">Çalıştığınız platformun uyguladığı sistemi seçin.</p>
+      <div class="onboarding-options">
+        <label><input type="radio" id="onboardWeekly" name="onboardBonus" value="weekly" required><span><strong>Haftalık bonus</strong><small>Bir haftadaki toplam teslimat sayısına göre.</small></span></label>
+        <label><input type="radio" id="onboardDaily" name="onboardBonus" value="daily" required><span><strong>Günlük bonus</strong><small>Her günün teslimat sayısına göre ayrı ayrı.</small></span></label>
+      </div>
+      <div class="onboarding-note"><strong>Başlangıç barajları</strong><p id="onboardingTiers"></p><p>Bu barajlar başlangıç değerleridir. Platformunuzun tutarları farklıysa “Bonus Sistemi” sayfasından düzenleyin.</p></div>
+      <button class="btn btn-primary onboarding-next" type="submit">Bonus sistemini kaydet</button>
+    </form>
+  </section>
+  <section id="onboardReadyStep" hidden>
+    <div class="onboarding-ready-mark" aria-hidden="true">✓</div><h3>Kullanıma hazırsınız!</h3>
+    <p>Artık tek yapmanız gereken gün sonunda <strong>“Kayıt”</strong> sekmesinden yeni kayıt oluşturmak. Mesafe, paket, gelir ve giderlerinizi girin; özetiniz otomatik hesaplansın.</p>
+    <p>Detaylı kullanım rehberi için <strong>“Talimatlar”</strong> sayfasına göz atabilirsiniz. Araç, bakım ve bonus ayarlarınızı daha sonra değiştirebilirsiniz.</p>
+    <div class="modal-actions"><button id="onboardingGuide" type="button" class="btn btn-ghost">Rehberi aç</button><button id="onboardingFinish" type="button" class="btn btn-primary">Uygulamaya başla</button></div>
+  </section>
+  <p id="onboardingError" class="form-error" role="alert"></p>
+  <button type="button" class="btn btn-ghost" id="onboardingBack" hidden>Önceki adım</button>
+</dialog>
+
 <div class="overlay" id="maintenanceOverlay">
   <div class="modal">
     <h2 id="maintModalTitle">Bakım Hedefi Ekle</h2>
@@ -1901,19 +2232,45 @@ textarea:focus{border-color:var(--accent)}
       </div>
       <div class="fg-row">
         <div class="fg">
-          <label>Son Yapıldığı KM</label>
-          <input type="number" id="mLastKm" required min="0" />
+          <label for="mLastKm">Aracın güncel kilometresi</label>
+          <input type="number" id="mLastKm" required min="0" max="2000000" step="0.01" inputmode="decimal" />
         </div>
         <div class="fg">
-          <label>Periyot (KM)</label>
-          <input type="number" id="mInterval" required min="1" />
+          <label for="mInterval">Bakım periyodu (km)</label>
+          <input type="number" id="mInterval" required min="1" max="200000" step="0.01" inputmode="decimal" />
         </div>
       </div>
+      <div class="fg"><label for="mRemaining">Bakıma tahmini kaç kilometre kaldı? <span class="optional-label">İsteğe bağlı</span></label><input id="mRemaining" type="number" min="0" max="200000" step="0.01" inputmode="decimal" placeholder="Boş bırakırsanız periyot kullanılır" aria-describedby="mRemainingHint"><p class="field-hint" id="mRemainingHint">Güncel kilometre sayacın başlangıcını etkilemez. Periyot 2.000 km ve kalan mesafe 1.500 km ise sayaç 1.500 km'den başlar. 0 = bakım zamanı geldi.</p></div>
+      <p id="mError" class="form-error" role="alert"></p>
       <div class="modal-actions">
         <button type="button" class="btn btn-ghost" id="btnMaintCancel">İptal</button>
         <button type="submit" class="btn btn-primary">Kaydet</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal: Bakım Sıfırla (native prompt() yerine) -->
+<div class="overlay" id="maintResetOverlay">
+  <div class="modal" style="max-width:380px;">
+    <div style="display:flex;align-items:center;gap:.7rem;margin-bottom:.3rem;">
+      <div style="width:42px;height:42px;border-radius:12px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;">🔄</div>
+      <div>
+        <h2 style="margin:0;font-size:1.05rem;">Bakımı Sıfırla</h2>
+        <p style="margin:.15rem 0 0;font-size:.78rem;color:var(--muted);" id="mrSubtitle">Sayaç sıfırlanacak.</p>
+      </div>
+    </div>
+    <div class="fg" style="margin-top:1rem;">
+      <label>Masraf (₺) — isteğe bağlı</label>
+      <input type="text" id="mrCost" inputmode="decimal" autocomplete="off" maxlength="10" placeholder="Örn: 450"/>
+      <p style="font-size:.74rem;color:var(--muted);margin:.35rem 0 0;line-height:1.45;">
+        Tutar girerseniz bugünün giderine otomatik eklenir. Boş bırakabilirsiniz.
+      </p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="mrCancel">Vazgeç</button>
+      <button class="btn btn-primary" id="mrOk">Sıfırla</button>
+    </div>
   </div>
 </div>
 
@@ -1972,7 +2329,9 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 let currentUser = null;
-const CURRENT_APP_VERSION = "6.0.3";
+let _onboardingOwner = null;
+let _onboardingShownStep = '';
+const CURRENT_APP_VERSION = "6.0.7";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -2067,6 +2426,13 @@ let _installedNativeVersion = '';   // admin panelinde kendini kilitleme uyarıs
 function showForceUpdateGate(storeData, installedVersion){
   const gate = document.getElementById('forceUpdateGate');
   if(!gate) return;
+  resetOnboardingUI();
+  // ÖNCEKİ HATA: checkForcedUpdate() uygulama her öne geldiğinde çalışıyor
+  // ve kapı hâlâ gerekliyse bu fonksiyonu TEKRAR çağırıyordu. Her çağrıda
+  // yeni bir pushState + yeni bir popstate dinleyicisi ekleniyordu
+  // (eskisi temizlenmeden) -> bellek sızıntısı ve tuhaf geri tuşu davranışı.
+  // Kapı zaten açıksa yeniden kurmuyoruz.
+  if(_forceGateActive && gate.classList.contains('show')) return;
   _forceGateActive = true;
 
   const badge = document.getElementById('forceVersionBadge');
@@ -2418,7 +2784,7 @@ if (isLight) {
    ====================================================================== */
 function applyThemeChrome(){
   const meta = document.querySelector('meta[name="theme-color"]');
-  if(meta) meta.setAttribute('content', isLight ? '#f4f7fb' : '#0a0e14');
+  if(meta) meta.setAttribute('content', isLight ? '#f3f5fa' : '#0c1018');
 }
 applyThemeChrome();
 btnThemeToggle.addEventListener('click', () => {
@@ -2436,12 +2802,15 @@ btnThemeToggle.addEventListener('click', () => {
 });
 
 document.querySelectorAll('.dash-tab-btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const parentPage = e.target.closest('.page');
-    parentPage.querySelectorAll('.dash-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.setAttribute('aria-pressed', String(btn.classList.contains('active')));
+  btn.addEventListener('click', () => {
+    const parentPage = btn.closest('.page');
+    parentPage.querySelectorAll('.dash-tab-btn').forEach(b => {
+      b.classList.toggle('active', b === btn);
+      b.setAttribute('aria-pressed', String(b === btn));
+    });
     parentPage.querySelectorAll('.dash-tab-pane').forEach(p => p.classList.remove('active'));
-    e.target.classList.add('active');
-    const targetPane = parentPage.querySelector('#tab-' + e.target.dataset.tab);
+    const targetPane = parentPage.querySelector('#tab-' + btn.dataset.tab);
     if(targetPane){
       targetPane.classList.add('active');
     }
@@ -2596,7 +2965,36 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-document.getElementById('btnLogout').addEventListener('click', () => auth.signOut());
+async function logoutUser(){
+  if(currentUser && !saveLocalCache()) return false;
+  try{ await auth.signOut(); return true; }
+  catch(err){ toast(friendlyError(err), false); return false; }
+}
+document.getElementById('btnLogout').addEventListener('click', logoutUser);
+
+async function deleteAccountAndData(user){
+  const state = _syncState;
+  if(!state || !currentUser || state.uid !== user.uid || currentUser.uid !== user.uid) throw new Error('Oturum değişti. Yeniden giriş yapın.');
+  if(navigator.onLine === false) throw new Error('Hesap silmek için internet bağlantısı gerekli.');
+  state.deleting = true;
+  appContainer.inert = true;
+  try{
+    if(_syncInFlight) await _syncInFlight.promise;
+    if(_syncState !== state) throw new Error('Oturum değişti. Yeniden giriş yapın.');
+    await db.ref('kullanicilar/' + user.uid).remove();
+    await db.ref('usersList/' + user.uid).remove();
+    await user.delete();
+    try{
+      localStorage.removeItem(LOCAL_CACHE_KEY + ':' + user.uid);
+      const legacy = JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY) || 'null');
+      if(legacy && legacy.uid === user.uid) localStorage.removeItem(LOCAL_CACHE_KEY);
+      return true;
+    }catch(e){ return false; }
+  }finally{
+    if(_syncState === state) state.deleting = false;
+    appContainer.inert = false;
+  }
+}
 
 let currentListenerRef = null;
 let adminUsersListenerRef = null;
@@ -2606,6 +3004,26 @@ let adminUsersState = {};
 let adminDataState = {};
 
 auth.onAuthStateChanged(user => {
+  const epoch = ++_syncEpoch;
+  if(!currentUser || !user || user.uid !== currentUser.uid){
+    resetOnboardingUI();
+    if(typeof undoStack !== 'undefined') undoStack.length = 0;
+    if(typeof updateUndoBtn === 'function') updateUndoBtn();
+    if(typeof editingId !== 'undefined') editingId = null;
+    if(typeof editingIndex !== 'undefined') editingIndex = null;
+    document.querySelectorAll('.overlay.show').forEach(el => el.classList.remove('show'));
+  }
+  if(currentUser){
+    saveLocalCache();
+    if(!user || user.uid !== currentUser.uid) clearLocalCache();
+  }
+  if(currentListenerRef) {
+    try{ currentListenerRef.keepSynced(false); }catch(e){}
+    currentListenerRef.off(); currentListenerRef = null;
+  }
+  if(adminUsersListenerRef) { adminUsersListenerRef.off(); adminUsersListenerRef = null; }
+  if(adminDataListenerRef) { adminDataListenerRef.off(); adminDataListenerRef = null; }
+  if(adminFeedbackListenerRef) { adminFeedbackListenerRef.off(); adminFeedbackListenerRef = null; }
   if(user) {
     currentUser = user; 
     document.getElementById('userEmailDisplay').textContent = user.email;
@@ -2625,7 +3043,7 @@ auth.onAuthStateChanged(user => {
     const splashLoaderEl = document.getElementById('splashLoader');
     const splashRetryBtnEl = document.getElementById('splashRetryBtn');
     const splashTimeoutId = setTimeout(() => {
-      if(firstLoadDone) return;
+      if(firstLoadDone || epoch !== _syncEpoch) return;
       if(splashSubtitleEl) splashSubtitleEl.textContent = 'Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edin.';
       if(splashLoaderEl) splashLoaderEl.style.display = 'none';
       if(splashRetryBtnEl) splashRetryBtnEl.style.display = '';
@@ -2638,21 +3056,26 @@ auth.onAuthStateChanged(user => {
     const navAdmin = document.getElementById('navAdmin');
     if (navAdmin) navAdmin.style.display = isAdmin ? 'flex' : 'none';
 
-    db.ref('usersList/' + user.uid).update({ email: user.email, lastLogin: firebase.database.ServerValue.TIMESTAMP });
+    db.ref('usersList/' + user.uid).update({ email: user.email, lastLogin: firebase.database.ServerValue.TIMESTAMP }).catch(err => {
+      if(epoch === _syncEpoch) toast('Son giriş bilgisi kaydedilemedi. ' + friendlyError(err), false);
+    });
 
     if (isAdmin) {
         adminUsersListenerRef = db.ref('usersList');
         adminUsersListenerRef.on('value', snap => {
+            if(epoch !== _syncEpoch) return;
             adminUsersState = snap.val() || {};
             mergeAndRenderAdmin();
         });
         adminDataListenerRef = db.ref('kullanicilar');
         adminDataListenerRef.on('value', snap => {
+            if(epoch !== _syncEpoch) return;
             adminDataState = snap.val() || {};
             mergeAndRenderAdmin();
         });
         adminFeedbackListenerRef = db.ref('feedback');
         adminFeedbackListenerRef.on('value', snap => {
+            if(epoch !== _syncEpoch) return;
             renderAdminFeedback(snap.val() || {});
         });
     }
@@ -2664,30 +3087,27 @@ auth.onAuthStateChanged(user => {
     // Bulut yanıtı gelene kadar cihazdaki son kopyayı göster (splash anında dolar,
     // çevrimdışı açılışta ekran boş kalmaz).
     const cached = loadLocalCache(currentUser.uid);
+    _restoreSyncState(user.uid, cached);
+    if(typeof switchToPage === 'function') switchToPage('dashboard');
     if(cached && Array.isArray(cached.records)){
-      records = sanitizeRecords(cached.records);
-      garageData = cached.garageData || { vehicles: [], activeVehicleId: null };
-      ensureRecordIds();
-      migrateGarageData();
       updateBonuses();
       try{ renderDash(); renderGarage(); renderDaily(); }catch(e){}
+      firstLoadDone = true;
+      clearTimeout(splashTimeoutId);
+      splashScreen.classList.remove('show');
+      appContainer.classList.add('show');
+      syncOnboardingUI();
+      maybeOpenQuickAddFromShortcut();
     }
 
     currentListenerRef.on('value', snapshot => {
-      let rawRecords = null;
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        rawRecords = data.kayitlar || null;
-        records = data.kayitlar || [];
-        // Sunucu hâlâ eski DİZİ formatındaysa işaretle: ilk yazımda anahtarlı
-        // yapıya geçirilecek. Nesne ise zaten yeni format.
-        _serverUsesArrayFormat = Array.isArray(records) && records.length > 0;
-        if (!Array.isArray(records)) records = Object.values(records);
-        garageData = data.garaj || { vehicles: [], activeVehicleId: null };
-      } else {
-        records = []; garageData = { vehicles: [], activeVehicleId: null };
-        _serverUsesArrayFormat = false;
-      }
+      if(epoch !== _syncEpoch || !currentUser || currentUser.uid !== user.uid) return;
+      const data = snapshot.exists() ? snapshot.val() : {};
+      const rawRecords = data.kayitlar || null;
+      // Sunucu hâlâ eski DİZİ formatındaysa işaretle: ilk yazımda anahtarlı
+      // yapıya geçirilecek. Nesne ise zaten yeni format.
+      _serverUsesArrayFormat = Array.isArray(rawRecords) && rawRecords.length > 0;
+      _mergeServerData(data);
       // SAVUNMA: tarihi olmayan/bozuk kayıt tüm listeyi çökertiyordu
       // (r.tarih.slice / localeCompare -> undefined hatası). Bulut verisi
       // beklenmedik şekilde bozulursa uygulama komple açılmaz hale gelmesin.
@@ -2696,36 +3116,37 @@ auth.onAuthStateChanged(user => {
       // Eski kayıtlara kalıcı id ver; eksikse buluta geri yaz.
       const idsAdded = ensureRecordIds();
       migrateGarageData();
+      _syncReady = true;
+      initializeOnboarding(user, data);
       saveLocalCache();
 
       // Sunucudaki güncel hâli anlık görüntü olarak sakla; bundan sonraki
       // yazımlar sadece gerçek farkları gönderir.
-      if(rawRecords && !Array.isArray(rawRecords) && !idsAdded){
-        const snap = {};
-        Object.keys(rawRecords).forEach(k => { snap[k] = JSON.stringify(rawRecords[k]); });
-        _serverRecordSnapshot = snap;
-      } else {
-        _refreshServerSnapshot();
-      }
+      _refreshServerSnapshot();
 
       if(idsAdded && navigator.onLine !== false){
         try{ _pushRecords(); }catch(e){}
       }
+      flushOfflineQueue();
       updateBonuses();
       scheduleRender();
       checkMaintenanceThresholds();
+      syncOnboardingUI();
 
       if(!firstLoadDone) {
         firstLoadDone = true;
         clearTimeout(splashTimeoutId);
         const elapsed = Date.now() - splashStart;
         setTimeout(() => {
+          if(epoch !== _syncEpoch) return;
           splashScreen.classList.remove('show');
           appContainer.classList.add('show');
+          syncOnboardingUI();
           maybeOpenQuickAddFromShortcut();
         }, Math.max(0, 3000 - elapsed));
       }
     }, err => {
+      if(epoch !== _syncEpoch) return;
       toast(friendlyError(err), false);
       if(!firstLoadDone){
         clearTimeout(splashTimeoutId);
@@ -2735,13 +3156,11 @@ auth.onAuthStateChanged(user => {
       }
     });
   } else {
-    if(currentListenerRef) { currentListenerRef.off(); currentListenerRef = null; }
-    if(adminUsersListenerRef) { adminUsersListenerRef.off(); adminUsersListenerRef = null; }
-    if(adminDataListenerRef) { adminDataListenerRef.off(); adminDataListenerRef = null; }
-    if(adminFeedbackListenerRef) { adminFeedbackListenerRef.off(); adminFeedbackListenerRef = null; }
-    clearLocalCache();
     _serverRecordSnapshot = {}; _serverUsesArrayFormat = false;
-    currentUser = null; 
+    _syncState = null; _syncInFlight = null; _syncReady = false; _syncStorageError = false;
+    _garageSnapshot = {}; adminUsersState = {}; adminDataState = {};
+    currentUser = null;
+    updateOfflineBadge();
     splashScreen.classList.remove('show');
     authScreen.style.display = 'flex'; 
     appContainer.classList.remove('show');
@@ -2750,6 +3169,7 @@ auth.onAuthStateChanged(user => {
 });
 
 function maybeOpenQuickAddFromShortcut(){
+  if(garageData.onboarding && garageData.onboarding.step !== 'complete') return;
   const params = new URLSearchParams(location.search);
   const action = params.get('action');
   if(action){
@@ -2763,6 +3183,7 @@ function maybeOpenQuickAddFromShortcut(){
 }
 
 let records=[];
+let recordBonusMap = {};   // kayıt id -> bonus (updateBonuses doldurur)
 let garageData = { vehicles: [], activeVehicleId: null };
 let dateBonusMap = {};
 
@@ -2800,6 +3221,11 @@ function showInfoDialog(opts){
 
 function isOverlayShown(el){ return !!(el && el.classList.contains('show')); }
 function closeTopUi(){
+  const onboarding = document.getElementById('onboardingDialog');
+  if(onboarding && onboarding.open){
+    try{ onboardingBack(); }catch(error){ document.getElementById('onboardingError').textContent = error.message; }
+    return true;
+  }
   // Dönem seçici en üstte: geri tuşu önce onu kapatsın.
   const sheet = document.getElementById('periodSheet');
   if(isOverlayShown(sheet)){ closePeriodSheet(); return true; }
@@ -2810,7 +3236,7 @@ function closeTopUi(){
     else confirmOv.classList.remove('show');
     return true;
   }
-  const ids = ['fileFallbackOverlay','infoOverlay','otaUpdateOverlay','vehicleOverlay','maintenanceOverlay','adminStatsOverlay','goalOverlay','overlay'];
+  const ids = ['maintResetOverlay','fileFallbackOverlay','infoOverlay','otaUpdateOverlay','vehicleOverlay','maintenanceOverlay','adminStatsOverlay','goalOverlay','overlay'];
   for(let i=0;i<ids.length;i++){
     const el = document.getElementById(ids[i]);
     if(isOverlayShown(el)){
@@ -2851,7 +3277,7 @@ document.querySelectorAll('.overlay').forEach(ov => {
   });
 });
 document.addEventListener('keydown', e => {
-  if(e.key === 'Escape') closeTopUi();
+  if(e.key === 'Escape'){ e.preventDefault(); closeTopUi(); }
 });
 bindHardwareBack();
 setTimeout(bindHardwareBack, 800);
@@ -2967,6 +3393,22 @@ function bonusForCount(count, mode){
   return 0;
 }
 
+function bonusGroups(recs, mode){
+  const groups = new Map();
+  recs.forEach(r => {
+    if(!r || !r.tarih) return;
+    const vehicle = r.arac || fallbackVehicleId() || '_';
+    const period = mode === 'daily' ? r.tarih : weekOf(r.tarih);
+    const key = JSON.stringify([vehicle, period]);
+    if(!groups.has(key)) groups.set(key, { period, tes: 0, items: [] });
+    const group = groups.get(key);
+    const count = Number(r.teslimat);
+    group.tes += Number.isFinite(count) ? Math.max(0, count) : 0;
+    group.items.push(r);
+  });
+  return Array.from(groups.values());
+}
+
 function migrateGarageData() {
   if(!garageData.vehicles || !garageData.vehicles.length) {
     garageData.vehicles = [{ id: 'v1', model: garageData.model || '', bakimlar: garageData.bakimlar || [] }];
@@ -3001,35 +3443,57 @@ function vehicleRecords(vid) { const fallback = fallbackVehicleId(); return reco
    toplamları; çalışma saati istatistikleri.
    İlgili: [10-BONUS] bonus tutarı buradan gelir
    ====================================================================== */
+/* Bonus dağıtımı — kayıt id'sine göre.
+   ------------------------------------------------------------------
+   ÖNCEKİ HATA: bonus TARİHE göre anahtarlanıyordu (dateBonusMap) ve
+   calc() her kayda o tarihin TAMAMINI ekliyordu. İki sonuç doğuruyordu:
+
+   1) Aynı gün iki farklı ARAÇ kaydı varsa, ikisi de tam bonusu alıyor
+      -> toplam bonus iki katına çıkıyordu (400 ₺ yerine 200 ₺).
+   2) Aynı gün aynı araçta iki kayıt (bölünmüş vardiya) varsa, paketler
+      ayrı ayrı değerlendiriliyor, baraj hiç tutmuyordu (10+10=20 iken
+      bonus 0 çıkıyordu).
+
+   ÇÖZÜM: Bonus artık ARAÇ + GÜN bazında hesaplanıyor (o günün o araçtaki
+   tüm paketleri toplanır), sonra grubun kayıtlarına payları oranında
+   dağıtılıyor. Böylece bir bonus yalnızca bir kez sayılır.
+   ------------------------------------------------------------------ */
 function updateBonuses() {
-  dateBonusMap = {};
+  dateBonusMap = {};   // geriye dönük uyum: gün -> toplam bonus (raporlar için)
+  recordBonusMap = {}; // asıl kaynak: kayıt id -> o kayda düşen bonus
   const mode = getBonusMode();
 
-  if(mode === 'daily'){
-    // Her gün kendi paket sayısına göre ayrı bonus alır.
-    records.forEach(r => {
-      const bns = bonusForCount(r.teslimat || 0, 'daily');
-      if(bns > 0) dateBonusMap[r.tarih] = (dateBonusMap[r.tarih] || 0) + bns;
-    });
-    return;
-  }
+  // Grupla: günlük modda araç+gün, haftalık modda araç+hafta
+  const groups = bonusGroups(records, mode);
 
-  // Haftalık: hafta toplamına tek bonus, haftanın son kayıt gününe yazılır.
-  const wMap = {};
-  records.forEach(r => {
-    const w = weekOf(r.tarih);
-    if(!wMap[w]) wMap[w] = { tes: 0, lastDate: r.tarih };
-    wMap[w].tes += (r.teslimat || 0);
-    if(r.tarih > wMap[w].lastDate) wMap[w].lastDate = r.tarih; 
+  groups.forEach(g => {
+    const bns = Math.round(bonusForCount(g.tes, mode) * 100);
+    if(!Number.isFinite(bns) || bns <= 0) return;
+
+    // Bonusu grubun kayıtlarına paket payına göre dağıt.
+    // Paket yoksa (0 paketli kayıtlar) eşit böl ki bonus kaybolmasın.
+    let dagitilan = 0, paketPayi = 0;
+    g.items.forEach((r, i) => {
+      const count = Number(r.teslimat);
+      paketPayi += Number.isFinite(count) ? Math.max(0, count) : 0;
+      let pay;
+      if(i === g.items.length - 1){
+        pay = bns - dagitilan;                       // yuvarlama artığı son kayda
+      } else if(g.tes > 0){
+        pay = Math.round(bns * paketPayi / g.tes) - dagitilan;
+      } else {
+        pay = Math.round(bns * (i + 1) / g.items.length) - dagitilan;
+      }
+      dagitilan += pay;
+      if(r.id) recordBonusMap[r.id] = (recordBonusMap[r.id] || 0) + pay / 100;
+      dateBonusMap[r.tarih] = (dateBonusMap[r.tarih] || 0) + pay / 100;
+    });
   });
-  for(let w in wMap) {
-    const bns = bonusForCount(wMap[w].tes, 'weekly');
-    if(bns > 0) dateBonusMap[wMap[w].lastDate] = bns;
-  }
 }
 
 function calc(r){
-  const bonus = dateBonusMap[r.tarih] || 0;
+  // Kayıt bazlı bonus (bkz. updateBonuses). id yoksa 0 -> çift sayım olmaz.
+  const bonus = (r && r.id && recordBonusMap[r.id]) ? recordBonusMap[r.id] : 0;
   const gider = (r.yakit||0) + (r.diger||0);
   const toplamGelir = (r.gelir||0) + bonus;
   const net = toplamGelir - gider;
@@ -3074,19 +3538,132 @@ function getWorkingHoursHTML(recs) {
    İlgili: [16-BILDIRIM] commitRecords() hatırlatmayı bilgilendirir
    ====================================================================== */
 const OFFLINE_PENDING_KEY = 'kurye_offline_pending';
-function _offlinePending(){ try{ return JSON.parse(localStorage.getItem(OFFLINE_PENDING_KEY) || '{}') || {}; }catch(e){ return {}; } }
-function _setOfflinePending(kind, on){
-  const p = _offlinePending();
-  if(on) p[kind] = true; else delete p[kind];
-  try{ localStorage.setItem(OFFLINE_PENDING_KEY, JSON.stringify(p)); }catch(e){}
+let _syncState = null;
+let _syncEpoch = 0;
+let _syncReady = false;
+let _syncInFlight = null;
+let _syncStorageError = false;
+let _garageSnapshot = {};
+let _serverGarageHasVehicles = false;
+
+function _syncClone(value){ return JSON.parse(JSON.stringify(value)); }
+function _syncKey(key){ return typeof key === 'string' && /^[A-Za-z0-9_-]{1,128}$/.test(key) && !['__proto__', 'prototype', 'constructor'].includes(key); }
+function _offlinePending(){
+  if(!_syncState || !currentUser || _syncState.uid !== currentUser.uid) return {};
+  const pending = {};
+  if(Object.keys(_syncState.records).length) pending.records = true;
+  if(Object.keys(_syncState.garage).length) pending.garage = true;
+  return pending;
+}
+function _setOfflinePending(){ updateOfflineBadge(); }
+
+function _restoreSyncState(uid, cached){
+  _syncInFlight = null;
+  _syncReady = false;
+  _syncStorageError = false;
+  _serverGarageHasVehicles = false;
+  _stripIdsForServer = false;
+  _syncState = { uid, revision: 0, records: {}, garage: {}, paths: {}, lastSyncAt: null, error: '' };
+  records = sanitizeRecords(cached && cached.records || []);
+  garageData = cached && cached.garageData || { vehicles: [], activeVehicleId: null };
+  ensureRecordIds();
+  migrateGarageData();
+  const saved = cached && cached.sync;
+  if(saved && saved.uid === uid){
+    _syncState.revision = Number.isSafeInteger(saved.revision) ? saved.revision : 0;
+    _syncState.lastSyncAt = saved.lastSyncAt || null;
+    for(const kind of ['records', 'garage']){
+      Object.entries(saved[kind] || {}).forEach(([key, op]) => {
+        if(!_syncKey(key) || !op || !Number.isSafeInteger(op.revision) || !Object.prototype.hasOwnProperty.call(op, 'value')) return;
+        _syncState[kind][key] = _syncClone(op);
+        _syncState.revision = Math.max(_syncState.revision, op.revision);
+      });
+    }
+    Object.entries(saved.paths || {}).forEach(([id, key]) => {
+      if(_syncKey(id) && _syncKey(key)) _syncState.paths[id] = key;
+    });
+  } else if(cached && cached.uid === uid){
+    let pending = {};
+    try{ pending = JSON.parse(localStorage.getItem(OFFLINE_PENDING_KEY) || '{}') || {}; }catch(e){}
+    if(pending.records) records.forEach(r => {
+      _syncState.records[r.id] = { revision: ++_syncState.revision, value: _syncClone(r) };
+    });
+    if(pending.garage) Object.keys(garageData).filter(_syncKey).forEach(key => {
+      _syncState.garage[key] = { revision: ++_syncState.revision, value: _syncClone(garageData[key]) };
+    });
+  }
+  _refreshServerSnapshot();
+  _garageSnapshot = _syncClone(garageData);
+  saveLocalCache();
   updateOfflineBadge();
 }
-function offlinePendingCount(){ return Object.keys(_offlinePending()).length; }
+
+function _mergeServerData(data){
+  const raw = data && data.kayitlar || {};
+  const merged = {};
+  Object.entries(raw).forEach(([key, value]) => {
+    if(!_syncKey(key) || !sanitizeRecords([value]).length) return;
+    let id = _syncKey(value.id) ? value.id : key;
+    if(Object.prototype.hasOwnProperty.call(merged, id)) id = 'legacy_' + key;
+    merged[id] = { ...value, id };
+    _syncState.paths[id] = key;
+  });
+  Object.entries(_syncState.records).forEach(([id, op]) => {
+    if(op.value === null) delete merged[id];
+    else merged[id] = _syncClone(op.value);
+  });
+  records = sanitizeRecords(Object.values(merged));
+  garageData = _syncClone(data && data.garaj || { vehicles: [], activeVehicleId: null });
+  _serverGarageHasVehicles = !!(garageData.vehicles && garageData.vehicles.length);
+  Object.entries(_syncState.garage).forEach(([key, op]) => {
+    if(op.value === null) delete garageData[key];
+    else garageData[key] = _syncClone(op.value);
+  });
+  migrateGarageData();
+  _queueGarageDefaults();
+  _refreshServerSnapshot();
+  _garageSnapshot = _syncClone(garageData);
+}
+
+function _queueRecords(){
+  if(!_syncState || !currentUser || _syncState.uid !== currentUser.uid) return;
+  ensureRecordIds();
+  const delta = _buildRecordsDelta();
+  Object.entries(delta).forEach(([id, value]) => {
+    _syncState.records[id] = { revision: ++_syncState.revision, value: _syncClone(value) };
+  });
+  _refreshServerSnapshot();
+}
+
+function _queueGarage(){
+  if(!_syncState || !currentUser || _syncState.uid !== currentUser.uid) return;
+  const keys = new Set([...Object.keys(_garageSnapshot), ...Object.keys(garageData)]);
+  keys.forEach(key => {
+    if(!_syncKey(key) || JSON.stringify(_garageSnapshot[key]) === JSON.stringify(garageData[key])) return;
+    _syncState.garage[key] = { revision: ++_syncState.revision, value: garageData[key] == null ? null : _syncClone(garageData[key]) };
+  });
+  if(_syncReady) _queueGarageDefaults();
+  _garageSnapshot = _syncClone(garageData);
+}
+function _queueGarageDefaults(){
+  if(_serverGarageHasVehicles || !Object.keys(_syncState.garage).length) return;
+  for(const key of ['vehicles', 'activeVehicleId']){
+    if(!_syncState.garage[key] && garageData[key] != null){
+      _syncState.garage[key] = { revision: ++_syncState.revision, value: _syncClone(garageData[key]) };
+    }
+  }
+}
+function offlinePendingCount(){
+  return Object.keys(_offlinePending()).reduce((count, kind) => count + Object.keys(_syncState[kind]).length, 0);
+}
 function updateOfflineBadge(){
   const el = document.getElementById('offlineBadge');
   if(!el) return;
   const n = offlinePendingCount();
   const off = (typeof navigator !== 'undefined') && navigator.onLine === false;
+  el.title = _syncState && _syncState.lastSyncAt ? 'Son senkron: ' + new Date(_syncState.lastSyncAt).toLocaleString('tr-TR') : '';
+  if(_syncStorageError){ el.textContent = 'Cihaza kaydedilemedi · uygulamayı kapatmayın'; el.style.display = ''; return; }
+  if(n && _syncState.error){ el.textContent = n + ' işlem bekliyor · senkron hatası'; el.title = _syncState.error; el.style.display = ''; return; }
   if(off){ el.textContent = '⛈ Çevrimdışı' + (n ? ' · ' + n + ' veri bekliyor' : ''); el.style.display = ''; }
   else if(n){ el.textContent = '↻ ' + n + ' veri senkron bekliyor'; el.style.display = ''; }
   else el.style.display = 'none';
@@ -3152,65 +3729,86 @@ function _recordsPath(){ return 'kullanicilar/' + currentUser.uid + '/kayitlar';
 // Kayıtları delta olarak gönderir. Sunucu hâlâ dizi formatındaysa bir kereliğine
 // tam yazım yaparak anahtarlı yapıya geçirir (migration).
 function _pushRecords(){
-  if(!currentUser) { _setOfflinePending('records', true); return; }
-  if((typeof navigator !== 'undefined') && navigator.onLine === false){ _setOfflinePending('records', true); return; }
-
-  const ref = db.ref(_recordsPath());
-  const onOk = () => { _refreshServerSnapshot(); _setOfflinePending('records', false); };
-  const onErr = (err) => {
-    const msg = String((err && (err.code || err.message)) || '');
-    if(!_stripIdsForServer && /permission|denied|PERMISSION/i.test(msg)){
-      _stripIdsForServer = true;
-      console.warn("Kural uyumluluğu: kayıt id'leri sunucuya gönderilmiyor. database.rules.json güncellenmeli.");
-      ref.set(_keyedRecords()).then(onOk).catch(() => _setOfflinePending('records', true));
-      return;
-    }
-    _setOfflinePending('records', true);
-  };
-
+  _queueRecords();
+  if(!saveLocalCache()) return;
   if(_serverUsesArrayFormat){
     // Eski dizi düğümünü anahtarlı nesneyle değiştir (sayısal anahtarlar temizlenir).
     _serverUsesArrayFormat = false;
-    ref.set(_keyedRecords()).then(onOk).catch(onErr);
-    return;
   }
-
-  const delta = _buildRecordsDelta();
-  if(!Object.keys(delta).length){ _setOfflinePending('records', false); return; }
-  ref.update(delta).then(onOk).catch(onErr);
+  return flushOfflineQueue();
 }
 
-function _pushToFirebase(kind, path, value){
-  if(!currentUser) { _setOfflinePending(kind, true); return; }
-  if((typeof navigator !== 'undefined') && navigator.onLine === false){ _setOfflinePending(kind, true); return; }
-  db.ref(path).set(value)
-    .then(() => { _setOfflinePending(kind, false); })
-    .catch(() => { _setOfflinePending(kind, true); });
+function _pushToFirebase(kind){
+  if(kind === 'garage') _queueGarage();
+  if(!saveLocalCache()) return;
+  return flushOfflineQueue();
 }
 function flushOfflineQueue(){
-  if((typeof navigator !== 'undefined') && navigator.onLine === false) return;
-  const p = _offlinePending();
-  if(p.records && currentUser) _pushRecords();
-  if(p.garage && currentUser) _pushToFirebase('garage', 'kullanicilar/' + currentUser.uid + '/garaj', garageData);
+  if(!currentUser || !_syncState || _syncState.deleting) return;
+  if(_syncStorageError && !saveLocalCache()) return;
+  if(!_syncReady || navigator.onLine === false) return;
+  if(_syncInFlight) return _syncInFlight.promise;
+  const state = _syncState;
+  if(state.uid !== currentUser.uid) return;
+  const batch = { records: _syncClone(state.records), garage: _syncClone(state.garage) };
+  const payload = {};
+  Object.entries(batch.records).forEach(([id, op]) => {
+    payload['kayitlar/' + (state.paths[id] || id)] = op.value;
+  });
+  Object.entries(batch.garage).forEach(([key, op]) => { payload['garaj/' + key] = op.value; });
+  if(!Object.keys(payload).length){ updateOfflineBadge(); return; }
+  const flight = { promise: null };
+  _syncInFlight = flight;
+  let succeeded = false;
+  flight.promise = Promise.resolve().then(() => {
+    if(_syncState !== state || _syncStorageError || !currentUser || currentUser.uid !== state.uid) return;
+    return db.ref('kullanicilar/' + state.uid).update(payload).then(() => {
+      if(_syncState !== state) return;
+      for(const kind of ['records', 'garage']){
+        Object.entries(batch[kind]).forEach(([key, op]) => {
+          if(state[kind][key] && state[kind][key].revision === op.revision) delete state[kind][key];
+        });
+      }
+      state.lastSyncAt = Date.now();
+      state.error = '';
+      if(batch.garage.vehicles && batch.garage.vehicles.value) _serverGarageHasVehicles = true;
+      succeeded = saveLocalCache();
+    });
+  }).catch(error => {
+    if(_syncState !== state) return;
+    state.error = friendlyError(error);
+    saveLocalCache();
+    toast('Senkronizasyon başarısız. Değişiklikler kuyrukta tutuluyor. ' + state.error, false);
+  }).finally(() => {
+    if(_syncInFlight !== flight) return;
+    _syncInFlight = null;
+    updateOfflineBadge();
+    if(succeeded && offlinePendingCount()) flushOfflineQueue();
+  });
+  return flight.promise;
 }
 window.addEventListener('online', () => { updateOfflineBadge(); flushOfflineQueue(); toast('Bağlantı geri geldi, bekleyen veriler senkronlanıyor.', true); });
 window.addEventListener('offline', () => { updateOfflineBadge(); toast('Çevrimdışısınız. Değişiklikleriniz yerelde birikiyor.', false); });
 updateOfflineBadge();
 // Giriş sonrası ve geçici push hatalarında kuyruğun eridiğinden emin ol.
-setInterval(() => { updateOfflineBadge(); if(offlinePendingCount() > 0 && currentUser) flushOfflineQueue(); }, 30000);
+setInterval(() => { updateOfflineBadge(); if((offlinePendingCount() > 0 || _syncStorageError) && currentUser) flushOfflineQueue(); }, 30000);
 
 // --- KALICI KAYIT KİMLİKLERİ ---
 // Kayıtlar tarihe göre sürekli yeniden sıralandığı için dizi indeksi güvenilir
 // değildir. Her kayda kalıcı bir id verip tüm silme/düzenleme işlemlerini bu id
 // üzerinden yaparız; böylece "yanlış kaydı silme" hatası ortadan kalkar.
 let _ridSeq = 0;
-function newRecordId(){ _ridSeq++; return 'r' + Date.now().toString(36) + _ridSeq.toString(36); }
+function newRecordId(){
+  _ridSeq++;
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return 'r' + Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
 function ensureRecordIds(){
   let changed = false;
   const seen = new Set();
   records.forEach(r => {
     if(!r || typeof r !== 'object') return;
-    if(!r.id || seen.has(r.id)){ r.id = newRecordId(); changed = true; }
+    if(!_syncKey(r.id) || seen.has(r.id)){ r.id = newRecordId(); changed = true; }
     seen.add(r.id);
   });
   return changed;
@@ -3238,23 +3836,38 @@ function indexOfRecordId(id){ return records.findIndex(r => r && r.id === id); }
 // Artık verinin kendisi de cihazda saklanır; uygulama kapansa bile kaybolmaz.
 const LOCAL_CACHE_KEY = 'kurye_local_cache_v1';
 function saveLocalCache(){
-  if(!currentUser) return;
+  if(!currentUser || !_syncState || _syncState.uid !== currentUser.uid) return false;
   try{
-    localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify({
-      uid: currentUser.uid, savedAt: Date.now(), records, garageData
+    localStorage.setItem(LOCAL_CACHE_KEY + ':' + currentUser.uid, JSON.stringify({
+      uid: currentUser.uid, savedAt: Date.now(), records, garageData, sync: _syncState
     }));
-  }catch(e){ /* kota dolabilir, kritik değil */ }
+    _syncStorageError = false;
+    updateOfflineBadge();
+    return true;
+  }catch(e){ /* kota dolabilir, kritik değil */
+    _syncStorageError = true;
+    updateOfflineBadge();
+    toast('Cihaza kaydedilemedi. Veriler yalnızca bellekte; uygulamayı kapatmadan bağlantıyı ve depolama alanını kontrol edin.', false);
+    return false;
+  }
 }
 function loadLocalCache(uid){
   try{
-    const raw = localStorage.getItem(LOCAL_CACHE_KEY);
+    const raw = localStorage.getItem(LOCAL_CACHE_KEY + ':' + uid) || localStorage.getItem(LOCAL_CACHE_KEY);
     if(!raw) return null;
     const c = JSON.parse(raw);
     if(!c || c.uid !== uid) return null;
     return c;
   }catch(e){ return null; }
 }
-function clearLocalCache(){ try{ localStorage.removeItem(LOCAL_CACHE_KEY); }catch(e){} }
+function clearLocalCache(){
+  if(!currentUser || offlinePendingCount() || _syncStorageError) return;
+  try{
+    localStorage.removeItem(LOCAL_CACHE_KEY + ':' + currentUser.uid);
+    const legacy = JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY) || 'null');
+    if(legacy && legacy.uid === currentUser.uid) localStorage.removeItem(LOCAL_CACHE_KEY);
+  }catch(e){}
+}
 
 // Bulut dinleyicisi arka arkaya tetiklenebildiği için ağır render'ları tek
 // kareye topluyoruz; aksi halde her küçük güncellemede tüm sayfalar yeniden çizilir.
@@ -3285,8 +3898,8 @@ function commitRecords() {
   // bu yüzden typeof kontrolü ile çağırıyoruz (yükleme sırası güvenliği).
   try{ if(typeof syncLastRecordDateToNative === 'function') syncLastRecordDateToNative(); }catch(e){}
 }
-function saveRecords() { saveLocalCache(); if(currentUser) _pushRecords(); }
-function saveGarage() { saveLocalCache(); if(currentUser) _pushToFirebase('garage', 'kullanicilar/' + currentUser.uid + '/garaj', garageData); }
+function saveRecords() { if(currentUser) return _pushRecords(); }
+function saveGarage() { if(currentUser) return _pushToFirebase('garage'); }
 
 /* #region 13-SAYFA-GECIS ====================================================
    [13-SAYFA-GECIS]  SAYFA GEÇİŞİ & DÖNEM SEÇİCİ
@@ -3314,7 +3927,7 @@ function switchToPage(pageName, dir){
   if(pageName==='daily')renderDaily();
   if(pageName==='weekly'){renderWeekly();renderWeeklyDetail();}
   if(pageName==='monthly'){renderMonthly();renderMonthlyDetail();}
-  if(pageName==='changelog'){ try{ renderChangelog(); }catch(e){} }   // -> [18-CHANGELOG]
+  if(pageName==='changelog'){ try{ renderChangelog(true); }catch(e){} }   // -> [18-CHANGELOG]
   if(pageName==='garage')renderGarage();
   if(pageName==='settings')renderBonusTiers();
   if(pageName==='account') fillAccountPage();
@@ -3531,7 +4144,11 @@ function renderWeeklyDetail(){
   if(wIdx===null)wIdx=weeks.length-1; wIdx=Math.max(0,Math.min(wIdx,weeks.length-1));
   const cur=weeks[wIdx],recs=cur.recs.slice().sort((a,b)=>a.tarih.localeCompare(b.tarih));
   const t=totalsOf(recs), b=bestOfRecs(recs);
-  const prevWeek = weeks.find(w => w.w === cur.w - 1);
+  // ÖNCEKİ HATA: cur.w - 1 aritmetiği yıl sınırında kırılıyordu.
+  // Hafta kodu yıl*100+hafta biçiminde (202601); 1. haftada 202600 gibi
+  // var olmayan bir değer aranıyor ve "geçen haftaya göre" kıyası sessizce
+  // kayboluyordu. Liste zaten sıralı, indeksle almak hem doğru hem basit.
+  const prevWeek = (wIdx > 0) ? weeks[wIdx - 1] : null;
   const prevT = prevWeek ? totalsOf(prevWeek.recs) : null;
   
   const curW = weekLabelParts(cur.w);
@@ -3545,16 +4162,16 @@ function renderWeeklyDetail(){
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
   
   document.getElementById('wMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-ico">🛣️</div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km'})}</div></div>
-<div class="metric"><div class="metric-ico">📦</div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket'})}</div></div>
+<div class="metric cyan"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km'})}</div></div>
+<div class="metric"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zm-9 5 9 5 9-5m-9 5v9M7 5.8l9 5V15"/></svg></div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket'})}</div></div>
 ${getWorkingHoursHTML(recs)}
-<div class="metric green"><div class="metric-ico">💰</div><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺'})}${bonusHTML}</div></div>
-<div class="metric red"><div class="metric-ico">💸</div><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true})}</div></div>
+<div class="metric green"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8V5a2 2 0 0 0-2-2H6a3 3 0 0 0 0 6h14v11H6a3 3 0 0 1-3-3V6m17 6h-5v5h5"/></svg></div><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺'})}${bonusHTML}</div></div>
+<div class="metric red"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16m-6 5h3"/></svg></div><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true})}</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-ico">${t.net>=0?'📈':'📉'}</div><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺'})}</div></div>
 <div class="metric amber"><div class="metric-ico">📐</div><div class="metric-label">Ort. TL / km</div><div class="metric-value">${fmt(t.tlkm)}</div><div class="metric-sub">${deltaChip(t.tlkm, prevT?prevT.tlkm:null, {d:2})}</div></div>`;
   
   document.getElementById('wInsights').innerHTML=`
-<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
+<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val ${t.perPkg<0?'neg':'pos'}">${fmt(t.perPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div></div></div>`;
@@ -3612,16 +4229,16 @@ function renderMonthlyDetail(){
   let bonusHTML = t.totalBonus > 0 ? `<br><span style="color:var(--accent);font-size:0.65rem;">(+${fmt(t.totalBonus,0)}₺ Bonus Dahil)</span>` : '';
 
   document.getElementById('mMetrics').innerHTML=`
-<div class="metric cyan"><div class="metric-ico">🛣️</div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km', ...dOpt})}</div></div>
-<div class="metric"><div class="metric-ico">📦</div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket', ...dOpt})}</div></div>
+<div class="metric cyan"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(t.km)}</div><div class="metric-sub">${deltaChip(t.km, prevT?prevT.km:null, {int:true, unit:' km', ...dOpt})}</div></div>
+<div class="metric"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zm-9 5 9 5 9-5m-9 5v9M7 5.8l9 5V15"/></svg></div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(t.tes)}</div><div class="metric-sub">${deltaChip(t.tes, prevT?prevT.tes:null, {int:true, unit:' paket', ...dOpt})}</div></div>
 ${getWorkingHoursHTML(recs)}
-<div class="metric green"><div class="metric-ico">💰</div><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺', ...dOpt})}${bonusHTML}</div></div>
-<div class="metric red"><div class="metric-ico">💸</div><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true, ...dOpt})}</div></div>
+<div class="metric green"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 8V5a2 2 0 0 0-2-2H6a3 3 0 0 0 0 6h14v11H6a3 3 0 0 1-3-3V6m17 6h-5v5h5"/></svg></div><div class="metric-label">Toplam Gelir</div><div class="metric-value" style="font-size:1.2rem;">${fmt(t.gelir)} ₺</div><div class="metric-sub">${deltaChip(t.gelir, prevT?prevT.gelir:null, {unit:' ₺', ...dOpt})}${bonusHTML}</div></div>
+<div class="metric red"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16m-6 5h3"/></svg></div><div class="metric-label">Toplam Gider</div><div class="metric-value">${fmt(t.gider)} ₺</div><div class="metric-sub">${deltaChip(t.gider, prevT?prevT.gider:null, {unit:' ₺', invert:true, ...dOpt})}</div></div>
 <div class="metric ${t.net>=0?'green':'red'}"><div class="metric-ico">${t.net>=0?'📈':'📉'}</div><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(t.net)} ₺</div><div class="metric-sub">${deltaChip(t.net, prevT?prevT.net:null, {unit:' ₺', ...dOpt})}</div></div>
 <div class="metric violet"><div class="metric-ico">📊</div><div class="metric-label">Günlük Ort. Net</div><div class="metric-value">${fmt(t.gunOrt)} ₺</div><div class="metric-sub">${deltaChip(t.gunOrt, prevT?prevT.gunOrt:null, {unit:' ₺', ...dOpt})}</div></div>`;
   
   document.getElementById('mInsights').innerHTML=`
-<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div></div></div>
+<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val ${t.perPkg<0?'neg':'pos'}">${fmt(t.perPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div></div></div>
 <div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div></div></div>`;
@@ -3702,7 +4319,15 @@ function renderProjections() {
   
   const dailyAvgPkg = daysLoggedThisWeek > 0 ? (wTotals.tes / daysLoggedThisWeek) : 0;
   const projectedPkg = Math.round(dailyAvgPkg * 7);
-  const projectedBonus = getPackageBonus(projectedPkg);
+  // ÖNCEKİ HATA: getPackageBonus() HER ZAMAN haftalık tabloyu okuyordu.
+  // Günlük bonus modundaki kullanıcı için tamamen ilgisiz bir rakam
+  // çıkıyordu. Artık kullanıcının seçtiği moda göre hesaplanıyor:
+  //  · haftalık mod -> hafta toplamına tek bonus
+  //  · günlük mod   -> günlük ortalamaya göre bonus x 7 gün
+  const _bMode = getBonusMode();
+  const projectedBonus = _bMode === 'daily'
+    ? bonusForCount(Math.round(dailyAvgPkg), 'daily') * 7
+    : bonusForCount(projectedPkg, 'weekly');
   
   if(weekValEl) {
       weekValEl.textContent = fmt(projectedBaseNet + projectedBonus) + ' ₺';
@@ -3758,6 +4383,46 @@ function hoursSlide(label, recs, tag){
   };
 }
 
+function uiIcon(name){
+  const paths = {
+    wallet: '<path d="M20 8V5a2 2 0 0 0-2-2H6a3 3 0 0 0 0 6h14v11H6a3 3 0 0 1-3-3V6m17 6h-5v5h5"/>',
+    package: '<path d="m12 3 9 5v9l-9 5-9-5V8zm-9 5 9 5 9-5m-9 5v9M7 5.8l9 5V15"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    route: '<circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/>',
+    bolt: '<path d="m14 3-9 11h6l-1 7 9-11h-6z"/>',
+    chart: '<path d="M4 4v16h17M9 15v-4m5 4V7m5 8V4"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    fuel: '<path d="M4 21V4h10v17M2 21h14M4 11h10m3-6 3 3v10a2 2 0 0 1-4 0v-5h-2"/>',
+    expense: '<path d="M4 5h16v14H4zM4 9h16m-6 5h3"/>',
+    settings: '<circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>'
+  };
+  return '<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + (paths[name] || paths.chart) + '</svg>';
+}
+function renderDashboardOverview(t){
+  const hours = hourStatsOf(records);
+  const dates = records.map(r => r.tarih).filter(date => typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)).sort();
+  const range = dates.length ? escapeHtml(dates[0]) + ' – ' + escapeHtml(dates[dates.length - 1]) + ' · ' : '';
+  document.getElementById('dashboardSummary').innerHTML =
+    (!records.length ? '<div class="dashboard-empty"><strong>İlk kilometreyle başlar.</strong>Yeni kayıt eklediğinde kazancın ve performansın burada görünecek.</div>' : '') +
+    `<section class="dashboard-hero" aria-labelledby="dashboardEarningsTitle">
+      <div class="dashboard-hero-head"><h2 id="dashboardEarningsTitle">${uiIcon('wallet')}Toplam net kazanç</h2><span class="dashboard-period">Tüm zamanlar</span></div>
+      <div class="dashboard-net${t.net < 0 ? ' loss' : ''}" id="dashboardNet">${fmt(t.net)} ₺</div>
+      <p class="dashboard-note" id="dashboardBonus">${t.totalBonus > 0 ? fmt(t.totalBonus) + ' ₺ bonus dahil' : 'Gelirden giderler düşüldü'}${t.net < 0 ? ' · Giderler geliri aşıyor' : t.totalBonus > 0 ? ' · Giderler düşüldü' : ''}</p>
+      <p class="dashboard-range" id="dashboardRange">${range}${fmtInt(records.length)} kayıt</p>
+      <dl class="dashboard-breakdown"><div><dt>Toplam gelir${t.totalBonus > 0 ? ' · bonus dahil' : ''}</dt><dd id="dashboardIncome">${fmt(t.gelir)} ₺</dd></div><div><dt>Toplam gider</dt><dd id="dashboardExpense">${fmt(t.gider)} ₺</dd></div></dl>
+    </section>`;
+  const metrics = [
+    { icon: 'package', label: 'Toplam teslimat', value: fmtInt(t.tes), sub: 'Tüm kayıtlar' },
+    { icon: 'clock', label: 'Çalışma süresi', value: fmt(hours.totalHours, 1) + ' sa', sub: fmtInt(hours.totalMolaDk) + ' dk mola dahil' },
+    { icon: 'route', label: 'Toplam mesafe', value: fmt(t.km, 1) + ' km', sub: 'Kayıtlı mesafe' },
+    { icon: 'bolt', label: 'Saatlik net kazanç', value: hours.avgPerHour != null ? fmt(hours.avgPerHour) + ' ₺/sa' : '—', sub: hours.avgPerHour != null ? 'Süre girilen kayıtlar · mola hariç' : 'Hesaplama için çalışma süresi girin', negative: hours.avgPerHour < 0 }
+  ];
+  document.getElementById('mainMetrics').innerHTML = metrics.map(item => `<div class="metric"><div class="metric-ico">${uiIcon(item.icon)}</div><div class="metric-value${item.negative ? ' neg' : ''}">${item.value}</div><div class="metric-label">${item.label}</div><div class="metric-sub">${item.sub}</div></div>`).join('');
+}
+function openDashboardRecord(){
+  switchToPage('daily');
+  document.getElementById('btnAdd').click();
+}
 function renderDash(){
   const t=totals(),b=bestOf();
   const tW=totalsOf(recsForCurrentWeek());
@@ -3771,7 +4436,8 @@ function renderDash(){
   const recsM = recsForCurrentMonth();
   const bonusOf = tot => tot.totalBonus > 0 ? `<span style="color:var(--accent);font-size:0.65rem;">(+${fmtInt(tot.totalBonus)}₺ bonus)</span>` : 'Bonus yok';
 
-  document.getElementById('mainMetrics').innerHTML=
+  renderDashboardOverview(t);
+  document.getElementById('detailMetrics').innerHTML=
     metricSwipe('cyan', [
       {label:'Toplam KM', value:fmtInt(t.km), sub:`Tümü · ${t.workDays} çalışma günü`},
       {label:'Bu Hafta KM', value:fmtInt(tW.km), sub:`Bu hafta · ${tW.workDays} gün`},
@@ -3817,19 +4483,19 @@ function renderDash(){
       {label:'Bu Hafta Gider / km', value:fmt(tW.giderKm)+' ₺', sub:'Bu hafta'},
       {label:'Bu Ay Gider / km', value:fmt(tM.giderKm)+' ₺', sub:'Bu ay'}
     ], '⚙️');
-  bindMetricSwipes(document.getElementById('mainMetrics'));
+  bindMetricSwipes(document.getElementById('detailMetrics'));
   let hint = document.getElementById('metricsHint');
   if(!hint){
     hint = document.createElement('p');
     hint.id = 'metricsHint';
     hint.className = 'metrics-hint';
     hint.textContent = 'Kartları yana kaydırın: tümü · bu hafta · bu ay';
-    const mm = document.getElementById('mainMetrics');
+    const mm = document.getElementById('detailMetrics');
     if(mm && mm.parentNode) mm.parentNode.insertBefore(hint, mm.nextSibling);
   }
 
   document.getElementById('insights').innerHTML=`
-<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val pos">${fmt(t.perPkg)} ₺</div><div class="desc">Maliyet düşüldükten sonra</div></div></div>
+<div class="insight"><div class="insight-icon g">📦</div><div><h4>Paket başına net</h4><div class="val ${t.perPkg<0?'neg':'pos'}">${fmt(t.perPkg)} ₺</div><div class="desc">Maliyet düşüldükten sonra</div></div></div>
 <div class="insight"><div class="insight-icon a">🛣️</div><div><h4>Paket başına mesafe</h4><div class="val">${fmt(t.kmPkg,1)} km</div><div class="desc">Paket başına yakılan yol</div></div></div>
 <div class="insight"><div class="insight-icon c">⛽</div><div><h4>Paket başına yakıt</h4><div class="val">${fmt(t.yakitPkg)} ₺</div><div class="desc">Yakıt maliyeti payı</div></div></div>
 <div class="insight"><div class="insight-icon g">🛢️</div><div><h4>Ort. yakıt verimliliği</h4><div class="val ${t.avgKmPerLitre!=null?'pos':''}">${t.avgKmPerLitre!=null?fmt(t.avgKmPerLitre,1)+' km/L':'Veri yok'}</div><div class="desc">Litre girilen kayıtlardan</div></div></div>`;
@@ -3865,7 +4531,7 @@ function renderDaily(){
     renderDailyCardsView(list); return}
   tbody.innerHTML=list.map(r=>{
     const c=calc(r);
-    let bonusTag = c.bonus > 0 ? `<div style="font-size:0.65rem; color:var(--accent); margin-top:3px; font-weight:700;">+${fmtInt(c.bonus)} ₺ Bns</div>` : '';
+    let bonusTag = c.bonus > 0 ? `<div style="font-size:0.65rem; color:var(--accent); margin-top:3px; font-weight:700;">+${fmt(c.bonus)} ₺ ${getBonusMode() === 'weekly' ? 'Haftalık bonus payı' : 'Günlük bonus payı'}</div>` : '';
     return`<tr data-id="${escapeHtml(r.id||'')}"><td>${r.tarih}</td><td class="day-name">${dayName(r.tarih)}</td>
     <td class="num"><input class="editable" type="number" data-f="km" value="${r.km||0}" min="0" step="1"/></td>
     <td class="num" title="${r.molaDk>0?fmt(r.molaDk,0)+' dk mola':'Mola girilmedi'}">${r.baslangic && r.bitis ? r.baslangic+'-'+r.bitis : (r.saat!=null?r.saat+'s':'—')}${r.molaDk>0?`<br><span style="font-size:0.65rem;color:var(--muted)">☕ ${fmt(r.molaDk,0)}dk mola</span>`:''}</td>
@@ -3928,7 +4594,7 @@ function renderDailyCardsView(list){
 
   container.innerHTML = list.map(r => {
     const c = calc(r);
-    const bonusTag = c.bonus > 0 ? `<span class="daily-card-bonus">+${fmtInt(c.bonus)}₺ Bonus</span>` : '';
+    const bonusTag = c.bonus > 0 ? `<span class="daily-card-bonus">+${fmt(c.bonus)}₺ ${getBonusMode() === 'weekly' ? 'Haftalık bonus payı' : 'Günlük bonus payı'}</span>` : '';
     const saatText = r.baslangic && r.bitis ? `${r.baslangic}–${r.bitis}` : (r.saat!=null ? `${fmt(r.saat,1)} sa` : '—');
     const isToday = r.tarih === todayISO();
     const dayCls = c.net < 0 ? ' neg-day' : ' pos-day';
@@ -4427,6 +5093,57 @@ function getShiftReminderPlugin(){
 }
 let _nativeReminderInfo = { available: false, exact: true, notificationsAllowed: true, battery: true };
 
+/* Bildirim iznini ister ve SONUCU BİLDİRİR.
+   ÖNCEKİ HATA: catch(e){} hatayı yutuyordu; eklenti yoksa ya da metot
+   reddederse buton hiçbir şey yapmıyor gibi görünüyordu ("tepki vermiyor").
+   Artık her yol için ayrı mesaj var ve son çare olarak cihaz ayarlarına
+   yönlendiriyoruz. */
+async function requestNotifPermissionUX(){
+  // 1) Kendi çökme-güvenli eklentimiz (BackgroundGeolocation)
+  const BG = getSafePermPlugin();
+  if(BG && typeof BG.requestNotificationPermission === 'function'){
+    try{
+      const r = await BG.requestNotificationPermission();
+      if(r && r.granted){ toast('Bildirim izni verildi.', true); return true; }
+      // Kullanıcı reddettiyse ya da sistem "bir daha sorma" durumundaysa
+      // pencere hiç açılmaz; elle ayarlara gitmesi gerekir.
+      toast('İzin verilmedi. Ayarlar açılıyor…', false);
+      openAppNotificationSettings();
+      return false;
+    }catch(e){
+      console.warn('requestNotificationPermission hatası:', e);
+      toast('İzin penceresi açılamadı. Ayarlar açılıyor…', false);
+      openAppNotificationSettings();
+      return false;
+    }
+  }
+  // 2) Tarayıcı API'si (native eklenti yoksa)
+  if(typeof Notification !== 'undefined' && Notification.requestPermission){
+    try{
+      let p = Notification.permission;
+      if(p === 'default') p = await Notification.requestPermission();
+      const ok = (p === 'granted');
+      toast(ok ? 'Bildirim izni verildi.' : 'Bildirim izni reddedildi.', ok);
+      return ok;
+    }catch(e){}
+  }
+  // 3) Hiçbiri yoksa: kullanıcıyı sessiz bırakma, ayarlara yönlendir
+  toast('İzin otomatik istenemedi. Cihaz ayarlarından açmanız gerekiyor.', false);
+  openAppNotificationSettings();
+  return false;
+}
+
+/* Uygulamanın sistem ayar sayfasını açar (bildirim izni elle verilecekse). */
+function openAppNotificationSettings(){
+  const BG = getSafePermPlugin();
+  if(BG && typeof BG.openSettings === 'function'){
+    try{ BG.openSettings(); return true; }catch(e){}
+  }
+  // Eklenti yoksa en azından nasıl yapılacağını anlat.
+  try{ showBatteryHelp('notif'); }catch(e){}
+  return false;
+}
+
 // VARSAYILAN: hatırlatma AÇIK ve saat 23:00.
 // Kullanıcı bir kez kapatmışsa/saati değiştirmişse tercihi korunur:
 // localStorage'da kayıt YOKSA varsayılan uygulanır, VARSA ona uyulur.
@@ -4569,20 +5286,26 @@ function updateReminderStatusUI(){
     cls = 'rem-status warn';
     msg = `⚠ Her gün ${t} · ancak bildirim izni KAPALI, hatırlatma görünmez.`;
     fixes.push({ label: '🔔 Bildirim iznini ver', act: async () => {
-      const BG = getSafePermPlugin();
-      if(BG && typeof BG.requestNotificationPermission === 'function'){
-        try{ await BG.requestNotificationPermission(); }catch(e){}
-      }
-      await refreshNativeReminderInfo(); updateReminderStatusUI();
+      await requestNotifPermissionUX();
+      await refreshNativeReminderInfo();
+      updateReminderStatusUI();
+      try{ renderSysWarnBanner(); }catch(e){}
     }});
   } else if(!info.battery){
     cls = 'rem-status warn';
     msg = `⚠ Her gün ${t} · pil optimizasyonu açık, bildirim gecikebilir veya hiç gelmeyebilir.`;
     fixes.push({ label: '🔋 Pil kısıtlamasını kaldır', act: async () => {
       const SR = getShiftReminderPlugin();
-      if(SR && typeof SR.requestBatteryExemption === 'function'){
-        try{ await SR.requestBatteryExemption(); }catch(e){}
+      if(!SR || typeof SR.requestBatteryExemption !== 'function'){
+        // Eklenti yoksa sessiz kalma: elle nasıl yapılacağını göster.
+        showBatteryHelp('battery'); return;
+      }
+      try{
+        await SR.requestBatteryExemption();
         toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+      }catch(e){
+        toast('Ayar ekranı açılamadı, elle yapmanız gerekiyor.', false);
+        showBatteryHelp('battery');
       }
     }});
   } else if(!info.exact){
@@ -4590,9 +5313,15 @@ function updateReminderStatusUI(){
     msg = `⏰ Her gün ${t} · kesin alarm izni yok, bildirim birkaç dakika sapabilir.`;
     fixes.push({ label: '⏰ Kesin alarm iznini ver', act: async () => {
       const SR = getShiftReminderPlugin();
-      if(SR && typeof SR.openExactAlarmSettings === 'function'){
-        try{ await SR.openExactAlarmSettings(); }catch(e){}
+      if(!SR || typeof SR.openExactAlarmSettings !== 'function'){
+        showBatteryHelp('exact'); return;
+      }
+      try{
+        await SR.openExactAlarmSettings();
         toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+      }catch(e){
+        toast('Ayar ekranı açılamadı, elle yapmanız gerekiyor.', false);
+        showBatteryHelp('exact');
       }
     }});
   } else {
@@ -4623,7 +5352,26 @@ function updateReminderStatusUI(){
       // kullanıcıya "buton tepki vermiyor" gibi görünüyordu. Artık her
       // durumda geri bildirim veriyoruz.
       if(!SR || typeof SR.testNotification !== 'function'){
-        toast('Bildirim modülü yüklenemedi. Uygulamayı Play Store\'dan güncelleyin.', false);
+        // Eklenti var ama testNotification yoksa: APK'daki native eklenti
+        // ESKİ sürüm demektir (alarm çalışır, test metodu yoktur).
+        // Bu durumda kullanıcıyı boş bırakmayalım: alarm zincirini
+        // gerçekten deneyen bir yedek yol sunuyoruz.
+        if(SR && typeof SR.scheduleTestAlarm === 'function'){
+          try{
+            await SR.scheduleTestAlarm({ seconds: 60 });
+            toast('Test alarmı kuruldu. 1 dakika içinde bildirim gelmeli.', true);
+            return;
+          }catch(e){}
+        }
+        showInfoDialog({
+          title: 'Test bildirimi kullanılamıyor',
+          icon: 'ℹ️',
+          message: 'Bu özellik uygulamanın daha yeni bir Play Store sürümünde çalışır.\n\n'
+                 + 'Zamanlanmış hatırlatmanız etkilenmez; belirlediğiniz saatte bildirim '
+                 + 'almaya devam edersiniz.\n\n'
+                 + 'Hemen denemek isterseniz: hatırlatma saatini şu andan 2 dakika '
+                 + 'sonrasına ayarlayıp uygulamayı tamamen kapatın.'
+        });
         return;
       }
       test.disabled = true;
@@ -4775,7 +5523,7 @@ function getDueMaintenances(){
   (garageData.vehicles || []).forEach(v => {
     const totalKm = getVehicleTotalKm(v.id);
     (v.bakimlar || []).forEach((b, i) => {
-      const remaining = (b.sonKm + b.periyot) - totalKm;
+      const remaining = maintenanceState(b, totalKm).remaining;
       if(remaining <= 500){
         due.push({ vehicleId: v.id, vehicleName: v.model || 'Aracınız', index: i, name: b.ad, remaining, sonKm: b.sonKm });
       }
@@ -4817,7 +5565,7 @@ function checkMaintenanceThresholds(){
   (garageData.vehicles || []).forEach(v => {
     const totalKm = getVehicleTotalKm(v.id);
     (v.bakimlar || []).forEach((b, i) => {
-      const remaining = (b.sonKm + b.periyot) - totalKm;
+      const remaining = maintenanceState(b, totalKm).remaining;
       MAINT_THRESHOLDS.forEach(threshold => {
         if(remaining <= threshold){
           const key = `${v.id}::${i}::${b.sonKm}::${threshold}`;
@@ -4891,10 +5639,7 @@ function renderSysWarnBanner(){
       desc:'Vardiya sonu hatırlatması ve bakım uyarıları görünmeyecek.',
       btn:'Bildirim iznini ver',
       act: async () => {
-        const BG = getSafePermPlugin();
-        if(BG && typeof BG.requestNotificationPermission === 'function'){
-          try{ await BG.requestNotificationPermission(); }catch(e){}
-        }
+        await requestNotifPermissionUX();
         await refreshNativeReminderInfo();
         renderSysWarnBanner(); updateReminderStatusUI();
       }
@@ -4908,9 +5653,15 @@ function renderSysWarnBanner(){
       btn:'Kısıtlamayı kaldır',
       act: async () => {
         const SR = getShiftReminderPlugin();
-        if(SR && typeof SR.requestBatteryExemption === 'function'){
-          try{ await SR.requestBatteryExemption(); }catch(e){}
+        if(!SR || typeof SR.requestBatteryExemption !== 'function'){
+          showBatteryHelp('battery'); return;
+        }
+        try{
+          await SR.requestBatteryExemption();
           toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+        }catch(e){
+          toast('Ayar ekranı açılamadı, elle yapmanız gerekiyor.', false);
+          showBatteryHelp('battery');
         }
       }
     });
@@ -4923,9 +5674,15 @@ function renderSysWarnBanner(){
       btn:'İzin ver',
       act: async () => {
         const SR = getShiftReminderPlugin();
-        if(SR && typeof SR.openExactAlarmSettings === 'function'){
-          try{ await SR.openExactAlarmSettings(); }catch(e){}
+        if(!SR || typeof SR.openExactAlarmSettings !== 'function'){
+          showBatteryHelp('exact'); return;
+        }
+        try{
+          await SR.openExactAlarmSettings();
           toast('İzni verdikten sonra uygulamaya geri dönün.', true);
+        }catch(e){
+          toast('Ayar ekranı açılamadı, elle yapmanız gerekiyor.', false);
+          showBatteryHelp('exact');
         }
       }
     });
@@ -5087,6 +5844,59 @@ function _clFormatDate(iso){
 }
 
 let _clLoaded = false;
+let _clLoading = null;
+
+function mergeChangelogItems(history, latest, previous){
+  const items = new Map();
+  const add = entry => {
+    if(!entry || typeof entry.version !== 'string') return;
+    const version = entry.version.trim().replace(/^v/i, '');
+    if(!/^\d+(?:\.\d+){0,2}$/.test(version) || version.length > 20) return;
+    items.set(version, {
+      version,
+      notes: typeof entry.notes === 'string' ? entry.notes : '',
+      publishedAt: entry.publishedAt || ''
+    });
+  };
+  add(previous);
+  add(latest);
+  if(history && typeof history === 'object') Object.values(history).forEach(add);
+  return Array.from(items.values()).sort((a,b) => cmpVersions(b.version, a.version));
+}
+
+function setChangelogExpanded(expanded){
+  const list = document.getElementById('clList');
+  if(!list) return;
+  list.querySelectorAll('.cl-entry').forEach(entry => {
+    entry.classList.toggle('open', expanded);
+    entry.querySelector('.cl-head').setAttribute('aria-expanded', String(expanded));
+    const body = entry.querySelector('.cl-body');
+    body.setAttribute('aria-hidden', String(!expanded));
+    body.toggleAttribute('inert', !expanded);
+  });
+}
+
+async function publishRelease(currentLatest, release){
+  const changes = {
+    latest: release,
+    ['history/' + release.version.replace(/\./g, '_')]: {
+      version: release.version, notes: release.notes || '', publishedAt: release.publishedAt
+    }
+  };
+  if(currentLatest){
+    changes.previous = currentLatest;
+    const previous = await firebase.database().ref('appUpdate/previous').once('value');
+    for(const entry of mergeChangelogItems(null, currentLatest, previous.val())){
+      if(entry.version === release.version) continue;
+      const key = 'history/' + entry.version.replace(/\./g, '_');
+      const archived = await firebase.database().ref('appUpdate/' + key).once('value');
+      if(!archived.val()) changes[key] = entry;
+    }
+  }
+  await firebase.database().ref('appUpdate').update(changes);
+  _clLoaded = false;
+}
+
 async function renderChangelog(force){
   const list = document.getElementById('clList');
   const curEl = document.getElementById('clCurrentVer');
@@ -5095,23 +5905,23 @@ async function renderChangelog(force){
   if(_clLoaded && !force) return;
 
   list.innerHTML = '<div class="cl-empty">Yükleniyor…</div>';
-  let items = [];
-  try{
-    const snap = await firebase.database().ref('appUpdate/history').once('value');
-    const val = snap.val() || {};
-    items = Object.keys(val).map(k => Object.assign({ _key: k }, val[k]));
-  }catch(e){
-    list.innerHTML = '<div class="cl-empty">⚠️ Notlar yüklenemedi. İnternet bağlantınızı kontrol edin.</div>';
-    return;
+  if(!_clLoading){
+    _clLoading = Promise.allSettled(['history', 'latest', 'previous'].map(key =>
+      Promise.resolve().then(() => firebase.database().ref('appUpdate/' + key).once('value'))
+    ));
   }
+  const results = await _clLoading;
+  _clLoading = null;
+  const values = results.map(result => result.status === 'fulfilled' ? result.value.val() : null);
+  const incomplete = results.some(result => result.status === 'rejected');
+  const status = document.getElementById('clStatus');
+  if(status) status.textContent = incomplete ? 'Geçmişin bir bölümü yüklenemedi. Bağlantıyı veya erişim izinlerini kontrol edip yenileyin.' : '';
 
   // Geçmiş boşsa en azından yayındaki sürümü göster.
-  if(!items.length){
-    try{
-      const s2 = await firebase.database().ref('appUpdate/latest').once('value');
-      const l = s2.val();
-      if(l && l.version) items = [{ version: l.version, notes: l.notes, publishedAt: l.publishedAt }];
-    }catch(e){}
+  const items = mergeChangelogItems(values[0], values[1], values[2]);
+  if(!items.length && incomplete){
+    list.innerHTML = '<div class="cl-empty">Notlar yüklenemedi. Bağlantıyı veya erişim izinlerini kontrol edip yenileyin.</div>';
+    return;
   }
   if(!items.length){
     list.innerHTML = '<div class="cl-empty"><div style="font-size:2rem;opacity:.5;margin-bottom:.5rem;">📋</div>'
@@ -5122,18 +5932,42 @@ async function renderChangelog(force){
 
   items.sort(function(a,b){ return cmpVersions(b.version || '0', a.version || '0'); });
 
-  list.innerHTML = items.map(function(it){
+  // Akordiyon: yalnızca kullanılan sürüm açık başlar, diğerleri kapalı.
+  // Uzun listelerde sürekli kaydırmayı önler.
+  list.innerHTML = items.map(function(it, i){
     const isCur = it.version === CURRENT_APP_VERSION;
+    const acik  = isCur || (i === 0 && !items.some(x => x.version === CURRENT_APP_VERSION));
     const tarih = _clFormatDate(it.publishedAt);
     const notes = it.notes ? formatUpdateNotes(it.notes)
       : '<p style="margin:0;color:var(--muted);font-size:.8rem;">Not girilmemiş.</p>';
-    return '<div class="cl-entry' + (isCur ? ' is-current' : '') + '">'
-      + '<div class="cl-head">'
+    // Kaç değişiklik var? Başlıkta özet rozet olarak gösterelim.
+    let adet = 0;
+    try{ adet = parseOtaNotes(it.notes || '').length; }catch(e){}
+    return '<div class="cl-entry' + (isCur ? ' is-current' : '') + (acik ? ' open' : '') + '">'
+      + '<button type="button" class="cl-head" id="cl-head-' + i + '" aria-controls="cl-body-' + i + '" aria-expanded="' + (acik ? 'true' : 'false') + '">'
       + '<span class="cl-ver">v' + escapeHtml(it.version || '?') + '</span>'
       + (isCur ? '<span class="cl-badge">KULLANDIĞINIZ</span>' : '')
+      + (adet ? '<span class="cl-count">' + adet + '</span>' : '')
       + (tarih ? '<span class="cl-date">' + escapeHtml(tarih) + '</span>' : '')
-      + '</div><div class="cl-body">' + notes + '</div></div>';
+      + '<svg class="cl-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>'
+      + '</button>'
+      + '<div class="cl-body" id="cl-body-' + i + '" role="region" aria-labelledby="cl-head-' + i + '" aria-hidden="' + !acik + '"' + (acik ? '' : ' inert') + '><div class="cl-body-inner">' + notes + '</div></div></div>';
   }).join('');
+
+  // Başlığa dokununca aç/kapa (tek dinleyici, delegasyon).
+  if(!list.dataset.clBound){
+    list.dataset.clBound = '1';
+    list.addEventListener('click', function(e){
+      const head = e.target.closest('.cl-head');
+      if(!head) return;
+      const entry = head.parentElement;
+      const acildi = entry.classList.toggle('open');
+      head.setAttribute('aria-expanded', acildi ? 'true' : 'false');
+      const body = entry.querySelector('.cl-body');
+      body.setAttribute('aria-hidden', String(!acildi));
+      body.toggleAttribute('inert', !acildi);
+    });
+  }
   _clLoaded = true;
 }
 
@@ -5248,6 +6082,207 @@ if(btnSendFeedbackEl){
    [20-GARAJ]  GARAJ & BAKIM TAKİBİ
    Araç yönetimi, yakıt verimliliği, periyodik bakım hatırlatmaları.
    ====================================================================== */
+function maintenanceState(b, totalKm){
+  const period = Number(b.periyot) || 0;
+  const anchored = Number.isFinite(b.startKm);
+  const initial = Number.isFinite(b.initialRemaining) ? b.initialRemaining : period;
+  const remaining = anchored ? initial - Math.max(0, totalKm - b.startKm) : (Number(b.sonKm) || 0) + period - totalKm;
+  return { remaining, progress: period > 0 ? Math.min(100, Math.max(0, (period - remaining) / period * 100)) : 0 };
+}
+function mileageInput(value, label, min, max){
+  if(typeof value !== 'string' && typeof value !== 'number') throw new Error(label + ' sayısal olmalı.');
+  const text = String(value == null ? '' : value).trim().replace(',', '.');
+  const number = Number(text);
+  if(!/^\d+(?:\.\d{1,2})?$/.test(text) || !Number.isFinite(number) || number < min || number > max) throw new Error(label + ' ' + min + ' ile ' + max + ' arasında olmalı.');
+  return number;
+}
+function createMaintenance(name, odometer, period, remaining, totalKm){
+  const ad = typeof name === 'string' ? name.trim() : '';
+  if(!ad || ad.length > 60) throw new Error('Bakım adı 1–60 karakter olmalı.');
+  const sonKm = mileageInput(odometer, 'Güncel kilometre', 0, 2000000);
+  const periyot = mileageInput(period, 'Bakım periyodu', 1, 200000);
+  if(remaining != null && typeof remaining !== 'string' && typeof remaining !== 'number') throw new Error('Bakıma kalan kilometre sayısal olmalı.');
+  const initialRemaining = remaining == null || String(remaining).trim() === '' ? periyot : mileageInput(remaining, 'Bakıma kalan kilometre', 0, periyot);
+  if(!Number.isFinite(totalKm) || totalKm < 0) throw new Error('Kayıtlı mesafe geçersiz.');
+  return { id: newRecordId(), ad, sonKm, periyot, startKm: totalKm, initialRemaining };
+}
+function vehicleOdometer(vehicle){
+  const total = getVehicleTotalKm(vehicle.id);
+  return Number.isFinite(vehicle.odometerBase) && Number.isFinite(vehicle.odometerAtKm)
+    ? vehicle.odometerBase + Math.max(0, total - vehicle.odometerAtKm) : total;
+}
+function _commitGarageUpdate(next){
+  if(!currentUser || !_syncState || _syncState.uid !== currentUser.uid || _syncState.deleting) throw new Error('Oturum değişti. Yeniden giriş yapın.');
+  const previous = garageData, pending = _syncClone(_syncState.garage), snapshot = _syncClone(_garageSnapshot);
+  garageData = next;
+  _queueGarage();
+  if(!saveLocalCache()){
+    garageData = previous;
+    _syncState.garage = pending;
+    _garageSnapshot = snapshot;
+    throw new Error('Değişiklikler cihaza kaydedilemedi. Depolama alanını kontrol edip tekrar deneyin.');
+  }
+  flushOfflineQueue();
+}
+function shouldStartOnboarding(user, data){
+  if(!user || !user.metadata || !user.metadata.creationTime || user.metadata.creationTime !== user.metadata.lastSignInTime) return false;
+  const garage = data && data.garaj || {};
+  if(garage.onboarding || garage.bonusMode || garage.model || (garage.bakimlar || []).length) return false;
+  if(Object.keys(data && data.kayitlar || {}).length) return false;
+  return !(garage.vehicles || []).some(v => v && (v.model || (v.bakimlar || []).length || v.odometerBase != null));
+}
+function initializeOnboarding(user, data){
+  if(!currentUser || currentUser.uid !== user.uid || garageData.onboarding || !shouldStartOnboarding(user, data)) return;
+  if(records.length || garageData.bonusMode || (garageData.vehicles || []).some(v => v.model || (v.bakimlar || []).length || v.odometerBase != null)) return;
+  try{ _commitGarageUpdate({ ...garageData, onboarding: { version: 1, step: 'vehicle' } }); }
+  catch(error){ toast(error.message, false); }
+}
+/* “KURULUMU BAŞLAT” (Talimatlar sayfasından)
+   - Yarım kalan bir kurulum varsa VERİYE DOKUNMADAN kaldığı adımdan açılır.
+   - Hesap boşsa (araç/kayıt yok) yeni kurulum başlatılır.
+   - Araç veya kayıt VARSA kurulum sıfırlanMAZ: sihirbaz 1. adımda "Genel bakım"
+     kaydı oluşturuyor; mevcut aracın üstüne ikinci bir kayıt yazmaktansa
+     kullanıcıyı ilgili sayfaya yönlendiriyoruz. */
+function startSetupFromGuide(){
+  try{
+    if(!currentUser || !garageData){ toast('Önce giriş yapın.', false); return; }
+    if(garageData.onboarding){ syncOnboardingUI(); return; }
+    const hasData = records.length
+      || (garageData.vehicles || []).some(v => v && (v.model || (v.bakimlar || []).length || v.odometerBase != null))
+      || !!garageData.bonusMode;
+    if(hasData){
+      toast('Kurulum zaten tamamlanmış. Aracı Garaj’dan, bonus barajlarını Bonus Sistemi sayfasından düzenleyebilirsiniz.', true);
+      return;
+    }
+    _commitGarageUpdate({ ...garageData, onboarding: { version: 1, step: 'vehicle' } });
+    syncOnboardingUI();
+  }catch(error){
+    toast(error && error.message ? error.message : 'Kurulum başlatılamadı.', false);
+  }
+}
+function resetOnboardingUI(){
+  const dialog = document.getElementById('onboardingDialog');
+  if(dialog && dialog.open) dialog.close();
+  _onboardingOwner = null;
+  _onboardingShownStep = '';
+}
+function onboardingBonusPreview(){
+  const selected = document.querySelector('input[name="onboardBonus"]:checked');
+  const box = document.getElementById('onboardingTiers');
+  if(!box || !selected) return;
+  box.textContent = bonusTiersFor(selected.value).slice().sort((a,b) => a.p - b.p).map(t => fmtInt(t.p) + ' paket → ' + fmt(t.b) + ' ₺').join(' · ');
+}
+function syncOnboardingUI(){
+  const dialog = document.getElementById('onboardingDialog');
+  if(!dialog) return;
+  const state = garageData && garageData.onboarding;
+  if(!currentUser || !state || !['vehicle','bonus','ready'].includes(state.step)) { resetOnboardingUI(); return; }
+  const gate = document.getElementById('forceUpdateGate');
+  if(gate && gate.classList.contains('show')) { resetOnboardingUI(); return; }
+  if(!document.getElementById('app-container').classList.contains('show')) return;
+  if(dialog.open && _onboardingOwner === currentUser.uid && _onboardingShownStep === state.step) return;
+  _onboardingOwner = currentUser.uid;
+  _onboardingShownStep = state.step;
+  const index = ['vehicle','bonus','ready'].indexOf(state.step);
+  ['onboardVehicleStep','onboardBonusStep','onboardReadyStep'].forEach((id,i) => { document.getElementById(id).hidden = i !== index; });
+  document.querySelectorAll('.onboarding-step').forEach((item,i) => {
+    item.classList.toggle('active', i === index);
+    if(i === index) item.setAttribute('aria-current', 'step'); else item.removeAttribute('aria-current');
+  });
+  document.getElementById('onboardingStepLabel').textContent = (index + 1) + ' / 3';
+  document.getElementById('onboardingBack').hidden = index === 0;
+  document.getElementById('onboardingError').textContent = '';
+  if(state.step === 'vehicle'){
+    const vehicle = (garageData.vehicles || []).find(v => v.id === state.vehicleId);
+    const maintenance = vehicle && (vehicle.bakimlar || []).find(b => b.id === state.maintenanceId);
+    document.getElementById('onboardModel').value = vehicle ? vehicle.model || '' : '';
+    document.getElementById('onboardOdometer').value = vehicle ? vehicleOdometer(vehicle) : '';
+    document.getElementById('onboardPeriod').value = maintenance ? maintenance.periyot : '';
+    document.getElementById('onboardRemaining').value = maintenance ? Math.max(0, maintenanceState(maintenance, getVehicleTotalKm(vehicle.id)).remaining) : '';
+  }
+  if(state.step === 'bonus'){
+    document.querySelectorAll('input[name="onboardBonus"]').forEach(input => { input.checked = input.value === (garageData.bonusMode || 'weekly'); });
+    onboardingBonusPreview();
+  }
+  if(!dialog.open) dialog.showModal();
+  const target = document.getElementById(index === 0 ? 'onboardModel' : index === 1 ? 'onboardWeekly' : 'onboardingFinish');
+  target.focus();
+}
+function applyOnboardingVehicle(input){
+  const state = garageData.onboarding;
+  if(!state || !['vehicle','bonus'].includes(state.step)) throw new Error('Kurulum adımı değişti.');
+  const model = String(input.model || '').trim();
+  if(!model || model.length > 60) throw new Error('Araç adı 1–60 karakter olmalı.');
+  const next = _syncClone(garageData);
+  if(!next.vehicles) next.vehicles = [];
+  let vehicle = next.vehicles.find(v => v.id === state.vehicleId);
+  if(!vehicle && !state.vehicleId) vehicle = next.vehicles.find(v => !v.model && !(v.bakimlar || []).length && !vehicleRecords(v.id).length);
+  if(!vehicle){ vehicle = { id: 'v' + newRecordId(), model: '', bakimlar: [] }; next.vehicles.push(vehicle); }
+  const total = getVehicleTotalKm(vehicle.id);
+  const maintenance = createMaintenance('Genel bakım', input.odometer, input.period, input.remaining, total);
+  if(state.maintenanceId) maintenance.id = state.maintenanceId;
+  vehicle.model = model;
+  vehicle.odometerBase = maintenance.sonKm;
+  vehicle.odometerAtKm = total;
+  vehicle.bakimlar = (vehicle.bakimlar || []).filter(b => b.id !== state.maintenanceId);
+  vehicle.bakimlar.push(maintenance);
+  next.activeVehicleId = vehicle.id;
+  next.onboarding = { version: 1, step: 'bonus', vehicleId: vehicle.id, maintenanceId: maintenance.id };
+  _commitGarageUpdate(next);
+  scheduleRender();
+  syncOnboardingUI();
+}
+function applyOnboardingBonus(mode){
+  if(!['weekly','daily'].includes(mode)) throw new Error('Günlük veya haftalık bonus sistemini seçin.');
+  if(!garageData.onboarding || garageData.onboarding.step !== 'bonus') throw new Error('Kurulum adımı değişti.');
+  const next = _syncClone(garageData);
+  next.bonusMode = mode;
+  if(!next.bonusTiers || !next.bonusTiers.length) next.bonusTiers = bonusTiersFor('weekly').map(t => ({ ...t }));
+  if(!next.dailyBonusTiers || !next.dailyBonusTiers.length) next.dailyBonusTiers = bonusTiersFor('daily').map(t => ({ ...t }));
+  next.onboarding.step = 'ready';
+  _commitGarageUpdate(next);
+  updateBonuses(); scheduleRender(); syncOnboardingUI();
+}
+function onboardingBack(){
+  const state = garageData.onboarding;
+  if(!state || !['bonus','ready'].includes(state.step)) return;
+  const next = _syncClone(garageData);
+  next.onboarding.step = state.step === 'ready' ? 'bonus' : 'vehicle';
+  _commitGarageUpdate(next);
+  syncOnboardingUI();
+}
+function completeOnboarding(){
+  if(!garageData.onboarding || garageData.onboarding.step !== 'ready') throw new Error('Önce araç ve bonus ayarlarını tamamlayın.');
+  const next = _syncClone(garageData);
+  next.onboarding.step = 'complete';
+  _commitGarageUpdate(next);
+  resetOnboardingUI();
+  switchToPage('dashboard');
+  return true;
+}
+function initOnboarding(){
+  const dialog = document.getElementById('onboardingDialog');
+  if(!dialog) return;
+  const run = action => {
+    if(!currentUser || _onboardingOwner !== currentUser.uid) { resetOnboardingUI(); return; }
+    try{ action(); }catch(error){ document.getElementById('onboardingError').textContent = error.message; }
+  };
+  document.getElementById('onboardingVehicleForm').addEventListener('submit', event => {
+    event.preventDefault();
+    run(() => applyOnboardingVehicle({ model: document.getElementById('onboardModel').value, odometer: document.getElementById('onboardOdometer').value, period: document.getElementById('onboardPeriod').value, remaining: document.getElementById('onboardRemaining').value }));
+  });
+  document.getElementById('onboardingBonusForm').addEventListener('submit', event => {
+    event.preventDefault();
+    run(() => applyOnboardingBonus((document.querySelector('input[name="onboardBonus"]:checked') || {}).value));
+  });
+  document.querySelectorAll('input[name="onboardBonus"]').forEach(input => input.addEventListener('change', onboardingBonusPreview));
+  document.getElementById('onboardingFinish').addEventListener('click', () => run(completeOnboarding));
+  document.getElementById('onboardingGuide').addEventListener('click', () => run(() => { if(completeOnboarding()) switchToPage('instructions'); }));
+  document.getElementById('onboardingBack').addEventListener('click', () => run(onboardingBack));
+  dialog.addEventListener('cancel', event => { event.preventDefault(); run(onboardingBack); });
+}
+initOnboarding();
+
 function applyFuelColsPreference(){
   const scroll = document.getElementById('dailyTableScroll');
   if(!scroll) return;
@@ -5262,7 +6297,9 @@ function renderGarage() {
 
   const vRecs = vehicleRecords(av.id);
   let totalKm = 0; vRecs.forEach(r => { totalKm += (+r.km || 0); });
-  if(document.getElementById('totalMotorKmVal')) document.getElementById('totalMotorKmVal').textContent = fmtInt(totalKm) + ' km';
+  if(document.getElementById('totalMotorKmVal')) document.getElementById('totalMotorKmVal').textContent = fmtInt(vehicleOdometer(av)) + ' km';
+  const odometerInput = document.getElementById('garageOdometer');
+  if(odometerInput && document.activeElement !== odometerInput) odometerInput.value = vehicleOdometer(av);
 
   const t = totalsOf(vRecs);
   
@@ -5294,14 +6331,14 @@ function renderGarage() {
     + '<br><span style="font-size:.75rem;">Yağ, zincir gibi periyodik bakımları ekleyin; km dolunca sizi uyaralım.</span></div>'; return; }
   
   list.innerHTML = bakimlar.map((b, i) => {
-    const remaining = (b.sonKm + b.periyot) - totalKm;
+    const remaining = maintenanceState(b, totalKm).remaining;
     let statusClass = 'green', statusText = fmtInt(remaining) + ' km kaldı', statusIco = '✅';
-    if(remaining <= 0) { statusClass = 'red'; statusText = fmtInt(Math.abs(remaining)) + ' km GEÇTİ!'; statusIco = '🚨'; }
+    if(remaining <= 0) { statusClass = 'red'; statusText = remaining === 0 ? 'Bakım zamanı geldi' : fmtInt(Math.abs(remaining)) + ' km GEÇTİ!'; statusIco = '🚨'; }
     else if (remaining <= 300) { statusClass = 'amber'; statusIco = '⚠️'; }
-    const pct = Math.min(100, Math.max(0, ((totalKm - b.sonKm) / b.periyot) * 100));
+    const pct = maintenanceState(b, totalKm).progress;
     return `<div class="best-card maint-card ${statusClass}"><div style="display:flex; justify-content:space-between; margin-bottom:0.7rem;">
         <div class="tag" style="margin:0"><i>${statusIco}</i>${escapeHtml(b.ad)}</div>
-        <div style="display:flex; gap:0.3rem;"><button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="color:var(--green); border-color:transparent;">🔄 Sıfırla</button><button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="color:var(--red); border-color:transparent;">✕ Sil</button></div>
+        <div style="display:flex; gap:0.3rem;flex-wrap:wrap;"><button type="button" class="btn btn-ghost btn-sm" onclick="openMaintenanceModal(${i})">Düzenle</button><button class="btn btn-ghost btn-sm" onclick="resetMaint(${i}, ${totalKm})" style="color:var(--green); border-color:transparent;">🔄 Sıfırla</button><button class="btn btn-ghost btn-sm" onclick="deleteMaint(${i})" style="color:var(--red); border-color:transparent;">✕ Sil</button></div>
       </div>
       <div class="big ${statusClass}" style="font-size:1.3rem; margin-bottom:0.6rem">${statusText}</div>
       <div style="background:var(--elev); height:6px; border-radius:3px; margin-bottom:0.8rem; overflow:hidden;"><div style="background:var(--${statusClass}); height:100%; width:${pct}%"></div></div>
@@ -5367,34 +6404,145 @@ document.getElementById('btnDeleteVehicle').addEventListener('click', () => {
 });
 
 
-document.getElementById('btnSaveGarageInfo').addEventListener('click', () => { activeVehicle().model = document.getElementById('garageModel').value; saveGarage(); renderGarage(); toast('Kaydedildi', true); });
-document.getElementById('btnAddMaintenance').addEventListener('click', () => { document.getElementById('maintenanceOverlay').classList.add('show'); });
+document.getElementById('btnSaveGarageInfo').addEventListener('click', () => {
+  try{
+    const model = document.getElementById('garageModel').value.trim();
+    if(!model || model.length > 60) throw new Error('Araç adı 1–60 karakter olmalı.');
+    const odometer = mileageInput(document.getElementById('garageOdometer').value, 'Güncel kilometre', 0, 2000000);
+    const next = _syncClone(garageData);
+    const vehicle = next.vehicles.find(v => v.id === activeVehicle().id);
+    Object.assign(vehicle, { model, odometerBase: odometer, odometerAtKm: getVehicleTotalKm(vehicle.id) });
+    _commitGarageUpdate(next); renderGarage(); toast('Araç bilgisi kaydedildi', true);
+  }catch(error){ toast(error.message, false); }
+});
+function openMaintenanceModal(index){
+  const vehicle = activeVehicle();
+  const b = Number.isInteger(index) ? (vehicle.bakimlar || [])[index] : null;
+  const form = document.getElementById('maintForm');
+  form.reset();
+  form.dataset.uid = currentUser ? currentUser.uid : '';
+  form.dataset.vehicleId = vehicle.id;
+  form.dataset.index = b ? String(index) : '';
+  form.dataset.original = b ? JSON.stringify(b) : '';
+  document.getElementById('mName').value = b ? b.ad : '';
+  document.getElementById('mLastKm').value = vehicleOdometer(vehicle);
+  document.getElementById('mInterval').value = b ? b.periyot : '';
+  const remaining = b ? maintenanceState(b, getVehicleTotalKm(vehicle.id)).remaining : null;
+  document.getElementById('mRemaining').value = remaining != null && remaining >= 0 && remaining <= b.periyot ? remaining : '';
+  document.getElementById('mError').textContent = '';
+  document.getElementById('maintModalTitle').textContent = b ? 'Bakım hedefini düzenle' : 'Bakım hedefi ekle';
+  document.getElementById('maintenanceOverlay').classList.add('show');
+  document.getElementById('mName').focus();
+}
+document.getElementById('btnAddMaintenance').addEventListener('click', () => openMaintenanceModal());
 document.getElementById('btnMaintCancel').addEventListener('click', () => document.getElementById('maintenanceOverlay').classList.remove('show'));
 function fillMaintTpl(name, interval) { document.getElementById('mName').value = name; document.getElementById('mInterval').value = interval; }
 
-document.getElementById('maintForm').addEventListener('submit', (e) => {
-  e.preventDefault(); const ad = document.getElementById('mName').value, sonKm = parseInt(document.getElementById('mLastKm').value) || 0, periyot = parseInt(document.getElementById('mInterval').value) || 0;
-  const av = activeVehicle(); if(!av.bakimlar) av.bakimlar = [];
-  av.bakimlar.push({ad, sonKm, periyot}); saveGarage(); renderGarage(); checkMaintenanceThresholds();
-  document.getElementById('maintenanceOverlay').classList.remove('show'); toast('Eklendi', true);
-});
+function submitMaintenance(event){
+  event.preventDefault();
+  try{
+    const form = document.getElementById('maintForm');
+    const av = activeVehicle();
+    if(form.dataset.uid && (!currentUser || form.dataset.uid !== currentUser.uid)) throw new Error('Oturum değişti. Bakım ekranını yeniden açın.');
+    if(form.dataset.vehicleId && form.dataset.vehicleId !== av.id) throw new Error('Seçili araç değişti. Bakım ekranını yeniden açın.');
+    const maintenance = createMaintenance(document.getElementById('mName').value, document.getElementById('mLastKm').value, document.getElementById('mInterval').value, document.getElementById('mRemaining').value, getVehicleTotalKm(av.id));
+    const next = _syncClone(garageData);
+    const vehicle = next.vehicles.find(v => v.id === av.id);
+    if(!vehicle.bakimlar) vehicle.bakimlar = [];
+    const editing = form.dataset.index != null && form.dataset.index !== '';
+    const index = editing ? Number(form.dataset.index) : -1;
+    if(editing){
+      const original = vehicle.bakimlar[index];
+      if(!original || JSON.stringify(original) !== form.dataset.original) throw new Error('Bakım kaydı değişti. Ekranı yeniden açın.');
+      maintenance.id = original.id || maintenance.id;
+      vehicle.bakimlar[index] = maintenance;
+    } else vehicle.bakimlar.push(maintenance);
+    Object.assign(vehicle, { odometerBase: maintenance.sonKm, odometerAtKm: maintenance.startKm });
+    _commitGarageUpdate(next);
+    renderGarage(); checkMaintenanceThresholds(); renderMaintWarningBanner();
+    document.getElementById('maintenanceOverlay').classList.remove('show');
+    document.getElementById('mError').textContent = '';
+    toast(editing ? 'Bakım güncellendi' : 'Bakım eklendi', true);
+    return true;
+  }catch(error){ document.getElementById('mError').textContent = error.message; return false; }
+}
+document.getElementById('maintForm').addEventListener('submit', submitMaintenance);
 window.deleteMaint = function(i) {
   showConfirm('Bu bakım hedefi silinecek.', () => {
     activeVehicle().bakimlar.splice(i, 1); saveGarage(); renderGarage(); toast('Silindi', true);
   }, {title:'Bakım Hedefini Sil', icon:'🔧'});
 };
+/* Bakım sıfırlama — tema uyumlu modal.
+   ÖNCEKİ HATA: native prompt() kullanılıyordu. Capacitor Android
+   WebView'da prompt() bazı cihazlarda hiç görünmüyor; kullanıcı butona
+   basıyor ve hiçbir şey olmuyor. Projenin geri kalanı zaten native
+   dialog'lardan kaçınıyordu, burası atlanmış. */
 window.resetMaint = function(i, currentTotalKm) {
-  const av = activeVehicle(); const cost = prompt(`Masraf girdisi (₺) yapın veya boş bırakın:`, "");
-  if (cost !== null) {
-    av.bakimlar[i].sonKm = currentTotalKm; saveGarage(); renderGarage(); checkMaintenanceThresholds();
-    const cVal = parseFloat(cost.replace(',', '.'));
+  const av = activeVehicle();
+  const bakim = (av.bakimlar || [])[i];
+  if(!bakim) return;
+  const owner = currentUser && currentUser.uid;
+  const original = JSON.stringify(bakim);
+  const ov = document.getElementById('maintResetOverlay');
+  const inp = document.getElementById('mrCost');
+  const sub = document.getElementById('mrSubtitle');
+  if(!ov || !inp){ return; }
+
+  sub.textContent = (bakim.ad || 'Bakım') + ' · sayaç yeniden ' + fmtInt(bakim.periyot) + ' km kaldı olarak başlayacak';
+  inp.value = '';
+  ov.classList.add('show');
+  setTimeout(() => { try{ inp.focus(); }catch(e){} }, 250);
+
+  const close = () => {
+    ov.classList.remove('show');
+    document.getElementById('mrOk').onclick = null;
+    document.getElementById('mrCancel').onclick = null;
+    inp.onkeydown = null;
+    inp.oninput = null;
+  };
+
+  const uygula = () => {
+    // Virgüllü giriş de kabul edilsin (Türkçe klavye).
+    const cVal = parseFloat(String(inp.value || '').replace(',', '.'));
+    try{
+      if(!currentUser || owner !== currentUser.uid) throw new Error('Oturum değişti.');
+      const next = _syncClone(garageData);
+      const vehicle = next.vehicles.find(v => v.id === av.id);
+      if(!vehicle || JSON.stringify((vehicle.bakimlar || [])[i]) !== original) throw new Error('Bakım kaydı değişti. Ekranı yeniden açın.');
+      const renewed = createMaintenance(bakim.ad, vehicleOdometer(vehicle), bakim.periyot, '', getVehicleTotalKm(vehicle.id));
+      renewed.id = bakim.id || renewed.id;
+      vehicle.bakimlar[i] = renewed;
+      _commitGarageUpdate(next);
+    }catch(error){ toast(error.message, false); return; }
+    close();
+    renderGarage(); checkMaintenanceThresholds(); renderMaintWarningBanner();
     if (!isNaN(cVal) && cVal > 0) {
-      const today = todayISO(); let ex = records.find(r => r.tarih === today && (r.arac||fallbackVehicleId()) === av.id);
-      if (ex) { ex.diger = (ex.diger || 0) + cVal; ex.aciklama = (ex.aciklama ? ex.aciklama + ' · ' : '') + 'Bakım'; } 
-      else { records.push({ tarih: today, arac: av.id, km: 0, saat: null, molaDk: 0, yakit: 0, yakitLitre: 0, diger: cVal, gelir: 0, teslimat: 0, aciklama: 'Bakım' }); }
-      commitRecords(); toast('Sıfırlandı ve masraf eklendi!', true);
-    } else { toast('Sıfırlandı', true); }
-  }
+      const today = todayISO();
+      let ex = records.find(r => r.tarih === today && (r.arac || fallbackVehicleId()) === av.id);
+      if (ex) {
+        ex.diger = (ex.diger || 0) + cVal;
+        ex.aciklama = (ex.aciklama ? ex.aciklama + ' · ' : '') + 'Bakım';
+      } else {
+        records.push({ tarih: today, arac: av.id, km: 0, saat: null, molaDk: 0,
+          yakit: 0, yakitLitre: 0, diger: cVal, gelir: 0, teslimat: 0, aciklama: 'Bakım' });
+      }
+      commitRecords();
+      toast('Sıfırlandı, ' + fmt(cVal) + ' ₺ gidere eklendi.', true);
+    } else {
+      toast('Bakım sıfırlandı.', true);
+    }
+  };
+
+  // type="number" virgüllü girişi reddedip alanı boşaltıyordu (Türkçe
+  // klavyede ondalık ayırıcı virgül). Bu yüzden metin alanı kullanıp
+  // girişi kendimiz süzüyoruz.
+  inp.oninput = () => {
+    const temiz = inp.value.replace(/[^0-9.,]/g, '');
+    if(temiz !== inp.value) inp.value = temiz;
+  };
+  document.getElementById('mrOk').onclick = uygula;
+  document.getElementById('mrCancel').onclick = close;
+  inp.onkeydown = (e) => { if(e.key === 'Enter'){ e.preventDefault(); uygula(); } };
 };
 
 let editableTiers = [];
@@ -5410,6 +6558,7 @@ function renderBonusTiers(){
 function syncBonusModeUI(){
   document.querySelectorAll('.bonus-mode-opt').forEach(b => {
     b.classList.toggle('active', b.dataset.bonusMode === editingBonusMode);
+    b.setAttribute('aria-pressed', String(b.dataset.bonusMode === editingBonusMode));
   });
   const h = document.getElementById('bonusTiersHeading');
   const p = document.getElementById('bonusTiersHint');
@@ -5453,20 +6602,20 @@ function drawBonusPreview(){
   const calcB = (n) => { for(const t of tiers){ if(n >= t.p) return t.b; } return 0; };
 
   if(editingBonusMode === 'daily'){
-    const days = records.filter(r => (r.teslimat||0) > 0);
-    const last7 = days.slice(-7);
-    const sum = last7.reduce((a,r)=>a+calcB(r.teslimat||0),0);
+    const groups = bonusGroups(records, 'daily').filter(g => g.tes > 0);
+    const last7 = [...new Set(groups.map(g => g.period))].sort().slice(-7);
+    const sum = groups.filter(g => last7.includes(g.period)).reduce((a,g)=>a+calcB(g.tes),0);
     const best = tiers[0];
     box.innerHTML = `<b>Önizleme:</b> Son ${last7.length} çalışılan güne göre toplam <b>${fmtInt(sum)} ₺</b> bonus hesaplanır.<br>
       En yüksek baraj: günde <b>${fmtInt(best.p)}</b> pakette <b>${fmtInt(best.b)} ₺</b>.`;
   } else {
-    const wMap = {};
-    records.forEach(r => { const w = weekOf(r.tarih); wMap[w] = (wMap[w]||0) + (r.teslimat||0); });
-    const weeks = Object.keys(wMap);
-    const lastW = weeks.length ? Math.max(...weeks.map(Number)) : null;
-    const lastCount = lastW != null ? wMap[lastW] : 0;
+    const groups = bonusGroups(records, 'weekly');
+    const lastW = groups.reduce((latest,g) => Math.max(latest, g.period), 0);
+    const lastGroups = groups.filter(g => g.period === lastW);
+    const lastCount = lastGroups.reduce((sum,g) => sum + g.tes, 0);
+    const sum = lastGroups.reduce((total,g) => total + calcB(g.tes), 0);
     const best = tiers[0];
-    box.innerHTML = `<b>Önizleme:</b> En son haftanızda <b>${fmtInt(lastCount)}</b> paket → <b>${fmtInt(calcB(lastCount))} ₺</b> bonus.<br>
+    box.innerHTML = `<b>Önizleme:</b> En son haftanızda <b>${fmtInt(lastCount)}</b> paket → <b>${fmt(sum)} ₺</b> bonus.<br>
       En yüksek baraj: haftada <b>${fmtInt(best.p)}</b> pakette <b>${fmtInt(best.b)} ₺</b>.`;
   }
 }
@@ -5476,11 +6625,13 @@ document.querySelectorAll('.bonus-mode-opt').forEach(btn => {
     const mode = btn.dataset.bonusMode;
     if(mode === editingBonusMode) return;
     editingBonusMode = mode;
+    garageData.bonusMode = mode;
     // Seçilen modun kendi barajlarını yükle (iki mod ayrı ayrı saklanır).
     editableTiers = bonusTiersFor(mode).slice().sort((a,b)=>b.p-a.p).map(t=>({...t}));
     syncBonusModeUI();
     drawTierRows();
-    toast(mode === 'daily' ? 'Günlük bonus moduna geçildi. Kaydetmeyi unutmayın.' : 'Haftalık bonus moduna geçildi. Kaydetmeyi unutmayın.', true);
+    saveGarage(); updateBonuses(); renderDash(); renderDaily(); renderGarage();
+    toast(mode === 'daily' ? 'Günlük bonus modu etkinleştirildi.' : 'Haftalık bonus modu etkinleştirildi.', true);
   });
 });
 
@@ -5930,10 +7081,8 @@ if(btnDeleteAccount){
       const cred = firebase.auth.EmailAuthProvider.credential(user.email, pass);
       btnDeleteAccount.disabled = true;
       user.reauthenticateWithCredential(cred)
-        .then(() => db.ref('kullanicilar/' + user.uid).remove())
-        .then(() => db.ref('usersList/' + user.uid).remove())
-        .then(() => user.delete())
-        .then(() => { toast('Hesabınız silindi', true); })
+        .then(() => deleteAccountAndData(user))
+        .then(cleared => { toast(cleared ? 'Hesabınız silindi' : 'Hesap silindi ancak cihaz önbelleği temizlenemedi.', cleared); })
         .catch(err => { btnDeleteAccount.disabled = false; toast(friendlyError(err), false); });
     }, {title:'Hesabı Sil', icon:'⚠️', okText:'Evet, Sil'});
   });
@@ -6086,8 +7235,8 @@ window.viewUserStats = function(uid, email) {
         
         document.getElementById('adminStatsContent').innerHTML = `
             <div class="metrics" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
-                <div class="metric cyan"><div class="metric-ico">🛣️</div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
-                <div class="metric"><div class="metric-ico">📦</div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(tes)}</div></div>
+                <div class="metric cyan"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
+                <div class="metric"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zm-9 5 9 5 9-5m-9 5v9M7 5.8l9 5V15"/></svg></div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(tes)}</div></div>
                 <div class="metric green"><div class="metric-label">Net Kazanç</div><div class="metric-value">${fmt(net)} ₺</div><div class="metric-sub">Bonus Dahil: ${fmtInt(totalBonus)} ₺</div></div>
                 <div class="metric violet"><div class="metric-label">Toplam Çalışma</div><div class="metric-value">${fmt(hours, 1)} sa</div><div class="metric-sub">${userRecs.length} gün kayıtlı</div></div>
             </div>
@@ -6128,7 +7277,7 @@ window.deleteUserDatabase = function(uid, email) {
     active: false
   };
 
-  const MIN_ACCURACY_METERS = 75; // şehir içi binalar arasında 45m çok katıydı, ölçümler atılıp KM eksik çıkıyordu
+  const MIN_ACCURACY_METERS = 200; // şehir içi binalar arasında 45m çok katıydı, ölçümler atılıp KM eksik çıkıyordu
   const MAX_JUMP_KM = 1.5;  // tünel/kapalı otopark çıkışındaki meşru sıçramalar da sayılsın
   let lastJsSaveAt = 0;
   let lastJsNotifKm = 0;
@@ -6328,10 +7477,21 @@ window.deleteUserDatabase = function(uid, email) {
           return;
         }
         if (!location) return;
-        if (location.accuracy && location.accuracy > MIN_ACCURACY_METERS) return;
+        if (location.accuracy && location.accuracy > MIN_ACCURACY_METERS) {
+          // Noktayı mesafeye katma ama lastLat'i tamamen dondurma:
+          // aksi halde sonraki iyi fix büyük sıçrama sanılıp atılır.
+          if (location.accuracy <= 250) {
+            session.lastLat = location.latitude;
+            session.lastLon = location.longitude;
+          }
+          session.active = true;
+          saveSession(session, false);
+          notify();
+          return;
+        }
         if (session.lastLat != null && session.lastLon != null) {
           const deltaKm = haversineKm(session.lastLat, session.lastLon, location.latitude, location.longitude);
-          if (deltaKm > 0.01 && deltaKm <= MAX_JUMP_KM) {
+          if (deltaKm > 0.008 && deltaKm <= MAX_JUMP_KM) {
             session.totalKm += deltaKm;
           }
         }
@@ -6439,7 +7599,7 @@ window.deleteUserDatabase = function(uid, email) {
         requestPermissions: true,
         startTime: pendingStart,
         stale: false,
-        distanceFilter: 30,
+        distanceFilter: 25,
         initialKm: pendingKm
       };
       if (resume && session.lastLat != null && session.lastLon != null) {
@@ -6644,7 +7804,10 @@ window.deleteUserDatabase = function(uid, email) {
         if (tick % 3 === 0 && !syncing && typeof T.syncNativeDistance === 'function') {
           syncing = true;
           T.syncNativeDistance()
-            .then(function (s) { renderSessionLabels(s); })
+            .then(function (s) {
+              renderSessionLabels(s);
+              if (tick % 9 === 0) refreshGpsWidget();
+            })
             .catch(function () {})
             .then(function () { syncing = false; });
         }
@@ -6695,6 +7858,7 @@ window.deleteUserDatabase = function(uid, email) {
           tracker.resetSession();
           if (sureLabel) sureLabel.textContent = '00:00:00';
           if (liveLabel) liveLabel.textContent = '0.00 km';
+          refreshGpsWidget();
         } else {
           btnToggle.disabled = true;
           const ok = await tracker.start();
@@ -6706,6 +7870,7 @@ window.deleteUserDatabase = function(uid, email) {
           isTracking = true;
           setTrackingVisual(true);
           startUiTicker();
+          refreshGpsWidget();
           if (tracker.isUsingWebFallback()) {
             toast('Takip başladı. Arka plan için uygulamayı Play Store’dan güncelleyin.', true);
           } else {
@@ -6792,12 +7957,103 @@ window.deleteUserDatabase = function(uid, email) {
 
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) stopUiTicker();
-      else if (isTracking) startUiTicker();
+      else {
+        if (isTracking) startUiTicker();
+        /* WIDGET'IN KENDİ KENDİNE İYİLEŞMESİ
+           HyperOS/MIUI, uygulama askıdayken widget'a giden ilk güncelleme
+           yayını düşürebiliyor; ana ekranda kutunun içinde
+           "Araç yüklenemedi" kalıyor. Uygulama öne geldiğinde kareyi biz
+           gönderiyoruz: widget bir sonraki açılışta kendiliğinden düzelir. */
+        refreshGpsWidget();
+      }
     });
+
+    /* ---- ANA EKRAN WIDGET'I ----
+       Widget yalnızca bir kumandadır: dokunulunca uygulamayı
+       "toggle" komutuyla açar, takibi burada başlatıp durdururuz.
+       Böylece izin akışı ve tek doğruluk kaynağı korunur. */
+    function refreshGpsWidget(){
+      const SR = (window.Capacitor && window.Capacitor.Plugins
+                  && window.Capacitor.Plugins.ShiftReminder) || null;
+      if(SR && typeof SR.refreshWidget === 'function'){
+        try{ SR.refreshWidget(); }catch(e){}
+      }
+    }
+
+    /* WIDGET KOMUTU · GERİ YÜKLEME YARIŞI
+       ---------------------------------------------------------------
+       SORUN: handleWidgetAction() 800/1800/3200 ms'lik denemelerde
+       çalışıyordu; oysa BackgroundTracker.restore() eklenti cevap
+       vermeyince 10 × 300 ms (≈3 sn) boyunca denemeye devam ediyor.
+       Yani "widget'a bastım, uygulama açıldı" anında hem geri yükleme
+       hem de widget komutu aynı sayaçla uğraşıyordu: yarım kalan bir
+       "BAŞLAT" komutu, yeni geri yüklenen oturumu anında DURDURABİLİYORDU
+       (ve tam tersi). Komut sessizce ters yönde uygulanıyordu.
+       ÇÖZÜM: restore bitene kadar komutlar askıya alınır; restore biter
+       bitmez (veya 8 sn'lik emniyet süresi dolunca) bekleyen komut bir
+       kez denenir. Erken çıkışta komut TÜKETİLMEZ — native tarafta
+       beklemeye devam eder, böylece tek bir dokunuş kaybı olmaz. */
+    let widgetActionsPaused = true;
+    let widgetActionResumeTimer = null;
+
+    function resumeWidgetActions(){
+      if(!widgetActionsPaused) return;
+      widgetActionsPaused = false;
+      if(widgetActionResumeTimer){ clearTimeout(widgetActionResumeTimer); widgetActionResumeTimer = null; }
+      handleWidgetAction();
+    }
+
+    // Widget'tan gelen komutu oku ve uygula. Komut tek kullanımlıktır.
+    async function handleWidgetAction(){
+      if(widgetActionsPaused) return;
+      if(document.visibilityState && document.visibilityState !== 'visible') return;
+      const SR = (window.Capacitor && window.Capacitor.Plugins
+                  && window.Capacitor.Plugins.ShiftReminder) || null;
+      if(!SR || typeof SR.consumeWidgetAction !== 'function') return;
+      let action = '';
+      try{
+        const r = await SR.consumeWidgetAction();
+        action = (r && r.action) || '';
+      }catch(e){ return; }
+      if(action !== 'toggle') return;
+      const btn = document.getElementById('btnGpsToggle');
+      if(btn && !btn.disabled) btn.click();
+    }
+
+    function armWidgetActionListeners(){
+      document.addEventListener('visibilitychange', function(){
+        if(document.visibilityState === 'visible'){
+          setTimeout(handleWidgetAction, 250);
+        }
+      });
+      try{
+        const App = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+        if(App && typeof App.addListener === 'function'){
+          App.addListener('appStateChange', function (st) {
+            if(st && st.isActive) setTimeout(handleWidgetAction, 200);
+          });
+          App.addListener('resume', function () {
+            setTimeout(handleWidgetAction, 200);
+          });
+        }
+      }catch(e){}
+      setTimeout(handleWidgetAction, 800);
+      setTimeout(handleWidgetAction, 1800);
+      setTimeout(handleWidgetAction, 3200);
+      // Emniyet ventil: restore hiç sonlanmazsa (eklenti asmışsa) komut
+      // sonsuza kadar askıda kalmasın.
+      widgetActionResumeTimer = setTimeout(resumeWidgetActions, 8000);
+    }
+
+    armWidgetActionListeners();
 
     (async function resumeIfNeeded() {
       const tracker = window.BackgroundTracker;
-      if (!tracker || typeof tracker.restore !== 'function') return;
+      if (!tracker || typeof tracker.restore !== 'function') {
+        // GPS katmanı yoksa bekleyecek bir şey yok: komutları hemen aç.
+        resumeWidgetActions();
+        return;
+      }
       try {
         const resumed = await tracker.restore();
         if (resumed) {
@@ -6808,7 +8064,12 @@ window.deleteUserDatabase = function(uid, email) {
           if (liveLabel) liveLabel.textContent = (s.totalKm || 0).toFixed(2) + ' km';
           if (sureLabel) sureLabel.textContent = s && s.startTime ? formatElapsed(s.startTime) : '00:00:00';
         }
-      } catch (e) {}
+        refreshGpsWidget();
+      } catch (e) {
+      } finally {
+        // Geri yükleme bitti: askıdaki widget komutu artık güvenli.
+        resumeWidgetActions();
+      }
     })();
   }
 
@@ -7206,26 +8467,18 @@ window.deleteUserDatabase = function(uid, email) {
         statusEl.textContent = 'Sürüm bilgisi yayınlanıyor...';
         const snap = await firebase.database().ref('appUpdate/latest').once('value');
         const currentLatest = snap.val();
-        if (currentLatest) {
-          await firebase.database().ref('appUpdate/previous').set(currentLatest);
-        }
-
         const publishedAt = new Date().toISOString();
-        await firebase.database().ref('appUpdate/latest').set({
+        const release = {
           version: version,
           url: downloadUrl,
           notes: notes || '',
           publishedAt: publishedAt
-        });
+        };
 
         // Sürüm geçmişine yaz (kullanıcıların "Güncelleme Notları"
         // sayfasında görünür). Anahtar olarak sürümü kullanıyoruz:
         // aynı sürüm tekrar yayınlanırsa kayıt çoğalmaz, güncellenir.
-        try{
-          await firebase.database()
-            .ref('appUpdate/history/' + version.replace(/\./g, '_'))
-            .set({ version: version, notes: notes || '', publishedAt: publishedAt });
-        }catch(e){ console.log('Geçmişe yazılamadı:', e); }
+        await publishRelease(currentLatest, release);
 
         statusEl.textContent = '';
         toast('v' + version + ' başarıyla yayınlandı!', true);
@@ -7342,5 +8595,5 @@ window.deleteUserDatabase = function(uid, email) {
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3570eb5cacced5e',t:'MTc4ODQ2MjY1Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a371404c1cde656e',t:'MTc4ODczNzMxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

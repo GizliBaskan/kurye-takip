@@ -1,6 +1,6 @@
 {
-  "name": "Motokurye Takip 2026",
-  "short_name": "Kurye",
+  "name": "Kurye OS",
+  "short_name": "Kurye OS",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0e14",

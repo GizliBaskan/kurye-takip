@@ -2798,7 +2798,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.2.2";
+const CURRENT_APP_VERSION = "6.3.0";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -7255,50 +7255,31 @@ async function publishRelease(currentLatest, release){
   _clLoaded = false;
 }
 
-async function renderChangelog(force){
+let _clData = { history: null, latest: null, previous: null };
+let _clListeners = [];
+let _clLiveBound = false;
+
+function _clRenderItems(){
   const list = document.getElementById('clList');
-  const curEl = document.getElementById('clCurrentVer');
   if(!list) return;
-  if(curEl) curEl.textContent = 'v' + CURRENT_APP_VERSION;
-  if(_clLoaded && !force) return;
-
-  list.innerHTML = '<div class="cl-empty">Yükleniyor…</div>';
-  if(!_clLoading){
-    _clLoading = Promise.allSettled(['history', 'latest', 'previous'].map(key =>
-      Promise.resolve().then(() => firebase.database().ref('appUpdate/' + key).once('value'))
-    ));
-  }
-  const results = await _clLoading;
-  _clLoading = null;
-  const values = results.map(result => result.status === 'fulfilled' ? result.value.val() : null);
-  const incomplete = results.some(result => result.status === 'rejected');
+  const items = mergeChangelogItems(_clData.history, _clData.latest, _clData.previous);
   const status = document.getElementById('clStatus');
-  if(status) status.textContent = incomplete ? 'Geçmişin bir bölümü yüklenemedi. Bağlantıyı veya erişim izinlerini kontrol edip yenileyin.' : '';
-
-  // Geçmiş boşsa en azından yayındaki sürümü göster.
-  const items = mergeChangelogItems(values[0], values[1], values[2]);
-  if(!items.length && incomplete){
-    list.innerHTML = '<div class="cl-empty">Notlar yüklenemedi. Bağlantıyı veya erişim izinlerini kontrol edip yenileyin.</div>';
-    return;
-  }
   if(!items.length){
     list.innerHTML = '<div class="cl-empty"><div style="font-size:2rem;opacity:.5;margin-bottom:.5rem;">📋</div>'
       + 'Henüz yayınlanmış bir güncelleme notu yok.</div>';
+    if(status) status.textContent = '';
     _clLoaded = true;
     return;
   }
 
   items.sort(function(a,b){ return cmpVersions(b.version || '0', a.version || '0'); });
 
-  // Akordiyon: yalnızca kullanılan sürüm açık başlar, diğerleri kapalı.
-  // Uzun listelerde sürekli kaydırmayı önler.
   list.innerHTML = items.map(function(it, i){
     const isCur = it.version === CURRENT_APP_VERSION;
     const acik  = isCur || (i === 0 && !items.some(x => x.version === CURRENT_APP_VERSION));
     const tarih = _clFormatDate(it.publishedAt);
     const notes = it.notes ? formatUpdateNotes(it.notes)
       : '<p style="margin:0;color:var(--muted);font-size:.8rem;">Not girilmemiş.</p>';
-    // Kaç değişiklik var? Başlıkta özet rozet olarak gösterelim.
     let adet = 0;
     try{ adet = parseOtaNotes(it.notes || '').length; }catch(e){}
     return '<div class="cl-entry' + (isCur ? ' is-current' : '') + (acik ? ' open' : '') + '">'
@@ -7312,7 +7293,6 @@ async function renderChangelog(force){
       + '<div class="cl-body" id="cl-body-' + i + '" role="region" aria-labelledby="cl-head-' + i + '" aria-hidden="' + !acik + '"' + (acik ? '' : ' inert') + '><div class="cl-body-inner">' + notes + '</div></div></div>';
   }).join('');
 
-  // Başlığa dokununca aç/kapa (tek dinleyici, delegasyon).
   if(!list.dataset.clBound){
     list.dataset.clBound = '1';
     list.addEventListener('click', function(e){
@@ -7326,7 +7306,54 @@ async function renderChangelog(force){
       body.toggleAttribute('inert', !acildi);
     });
   }
+  if(status) status.textContent = '';
   _clLoaded = true;
+}
+
+function initChangelogListeners(){
+  if(_clListeners.length) return;
+  ['history','latest','previous'].forEach(key => {
+    const ref = firebase.database().ref('appUpdate/' + key);
+    ref.on('value', snap => {
+      _clData[key] = snap.val();
+      if(document.getElementById('page-changelog') && document.getElementById('page-changelog').classList.contains('active')){
+        _clRenderItems();
+      }
+    }, err => { console.log('Changelog listener error:', key, err); });
+    _clListeners.push(ref);
+  });
+}
+
+function detachChangelogListeners(){
+  _clListeners.forEach(ref => { try{ ref.off(); }catch(e){} });
+  _clListeners = [];
+}
+
+async function renderChangelog(force){
+  const list = document.getElementById('clList');
+  const curEl = document.getElementById('clCurrentVer');
+  if(!list) return;
+  if(curEl) curEl.textContent = 'v' + CURRENT_APP_VERSION;
+  if(_clLoaded && !force) return;
+
+  initChangelogListeners();
+  list.innerHTML = '<div class="cl-empty">Yükleniyor…</div>';
+  if(force) _clLoading = null;
+  if(!_clLoading){
+    _clLoading = Promise.allSettled(['history', 'latest', 'previous'].map(key =>
+      Promise.resolve().then(() => firebase.database().ref('appUpdate/' + key).once('value'))
+    ));
+  }
+  const results = await _clLoading;
+  _clLoading = null;
+  const values = results.map(result => result.status === 'fulfilled' ? result.value.val() : null);
+  const incomplete = results.some(result => result.status === 'rejected');
+  ['history','latest','previous'].forEach((key, i) => { _clData[key] = values[i]; });
+  _clRenderItems();
+  if(incomplete){
+    const status = document.getElementById('clStatus');
+    if(status) status.textContent = 'Geçmişin bir bölümü yüklenemedi. Bağlantıyı veya erişim izinlerini kontrol edip yenileyin.';
+  }
 }
 
 /* ============================================================

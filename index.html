@@ -533,7 +533,7 @@ textarea:focus{border-color:var(--accent)}
 .goal-seg-row{display:flex;background:var(--elev);border:1px solid var(--border);border-radius:999px;padding:3px;gap:2px;margin:0 auto .95rem;width:fit-content;max-width:100%}
 .goal-seg{border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:.8rem;font-weight:600;padding:.4rem 1rem;border-radius:999px;cursor:pointer;transition:.2s}
 .goal-seg.active{background:var(--accent-dim);color:var(--accent)}
-.goal-track{display:flex;overflow:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.goal-track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
 .goal-track::-webkit-scrollbar{display:none}
 .goal-slide{min-width:100%;width:100%;scroll-snap-align:start;flex-shrink:0}
 .goal-slide-inner{display:flex;align-items:center;justify-content:center;width:100%;padding:0 .2rem;box-sizing:border-box}
@@ -809,6 +809,24 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .maint-history-table th{color:var(--muted);font-weight:600}
 .maint-history-table td.num{text-align:right;font-family:var(--mono)}
 .maint-history-table tr:last-child td{border-bottom:none}
+/* --- Bakım geçmişi (kart görünümü) --- */
+.mh-list{display:flex;flex-direction:column;gap:.55rem}
+.mh-entry{display:flex;gap:.7rem;align-items:flex-start;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
+.mh-entry-ico{width:34px;height:34px;flex:0 0 34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:var(--elev);border:1px solid var(--border)}
+.mh-entry-body{flex:1;min-width:0}
+.mh-entry-top{display:flex;justify-content:space-between;gap:.5rem;align-items:baseline}
+.mh-entry-date{font-size:.78rem;font-weight:700;color:var(--sec)}
+.mh-entry-cost{font-family:var(--mono);font-size:.9rem;font-weight:700;color:var(--accent);white-space:nowrap}
+.mh-entry-note{font-size:.8rem;color:var(--text);margin:.15rem 0;line-height:1.4;word-break:break-word}
+.mh-entry-meta{font-size:.72rem;color:var(--muted);font-family:var(--mono)}
+/* --- Garaj yakıt istatistikleri (kaydırılabilir) --- */
+.fuel-grid{display:flex;flex-direction:column;gap:.65rem}
+.fuel-cell{display:flex;flex-direction:column;gap:.08rem;border-bottom:1px dashed var(--border);padding-bottom:.55rem}
+.fuel-cell:last-child{border-bottom:none;padding-bottom:0}
+.fuel-cell-k{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.fuel-cell-v{font-family:var(--mono);font-size:1.3rem;font-weight:700;color:var(--text);line-height:1.25}
+.fuel-cell-s{font-size:.7rem;color:var(--muted)}
+.fuel-tag{position:absolute;top:.95rem;right:.9rem;font-size:.58rem;font-weight:800;letter-spacing:.08em;color:var(--amber);background:var(--amber-dim,rgba(251,191,36,.12));border:1px solid rgba(251,191,36,.35);border-radius:99px;padding:.14rem .5rem}
 .mh-summary{display:flex;gap:.6rem;flex-wrap:wrap}
 .mh-stat{flex:1;min-width:90px;background:var(--elev);border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;text-align:center}
 .mh-stat span{display:block;font-size:.65rem;color:var(--muted);margin-bottom:.15rem}
@@ -1422,6 +1440,20 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 
     <div id="maintWarningBanner" style="display:none; margin-bottom:1rem;"></div>
 
+    <!-- SLOT HATIRLATICI KURULUM BANNER'I: özellik kapalıyken ana ekranda görünür.
+         Kullanıcı ✕ ile kapatırsa bir daha gösterilmez. -->
+    <div id="slotReminderBanner" class="announcement-banner" role="alert" hidden style="margin-bottom:1rem;">
+      <span aria-hidden="true" style="font-size:1.15rem;line-height:1.2;">🗓️</span>
+      <div style="flex:1;min-width:0;">
+        <b>Henüz bir slot hatırlatıcısı kurmadınız.</b>
+        <p style="margin:.15rem 0 0;font-size:.78rem;color:var(--muted);">Slot seçim gün ve saatinizi belirleyin; seçimden önce ve sonra size hatırlatalım.</p>
+      </div>
+      <div class="ann-act">
+        <button type="button" class="btn btn-primary btn-sm" id="slotBannerCta">Kur</button>
+        <button type="button" class="sys-warn-x" id="slotBannerClose" aria-label="Kapat">✕</button>
+      </div>
+    </div>
+
     <!-- SEKMELER -->
     <div class="dash-tabs">
       <button type="button" class="dash-tab-btn active" data-tab="ozet" aria-pressed="true" aria-controls="tab-ozet">Genel özet</button>
@@ -1632,26 +1664,35 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
       <button class="btn btn-ghost" id="btnDeleteVehicle" style="color:var(--red);">🗑️ Bu Aracı Sil</button>
     </div>
 
-    <!-- YAKIT VERİMLİLİĞİ KARTLARI -->
-    <div class="metrics" style="margin-bottom: 1.5rem; grid-template-columns: repeat(3, 1fr);">
-      <div class="metric green">
-        <div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h10v17M2 21h14M4 11h10m3-6 3 3v10a2 2 0 0 1-4 0v-5h-2"/></svg></div>
-        <div class="metric-label">100 KM'de Yakıt (L)</div>
-        <div class="metric-value" id="fuel100KmVal">0 L</div>
-        <div class="metric-sub">100 kilometrede ortalama tüketim</div>
+    <!-- YAKIT VERİMLİLİĞİ KARTLARI (kaydırılabilir: Genel / Bu Hafta / Bu Ay) -->
+    <div class="metric swipeable amber" style="margin-bottom: 1.5rem;">
+      <div class="metric-swipe" id="fuelSwipe">
+        <div class="metric-slide">
+          <div class="fuel-grid">
+            <div class="fuel-cell"><span class="fuel-cell-k">100 KM'de Yakıt</span><span class="fuel-cell-v" id="fuel100KmVal">0 L</span><span class="fuel-cell-s">Genel ortalama tüketim</span></div>
+            <div class="fuel-cell"><span class="fuel-cell-k">KM Başına Maliyet</span><span class="fuel-cell-v" id="fuelTlKmVal">0 ₺</span><span class="fuel-cell-s">1 kilometrelik yakıt masrafı</span></div>
+            <div class="fuel-cell"><span class="fuel-cell-k">1 Litre ile Yol</span><span class="fuel-cell-v" id="fuelKmLVal">0 km</span><span class="fuel-cell-s">1 litre benzinle gidilen ort. yol</span></div>
+          </div>
+          <div class="fuel-tag">GENEL (TÜMÜ)</div>
+        </div>
+        <div class="metric-slide">
+          <div class="fuel-grid">
+            <div class="fuel-cell"><span class="fuel-cell-k">100 KM'de Yakıt</span><span class="fuel-cell-v" id="fuel100KmValW">0 L</span><span class="fuel-cell-s">Bu haftaki ortalama tüketim</span></div>
+            <div class="fuel-cell"><span class="fuel-cell-k">KM Başına Maliyet</span><span class="fuel-cell-v" id="fuelTlKmValW">0 ₺</span><span class="fuel-cell-s">Bu haftaki yakıt masrafı</span></div>
+            <div class="fuel-cell"><span class="fuel-cell-k">1 Litre ile Yol</span><span class="fuel-cell-v" id="fuelKmLValW">0 km</span><span class="fuel-cell-s">Bu haftaki ort. km/L</span></div>
+          </div>
+          <div class="fuel-tag">BU HAFTA</div>
+        </div>
+        <div class="metric-slide">
+          <div class="fuel-grid">
+            <div class="fuel-cell"><span class="fuel-cell-k">100 KM'de Yakıt</span><span class="fuel-cell-v" id="fuel100KmValM">0 L</span><span class="fuel-cell-s">Bu ayki ortalama tüketim</span></div>
+            <div class="fuel-cell"><span class="fuel-cell-k">KM Başına Maliyet</span><span class="fuel-cell-v" id="fuelTlKmValM">0 ₺</span><span class="fuel-cell-s">Bu ayki yakıt masrafı</span></div>
+            <div class="fuel-cell"><span class="fuel-cell-k">1 Litre ile Yol</span><span class="fuel-cell-v" id="fuelKmLValM">0 km</span><span class="fuel-cell-s">Bu ayki ort. km/L</span></div>
+          </div>
+          <div class="fuel-tag">BU AY</div>
+        </div>
       </div>
-      <div class="metric amber">
-        <div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4zM4 9h16m-6 5h3"/></svg></div>
-        <div class="metric-label">KM Başına Maliyet (TL/km)</div>
-        <div class="metric-value" id="fuelTlKmVal">0 ₺</div>
-        <div class="metric-sub">1 kilometrelik yakıt masrafı</div>
-      </div>
-      <div class="metric cyan">
-        <div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div>
-        <div class="metric-label">1 Litre ile Yol (km/L)</div>
-        <div class="metric-value" id="fuelKmLVal">0 km</div>
-        <div class="metric-sub">1 litre benzinle gidilen ort. yol</div>
-      </div>
+      <div class="metric-dots"><span class="on"></span><span></span><span></span></div>
     </div>
 
     <div class="metrics" style="margin-bottom: 1.5rem;">
@@ -1842,10 +1883,11 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         <div class="gd-card-head"><div class="gd-ico">🏍️</div><h3>Garaj & Bakım</h3></div>
         <p>Aracınızın sağlığı ve gerçek maliyeti. Birden fazla araç ekleyip aralarında geçiş yapabilirsiniz.</p>
         <ul class="gd-list">
-          <li>Yakıt verimliliğiniz (km/L, KM başına maliyet) otomatik hesaplanır.</li>
+          <li>Yakıt kartını <b>yana kaydırarak</b> Genel (tümü) · Bu Hafta · Bu Ay değerlerini görebilirsiniz: 100 km'de litre, km başına maliyet ve km/L.</li>
           <li><b>Bakım hedefi</b> ekleyin: yağ, zincir, lastik için periyot KM girin; sırası gelince uyarılırsınız.</li>
             <li>Bakımı yaptırınca <b>"Sıfırla"</b> deyin; masrafı yazarsanız gidere de otomatik işlenir.</li>
           <li>Bakım kartının kenarı ve ikonu durumu gösterir: ✅ zamanı var, ⚠️ yaklaştı, 🚨 geçti.</li>
+          <li><b>Bakım Geçmişi</b> tablosunda yaptırdığınız bakımlar tarih, açıklama, KM ve tutar olarak listelenir; yukarıda toplam kayıt ve maliyet özeti görünür.</li>
         </ul>
       </div>
 
@@ -1855,6 +1897,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
         <ul class="gd-list">
           <li><b>Vardiya sonu hatırlatması:</b> Varsayılan olarak açıktır ve her gün <b>23:00</b>'te hatırlatır. Saati değiştirebilir veya kapatabilirsiniz.</li>
           <li>O gün kaydınızı zaten girdiyseniz hatırlatma <b>gelmez</b>; gereksiz bildirimle rahatsız edilmezsiniz.</li>
+          <li><b>Slot seçim hatırlatıcısı:</b> Slotlarınızı seçtiğiniz günü ve saati girin (ör. Çarşamba 15:00). Seçimden <b>30, 15, 5 ve 1 dakika önce</b>, ayrıca <b>5 dakika sonra</b> teyit bildirimi gelir. Özellik varsayılan kapalıdır ve açıp kapatılabilir.</li>
           <li>Uygulama kapalıyken de çalışır. <b>Bildirim gelmiyorsa</b> aşağıdaki butonla telefon ayarlarınızı kontrol edin.</li>
           <li>Buradan şifrenizi değiştirebilir, gizlilik politikasını okuyabilir veya hesabınızı silebilirsiniz.</li>
         </ul>
@@ -1976,7 +2019,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
   <section class="page" id="page-account">
     <div class="page-head">
       <h1>Hesabım</h1>
-      <p>Şifre, gizlilik ve hesap silme</p>
+      <p>Hatırlatıcılar, şifre, gizlilik ve hesap silme</p>
     </div>
 
     <div class="panel" style="margin-bottom:1.2rem;max-width:560px;">
@@ -2025,6 +2068,47 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
       </div>
 
       <div id="reminderStatus" class="rem-status"></div>
+    </div>
+
+    <div class="info-block" style="max-width:560px;">
+      <h3 style="margin-bottom:0.2rem">Slot seçim hatırlatıcısı</h3>
+      <p style="font-size:0.8rem;line-height:1.5;">Slotlarınızı seçtiğiniz gün ve saati girin. Seçim saatinizden <b>30, 15, 5 ve 1 dakika önce</b>, ayrıca <b>5 dakika sonra</b> bir teyit bildirimi gönderelim. Varsayılan olarak kapalıdır; istediğiniz zaman açıp kapatabilirsiniz.</p>
+    </div>
+    <div class="rem-card" id="slotReminderCard" style="max-width:560px;">
+      <div class="rem-head">
+        <div class="rem-ico"><span>🗓️</span></div>
+        <div class="rem-head-text">
+          <h3>Slot Seçim Hatırlatıcısı</h3>
+          <p>Haftalık · seçim saatinizden önce ve sonra hatırlatır</p>
+        </div>
+        <label class="rem-switch" aria-label="Slot hatırlatıcısını aç veya kapat">
+          <input type="checkbox" id="slotReminderEnabled" />
+          <span class="rem-slider"></span>
+        </label>
+      </div>
+
+      <div class="rem-body" id="slotReminderBody">
+        <div class="rem-time-row" style="margin-bottom:.9rem;">
+          <div class="rem-time-label">
+            <span class="rem-time-cap">Slot seçim günü</span>
+            <span class="rem-time-val" id="slotReminderDayVal">Çarşamba</span>
+          </div>
+          <select id="slotReminderDay" class="auth-input" style="margin:0;width:150px;" aria-label="Slot seçim günü"></select>
+        </div>
+        <div class="rem-time-row" style="margin-bottom:.9rem;">
+          <div class="rem-time-label">
+            <span class="rem-time-cap">Slot seçim saati</span>
+            <span class="rem-time-val" id="slotReminderTimeVal">15:00</span>
+          </div>
+          <label class="rem-time-edit">
+            Değiştir
+            <input type="time" id="slotReminderTime" value="15:00" />
+          </label>
+        </div>
+        <button type="button" class="btn btn-primary" id="btnSlotSave" style="width:100%;">💾 Kaydet</button>
+      </div>
+
+      <div id="slotReminderStatus" class="rem-status"></div>
     </div>
 
     <div class="info-block" style="max-width:560px;">
@@ -2798,7 +2882,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.3.1";
+const CURRENT_APP_VERSION = "6.3.2";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -5352,6 +5436,7 @@ function renderDash(){
   renderProjections();
   renderMaintWarningBanner();
   try{ renderSysWarnBanner(); }catch(e){}   // -> [17-SISTEM-UYARI]
+  try{ renderSlotReminderBanner(); }catch(e){}   // -> slot hatırlatıcı banner'ı
   renderGoals();
 
   const recsW = recsForCurrentWeek();
@@ -6856,6 +6941,225 @@ function applyReminderTime(v){
   });
 })();
 
+/* ============================================================
+   SLOT SEÇİM HATIRLATICISI
+   ------------------------------------------------------------
+   Kullanıcı slotlarını seçtiği gün+saati girer (ör. Çarşamba
+   15:00). Native ShiftReminder eklentisi hedef saatten 30, 15, 5
+   ve 1 dakika önce, ayrıca 5 dakika sonra bir teyit bildirimi
+   kurar. Özellik varsayılan KAPALI'dır; ana ekranda kurulum
+   banner'ı gösterilir (✕ ile bir daha gösterilmez).
+   ============================================================ */
+const SLOT_REMINDER_ENABLED_KEY = 'kurye_slot_reminder_enabled';
+const SLOT_REMINDER_DAY_KEY     = 'kurye_slot_reminder_day';   // 1=Pzt .. 7=Paz
+const SLOT_REMINDER_TIME_KEY    = 'kurye_slot_reminder_time';  // HH:MM
+const SLOT_REMINDER_BANNER_DISMISSED_KEY = 'kurye_slot_reminder_banner_dismissed';
+const SLOT_REMINDER_LAST_FIRE_KEY = 'kurye_slot_reminder_last_fire';
+
+const SLOT_DEFAULT_DAY = 3;         // Çarşamba
+const SLOT_DEFAULT_TIME = '15:00';
+
+const SLOT_DAYS = [
+  { v: 1, k: 'Pazartesi' }, { v: 2, k: 'Salı' }, { v: 3, k: 'Çarşamba' },
+  { v: 4, k: 'Perşembe' }, { v: 5, k: 'Cuma' }, { v: 6, k: 'Cumartesi' }, { v: 7, k: 'Pazar' }
+];
+
+function slotReminderIsEnabled(){
+  return localStorage.getItem(SLOT_REMINDER_ENABLED_KEY) === '1';
+}
+function slotReminderDay(){
+  const d = parseInt(localStorage.getItem(SLOT_REMINDER_DAY_KEY), 10);
+  return (d >= 1 && d <= 7) ? d : SLOT_DEFAULT_DAY;
+}
+function slotReminderTime(){
+  const t = localStorage.getItem(SLOT_REMINDER_TIME_KEY) || SLOT_DEFAULT_TIME;
+  return /^\d{2}:\d{2}$/.test(t) ? t : SLOT_DEFAULT_TIME;
+}
+function slotDayLabel(d){
+  const f = SLOT_DAYS.find(x => x.v === d);
+  return f ? f.k : ('Gün ' + d);
+}
+function slotNativeAvailable(){
+  const SR = getShiftReminderPlugin();
+  return !!(SR && typeof SR.scheduleSlot === 'function' && typeof SR.cancelSlot === 'function');
+}
+// Native taraf slot alarmlarını kurar / iptal eder. Native yoksa false döner.
+async function syncNativeSlotReminder(){
+  if(!slotNativeAvailable()) return false;
+  const SR = getShiftReminderPlugin();
+  try{
+    if(slotReminderIsEnabled()){
+      const [hh, mm] = slotReminderTime().split(':').map(Number);
+      await SR.scheduleSlot({ enabled: true, day: slotReminderDay(), hour: hh, minute: mm });
+    } else {
+      await SR.cancelSlot();
+    }
+    return true;
+  }catch(e){ console.log('Slot hatırlatıcısı native kurulamadı:', e); return false; }
+}
+
+function updateSlotReminderUI(){
+  const card = document.getElementById('slotReminderCard');
+  if(!card) return;
+  const body = document.getElementById('slotReminderBody');
+  const chk  = document.getElementById('slotReminderEnabled');
+  const daySel = document.getElementById('slotReminderDay');
+  const timeInp = document.getElementById('slotReminderTime');
+  const dayVal = document.getElementById('slotReminderDayVal');
+  const timeVal = document.getElementById('slotReminderTimeVal');
+  const st = document.getElementById('slotReminderStatus');
+  const on = slotReminderIsEnabled();
+  const day = slotReminderDay();
+  const t = slotReminderTime();
+
+  card.classList.toggle('on', on);
+  if(body) body.classList.toggle('hidden', !on);
+  if(chk) chk.checked = on;
+  if(daySel && !daySel.options.length){
+    SLOT_DAYS.forEach(d => {
+      const o = document.createElement('option');
+      o.value = String(d.v); o.textContent = d.k;
+      daySel.appendChild(o);
+    });
+  }
+  if(daySel) daySel.value = String(day);
+  if(timeInp && timeInp.value !== t) timeInp.value = t;
+  if(dayVal) dayVal.textContent = slotDayLabel(day);
+  if(timeVal) timeVal.textContent = t;
+
+  if(st){
+    if(!on){
+      st.className = 'rem-status';
+      st.textContent = 'Slot hatırlatıcısı kapalı. Açarsanız seçim saatinizden önce ve sonra hatırlatırız.';
+    } else if(slotNativeAvailable()){
+      st.className = 'rem-status on';
+      st.textContent = '✓ Her hafta ' + slotDayLabel(day) + ' ' + t + ' · 30/15/5/1 dk önce ve 5 dk sonra bildirim alırsınız.';
+    } else {
+      st.className = 'rem-status warn';
+      st.textContent = '⚠ Her hafta ' + slotDayLabel(day) + ' ' + t + ' · uygulama kapalıyken bildirim için Play Store güncellemesi gerekir (açıkken hatırlatırız).';
+    }
+  }
+}
+
+// JS yedeği: native yoksa uygulama AÇIKKEN pencere içinde hatırlat.
+function checkSlotReminderInApp(){
+  try{
+    if(!slotReminderIsEnabled()) return;
+    if(!currentUser) return;
+    const day = slotReminderDay();
+    const [hh, mm] = slotReminderTime().split(':').map(Number);
+    const now = new Date();
+    const curIso = now.getDay() === 0 ? 7 : now.getDay();
+    const diff = (day - curIso + 7) % 7;
+    const target = new Date(now);
+    target.setDate(now.getDate() + diff);
+    target.setHours(hh, mm, 0, 0);
+    if(target.getTime() <= now.getTime()) target.setDate(target.getDate() + 7);
+    const start = target.getTime() - 30 * 60000;
+    const end = target.getTime() + 5 * 60000;
+    if(now.getTime() < start || now.getTime() > end) return;
+    const key = String(target.getTime());
+    if(localStorage.getItem(SLOT_REMINDER_LAST_FIRE_KEY) === key) return;
+    localStorage.setItem(SLOT_REMINDER_LAST_FIRE_KEY, key);
+    const leftMin = Math.round((target.getTime() - now.getTime()) / 60000);
+    let title, body;
+    if(leftMin > 1){ title = 'Slot Seçimi Hatırlatması'; body = 'Slotlarınızı seçmenize ' + leftMin + ' dakika kaldı.'; }
+    else if(leftMin >= 0){ title = 'Slot Seçimi Hatırlatması'; body = 'Slotlarınızı seçmenize 1 dakikadan az kaldı!'; }
+    else { title = 'Slot Seçimi · Süre Doldu'; body = 'Slotlarınızı seçtiniz mi? Unutmayın.'; }
+    const BG = getSafePermPlugin();
+    if(BG && typeof BG.showNotification === 'function'){
+      try{ BG.showNotification({ title, body }).catch(() => toast(body, true)); }catch(e){ toast(body, true); }
+    } else {
+      toast(body, true);
+    }
+  }catch(e){ /* hatırlatma asla uygulamayı bozmamalı */ }
+}
+
+function renderSlotReminderBanner(){
+  const el = document.getElementById('slotReminderBanner');
+  if(!el) return;
+  const dismissed = localStorage.getItem(SLOT_REMINDER_BANNER_DISMISSED_KEY) === '1';
+  el.hidden = !(currentUser && !slotReminderIsEnabled() && !dismissed);
+}
+
+(function initSlotReminder(){
+  const card = document.getElementById('slotReminderCard');
+  if(!card) return;
+  const chk = document.getElementById('slotReminderEnabled');
+  const time = document.getElementById('slotReminderTime');
+  const daySel = document.getElementById('slotReminderDay');
+  const save = document.getElementById('btnSlotSave');
+  const bannerCta = document.getElementById('slotBannerCta');
+  const bannerClose = document.getElementById('slotBannerClose');
+
+  const persistSlot = async () => {
+    const day = parseInt(daySel.value, 10) || SLOT_DEFAULT_DAY;
+    const t = (time && time.value) || SLOT_DEFAULT_TIME;
+    if(!/^\d{2}:\d{2}$/.test(t)){ toast('Geçerli bir saat girin.', false); return; }
+    localStorage.setItem(SLOT_REMINDER_DAY_KEY, String(day));
+    localStorage.setItem(SLOT_REMINDER_TIME_KEY, t);
+    if(slotReminderIsEnabled()){
+      await syncNativeSlotReminder();
+      toast('Slot hatırlatıcısı kaydedildi: her ' + slotDayLabel(day) + ' ' + t + '.', true);
+    } else {
+      toast('Gün ve saat kaydedildi. Hatırlatıcıyı açmak için anahtarı açın.', true);
+    }
+    updateSlotReminderUI();
+  };
+
+  if(chk) chk.addEventListener('change', async () => {
+    if(chk.checked){
+      let granted = await checkNotifGranted();
+      if(!granted){
+        const BG = getSafePermPlugin();
+        if(BG && typeof BG.requestNotificationPermission === 'function'){
+          try{ const r = await BG.requestNotificationPermission(); granted = !!(r && r.granted); }catch(e){}
+        } else if(typeof Notification !== 'undefined'){
+          try{ let p = Notification.permission; if(p === 'default') p = await Notification.requestPermission(); granted = (p === 'granted'); }catch(e){}
+        }
+      }
+      localStorage.setItem(SLOT_REMINDER_ENABLED_KEY, '1');
+      await syncNativeSlotReminder();
+      toast(granted
+        ? 'Slot hatırlatıcısı açıldı.'
+        : 'Açıldı, ancak bildirim izni yok: uygulama açıkken uyarı göreceksiniz.', granted);
+    } else {
+      localStorage.setItem(SLOT_REMINDER_ENABLED_KEY, '0');
+      const SR = getShiftReminderPlugin();
+      if(SR && typeof SR.cancelSlot === 'function'){ try{ await SR.cancelSlot(); }catch(e){} }
+      toast('Slot hatırlatıcısı kapatıldı.', false);
+    }
+    updateSlotReminderUI();
+    try{ renderSlotReminderBanner(); }catch(e){}
+  });
+
+  if(time) time.addEventListener('change', () => { updateSlotReminderUI(); });
+  if(save) save.addEventListener('click', persistSlot);
+
+  if(bannerCta) bannerCta.addEventListener('click', () => {
+    switchToPage('account');
+    setTimeout(() => { const c = document.getElementById('slotReminderCard'); if(c) c.scrollIntoView({ behavior:'smooth', block:'center' }); }, 250);
+  });
+  if(bannerClose) bannerClose.addEventListener('click', () => {
+    localStorage.setItem(SLOT_REMINDER_BANNER_DISMISSED_KEY, '1');
+    try{ renderSlotReminderBanner(); }catch(e){}
+    toast('Banner kapatıldı. Hesabım sayfasından istediğiniz zaman kurabilirsiniz.', true);
+  });
+
+  updateSlotReminderUI();
+
+  // Native varsa kayıtlı tercihi yansıt; yoksa yedek yolu kur.
+  if(slotNativeAvailable()){
+    if(slotReminderIsEnabled()) syncNativeSlotReminder();
+  } else {
+    setInterval(checkSlotReminderInApp, 60000);
+    document.addEventListener('visibilitychange', () => {
+      if(document.visibilityState === 'visible'){ checkSlotReminderInApp(); updateSlotReminderUI(); }
+    });
+    setTimeout(checkSlotReminderInApp, 4000);
+  }
+})();
+
 /* BAKIM KM EŞİĞİ TAKİBİ (1000 km ve 500 km kala hatırlatma) */
 const MAINT_THRESHOLDS = [1000, 500];
 
@@ -7985,24 +8289,43 @@ function renderGarage() {
   if(odometerInput && document.activeElement !== odometerInput) odometerInput.value = vehicleOdometer(av);
 
   const t = totalsOf(vRecs);
-  
-  let totalLiters = 0;
-  let totalFuelCost = 0;
-  let totalDrivenKm = 0;
-  
-  vRecs.forEach(r => {
-    totalLiters += Number(r.yakitLitre) || 0;
-    totalFuelCost += Number(r.yakit) || 0;
-    totalDrivenKm += Number(r.km) || 0;
-  });
 
-  const fuel100Km = totalDrivenKm > 0 ? (totalLiters / totalDrivenKm) * 100 : 0;
-  const fuelTlKm = totalDrivenKm > 0 ? totalFuelCost / totalDrivenKm : 0;
-  const fuelKmL = totalLiters > 0 ? totalDrivenKm / totalLiters : 0;
+  // Yakıt istatistikleri: Genel (tümü) / Bu Hafta / Bu Ay olarak kaydırılabilir.
+  const fuelStatsOf = (recs) => {
+    let liters = 0, cost = 0, driven = 0;
+    recs.forEach(r => {
+      liters += Number(r.yakitLitre) || 0;
+      cost += Number(r.yakit) || 0;
+      driven += Number(r.km) || 0;
+    });
+    return {
+      per100: driven > 0 ? (liters / driven) * 100 : 0,
+      tlKm: driven > 0 ? cost / driven : 0,
+      kmL: liters > 0 ? driven / liters : 0
+    };
+  };
+  const vRecsW = vRecs.filter(r => weekOf(r.tarih) === +currentWeekKey());
+  const vRecsM = vRecs.filter(r => monthKey(r.tarih) === currentMonthKey());
+  const setFuel = (pfx, s) => {
+    const a = document.getElementById('fuel100KmVal' + pfx); if(a) a.textContent = s.per100 > 0 ? fmt(s.per100, 2) + ' L' : '0 L';
+    const b = document.getElementById('fuelTlKmVal' + pfx); if(b) b.textContent = s.tlKm > 0 ? fmt(s.tlKm, 2) + ' ₺' : '0 ₺';
+    const c = document.getElementById('fuelKmLVal' + pfx); if(c) c.textContent = s.kmL > 0 ? fmt(s.kmL, 2) + ' km' : '0 km';
+  };
+  setFuel('', fuelStatsOf(vRecs));
+  setFuel('W', fuelStatsOf(vRecsW));
+  setFuel('M', fuelStatsOf(vRecsM));
 
-  if(document.getElementById('fuel100KmVal')) document.getElementById('fuel100KmVal').textContent = fuel100Km > 0 ? fmt(fuel100Km, 2) + ' L' : '0 L';
-  if(document.getElementById('fuelTlKmVal')) document.getElementById('fuelTlKmVal').textContent = fuelTlKm > 0 ? fmt(fuelTlKm, 2) + ' ₺' : '0 ₺';
-  if(document.getElementById('fuelKmLVal')) document.getElementById('fuelKmLVal').textContent = fuelKmL > 0 ? fmt(fuelKmL, 2) + ' km' : '0 km';
+  // Kaydırılabilir yakıt kartındaki noktaları senkronize et.
+  const fuelSwipeEl = document.getElementById('fuelSwipe');
+  if(fuelSwipeEl && !fuelSwipeEl.dataset.bound){
+    fuelSwipeEl.dataset.bound = '1';
+    const dots = fuelSwipeEl.parentElement.querySelectorAll('.metric-dots span');
+    fuelSwipeEl.addEventListener('scroll', () => {
+      const w = fuelSwipeEl.clientWidth || 1;
+      const i = Math.max(0, Math.min(dots.length - 1, Math.round(fuelSwipeEl.scrollLeft / w)));
+      dots.forEach((d, j) => d.classList.toggle('on', j === i));
+    }, {passive:true});
+  }
 
   if(document.getElementById('fuelEfficiencyVal')) document.getElementById('fuelEfficiencyVal').textContent = t.avgKmPerLitre!=null ? fmt(t.avgKmPerLitre,1) + ' km/L' : 'Veri yok';
   if(document.getElementById('fuelPriceVal')) document.getElementById('fuelPriceVal').textContent = t.avgFuelPrice!=null ? fmt(t.avgFuelPrice,2) + ' ₺/L' : 'Veri yok';
@@ -8044,15 +8367,50 @@ function renderMaintenanceHistory(){
     .sort((a,b) => String(b.date || '').localeCompare(String(a.date || '')));
   const recentCost = all.filter(h => new Date(h.date + 'T00:00:00+03:00') >= sixMonthsAgo).reduce((s,h) => s + h.cost, 0);
   const totalCost = all.reduce((s,h) => s + h.cost, 0);
-  if(!all.length){
-    box.innerHTML = '<div class="empty-period" style="text-align:center;padding:1.5rem 1rem;"><div style="font-size:1.6rem;opacity:.5;margin-bottom:.3rem;">📋</div><p style="margin:0 0 .6rem;color:var(--muted);font-size:.8rem;">Henüz bakım geçmişi yok.</p><p style="margin:0;color:var(--muted);font-size:.7rem;">Bakım sıfırlarken tutulan maliyet burada listelenir.</p></div>';
-  } else {
-    box.innerHTML = '<div class="maint-history-table-wrap"><table class="maint-history-table"><thead><tr><th>Tarih</th><th>Açıklama</th><th>KM</th><th>Tutar</th></tr></thead><tbody>'
-      + all.map(h => `<tr><td>${escapeHtml(h.date || '')}</td><td>${escapeHtml(h.note || 'Bakım')}</td><td class="num">${fmtInt(h.km)} km</td><td class="num">${fmt(h.cost)} ₺</td></tr>`).join('')
-      + '</tbody></table></div>';
-  }
+
   const summary = document.getElementById('maintenanceHistorySummary');
   if(summary) summary.innerHTML = `<div class="mh-stat"><span>Toplam kayıt</span><b>${all.length}</b></div><div class="mh-stat"><span>Son 6 ay</span><b>${fmt(recentCost)} ₺</b></div><div class="mh-stat"><span>Toplam maliyet</span><b>${fmt(totalCost)} ₺</b></div>`;
+
+  if(!all.length){
+    box.dataset.expanded = '';
+    box.innerHTML = '<div class="empty-period" style="text-align:center;padding:1.5rem 1rem;"><div style="font-size:1.6rem;opacity:.5;margin-bottom:.3rem;">📋</div><p style="margin:0 0 .6rem;color:var(--muted);font-size:.8rem;">Henüz bakım geçmişi yok.</p><p style="margin:0;color:var(--muted);font-size:.7rem;">Bakım sıfırlarken tutulan maliyet burada listelenir.</p></div>';
+    return;
+  }
+
+  // Kart görünümü: tablo yerine okunması kolay, kaydırma gerektirmeyen liste.
+  const fmtDate = (iso) => {
+    if(!iso) return '—';
+    const p = String(iso).split('-');
+    if(p.length !== 3) return escapeHtml(iso);
+    const m = MONTHS_SHORT[+p[1] - 1] || p[1];
+    return p[2] + ' ' + m + ' ' + p[0];
+  };
+  const ROW_LIMIT = 5;
+  const showAll = box.dataset.expanded === '1';
+  const visible = showAll ? all : all.slice(0, ROW_LIMIT);
+
+  box.innerHTML = '<div class="mh-list">'
+    + visible.map(h => {
+        const kmTxt = (h.km && +h.km > 0) ? fmtInt(h.km) + ' km' : 'km yok';
+        return `<div class="mh-entry">
+          <div class="mh-entry-ico">🔧</div>
+          <div class="mh-entry-body">
+            <div class="mh-entry-top"><span class="mh-entry-date">${fmtDate(h.date)}</span><span class="mh-entry-cost">${fmt(h.cost)} ₺</span></div>
+            <div class="mh-entry-note">${escapeHtml(h.note || 'Bakım')}</div>
+            <div class="mh-entry-meta">${kmTxt}</div>
+          </div>
+        </div>`;
+      }).join('')
+    + (all.length > ROW_LIMIT
+        ? `<button type="button" class="btn btn-ghost btn-sm" id="mhToggle" style="width:100%;margin-top:.55rem;">${showAll ? 'Daha az göster' : 'Tümünü göster (' + all.length + ')'}</button>`
+        : '')
+    + '</div>';
+
+  const toggle = document.getElementById('mhToggle');
+  if(toggle) toggle.addEventListener('click', () => {
+    box.dataset.expanded = showAll ? '' : '1';
+    renderMaintenanceHistory();
+  });
 }
 
 document.getElementById('vehicleSelect').addEventListener('change', (e) => { garageData.activeVehicleId = e.target.value; saveGarage(); renderGarage(); });
@@ -8746,6 +9104,7 @@ function fillAccountPage(){
   const ack = document.getElementById('deleteAccountAck');
   if(ack) ack.checked = false;
   if(typeof renderBadges === 'function') renderBadges();
+  if(typeof updateSlotReminderUI === 'function') updateSlotReminderUI();
 }
 
 const btnGoAccount = document.getElementById('btnGoAccount');
@@ -10045,7 +10404,7 @@ window.admStoreImpact = function (minVer) {
         requestPermissions: true,
         startTime: pendingStart,
         stale: false,
-        distanceFilter: 25,
+        distanceFilter: 10,
         initialKm: pendingKm
       };
       if (resume && session.lastLat != null && session.lastLon != null) {
@@ -10703,9 +11062,26 @@ window.admStoreImpact = function (minVer) {
     box.innerHTML = '<div style="color:var(--muted);font-size:.8rem;">Yükleniyor…</div>';
     let items = [];
     try{
-      const snap = await firebase.database().ref('appUpdate/history').once('value');
-      const val = snap.val() || {};
-      items = Object.keys(val).map(k => Object.assign({ _key:k }, val[k]));
+      // Kullanıcı tarafı (changelog) history + latest + previous düğümlerinin
+      // HEPSİNİ görür. Bu yüzden admin listesi de üç düğümü birleştirir; aksi
+      // halde admin yalnızca "history"yi görüp oradan siler, ancak sürüm
+      // latest/previous'ta kaldığı için uygulamada görünmeye devam ederdi.
+      const keys = ['history','latest','previous'];
+      const seen = new Set();
+      for(const k of keys){
+        const snap = await firebase.database().ref('appUpdate/' + k).once('value');
+        const val = snap.val();
+        if(k === 'history'){
+          if(val && typeof val === 'object'){
+            Object.keys(val).forEach(hk => {
+              if(!seen.has(hk)){ seen.add(hk); items.push(Object.assign({ _key:'history/' + hk }, val[hk])); }
+            });
+          }
+        } else if(val && val.version){
+          const hk = String(val.version).replace(/\./g, '_');
+          if(!seen.has(hk)){ seen.add(hk); items.push(Object.assign({ _key:k, _noKey:true }, val)); }
+        }
+      }
     }catch(e){
       box.innerHTML = '<div style="color:var(--red);font-size:.8rem;">Okunamadı: '+escapeHtml(e.message||'')+'</div>';
       return;
@@ -10740,8 +11116,22 @@ window.admStoreImpact = function (minVer) {
         showConfirm('v'+(it.version||'?')+' kaydı sürüm geçmişinden silinecek. Kullanıcılar bu notu artık göremeyecek.',
           async () => {
             try{
-              await firebase.database().ref('appUpdate/history/'+it._key).remove();
-              _clStatus('v'+it.version+' silindi.', true);
+              const ver = String(it.version || '').replace(/^v/i, '');
+              // 1) history düğümündeki kayıt (varsa)
+              if(it._key && !it._noKey){
+                await firebase.database().ref('appUpdate/' + it._key).remove();
+              }
+              // 2) latest / previous düğümleri bu sürümü gösteriyorsa onları da
+              //    temizle. (Önceki hata: yalnızca history siliniyordu; sürüm
+              //    latest/previous'ta kalınca uygulamada görünmeye devam ediyordu.)
+              for(const k of ['latest','previous']){
+                const s = await firebase.database().ref('appUpdate/' + k).once('value');
+                const d = s.val();
+                if(d && String(d.version || '').replace(/^v/i, '') === ver){
+                  await firebase.database().ref('appUpdate/' + k).remove();
+                }
+              }
+              _clStatus('v'+it.version+' silindi. Kullanıcılar artık görmeyecek.', true);
               renderClAdminList();
             }catch(e){ _clStatus('Silinemedi: '+e.message, false); }
           }, { title:'Kaydı sil', okText:'Sil', icon:'🗑️' });
@@ -11147,5 +11537,5 @@ window.admStoreImpact = function (minVer) {
   }
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37fe264bb062ff7',t:'MTc4ODg5MDc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37fe264bb062ff7',t:'MTc4ODg5MDc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a388da7f7b1ed5ff',t:'MTc4ODk4NDgwNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

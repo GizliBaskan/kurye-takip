@@ -1507,8 +1507,8 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
 .today-stat:hover,.week-perf-stat:hover{background:var(--bg)}
 .today-stat:active,.week-perf-stat:active{transform:scale(.97)}
 /* Geri Al çubuğu (5sn otomatik kaybolur) */
-.undo-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);transform:translate(-50%,160%);display:flex;align-items:center;gap:.55rem;background:var(--elev);border:1px solid var(--border2);border-radius:14px;padding:.55rem .65rem .55rem .95rem;box-shadow:0 12px 34px rgba(0,0,0,.4);z-index:120;transition:transform .3s cubic-bezier(.22,1,.36,1);max-width:calc(100vw - 1.5rem);overflow:hidden}
-.undo-bar.show{transform:translate(-50%,0)}
+.undo-bar{position:fixed;left:50%;bottom:78px;bottom:calc(env(safe-area-inset-bottom,0px) + 78px);transform:translate(-50%,24px);display:flex;align-items:center;gap:.55rem;background:var(--elev);border:1px solid var(--border2);border-radius:14px;padding:.55rem .65rem .55rem .95rem;box-shadow:0 12px 34px rgba(0,0,0,.4);z-index:120;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .25s ease,visibility 0s linear .3s;opacity:0;visibility:hidden;pointer-events:none;max-width:calc(100vw - 1.5rem);overflow:hidden}
+.undo-bar.show{transform:translate(-50%,0);opacity:1;visibility:visible;pointer-events:auto;transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .25s ease,visibility 0s linear 0s}
 .undo-bar .ub-msg{font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .undo-bar .ub-btn{flex-shrink:0;min-height:34px}
 .undo-bar .ub-x{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.95rem;line-height:1;padding:.35rem;min-height:30px;min-width:30px;border-radius:8px}
@@ -1781,6 +1781,23 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
         <button type="button" class="qa-btn qa-gps" id="qaGpsBtn">▶ GPS Başlat</button>
       </section>
 
+      <!-- 2.6) VARDİYA: canlı çalışma takibi (başlat / bitir / özet) -->
+      <section class="vardiya-card" id="vardiyaCard">
+        <span class="v-ico" id="vardiyaIco">🕐</span>
+        <div class="v-body">
+          <div class="v-title" id="vardiyaTitle">Vardiya başlatılmadı</div>
+          <div class="v-sub" id="vardiyaSub">Çalışmaya başlayınca süre, KM ve paket burada birikir · GPS ile senkron</div>
+          <div class="v-stats" id="vardiyaStats" style="display:none;">
+            <span class="v-stat">Süre<b id="vardiyaSure">00:00</b></span>
+            <span class="v-stat">KM<b id="vardiyaKm">0</b></span>
+            <span class="v-stat">Paket<b id="vardiyaPkg">0</b></span>
+          </div>
+        </div>
+        <div class="v-actions">
+          <button type="button" class="btn btn-primary btn-sm" id="vardiyaToggle">🟢 Vardiya Başlat</button>
+        </div>
+      </section>
+
       <!-- 2.5) KURULUM İLERLEMESİ: eksikler tek bakışta + tamamla -->
       <section class="setup-card" id="setupProgressCard" style="display:none;">
         <div class="sc-head">
@@ -1917,23 +1934,6 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
           <div class="gps-status-sub">Vardiyanı takip etmeye başla</div>
         </div>
         <button type="button" class="btn btn-primary btn-sm" id="gpsStatusStart">▶ Başlat</button>
-      </section>
-
-      <!-- 6.5) VARDİYA: canlı çalışma takibi (başlat / bitir / özet) -->
-      <section class="vardiya-card" id="vardiyaCard">
-        <span class="v-ico" id="vardiyaIco">🕐</span>
-        <div class="v-body">
-          <div class="v-title" id="vardiyaTitle">Vardiya başlatılmadı</div>
-          <div class="v-sub" id="vardiyaSub">Çalışmaya başlayınca süre, KM ve kazanç burada birikir</div>
-          <div class="v-stats" id="vardiyaStats" style="display:none;">
-            <span class="v-stat">Süre<b id="vardiyaSure">00:00</b></span>
-            <span class="v-stat">KM<b id="vardiyaKm">0</b></span>
-            <span class="v-stat">Paket<b id="vardiyaPkg">0</b></span>
-          </div>
-        </div>
-        <div class="v-actions">
-          <button type="button" class="btn btn-primary btn-sm" id="vardiyaToggle">🟢 Vardiya Başlat</button>
-        </div>
       </section>
 
     </div>
@@ -3485,7 +3485,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.5.0";
+const CURRENT_APP_VERSION = "6.5.1";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -3651,6 +3651,19 @@ async function checkForcedUpdate(){
   return false;
 }
 
+// Güncelleme kontrolü için saf karar fonksiyonu (test edilebilir):
+// hangi güncellemenin popup ile gösterileceğini ve sessiz sürümün
+// arka planda indirilip indirilmeyeceğini belirler.
+function otaPlanUpdate(latest, previous, history, currentVersion, skipped){
+  const releases = mergeChangelogItems(history, latest, previous);
+  const silentPending = !!(latest && latest.silent && latest.version
+    && cmpVersions(latest.version, currentVersion) > 0);
+  const visible = releases
+    .filter(r => !r.silent && r.version !== skipped && cmpVersions(r.version, currentVersion) > 0)
+    .sort((a,b) => cmpVersions(a.version, b.version));
+  return { silentPending, visibleTarget: visible[0] || null, latest };
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater) {
     try { await window.Capacitor.Plugins.CapacitorUpdater.notifyAppReady(); } catch(e){ console.log("Updater notify hatası: ", e); }
@@ -3663,20 +3676,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     try{ blocked = await checkForcedUpdate(); }catch(e){}
     if(blocked) return;
 
-    firebase.database().ref('appUpdate/latest').once('value').then(snap => {
-      const updateData = snap.val();
+    Promise.allSettled(['latest','previous','history'].map(key =>
+      firebase.database().ref('appUpdate/' + key).once('value')
+    )).then(results => {
+      const vals = results.map(r => r.status === 'fulfilled' ? r.value.val() : null);
+      const latest = vals[0], previous = vals[1], history = vals[2];
+      const skipped = localStorage.getItem('skipped_version');
+      const plan = otaPlanUpdate(latest, previous, history, CURRENT_APP_VERSION, skipped);
 
-      if (updateData && updateData.version && updateData.version !== CURRENT_APP_VERSION) {
-        const skippedVersion = localStorage.getItem('skipped_version');
-        if (skippedVersion === updateData.version) return;
-
-        if(updateData.silent){
-          // Ufak güncelleme: bildirim göstermeden arka planda indir ve kur.
-          applyOtaSilently(updateData);
-        } else {
-          // Güncelleme modalı GİRİŞ YAPMADAN, auth ekranının üstünde gösterilir.
-          showOtaUpdateModal(updateData);
-        }
+      if(plan.visibleTarget){
+        // Görünür güncellemenin popup'ı gösterilirken, arka planda sessiz sürüm
+        // (varsa) reload'suz indirilir; popup bölünmez, kullanıcı haberdar olmaz.
+        if(plan.silentPending) downloadOtaInBackground(latest);
+        showOtaUpdateModal(plan.visibleTarget);
+      } else if(plan.silentPending){
+        // Gösterilecek görünür güncelleme yoksa sessiz sürüm tam uygulanır.
+        applyOtaSilently(latest);
       }
     }).catch(err => console.log("Güncelleme kontrol hatası:", err));
   }
@@ -3786,6 +3801,18 @@ async function applyOtaSilently(updateData){
     if(CapacitorUpdater.reload) await CapacitorUpdater.reload();
     else location.reload();
   }catch(e){ console.log('Sessiz OTA hatası:', e); }
+}
+
+// Sessiz güncellemeyi ARKA PLANDA indir + kur, ama reload YAPMA.
+// Bu, görünür bir güncelleme popup'ı varken kullanılır: sessiz sürüm bir sonraki
+// açılışta devreye girer, popup ise bölünmeden görünür kalır.
+async function downloadOtaInBackground(updateData){
+  const CapacitorUpdater = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater;
+  if(!CapacitorUpdater || !updateData.url) return;
+  try{
+    const dl = await CapacitorUpdater.download({ version: updateData.version, url: updateData.url });
+    await CapacitorUpdater.set({ id: dl.id });
+  }catch(e){ console.log('Sessiz OTA arka plan indirme hatası:', e); }
 }
 function showOtaUpdateModal(updateData){
   const overlay = document.getElementById('otaUpdateOverlay');
@@ -8652,14 +8679,33 @@ function mergeChangelogItems(history, latest, previous){
     if(!/^\d+(?:\.\d+){0,2}$/.test(version) || version.length > 20) return;
     items.set(version, {
       version,
+      url: typeof entry.url === 'string' ? entry.url : '',
       notes: typeof entry.notes === 'string' ? entry.notes : '',
-      publishedAt: entry.publishedAt || ''
+      publishedAt: entry.publishedAt || '',
+      silent: !!entry.silent
     });
   };
   add(previous);
   add(latest);
   if(history && typeof history === 'object') Object.values(history).forEach(add);
   return Array.from(items.values()).sort((a,b) => cmpVersions(b.version, a.version));
+}
+
+// "Kullandığınız sürüm" etiketi için kullanıcıya görünen sürüm.
+// Sessiz yayınlar kullanıcıya HİÇBİR yerde gösterilmez; etiket sessiz olmayan
+// en son sürümü gösterir (gerektiğinde sahte bile olsa).
+function userFacingVersion(items){
+  const byVersion = {};
+  items.forEach(it => { byVersion[it.version] = it; });
+  const cur = byVersion[CURRENT_APP_VERSION];
+  // Kurulu sürümün kendisi sessiz bir yayınsa gizlenir; yoksa doğrudan gösterilir.
+  if(cur && !cur.silent) return CURRENT_APP_VERSION;
+  const nonSilent = items.filter(it => !it.silent).sort((a,b) => cmpVersions(b.version, a.version));
+  if(nonSilent.length){
+    const atOrBelow = nonSilent.filter(it => cmpVersions(it.version, CURRENT_APP_VERSION) <= 0);
+    return (atOrBelow.length ? atOrBelow : nonSilent)[0].version;
+  }
+  return CURRENT_APP_VERSION;
 }
 
 function setChangelogExpanded(expanded){
@@ -8678,7 +8724,7 @@ async function publishRelease(currentLatest, release){
   const changes = {
     latest: release,
     ['history/' + release.version.replace(/\./g, '_')]: {
-      version: release.version, notes: release.notes || '', publishedAt: release.publishedAt, silent: !!release.silent
+      version: release.version, url: release.url || '', notes: release.notes || '', publishedAt: release.publishedAt, silent: !!release.silent
     }
   };
   if(currentLatest){
@@ -8702,8 +8748,14 @@ let _clLiveBound = false;
 function _clRenderItems(){
   const list = document.getElementById('clList');
   if(!list) return;
-  const items = mergeChangelogItems(_clData.history, _clData.latest, _clData.previous);
+  // Sessiz yayınlar kullanıcıya sürüm geçmişinde DÂHİ gösterilmez.
+  const merged = mergeChangelogItems(_clData.history, _clData.latest, _clData.previous);
+  const items = merged.filter(it => !it.silent);
   const status = document.getElementById('clStatus');
+  // "Kullandığınız sürüm" etiketi sessiz olmayan en son sürümü gösterir.
+  const uf = userFacingVersion(merged);
+  const curEl = document.getElementById('clCurrentVer');
+  if(curEl) curEl.textContent = 'v' + uf;
   if(!items.length){
     list.innerHTML = '<div class="cl-empty"><div style="font-size:2rem;opacity:.5;margin-bottom:.5rem;">📋</div>'
       + 'Henüz yayınlanmış bir güncelleme notu yok.</div>';
@@ -8715,8 +8767,8 @@ function _clRenderItems(){
   items.sort(function(a,b){ return cmpVersions(b.version || '0', a.version || '0'); });
 
   list.innerHTML = items.map(function(it, i){
-    const isCur = it.version === CURRENT_APP_VERSION;
-    const acik  = isCur || (i === 0 && !items.some(x => x.version === CURRENT_APP_VERSION));
+    const isCur = it.version === uf;
+    const acik  = isCur || (i === 0 && !items.some(x => x.version === uf));
     const tarih = _clFormatDate(it.publishedAt);
     const notes = it.notes ? formatUpdateNotes(it.notes)
       : '<p style="margin:0;color:var(--muted);font-size:.8rem;">Not girilmemiş.</p>';
@@ -8773,7 +8825,12 @@ async function renderChangelog(force){
   const list = document.getElementById('clList');
   const curEl = document.getElementById('clCurrentVer');
   if(!list) return;
-  if(curEl) curEl.textContent = 'v' + CURRENT_APP_VERSION;
+  if(curEl){
+    // Etiket sessiz olmayan en son sürümü gösterir; veri yüklenmeden önce
+    // yer tutucu olarak gerçek kurulu sürüm yazılır.
+    const merged = mergeChangelogItems(_clData.history, _clData.latest, _clData.previous);
+    curEl.textContent = 'v' + userFacingVersion(merged);
+  }
   if(_clLoaded && !force) return;
 
   initChangelogListeners();
@@ -11859,6 +11916,15 @@ window.admStoreImpact = function (minVer) {
 
       try {
         if (isTracking) {
+          // Vardiya aktifken GPS'i durdurmak = vardiyayı bitirmek.
+          // Tek durum kaynağı vardiyadır; özet ve sayaç sıfırlama orada yapılır.
+          if (typeof window.vardiyaActive === 'function' && window.vardiyaActive()) {
+            isTracking = false;
+            stopUiTicker();
+            setTrackingVisual(false);
+            window.endVardiyaFromGps();
+            return;
+          }
           await tracker.stop();
           isTracking = false;
           stopUiTicker();
@@ -11919,6 +11985,23 @@ window.admStoreImpact = function (minVer) {
         }
       }
     });
+
+    // VARDİYA ↔ GPS KÖPRÜSÜ
+    // Vardiya sistemi (ayrı script bloğu) GPS'i başlatmak/durdurmak için bu
+    // köprüyü kullanır; böylece isTracking / görsel durum / ticker tek yerde
+    // tutulur ve durumlar birbirinden sapmaz.
+    window.GpsBridge = {
+      running: function () { return isTracking; },
+      setUi: function (on) {
+        isTracking = on;
+        setTrackingVisual(on);
+        if (on) startUiTicker(); else stopUiTicker();
+      },
+      resetLabels: function () {
+        if (sureLabel) sureLabel.textContent = '00:00:00';
+        if (liveLabel) liveLabel.textContent = '0.00 km';
+      }
+    };
 
     function addGpsKmToTodayRecord(sessionKm) {
       const today = todayISO();
@@ -13054,13 +13137,16 @@ function renderSetupProgress(){
 /* ---------- 14/15. VARDİYA SİSTEMİ + GPS istatistikleri ---------- */
 var VARD_KEY = 'kurye_vardiya_v1';
 var vardiya = (function(){
-  try{ const p = JSON.parse(localStorage.getItem(VARD_KEY)||'null');
-    if(p && p.active && p.start) return {active:true, start:p.start};
+  try{
+    const p = JSON.parse(localStorage.getItem(VARD_KEY)||'null');
+    if(p && p.active && p.start){
+      return { active:true, start:p.start, tes0:p.tes0||0, gelir0:p.gelir0||0, km0:p.km0||0, startedGps:!!p.startedGps };
+    }
   }catch(e){}
-  return {active:false, start:null};
+  return { active:false, start:null, tes0:0, gelir0:0, km0:0, startedGps:false };
 })();
 var vardiyaTicker = null;
-function saveVardiya(){ try{ localStorage.setItem(VARD_KEY, JSON.stringify({active:vardiya.active, start:vardiya.start})); }catch(e){} }
+function saveVardiya(){ try{ localStorage.setItem(VARD_KEY, JSON.stringify(vardiya)); }catch(e){} }
 function gpsKmNow(){
   try{
     const T = window.BackgroundTracker;
@@ -13071,15 +13157,17 @@ function gpsKmNow(){
   }catch(e){}
   return 0;
 }
+function todayTes(){ const t = totalsOf(records.filter(r=>r.tarih===todayISO())); return t.tes || 0; }
+function todayGelir(){ const t = totalsOf(records.filter(r=>r.tarih===todayISO())); return t.gelir || 0; }
 function vardiyaTick(){
   if(!vardiya.active) return;
   const elSure=document.getElementById('vardiyaSure'), elKm=document.getElementById('vardiyaKm'), elPkg=document.getElementById('vardiyaPkg');
   const ms = Date.now() - vardiya.start;
   if(elSure) elSure.textContent = fmtDurLong(ms);
-  const km = gpsKmNow();
+  const km = Math.max(0, gpsKmNow() - vardiya.km0);
   if(elKm) elKm.textContent = km > 0 ? (Math.round(km*10)/10) : '0';
-  const t = totalsOf(records.filter(r=>r.tarih===todayISO()));
-  if(elPkg) elPkg.textContent = fmtInt(t.tes);
+  // Bu vardiyada girilen paket: başlangıçtaki gün toplamından fark.
+  if(elPkg) elPkg.textContent = fmtInt(Math.max(0, todayTes() - vardiya.tes0));
 }
 function renderVardiya(){
   const card = document.getElementById('vardiyaCard');
@@ -13091,7 +13179,7 @@ function renderVardiya(){
     card.classList.add('running');
     if(ico) ico.textContent='🔴';
     if(title) title.textContent='Vardiya sürüyor';
-    if(sub){ const d=new Date(vardiya.start); sub.textContent='Başlangıç: ' + HHMM(d) + ' · bitirmek için dokunun'; }
+    if(sub){ const d=new Date(vardiya.start); sub.textContent='Başlangıç: ' + HHMM(d) + ' · GPS senkron · bitirmek için dokunun'; }
     if(stats) stats.style.display='';
     if(btn){ btn.textContent='🔴 Vardiyayı Bitir'; btn.className='btn btn-danger btn-sm'; }
     vardiyaTick();
@@ -13100,50 +13188,107 @@ function renderVardiya(){
     card.classList.remove('running');
     if(ico) ico.textContent='🕐';
     if(title) title.textContent='Vardiya başlatılmadı';
-    if(sub) sub.textContent='Çalışmaya başlayınca süre, KM ve kazanç burada birikir';
+    if(sub) sub.textContent='Çalışmaya başlayınca süre, KM ve paket burada birikir · GPS ile senkron';
     if(stats) stats.style.display='none';
     if(btn){ btn.textContent='🟢 Vardiya Başlat'; btn.className='btn btn-primary btn-sm'; }
     if(vardiyaTicker){ clearInterval(vardiyaTicker); vardiyaTicker=null; }
   }
 }
-function toggleVardiya(){
-  if(!vardiya.active){
-    vardiya.active = true; vardiya.start = Date.now();
-    saveVardiya(); renderVardiya();
-    toast('🟢 Vardiya başladı · iyi çalışmalar!', true);
+
+// Vardiya başlat: bugünün anlık görüntüsünü al, GPS'i senkron başlat.
+async function startVardiya(){
+  if(vardiya.active) return;
+  vardiya.active = true; vardiya.start = Date.now();
+  vardiya.tes0 = todayTes(); vardiya.gelir0 = todayGelir(); vardiya.km0 = gpsKmNow();
+  vardiya.startedGps = false;
+  saveVardiya(); renderVardiya();
+  const T = window.BackgroundTracker;
+  const bridge = window.GpsBridge;
+  const running = (bridge && bridge.running()) || (T && typeof T.isActive==='function' && T.isActive());
+  if(!running && T && typeof T.start==='function'){
+    try{
+      const ok = await T.start();
+      if(ok){
+        vardiya.startedGps = true; saveVardiya();
+        if(bridge) bridge.setUi(true);
+        toast('🟢 Vardiya başladı · GPS takibi de açıldı', true);
+      } else {
+        toast('🟢 Vardiya başladı (GPS başlatılamadı)', true);
+      }
+    }catch(e){
+      toast('🟢 Vardiya başladı (GPS başlatılamadı: konum izni gerekebilir)', true);
+    }
   } else {
-    const startedAt = vardiya.start;
-    vardiya.active = false; vardiya.start = null;
-    saveVardiya(); renderVardiya();
-    showVardiyaSummary(startedAt);
+    toast('🟢 Vardiya başladı · GPS zaten açık', true);
   }
 }
-function showVardiyaSummary(startedAt){
+
+// Vardiya bitir: deltaları hesapla, gerekirse GPS'i durdur, özeti göster.
+// forceGpsStop: GPS'in kendi "Durdur" butonuyla tetiklendiyse GPS mutlaka durur.
+async function finishVardiya(forceGpsStop){
+  if(!vardiya.active) return;
+  const startedAt = vardiya.start;
+  const tes1 = todayTes(), gelir1 = todayGelir(), km1 = gpsKmNow();
+  const dTes = Math.max(0, tes1 - vardiya.tes0);
+  const dGelir = Math.max(0, gelir1 - vardiya.gelir0);
+  const dKm = Math.max(0, Math.round((km1 - vardiya.km0) * 10) / 10);
+  const startedGps = vardiya.startedGps;
+  vardiya.active = false; vardiya.start = null;
+  vardiya.tes0 = 0; vardiya.gelir0 = 0; vardiya.km0 = 0; vardiya.startedGps = false;
+  saveVardiya(); renderVardiya();
+  const shouldStopGps = !!forceGpsStop || !!startedGps;
+  if(shouldStopGps){
+    const T = window.BackgroundTracker;
+    if(T){
+      try{ await T.stop(); }catch(e){}
+      try{ T.resetSession(); }catch(e){}
+    }
+    const bridge = window.GpsBridge;
+    if(bridge){ bridge.setUi(false); bridge.resetLabels(); }
+  }
+  showVardiyaSummary({ startedAt: startedAt, km: dKm, tes: dTes, gelir: dGelir });
+}
+
+function toggleVardiya(){
+  if(!vardiya.active) startVardiya();
+  else finishVardiya(false);
+}
+window.vardiyaActive = function(){ return vardiya.active; };
+window.endVardiyaFromGps = function(){ finishVardiya(true); };
+
+function showVardiyaSummary(opt){
+  // Geriye dönük uyum: eski çağrılar sadece başlangıç zamanını geçebilir.
+  if(typeof opt === 'number') opt = { startedAt: opt, km:0, tes:0, gelir:0 };
+  const startedAt = opt.startedAt;
   const ms = Date.now() - startedAt;
   const h = ms/3600000;
-  const today = records.filter(r=>r.tarih===todayISO());
-  const t = totalsOf(today);
-  const km = Math.max(gpsKmNow(), t.km);
-  const saatUcret = h>0 ? t.net/h : 0;
-  const pkgSaat = h>0 ? t.tes/h : 0;
-  const kmSaat = h>0 ? km/h : 0;
+  const km = opt.km || 0;
+  const tes = opt.tes || 0;
+  const gelir = opt.gelir || 0;
   const d = new Date(startedAt);
+  const tooShort = ms < 60000;   // 1 dakikadan kısa: saatlik değerler anlamsız olur
+  const saatUcret = (!tooShort && h>0 && gelir>0) ? gelir/h : null;
+  const pkgSaat = (!tooShort && h>0 && tes>0) ? tes/h : null;
+  const kmSaat = (!tooShort && h>0 && km>0) ? km/h : null;
+  function r(v){ return v==null ? '—' : fmt(v,1); }
   const html =
     '<div style="text-align:center;padding:.1rem .1rem 0;">' +
     '<div style="font-size:1.9rem;margin-bottom:.15rem;">🏁</div>' +
-    '<div style="font-weight:800;font-size:1.05rem;margin-bottom:.8rem;">Vardiya Özeti</div>' +
+    '<div style="font-weight:800;font-size:1.05rem;margin-bottom:.2rem;">Vardiya Özeti</div>' +
+    '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem;">Yalnızca bu vardiya boyunca oluşan değerler</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.9rem;">' +
     '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük kayıtlara git"><div class="metric-value">'+fmtDurLong(ms)+'</div><div class="metric-label">Çalışma süresi</div><div class="metric-sub">'+HHMM(d)+' başladı</div></div>' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük paket detayına git"><div class="metric-value">'+fmtInt(t.tes)+'</div><div class="metric-label">Paket</div><div class="metric-sub">bugün</div></div>' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'garage\')" title="GPS / araç detayına git"><div class="metric-value">'+fmtInt(km)+' km</div><div class="metric-label">Mesafe</div><div class="metric-sub">GPS + kayıt</div></div>' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük kazanç detayına git"><div class="metric-value">'+fmt(t.net)+' ₺</div><div class="metric-label">Net kazanç</div><div class="metric-sub">bugün</div></div>' +
+    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük paket detayına git"><div class="metric-value">'+fmtInt(tes)+'</div><div class="metric-label">Paket</div><div class="metric-sub">bu vardiya</div></div>' +
+    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'garage\')" title="GPS / araç detayına git"><div class="metric-value">'+fmt(km,1)+' km</div><div class="metric-label">Mesafe</div><div class="metric-sub">GPS'+(km>0?' ile ölçüldü':' (takip kapalıydı)')+'</div></div>' +
+    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük kazanç detayına git"><div class="metric-value">'+fmt(gelir)+' ₺</div><div class="metric-label">Net kazanç</div><div class="metric-sub">bu vardiya</div></div>' +
     '</div>' +
     '<div style="font-size:.78rem;color:var(--muted);line-height:1.8;margin-bottom:.5rem;">' +
-    '📈 <b>'+fmt(saatUcret)+' ₺/saat</b> &nbsp;·&nbsp; 📦 '+fmt(pkgSaat,1)+' paket/saat &nbsp;·&nbsp; 🛣 '+fmt(kmSaat,1)+' km/saat' +
+    '📈 <b>'+r(saatUcret)+' ₺/saat</b> &nbsp;·&nbsp; 📦 '+r(pkgSaat)+' paket/saat &nbsp;·&nbsp; 🛣 '+r(kmSaat)+' km/saat' +
     '</div>' +
+    (tooShort ? '<div style="font-size:.72rem;color:var(--amber);margin-bottom:.6rem;">⚠️ Vardiya 1 dakikadan kısa; saatlik değerler hesaplanmadı.</div>' : '') +
     '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem;">Değerlere dokunarak ilgili bölüme gidebilirsiniz</div></div>';
   showConfirm(html, function(){
-    openNewRecordForm({ prefillShift: { baslangic: HHMM(d), bitis: HHMM(new Date()), molaDk: 0 }, km: Math.round(km), tes: t.tes, gelir: t.gelir });
+    openNewRecordForm({ prefillShift: { baslangic: HHMM(d), bitis: HHMM(new Date()), molaDk: 0 }, km: Math.round(km), tes: tes, gelir: gelir });
   }, {title:'Vardiya Özeti', icon:'🏁', warn:true, okText:'📝 Kayda Ekle', cancelText:'Kapat', html:true});
 }
 
@@ -13519,5 +13664,5 @@ scheduleDraftOffer();
   renderVardiya();
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37fe264bb062ff7',t:'MTc4ODg5MDc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3917c3cd922e323',t:'MTc4OTA3NTMxNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37fe264bb062ff7',t:'MTc4ODg5MDc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a391c9da7ab1e34b',t:'MTc4OTA3ODQ5Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

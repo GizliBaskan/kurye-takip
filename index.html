@@ -1557,6 +1557,82 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
 .gd-acc.flash{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
 @media(max-width:768px){.gd-acc-sub{display:none}}
 @media (prefers-reduced-motion: reduce){ .gd-acc-body{animation:none}.gd-acc[open] .gd-chev{transform:none} }
+/* ===== Popup açıkken arka plan kaydırma kilidi ===== */
+body.no-scroll{overflow:hidden !important}
+.modal,.sheet{overscroll-behavior:contain}
+/* ===== Akıllı kayıt: son kayıt öneri rozetleri ===== */
+.suggest-badge{display:inline-flex;align-items:center;gap:.3rem;margin-top:.35rem;padding:.28rem .55rem;background:var(--hover);border:1px solid var(--border);border-radius:9px;font-size:.68rem;color:var(--muted);cursor:pointer;max-width:100%}
+.suggest-badge b{color:var(--accent);font-weight:700}
+.suggest-badge:active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+/* ===== Günlük dönem chip'leri (Bugün · Bu hafta · Tümü) ===== */
+.dc-chips{display:flex;gap:.4rem;margin:.3rem 0 .7rem;flex-wrap:wrap}
+.dc-chip{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;border-radius:99px;border:1px solid var(--border);background:var(--card);color:var(--sec);font-size:.78rem;font-weight:600;cursor:pointer;min-height:38px;transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+.dc-chip.active{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+/* ===== Vardiya canlı mini bar ===== */
+.vardiya-minibar{position:fixed;left:.6rem;right:.6rem;bottom:calc(env(safe-area-inset-bottom,0px) + 62px);z-index:85;display:none;align-items:center;justify-content:space-between;gap:.6rem;padding:.55rem .85rem;background:linear-gradient(120deg,var(--card),var(--elev));border:1px solid var(--border2);border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.35);cursor:pointer;font-size:.78rem;color:var(--sec)}
+.vardiya-minibar.show{display:flex}
+.vardiya-minibar .vmb-ico{font-size:1.05rem}
+.vardiya-minibar b{color:var(--accent);font-weight:700}
+.vardiya-minibar .vmb-go{color:var(--accent);font-weight:800;flex-shrink:0}
+/* ===== "Bugün ne yapmalıyım?" görev kartı ===== */
+.today-tasks{display:flex;flex-direction:column;gap:.45rem;margin:0 0 1rem}
+.tt-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .75rem;background:var(--card);border:1px solid var(--border);border-radius:13px;cursor:pointer;text-align:left;width:100%}
+.tt-item:active{background:var(--hover)}
+.tt-ico{font-size:1.2rem;width:30px;height:30px;display:grid;place-items:center;background:var(--accent-dim);border-radius:9px;flex-shrink:0}
+.tt-body{flex:1;min-width:0}
+.tt-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.tt-sub{font-size:.74rem;color:var(--muted)}
+.tt-go{color:var(--accent);font-weight:800;flex-shrink:0;font-size:.8rem}
+/* ===== Günlük kart: kaydırarak düzenle/sil ===== */
+.daily-card{position:relative;overflow:hidden}
+.dc-swipe{position:absolute;top:0;right:0;bottom:0;display:flex;align-items:center;gap:.4rem;padding:.5rem;transform:translateX(110%);transition:transform .18s ease;z-index:2}
+.daily-card.swiped .dc-swipe{transform:translateX(0)}
+.dc-swipe .btn{min-width:60px}
+/* ===== Admin: sistem durumu + bugün + dikkat + işlem geçmişi ===== */
+.adm-status{display:flex;align-items:center;gap:.7rem;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:15px;padding:.7rem .9rem;margin-bottom:.7rem;box-shadow:var(--shadow)}
+.adm-status.warn{border-left-color:var(--amber)}
+.adm-status.crit{border-left-color:var(--red)}
+.adm-status .as-ico{font-size:1.4rem;flex:0 0 auto}
+.adm-status .as-body{flex:1;min-width:0}
+.adm-status .as-t{font-weight:800;font-size:.95rem;color:var(--text)}
+.adm-status .as-s{font-size:.74rem;color:var(--sec);line-height:1.5}
+.adm-today{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:.45rem;margin-bottom:.7rem}
+.adm-today .at{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:.5rem .6rem}
+.adm-today .at b{display:block;font-family:var(--mono);font-size:1.05rem;color:var(--text)}
+.adm-today .at span{font-size:.66rem;color:var(--muted)}
+.adm-attn{display:grid;gap:.35rem;margin-bottom:.7rem}
+.adm-attn-item{display:flex;align-items:center;gap:.6rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.5rem .7rem;cursor:pointer;text-align:left;width:100%;font-family:inherit;font-size:.8rem;color:var(--text)}
+.adm-attn-item:hover{border-color:var(--border2);background:var(--elev)}
+.adm-attn-item .ai-dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.adm-attn-item .ai-dot.red{background:var(--red)}
+.adm-attn-item .ai-dot.amber{background:var(--amber)}
+.adm-attn-item .ai-dot.green{background:var(--green)}
+.adm-attn-item .ai-t{flex:1;min-width:0;font-weight:600}
+.adm-attn-item .ai-s{display:block;font-size:.68rem;color:var(--muted);font-weight:400}
+.adm-attn-item .ai-go{color:var(--accent);font-weight:800;flex:0 0 auto;font-size:.78rem}
+.adm-log{display:grid;gap:.28rem;font-size:.72rem}
+.adm-log .al{display:flex;gap:.55rem;align-items:baseline;padding:.32rem .5rem;background:var(--elev);border:1px solid var(--border);border-radius:10px;color:var(--sec)}
+.adm-log .al i{font-family:var(--mono);color:var(--muted);font-style:normal;white-space:nowrap}
+.adm-log .al b{color:var(--text);font-weight:600}
+.adm-health{display:inline-flex;align-items:center;gap:.3rem;font-size:.66rem;font-weight:700;border-radius:999px;padding:.16rem .5rem;border:1px solid var(--border);background:var(--elev);color:var(--sec)}
+.adm-health.ok{color:var(--green);border-color:var(--green)}
+.adm-health.old{color:var(--amber);border-color:var(--amber)}
+.adm-health.silent{color:var(--amber);border-color:var(--amber)}
+.adm-health.problem{color:var(--red);border-color:var(--red)}
+.adm-health.empty{color:var(--muted)}
+.adm-avatar.b-red{background:var(--red);color:#fff}
+.adm-prio{display:inline-flex;align-items:center;gap:.25rem;font-size:.66rem;font-weight:700;border-radius:999px;padding:.14rem .48rem;border:1px solid var(--border)}
+.adm-prio.kritik{color:var(--red);border-color:var(--red);background:rgba(248,113,113,.12)}
+.adm-prio.yuksek{color:var(--amber);border-color:var(--amber)}
+.adm-prio.normal{color:var(--accent);border-color:var(--accent)}
+.adm-prio.dusuk{color:var(--muted)}
+.adm-profile{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.7rem .8rem;margin-bottom:.6rem}
+.adm-profile .ap-avatar{width:2.6rem;height:2.6rem;border-radius:14px;display:grid;place-items:center;background:var(--accent-dim);color:var(--accent);font-family:var(--mono);font-weight:800}
+.adm-profile .ap-who{flex:1;min-width:140px}
+.adm-profile .ap-who b{display:block;font-size:.9rem;color:var(--text);overflow-wrap:anywhere}
+.adm-profile .ap-who span{display:block;font-size:.72rem;color:var(--muted);line-height:1.5}
+.adm-sumline{font-size:.72rem;color:var(--sec);line-height:1.6;margin:.1rem 0 .6rem}
+.adm-spark{width:100%;height:48px;display:block;margin:0 0 .45rem}
 </style>
 </head>
 <body>
@@ -1781,6 +1857,12 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
         <button type="button" class="qa-btn qa-gps" id="qaGpsBtn">▶ GPS Başlat</button>
       </section>
 
+      <!-- 2.45) BUGÜN NE YAPMALIYIM? aksiyon kartı -->
+      <div id="todayTasksWrap" style="display:none;">
+        <div class="dashboard-section-title" style="margin:.2rem 0 .5rem;"><h2>Bugün ne yapmalıyım?</h2></div>
+        <div class="today-tasks" id="todayTasks"></div>
+      </div>
+
       <!-- 2.6) VARDİYA: canlı çalışma takibi (başlat / bitir / özet) -->
       <section class="vardiya-card" id="vardiyaCard">
         <span class="v-ico" id="vardiyaIco">🕐</span>
@@ -1960,6 +2042,11 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
   <section class="page" id="page-daily">
     <div class="page-head"><h1>Günlük Kayıtlar</h1><span class="head-date" id="dailyHeadDate">—</span><p>Sarı alanlar düzenlenebilir · bonuslar ayarlarınıza göre otomatik hesaplanır</p></div>
     <div class="panel">
+      <div class="dc-chips" role="group" aria-label="Dönem filtresi">
+        <button type="button" class="dc-chip" data-dc="today">📅 Bugün</button>
+        <button type="button" class="dc-chip" data-dc="week">📆 Bu hafta</button>
+        <button type="button" class="dc-chip active" data-dc="all">🗂️ Tümü</button>
+      </div>
       <div class="toolbar">
         <input type="text" id="searchQ" placeholder="Tarih veya not ara…"/>
         <select id="filterMonth"><option value="">Tüm aylar</option></select>
@@ -2770,6 +2857,8 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
                 <button type="button" class="adm-chip" data-uf="active">Son 7 gün</button>
                 <button type="button" class="adm-chip" data-uf="silent">Sessiz</button>
                 <button type="button" class="adm-chip" data-uf="empty">Kaydı yok</button>
+                <button type="button" class="adm-chip" data-uf="oldver">Eski sürüm</button>
+                <button type="button" class="adm-chip" data-uf="problem">Sorunlu</button>
               </div>
               <select class="adm-chip" id="admUserSort" aria-label="Sıralama">
                 <option value="last">Son etkinlik</option>
@@ -2794,6 +2883,8 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
                 <button type="button" class="adm-chip" data-ff="open">Açık</button>
                 <button type="button" class="adm-chip" data-ff="unread">Okunmamış bildirim</button>
                 <button type="button" class="adm-chip" data-ff="answered">İşaretlenen</button>
+                <button type="button" class="adm-chip" data-ff="kritik">🔴 Kritik</button>
+                <button type="button" class="adm-chip" data-ff="yuksek">🟠 Yüksek</button>
               </div>
               <button type="button" class="btn btn-ghost btn-sm" id="btnAdmFeedCsv" title="Önerileri CSV olarak indir">⬇ CSV</button>
             </div>
@@ -2884,8 +2975,8 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
           <div class="panel" style="padding:.75rem;">
             <h3 style="margin:0 0 .4rem;font-size:.95rem;">📢 Duyuru Yayınla</h3>
             <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
-              Buradan yayınladığınız duyurular, uygulamayı açan tüm kullanıcılara ana ekranın üstünde gösterilir.
-              Kullanıcı “Kapat” dediğinde aynı duyuruyu bir daha görmez.
+              Buradan yayınladığınız duyurular, uygulamayı açan kullanıcılara ana ekranın üstünde gösterilir.
+              Hedef kitlesini ve gösterim şeklini aşağıdan seçebilirsiniz.
             </p>
             <div class="fg">
               <label>Başlık</label>
@@ -2895,16 +2986,40 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
               <label>Mesaj</label>
               <textarea id="admAnnBody" rows="3" maxlength="500" placeholder="Kullanıcılara iletmek istediğiniz kısa mesaj"></textarea>
             </div>
-            <div class="fg">
-              <label>Tip</label>
-              <select id="admAnnType" class="auth-input">
-                <option value="info">ℹ️ Bilgi</option>
-                <option value="warning">⚠️ Uyarı</option>
-                <option value="success">✅ Başarı</option>
-              </select>
+            <div class="fg-row">
+              <div class="fg">
+                <label>Tip</label>
+                <select id="admAnnType" class="auth-input">
+                  <option value="info">ℹ️ Bilgi</option>
+                  <option value="feature">✨ Yeni özellik</option>
+                  <option value="warning">⚠️ Uyarı</option>
+                  <option value="critical">🚨 Kritik</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Hedef</label>
+                <select id="admAnnTarget" class="auth-input">
+                  <option value="all">👥 Herkes</option>
+                  <option value="oldver">📱 Eski sürüm kullananlar</option>
+                  <option value="newusers">🌱 Yeni kullanıcılar</option>
+                  <option value="selected">🎯 Seçili kullanıcılar</option>
+                </select>
+              </div>
+              <div class="fg">
+                <label>Gösterim</label>
+                <select id="admAnnDisplay" class="auth-input">
+                  <option value="once">Bir kez (kapatana kadar)</option>
+                  <option value="always">Her açılışta</option>
+                  <option value="until">Tarihe kadar</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg" id="admAnnTargetUidsWrap" style="display:none;">
+              <label>Seçili kullanıcı kimlikleri (uid) — virgülle ayırın</label>
+              <input type="text" id="admAnnTargetUids" placeholder="uid1, uid2, …"/>
             </div>
             <div class="fg">
-              <label>Bitiş tarihi (isteğe bağlı)</label>
+              <label>Bitiş tarihi (gösterim "Tarihe kadar" ise zorunlu)</label>
               <input type="date" id="admAnnExpires"/>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:.5rem;">
@@ -2986,6 +3101,7 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
             <p style="font-size:.78rem;color:var(--muted);line-height:1.55;margin:0 0 1rem;">
               Yeni rozet ekleyin veya var olanları düzenleyin. Değişiklikler sadece bu cihazda geçerli kalır; tüm kullanıcılara dağıtmak için güncellenmiş uygulama kodunun OTA veya Play Store ile yayınlanması gerekir.
             </p>
+            <div id="adminBadgeStats" style="margin-bottom:1rem;"></div>
             <div id="adminBadgeEditor" class="fg" style="margin-bottom:1rem;">
               <label>ID (benzersiz, boşluk yok)</label>
               <input type="text" id="admBadgeId" placeholder="örn. pkg-100"/>
@@ -3178,7 +3294,10 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
       <!-- AKILLI KAYIT: son kaydın değerlerini tek dokunuşla doldur -->
       <div class="use-last-row" id="useLastRow" style="display:none;">
         <span>🧠 <b id="useLastLabel">Son kaydı kullan</b></span>
-        <button type="button" class="btn btn-ghost btn-sm" id="btnUseLast">Doldur</button>
+        <span style="display:flex;gap:.4rem;align-items:center;">
+          <button type="button" class="btn btn-ghost btn-sm" id="btnDiscardDraft" style="display:none;">Taslağı sil</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btnUseLast">Doldur</button>
+        </span>
       </div>
 
       <details class="form-details" id="formDetails">
@@ -3300,6 +3419,7 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
       <div class="fg"><label for="onboardRemaining">Bakıma tahmini kaç kilometre kaldı? <span class="optional-label">İsteğe bağlı</span></label><input id="onboardRemaining" type="number" min="0" max="200000" step="0.01" inputmode="decimal" placeholder="Örn. 1500" aria-describedby="onboardRemainingHint"><p class="field-hint" id="onboardRemainingHint">Boş bırakırsanız sayaç bakım periyodundan başlar. Örneğin periyot 2.000 km, kalan mesafe 1.500 km ise sayaç 1.500 km'den ilerler. 0 girerseniz bakım zamanı gelmiş kabul edilir.</p></div>
       <p class="onboarding-note">Güncel kilometre aracınızın göstergesidir; bakım sayacını değiştirmez. İlk bakım hedefiniz “Genel bakım” adıyla oluşturulur.</p>
       <button class="btn btn-primary onboarding-next" type="submit">Aracı kaydet ve devam et</button>
+      <button type="button" class="btn btn-ghost" id="onboardSkip" style="width:100%;margin-top:.5rem;">Daha sonra kurarım →</button>
     </form>
   </section>
   <section id="onboardBonusStep" hidden>
@@ -3443,6 +3563,13 @@ input:focus,select:focus,textarea:focus{transition:border-color .15s ease,box-sh
   <span class="ub-progress" id="undoBarProgress"></span>
 </div>
 
+<!-- Vardiya canlı mini bar: vardiya sürerken ekranın altında ince şerit -->
+<div class="vardiya-minibar" id="vardiyaMiniBar" role="button" tabindex="0" aria-label="Vardiya devam ediyor">
+  <span class="vmb-ico">🔴</span>
+  <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Vardiya <b id="vmbTime">00:00</b> · <b id="vmbKm">0</b> km · <b id="vmbPkg">0</b> paket</span>
+  <span class="vmb-go">Gör →</span>
+</div>
+
 <!-- === JAVASCRIPT === -->
 <script>
 (function cleanupStrayScriptText(){
@@ -3485,7 +3612,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "6.5.1";
+const CURRENT_APP_VERSION = "6.5.4";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -3577,6 +3704,7 @@ async function openPlayStore(){
 
 let _forceGateActive = false;
 let _installedNativeVersion = '';   // admin panelinde kendini kilitleme uyarısı için
+let _annStoreLatest = '';           // duyuru hedefleme ("eski sürüm") için mağaza sürümü
 function showForceUpdateGate(storeData, installedVersion){
   const gate = document.getElementById('forceUpdateGate');
   if(!gate) return;
@@ -3630,6 +3758,8 @@ async function checkForcedUpdate(){
     storeData = snap.val();
   }catch(e){ return false; }
   if(!storeData || !storeData.minVersion) return false;
+
+  _annStoreLatest = storeData.latestVersion || storeData.minVersion || '';
 
   const installed = await getNativeAppVersion();
   _installedNativeVersion = installed || '';
@@ -4388,6 +4518,38 @@ let dateBonusMap = {};
 
 function toast(msg,ok){const el=document.getElementById('toast');if(!el)return;el.textContent=msg;el.className='toast show'+(ok?' ok':'');setTimeout(()=>el.classList.remove('show'),3000)}
 
+/* POPUP KAYDIRMA KİLİDİ
+   Bir modal/sheet açıkken arka planın (uygulamanın kendisinin) kaydırılmasını
+   engeller. Modal içinde kaydırma kendi scroll'unda kalır; body kilitlenir. */
+(function(){
+  var locked = false;
+  function refresh(){
+    var any = document.querySelector('.overlay.show, .sheet-overlay.show, dialog[open]');
+    var should = !!any;
+    if(should === locked) return;
+    locked = should;
+    if(typeof document.body !== 'undefined' && document.body) document.body.classList.toggle('no-scroll', should);
+  }
+  function relevant(t){
+    if(!t || !t.classList) return false;
+    return t.classList.contains('overlay') || t.classList.contains('sheet-overlay')
+        || t.tagName === 'DIALOG' || t.id === 'onboardingDialog';
+  }
+  if(typeof MutationObserver !== 'undefined'){
+    new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        var t = muts[i].target;
+        if(relevant(t)){ refresh(); return; }
+        // childList: altına overlay eklenmiş olabilir (örn. undo bar)
+        if(muts[i].addedNodes && muts[i].addedNodes.length) refresh();
+      }
+    }).observe(document.body, {subtree:true, childList:true, attributes:true, attributeFilter:['class','open']});
+  }
+  // İlk durum + geri düşüş
+  if(document.addEventListener){ document.addEventListener('DOMContentLoaded', refresh); }
+  refresh();
+})();
+
 function showConfirm(message, onConfirm, opts={}){
   const overlay = document.getElementById('confirmOverlay');
   const iconWrap = document.getElementById('confirmIconWrap');
@@ -5024,7 +5186,7 @@ window.addEventListener('online', () => { updateOfflineBadge(); flushOfflineQueu
 window.addEventListener('offline', () => { updateOfflineBadge(); toast('Çevrimdışısınız. Değişiklikleriniz yerelde birikiyor.', false); });
 updateOfflineBadge();
 // Giriş sonrası ve geçici push hatalarında kuyruğun eridiğinden emin ol.
-setInterval(() => { updateOfflineBadge(); if((offlinePendingCount() > 0 || _syncStorageError) && currentUser) flushOfflineQueue(); }, 30000);
+setInterval(() => { updateOfflineBadge(); if((offlinePendingCount() > 0 || _syncStorageError) && currentUser) flushOfflineQueue(); }, 120000);
 
 // --- KALICI KAYIT KİMLİKLERİ ---
 // Kayıtlar tarihe göre sürekli yeniden sıralandığı için dizi indeksi güvenilir
@@ -6133,8 +6295,53 @@ function initAdminBadgeEditor(){
   if(resetBtn) resetBtn.onclick = reset;
 }
 function renderAdminBadgesPane(){
+  renderAdminBadgeStats();
   renderAdminBadgesList();
   initAdminBadgeEditor();
+}
+
+/* Rozet analitiği (P2): her eşik rozetinin tüm kullanıcılar arasında kaç kez
+   kazanıldığını toplu/anonim olarak sayar. Özel (custom) rozetler kişi bazlı
+   saat analizi gerektirdiği için topluya katılmaz. */
+function admUserMetrics(recsArr){
+  let km=0, pkg=0, net=0, hours=0, fuelLitre=0;
+  (recsArr||[]).forEach(r => {
+    km += (+r.km||0); pkg += (+r.teslimat||0);
+    net += ((+r.gelir||0) - (+r.yakit||0) - (+r.diger||0));
+    hours += (+r.saat||0); fuelLitre += (+r.yakitLitre||0);
+  });
+  const streak = longestStreak(recsArr || []);
+  return { km, pkg, net, hours, fuelLitre, streak, records: (recsArr||[]).length };
+}
+function admBadgeStats(){
+  const defs = getEffectiveBadges().filter(b => !b.custom);
+  const counts = {};
+  const uids = Object.keys(adminDataState || {});
+  uids.forEach(uid => {
+    let recs = adminDataState[uid] && adminDataState[uid].kayitlar;
+    if (recs && !Array.isArray(recs)) recs = Object.values(recs);
+    const m = admUserMetrics(recs || []);
+    defs.forEach(b => { if (badgeUnlocked(b, m)) counts[b.id] = (counts[b.id] || 0) + 1; });
+  });
+  return { counts: counts, users: uids.length, defs: defs };
+}
+function renderAdminBadgeStats(){
+  const box = document.getElementById('adminBadgeStats');
+  if (!box) return;
+  const s = admBadgeStats();
+  if (!s.users) { box.innerHTML = '<div class="adm-hint">Henüz rozet verisi yok.</div>'; return; }
+  const earned = s.defs.filter(b => (s.counts[b.id] || 0) > 0)
+    .sort((a, b) => (s.counts[b.id] || 0) - (s.counts[a.id] || 0));
+  const never = s.defs.filter(b => !((s.counts[b.id] || 0) > 0))
+    .sort((a, b) => ((a.threshold || 0) - (b.threshold || 0)));
+  const row = b => `<div class="adm-dist-row"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.icon || ''} ${escapeHtml(b.title)}</span>` +
+    `<span class="adm-dist-bar"><span style="width:${Math.min(100, Math.round((s.counts[b.id] || 0) / s.users * 100))}%"></span></span>` +
+    `<b style="font-family:var(--mono);color:var(--text)">${s.counts[b.id] || 0}</b></div>`;
+  box.innerHTML =
+    '<div class="adm-sec">En çok kazanılan rozetler</div>'
+    + (earned.length ? earned.slice(0, 5).map(row).join('') : '<div class="adm-hint">Henüz rozet kazanılmamış.</div>')
+    + '<div class="adm-sec">Hiç kazanılmayan rozetler (en kolaydan)</div>'
+    + (never.length ? never.slice(0, 5).map(b => `<div class="adm-dist-row"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.icon || ''} ${escapeHtml(b.title)}</span><span class="adm-hint">eşik ${b.threshold != null ? Number(b.threshold).toLocaleString('tr-TR') : '—'}</span></div>`).join('') : '<div class="adm-hint">Tüm rozetler en az bir kullanıcıda var.</div>');
 }
 
 function renderProjections() {
@@ -6397,6 +6604,86 @@ function refreshSmartAlertsHeader(){
   const start = document.getElementById('gpsStatusStart');
   if(start) start.addEventListener('click', () => { const b = document.getElementById('btnGpsToggle'); if(b) b.click(); });
 })();
+
+/* FAZ 15: "BUGÜN NE YAPMALIYIM?" — aksiyona dönüşebilen görev listesi. */
+function shiftEndReminderPending(){
+  try{
+    const state = JSON.parse(localStorage.getItem(EVENT_NOTIF_KEY) || '{}');
+    return !!state['gps_end_' + todayISO()];
+  }catch(e){ return false; }
+}
+function todayTaskItems(){
+  const items = [];
+  const today = records.filter(r => r.tarih === todayISO());
+  const t = totalsOf(today);
+  // 0) Vardiya bitmiş ama bugünün kaydı tamamlanmamış → bildirimden gelen iş.
+  if(shiftEndReminderPending() && (t.km <= 0 && t.tes <= 0 && t.gelir <= 0)){
+    items.push({ico:'🏁', title:'Vardiya bitti, kaydı tamamla', sub:'Bugünün kaydını oluştur', act:'record'});
+  }
+  if(!today.length){
+    items.push({ico:'📝', title:'Bugün henüz kayıt yok', sub:'Hızlı kayıt ekle', act:'record'});
+  } else if(!today.some(r => (r.yakit||0) > 0 || (r.yakitLitre||0) > 0)){
+    items.push({ico:'⛽', title:'Yakıt girilmemiş', sub:'Bugünün kaydına yakıt ekle', act:'daily'});
+  }
+  try{
+    const av = activeVehicle();
+    if(av && av.bakimlar && av.bakimlar.length){
+      let nearest = null, nearestRem = Infinity;
+      av.bakimlar.forEach(b => {
+        const rem = maintenanceState(b, getVehicleTotalKm(av.id)).remaining;
+        if(rem < nearestRem){ nearestRem = rem; nearest = b; }
+      });
+      if(nearest && nearestRem <= 200){
+        items.push({ico:'🔧', title:'Bakım yaklaşıyor', sub:(nearest.ad||'Bakım') + ' · ~' + fmtInt(nearestRem) + ' km kaldı', act:'garage'});
+      }
+    }
+  }catch(e){}
+  try{
+    const key = currentWeekKey();
+    const goalRaw = (garageData.goals && garageData.goals.weekly && garageData.goals.weekly[key]) || (typeof lastStoredGoal==='function'?lastStoredGoal('weekly'):null) || {};
+    const goal = { money:+goalRaw.money||0, packages:+goalRaw.packages||0, hours:+goalRaw.hours||0 };
+    const tot = totalsOf(recsForCurrentWeek());
+    const cur = { money: tot.net, packages: tot.tes, hours: tot.hours };
+    let bestPct = 0;
+    ['money','packages','hours'].forEach(k => { if(goal[k] > 0) bestPct = Math.max(bestPct, cur[k] / goal[k]); });
+    if(bestPct >= 0.78 && bestPct < 1){
+      items.push({ico:'🎯', title:'Hedefin %' + Math.round(bestPct*100) + '’indesin', sub:'Devam et, az kaldı', act:'dashboard'});
+    }
+  }catch(e){}
+  if(!vardiya.active){
+    items.push({ico:'🟢', title:'Vardiya başlat', sub:'GPS takibi de senkron açılır', act:'vardiya'});
+  }
+  return items.slice(0, 4);
+}
+function runTodayTask(act){
+  if(act === 'record'){ openDashboardRecord(); return; }
+  if(act === 'daily'){ switchToPage('daily'); return; }
+  if(act === 'garage'){ switchToPage('garage'); return; }
+  if(act === 'vardiya'){ toggleVardiya(); return; }
+  switchToPage('dashboard');
+}
+function renderTodayTasks(){
+  const wrap = document.getElementById('todayTasksWrap');
+  const box = document.getElementById('todayTasks');
+  if(!box) return;
+  const items = todayTaskItems();
+  if(wrap) wrap.style.display = items.length ? '' : 'none';
+  if(!items.length){ box.innerHTML = ''; return; }
+  box.innerHTML = items.map(function(it){
+    return '<button type="button" class="tt-item" data-act="' + it.act + '">'
+      + '<span class="tt-ico">' + it.ico + '</span>'
+      + '<span class="tt-body"><span class="tt-title">' + escapeHtml(it.title) + '</span><span class="tt-sub">' + escapeHtml(it.sub) + '</span></span>'
+      + '<span class="tt-go">Gör →</span></button>';
+  }).join('');
+  if(!box.dataset.bound){
+    box.dataset.bound = '1';
+    box.addEventListener('click', function(e){
+      const b = e.target && e.target.closest ? e.target.closest('.tt-item') : null;
+      if(b) runTodayTask(b.dataset.act);
+    });
+  }
+}
+
 function renderDash(){
   const t=totals(),b=bestOf();
   const tW=totalsOf(recsForCurrentWeek());
@@ -6408,6 +6695,7 @@ function renderDash(){
   try{ renderTodayHero(); }catch(e){}
   try{ renderSetupProgress(); }catch(e){}   // -> kurulum ilerleme kartı
   try{ renderVardiya(); }catch(e){}         // -> canlı vardiya kartı
+  try{ renderTodayTasks(); }catch(e){}      // -> "bugün ne yapmalıyım?" kartı
   try{ renderWeekPerf(); }catch(e){}
   try{ renderMonthForecast(); }catch(e){}
   try{ renderSmartBonus(); }catch(e){}
@@ -6661,10 +6949,14 @@ function renderDaily(){
   if(dh) dh.textContent = 'Bugün · ' + (typeof formatLongDateTR==='function' ? formatLongDateTR(todayISO()) : todayISO());
   // Filtre paneli: araç seçeneklerini her renderda tazele (araç ekle/sil değişebilir).
   refreshFilterVehicleOptions();
+  // Dönem chip'lerinin aktif durumu
+  document.querySelectorAll('.dc-chip').forEach(function(c){ c.classList.toggle('active', c.getAttribute('data-dc') === _dcPeriod); });
   let list=records.map((r,i)=>({...r,_i:i})).filter(r=>{
     if(month&&!r.tarih.startsWith(month))return false;
     if(q&&!r.tarih.includes(q)&&!(r.aciklama||'').toLowerCase().includes(q))return false;
     if(_filterVehicle && (r.arac||fallbackVehicleId())!==_filterVehicle)return false;
+    if(_dcPeriod==='today' && r.tarih!==todayISO())return false;
+    if(_dcPeriod==='week' && typeof weekOf==='function' && weekOf(r.tarih)!==weekOf(todayISO()))return false;
     return true;
   }).sort((a,b)=>{
     switch(_filterSort||'date-desc'){
@@ -6764,6 +7056,10 @@ function renderDailyCardsView(list){
     const isToday = r.tarih === todayISO();
     const dayCls = c.net < 0 ? ' neg-day' : ' pos-day';
     return `<div class="daily-card${dayCls}${isToday?' is-today':''}" data-id="${escapeHtml(r.id||'')}">
+      <div class="dc-swipe" aria-hidden="true">
+        <button type="button" class="btn btn-ghost btn-sm daily-card-edit" data-id="${escapeHtml(r.id||'')}">✎ Düzenle</button>
+        <button type="button" class="btn btn-danger btn-sm daily-card-del" data-id="${escapeHtml(r.id||'')}">✕ Sil</button>
+      </div>
       <div class="daily-card-top">
         <div class="daily-card-date">${r.tarih}<span class="daily-card-day">${dayName(r.tarih)}</span>${isToday?'<span class="today-badge">BUGÜN</span>':''}</div>
         <div class="daily-card-net ${c.net<0?'neg':'pos'}">${fmt(c.net)} ₺</div>
@@ -6817,10 +7113,45 @@ function renderDailyCardsView(list){
         }, {title:'Kaydı Sil', icon:'🗑️'});
       }
     });
+    // Kaydırarak düzenle/sil (mobil): sola kaydır → aksiyon paneli açılır.
+    let swipeCard = null, swipeStartX = null, swipeStartY = null;
+    container.addEventListener('touchstart', function(e){
+      const card = e.target && e.target.closest ? e.target.closest('.daily-card') : null;
+      const t = e.touches && e.touches[0];
+      if(!card || !t) return;
+      swipeCard = card; swipeStartX = t.clientX; swipeStartY = t.clientY;
+    }, {passive:true});
+    container.addEventListener('touchend', function(){
+      if(!swipeCard) return;
+      swipeCard = null; swipeStartX = null; swipeStartY = null;
+    }, {passive:true});
+    container.addEventListener('touchmove', function(e){
+      if(!swipeCard || swipeStartX == null || swipeStartY == null) return;
+      const t = e.touches && e.touches[0];
+      if(!t) return;
+      const dx = t.clientX - swipeStartX, dy = t.clientY - swipeStartY;
+      if(Math.abs(dy) > Math.abs(dx)) return;           // dikey kaydırma → karışma
+      const card = swipeCard;
+      if(dx < -45){
+        container.querySelectorAll('.daily-card.swiped').forEach(c => { if(c !== card) c.classList.remove('swiped'); });
+        card.classList.add('swiped');
+      } else if(dx > 45){
+        card.classList.remove('swiped');
+      }
+    }, {passive:true});
   }
 }
 
-document.getElementById('searchQ').addEventListener('input',renderDaily);
+// Arama: her tuşta tüm tabloyu yeniden çizme; 250 ms debounce ile.
+(function(){
+  const sq = document.getElementById('searchQ');
+  if(!sq) return;
+  let t = null;
+  sq.addEventListener('input', function(){
+    clearTimeout(t);
+    t = setTimeout(renderDaily, 250);
+  });
+})();
 document.getElementById('filterMonth').addEventListener('change',renderDaily);
 document.querySelectorAll('.q-tag').forEach(btn=>{ btn.addEventListener('click', e => { const inp = document.getElementById('fNote'); inp.value = inp.value ? inp.value + ' · ' + btn.dataset.tag : btn.dataset.tag; }); });
 
@@ -8976,12 +9307,20 @@ if(btnSendFeedbackEl){
    ====================================================================== */
 const FBX_DURUM = {
   yeni:         { ad: 'Yeni',            sinif: 't-wait' },
-  okundu:       { ad: 'Okundu',          sinif: '' },
+  okundu:       { ad: 'İnceleniyor',     sinif: '' },
   planlandi:    { ad: 'Planlandı',       sinif: '' },
-  gelistirildi: { ad: 'Yayına hazır',    sinif: 't-ok' },
+  gelistirildi: { ad: 'Yapıldı',         sinif: 't-ok' },
   cozuldu:      { ad: 'Çözüldü',         sinif: 't-ok' },
-  reddedildi:   { ad: 'Şimdilik yok',    sinif: 't-no' }
+  reddedildi:   { ad: 'Reddedildi',      sinif: 't-no' }
 };
+/* Öneri → bilet önceliği. Yalnızca yönetici belirler; varsayılan 'normal'. */
+const FBX_ONCELIK = {
+  kritik:  { ad: 'Kritik',  sinif: 'adm-prio kritik' },
+  yuksek:  { ad: 'Yüksek',  sinif: 'adm-prio yuksek' },
+  normal:  { ad: 'Normal',  sinif: 'adm-prio normal' },
+  dusuk:   { ad: 'Düşük',   sinif: 'adm-prio dusuk' }
+};
+const FBX_ONCELIK_SIRA = { kritik: 0, yuksek: 1, normal: 2, dusuk: 3 };
 let oneriState = {};
 let _oneriRef = null;
 
@@ -9126,6 +9465,35 @@ function subscribeAnnouncements(uid){
   }, () => { /* okunamazsa sessiz kal */ });
 }
 
+/* Duyuru hedefleme: yönetici tip/hedef/gösterim seçer; bu fonksiyonlar
+   kullanıcının duyuruyu görüp görmeyeceğine karar verir. */
+function annUserRecordCount(){
+  try { return Array.isArray(records) ? records.length : null; } catch(e){ return null; }
+}
+function annTargetMatch(a){
+  const t = a.target || 'all';
+  if(t === 'all') return true;
+  if(t === 'selected'){
+    const raw = typeof a.targetUids === 'string' ? a.targetUids : '';
+    const list = raw.split(',').map(s => s.trim()).filter(Boolean);
+    return !!(currentUser && list.indexOf(currentUser.uid) >= 0);
+  }
+  if(t === 'newusers'){
+    // "Yeni kullanıcı": hiç kaydı olmayan veya 3'ten az kaydı olanlar
+    const n = annUserRecordCount();
+    return n === null || n < 3;
+  }
+  if(t === 'oldver'){
+    // Eski sürüm: native sürümü bilinen en son sürümden eski olanlar.
+    // Belirsiz durumda gizleme yapmıyoruz (bilgi kaybı olmasın).
+    const v = _installedNativeVersion || '';
+    if(!v) return true;
+    if(!_annStoreLatest){ return true; }
+    try { return cmpVersions(v, _annStoreLatest) < 0; } catch(e){ return true; }
+  }
+  return true;
+}
+
 function renderAnnouncementBanner(){
   const box = document.getElementById('announcementBanner');
   const title = document.getElementById('announcementTitle');
@@ -9140,12 +9508,15 @@ function renderAnnouncementBanner(){
     const a = _announcementsData[key];
     if(!a || !a.title) return;
     if(a.expiresAt && Date.parse(a.expiresAt + 'T23:59:59') < now) return;
-    if(seen[key]) return;
+    const display = a.display || 'once';
+    if(display !== 'always' && seen[key]) return;
+    if(!annTargetMatch(a)) return;
     if(!active || (a.createdAt || 0) > (active.createdAt || 0)){ active = a; activeKey = key; }
   });
   if(!active){ box.hidden = true; box.dataset.key = ''; return; }
   box.className = 'announcement-banner ann-' + (active.type || 'info');
-  icon.textContent = active.type === 'warning' ? '⚠️' : active.type === 'success' ? '✅' : '📢';
+  const ICONS = { critical: '🚨', warning: '⚠️', feature: '✨', success: '✅', info: '📢' };
+  icon.textContent = ICONS[active.type] || '📢';
   title.textContent = active.title;
   text.textContent = active.body || '';
   box.dataset.key = activeKey;
@@ -9157,10 +9528,16 @@ function dismissAnnouncement(){
   if(!box) return;
   const key = box.dataset.key;
   if(key){
-    let seen = {};
-    try{ seen = JSON.parse(localStorage.getItem(SEEN_ANN_KEY) || '{}'); }catch(e){}
-    seen[key] = Date.now();
-    try{ localStorage.setItem(SEEN_ANN_KEY, JSON.stringify(seen)); }catch(e){}
+    const a = (_announcementsData || {})[key] || {};
+    const display = a.display || 'once';
+    // "Her açılışta" duyuruları kalıcı işaretlenmez: bu oturumda kapanır,
+    // bir sonraki açılışta yeniden görünür.
+    if(display !== 'always'){
+      let seen = {};
+      try{ seen = JSON.parse(localStorage.getItem(SEEN_ANN_KEY) || '{}'); }catch(e){}
+      seen[key] = Date.now();
+      try{ localStorage.setItem(SEEN_ANN_KEY, JSON.stringify(seen)); }catch(e){}
+    }
   }
   box.hidden = true;
 }
@@ -9440,6 +9817,18 @@ function completeOnboarding(){
   switchToPage('dashboard');
   return true;
 }
+/* "Daha sonra": yeni kullanıcıyı sihirbaza kilitlemek yerine atlama imkânı.
+   step='skipped' kalıcıdır; shouldStartOnboarding zaten garage.onboarding varsa
+   false döndüğü için bir daha sorulmaz. */
+function skipOnboarding(){
+  if(!garageData || !garageData.onboarding) { resetOnboardingUI(); return; }
+  const next = _syncClone(garageData);
+  next.onboarding = { version: 1, step: 'skipped' };
+  _commitGarageUpdate(next);
+  resetOnboardingUI();
+  switchToPage('dashboard');
+  toast('Kurulumu daha sonra "Talimatlar" sayfasından tamamlayabilirsiniz.', true);
+}
 function initOnboarding(){
   const dialog = document.getElementById('onboardingDialog');
   if(!dialog) return;
@@ -9459,7 +9848,13 @@ function initOnboarding(){
   document.getElementById('onboardingFinish').addEventListener('click', () => run(completeOnboarding));
   document.getElementById('onboardingGuide').addEventListener('click', () => run(() => { if(completeOnboarding()) switchToPage('instructions'); }));
   document.getElementById('onboardingBack').addEventListener('click', () => run(onboardingBack));
-  dialog.addEventListener('cancel', event => { event.preventDefault(); run(onboardingBack); });
+  document.getElementById('onboardSkip').addEventListener('click', () => run(skipOnboarding));
+  dialog.addEventListener('cancel', event => {
+    event.preventDefault();
+    const st = garageData && garageData.onboarding;
+    if(st && st.step === 'vehicle') run(skipOnboarding);   // Escape: kilitli kalma
+    else run(onboardingBack);
+  });
 }
 initOnboarding();
 
@@ -10456,14 +10851,42 @@ function admInitials(email) {
   return (a + b).toUpperCase();
 }
 
+/* Kullanıcı "sağlık durumu": tek bakışta kim normal, kim eski sürümde,
+   kim sessiz, kim sorunlu. "Sorunlu" = eski sürüm + 14+ gündür sessiz. */
+function admLatestKnownVersion() {
+  let best = '';
+  admUi.all.forEach(u => {
+    const v = String(u.nativeVersion || '').trim();
+    if(!/^[0-9]+(\.[0-9]+){1,2}$/.test(v)) return;
+    try { if(!best || cmpVersions(v, best) > 0) best = v; } catch (e) {}
+  });
+  return best;
+}
+function admUserHealth(u, latest) {
+  const gun = 86400000, now = Date.now();
+  const silent = !u.lastLogin || (now - u.lastLogin) > 14 * gun;
+  const hasRec = (u.recCount || 0) > 0;
+  const ver = String(u.nativeVersion || '').trim();
+  const lv = latest || admLatestKnownVersion();
+  const old = !!(lv && ver && cmpVersions(ver, lv) < 0);
+  if (silent && old) return { key:'problem', label:'Sorunlu' };
+  if (old) return { key:'old', label:'Eski sürüm' };
+  if (!hasRec) return { key:'empty', label:'Kayıtsız' };
+  if (silent) return { key:'silent', label:'Sessiz' };
+  return { key:'ok', label:'Normal' };
+}
+
 function admFilteredUsers() {
   let list = admUi.all.slice();
   const q = admUi.q.trim().toLowerCase();
   if (q) list = list.filter(u => String(u.email || '').toLowerCase().includes(q) || String(u.uid || '').toLowerCase().includes(q));
   const gun = 86400000, now = Date.now();
+  const latest = admLatestKnownVersion();
   if (admUi.f === 'active') list = list.filter(u => u.lastLogin && (now - u.lastLogin) <= 7 * gun);
   else if (admUi.f === 'silent') list = list.filter(u => !u.lastLogin || (now - u.lastLogin) >= 14 * gun);
   else if (admUi.f === 'empty') list = list.filter(u => !(u.recCount > 0));
+  else if (admUi.f === 'oldver') list = list.filter(u => { const h = admUserHealth(u, latest); return h.key === 'old' || h.key === 'problem'; });
+  else if (admUi.f === 'problem') list = list.filter(u => admUserHealth(u, latest).key === 'problem');
   if (admUi.sort === 'recs') list.sort((a, b) => (b.recCount || 0) - (a.recCount || 0));
   else if (admUi.sort === 'email') list.sort((a, b) => String(a.email || '').localeCompare(String(b.email || ''), 'tr'));
   else list.sort((a, b) => (b.lastLogin || 0) - (a.lastLogin || 0));
@@ -10521,17 +10944,21 @@ function renderAdminUsers() {
     }
 
     const gun = 86400000, now = Date.now();
+    const latest = admLatestKnownVersion();
     tb.innerHTML = list.map(u => {
       const sessiz = !u.lastLogin || (now - u.lastLogin) > 14 * gun;
       const aktif = u.lastLogin && (now - u.lastLogin) <= 7 * gun;
       const noteTxt = u.adminNote && u.adminNote.text ? String(u.adminNote.text) : '';
       const surum = u.nativeVersion ? 'v' + u.nativeVersion : 'sürüm raporlanmadı';
+      const saglik = admUserHealth(u, latest);
+      const avCls = saglik.key === 'problem' ? ' b-red' : (saglik.key === 'old' ? ' b-amber' : (aktif ? ' b-green' : (sessiz ? ' b-amber' : '')));
       return `
         <div class="adm-row" data-uid="${escapeHtml(u.uid)}">
-          <span class="adm-avatar${aktif ? ' b-green' : (sessiz ? ' b-amber' : '')}" aria-hidden="true">${escapeHtml(admInitials(u.email))}</span>
+          <span class="adm-avatar${avCls}" aria-hidden="true">${escapeHtml(admInitials(u.email))}</span>
           <div class="adm-who">
             <b>${escapeHtml(u.email || '—')}</b>
             <span>${escapeHtml(u.uid.slice(0, 10))}… · ${escapeHtml(surum)}${u.webVersion ? ' · web v' + escapeHtml(u.webVersion) : ''}</span>
+            <span class="adm-health ${escapeHtml(saglik.key)}">${escapeHtml(saglik.label)}</span>
             ${noteTxt ? '<div class="adm-note">🏷 ' + escapeHtml(noteTxt) + '</div>' : ''}
           </div>
           <div class="adm-meta">
@@ -10588,7 +11015,7 @@ function renderAdminKpis() {
   set('admKpiRecsSub', users.length && kayit ? 'kişi başı ' + (kayit / users.length).toFixed(1) + ' gün' : 'henüz kayıt yok');
   const fs = admFeedSayilar();
   set('admKpiFeed', fs.toplam);
-  set('admKpiFeedSub', fs.toplam ? fs.acik + ' açık · ' + fs.okunmamis + ' bildirim okunmadı' : 'kutu boş');
+  set('admKpiFeedSub', fs.toplam ? fs.acik + ' açık' + (fs.kritik + fs.yuksek ? ' · ' + (fs.kritik + fs.yuksek) + ' yüksek öncelik' : '') + ' · ' + fs.okunmamis + ' bildirim okunmadı' : 'kutu boş');
   setAdmBadge('admBadgeUsers', users.length);
   setAdmBadge('admBadgeFeed', fs.acik);
 }
@@ -10621,6 +11048,24 @@ function admBarsHtml(gunler, field) {
   }).join('') + '</div>';
 }
 
+/* 30 günlük trend çizgisi (P3): veri noktalarını tek SVG'de birleştirir. */
+function admSparkline(gunler, field) {
+  const vals = gunler.map(d => d[field] || 0);
+  const max = Math.max.apply(null, [1].concat(vals));
+  const W = 320, H = 48, P = 3;
+  const n = vals.length || 1;
+  const pts = vals.map((v, i) => {
+    const x = n === 1 ? W / 2 : P + (i * (W - 2 * P) / (n - 1));
+    const y = H - P - (v / max) * (H - 2 * P);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  });
+  const area = P + ',' + (H - P) + ' ' + pts.join(' ') + ' ' + (W - P) + ',' + (H - P);
+  return '<svg class="adm-spark" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">'
+    + '<polygon points="' + area + '" fill="var(--accent-dim)"/>'
+    + '<polyline points="' + pts.join(' ') + '" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>'
+    + '</svg>';
+}
+
 function renderAdminDashIfActive() {
   const pane = document.getElementById('adm-dash');
   if (pane && pane.classList.contains('active')) { try { renderAdminDash(); } catch (e) { console.log('dash:', e); } }
@@ -10630,16 +11075,24 @@ function renderAdminDash() {
   const box = document.getElementById('admDashBody');
   if (!box) return;
 
+  const gun = 86400000, now = Date.now();
+  const users = admUi.all;
+  const aktif7 = users.filter(u => u.lastLogin && (now - u.lastLogin) <= 7 * gun).length;
+  const feedOpen = (admUi.feed || []).filter(f => !f.durum || f.durum === 'yeni').length;
+
   const tum = [];
   Object.keys(adminDataState).forEach(uid => {
     let recs = adminDataState[uid] && adminDataState[uid].kayitlar;
     if (recs && !Array.isArray(recs)) recs = Object.values(recs);
     if (Array.isArray(recs)) tum.push.apply(tum, recs);
   });
-  const gunler = admLast14(tum);
-  const toplamKm = gunler.reduce((a, d) => a + d.km, 0);
-  const toplamGelir = gunler.reduce((a, d) => a + d.gelir, 0);
-  const toplamKayit = gunler.reduce((a, d) => a + d.n, 0);
+  const gunler30 = admLastDays(tum, 30);
+  const attn = admAttentionItems();
+  const hasRed = attn.some(a => a.sev === 'red');
+  const hasAmber = attn.some(a => a.sev === 'amber');
+  const t = admTodayStats();
+  const ret = admRetentionStats();
+  const feats = admFeatureUsage();
 
   const dist = {};
   admUi.all.forEach(u => { const v = u.nativeVersion || 'raporlanmadı'; dist[v] = (dist[v] || 0) + 1; });
@@ -10649,9 +11102,54 @@ function renderAdminDash() {
   const enCok = admUi.all.slice().sort((a, b) => (b.recCount || 0) - (a.recCount || 0)).slice(0, 5);
 
   box.innerHTML = `
-    <div class="adm-sec">Son 14 gün · tüm kullanıcılar</div>
-    ${admBarsHtml(gunler, 'km')}
-    <div class="adm-hint">${fmtInt(toplamKm)} km · ${fmtInt(toplamGelir)} ₺ gelir · ${toplamKayit} günlük kayıt (14 günde). Çubuğa basılı tutun: günün detayı.</div>
+    <div class="adm-status ${hasRed ? 'crit' : (hasAmber ? 'warn' : '')}">
+      <span class="as-ico">${hasRed ? '🔴' : (hasAmber ? '🟠' : '🟢')}</span>
+      <div class="as-body">
+        <div class="as-t">${hasRed ? 'Dikkat gerektiren durumlar var' : (hasAmber ? 'Sistem izlenmeli' : 'Sistem normal')}</div>
+        <div class="as-s">${users.length} kullanıcı · ${aktif7} aktif (7g) · ${feedOpen} bekleyen öneri${ret.active30 ? ' · 30 günde aktif: ' + ret.active30 : ''}</div>
+      </div>
+    </div>
+
+    <div class="adm-sec">Bugün</div>
+    <div class="adm-today">
+      <div class="at"><b>${t.aktif}</b><span>aktif kullanıcı</span></div>
+      <div class="at"><b>${t.kayit}</b><span>kayıt</span></div>
+      <div class="at"><b>${fmtInt(t.gelir)} ₺</b><span>toplam gelir</span></div>
+      <div class="at"><b>${fmtInt(t.km)}</b><span>km</span></div>
+      <div class="at"><b>${t.yeniOneri}</b><span>yeni öneri</span></div>
+    </div>
+
+    <div class="adm-sec">Dikkat</div>
+    ${attn.length
+      ? '<div class="adm-attn">' + attn.map(a => `
+        <button type="button" class="adm-attn-item" data-tab="${a.tab}" data-filter="${a.filter || ''}">
+          <span class="ai-dot ${a.sev}"></span>
+          <span class="ai-t">${a.text}<span class="ai-s">${a.sub}</span></span>
+          <span class="ai-go">${a.go} →</span>
+        </button>`).join('') + '</div>'
+      : '<div class="adm-hint" style="margin-bottom:.7rem">✅ Dikkat gerektiren bir durum yok.</div>'}
+
+    <div class="adm-sec">Son 30 gün aktivite · tüm kullanıcılar</div>
+    ${admSparkline(gunler30, 'n')}
+    ${admBarsHtml(gunler30, 'n')}
+    <div class="adm-hint">${fmtInt(gunler30.reduce((a, d) => a + d.n, 0))} kayıt · ${fmtInt(gunler30.reduce((a, d) => a + d.km, 0))} km (30 gün). Çubuğa basılı tutun: günün detayı.</div>
+
+    <div class="adm-sec">Kullanıcı bağlılığı (retention)</div>
+    <table class="adm-tbl"><tbody>
+      <tr><td>Son 7 günde aktif</td><td class="num">${ret.active7}</td></tr>
+      <tr><td>Son 30 günde aktif</td><td class="num">${ret.active30}</td></tr>
+      <tr><td>Hiç kayıt girmemiş</td><td class="num">${ret.noRec}</td></tr>
+      <tr><td>Son 30 günde kayıt giren</td><td class="num">${ret.rec30}</td></tr>
+      <tr><td>Bağlılık oranı (kayıt / aktif 30g)</td><td class="num">%${ret.baglilik}</td></tr>
+    </tbody></table>
+
+    <div class="adm-sec">Özellik kullanımı (veri tabanlı tahmin)</div>
+    ${feats.length ? '<div class="adm-dist">' + feats.map(f => `
+      <div class="adm-dist-row"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(f.ad)}</span>
+        <span class="adm-dist-bar"><span style="width:${f.pct}%"></span></span>
+        <b style="font-family:var(--mono);color:var(--text)">%${f.pct}</b></div>`).join('') + '</div>'
+      : '<div class="adm-hint">Veri yok.</div>'}
+    <div class="adm-hint">GPS ve PDF gibi olaylar kaydedilmediği için yalnızca veri tabanından kesin ölçülebilen özellikler gösterilir.</div>
 
     <div class="adm-sec">Sürüm dağılımı — zorunlu güncelleme kapısını buna göre ayarlayın</div>
     <div class="adm-dist">
@@ -10669,23 +11167,165 @@ function renderAdminDash() {
     ${enCok.length ? `<table class="adm-tbl"><thead><tr><th>Kullanıcı</th><th style="text-align:right">Gün</th><th style="text-align:right">Son giriş</th></tr></thead><tbody>
       ${enCok.map(u => `<tr><td>${escapeHtml(u.email || u.uid)}</td><td class="num">${u.recCount || 0}</td><td class="num">${escapeHtml(admRelTime(u.lastLogin))}</td></tr>`).join('')}
     </tbody></table>` : '<div class="adm-empty">Kayıt yok.</div>'}
+
+    <div class="adm-sec">İşlem geçmişi (bu cihaz)</div>
+    <div class="adm-log" id="admLogBody"></div>
   `;
 
+  box.querySelectorAll('.adm-attn-item').forEach(b => {
+    b.addEventListener('click', () => admShowAdminTab(b.dataset.tab, b.dataset.filter || null));
+  });
+
+  renderAdminLog();
+
   const rel = document.getElementById('admDashRelease');
-  if (!rel) return;
-  Promise.all([
-    db.ref('appUpdate/latest').once('value').catch(() => null),
-    db.ref('appUpdate/store').once('value').catch(() => null)
-  ]).then(rs => {
-    const l = rs[0] && rs[0].val ? rs[0].val() : null;
-    const st = rs[1] && rs[1].val ? rs[1].val() : null;
-    rel.innerHTML = `<div class="adm-kv">
-      <div><small>OTA sürümü</small><b>${l && l.version ? 'v' + escapeHtml(l.version) : '—'}</b></div>
-      <div><small>Yayın tarihi</small><b>${l && l.publishedAt ? escapeHtml(String(l.publishedAt).slice(0, 10)) : '—'}</b></div>
-      <div><small>Minimum sürüm</small><b>${st && st.minVersion ? 'v' + escapeHtml(st.minVersion) : 'kapı yok'}</b></div>
-      <div><small>Mağazadaki</small><b>${st && st.latestVersion ? 'v' + escapeHtml(st.latestVersion) : '—'}</b></div>
-    </div>`;
-  }).catch(() => { rel.innerHTML = '<div class="adm-hint">okunamadı</div>'; });
+  if (rel) {
+    Promise.all([
+      db.ref('appUpdate/latest').once('value').catch(() => null),
+      db.ref('appUpdate/store').once('value').catch(() => null)
+    ]).then(rs => {
+      const l = rs[0] && rs[0].val ? rs[0].val() : null;
+      const st = rs[1] && rs[1].val ? rs[1].val() : null;
+      rel.innerHTML = `<div class="adm-kv">
+        <div><small>OTA sürümü</small><b>${l && l.version ? 'v' + escapeHtml(l.version) : '—'}</b></div>
+        <div><small>Yayın tarihi</small><b>${l && l.publishedAt ? escapeHtml(String(l.publishedAt).slice(0, 10)) : '—'}</b></div>
+        <div><small>Minimum sürüm</small><b>${st && st.minVersion ? 'v' + escapeHtml(st.minVersion) : 'kapı yok'}</b></div>
+        <div><small>Mağazadaki</small><b>${st && st.latestVersion ? 'v' + escapeHtml(st.latestVersion) : '—'}</b></div>
+      </div>`;
+    }).catch(() => { rel.innerHTML = '<div class="adm-hint">okunamadı</div>'; });
+  }
+}
+
+/* ---- ADMIN DASHBOARD YARDIMCILARI ---- */
+function admLastDays(recs, N) {
+  const gunler = [];
+  const byKey = {};
+  const now = new Date();
+  for (let i = N - 1; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86400000);
+    const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    gunler.push({ k: k, km: 0, gelir: 0, n: 0 });
+    byKey[k] = gunler[gunler.length - 1];
+  }
+  (recs || []).forEach(r => {
+    const d = byKey[String((r && r.tarih) || '')];
+    if (!d) return;
+    d.n++; d.km += (+(r.km) || 0) || 0; d.gelir += (+(r.gelir) || 0) || 0;
+  });
+  return gunler;
+}
+function admTodayStats() {
+  const today = todayISO();
+  const now = Date.now();
+  let kayit = 0, gelir = 0, km = 0;
+  Object.keys(adminDataState).forEach(uid => {
+    let recs = adminDataState[uid] && adminDataState[uid].kayitlar;
+    if (!recs) return;
+    if (!Array.isArray(recs)) recs = Object.values(recs);
+    (recs || []).forEach(r => {
+      if (String(r.tarih) === today) { kayit++; gelir += (+r.gelir || 0); km += (+r.km || 0); }
+    });
+  });
+  const aktif = admUi.all.filter(u => u.lastLogin && (now - u.lastLogin) <= 86400000 && new Date(u.lastLogin).toDateString() === new Date().toDateString()).length;
+  const yeniOneri = (admUi.feed || []).filter(f => (!f.durum || f.durum === 'yeni') && f.tarih && new Date(f.tarih).toDateString() === new Date().toDateString()).length;
+  return { aktif: aktif, kayit: kayit, gelir: gelir, km: km, yeniOneri: yeniOneri };
+}
+function admAttentionItems() {
+  const gun = 86400000, now = Date.now();
+  const latest = admLatestKnownVersion();
+  const items = [];
+  const oldUsers = admUi.all.filter(u => { const h = admUserHealth(u, latest); return h.key === 'old' || h.key === 'problem'; });
+  const silentUsers = admUi.all.filter(u => !u.lastLogin || (now - u.lastLogin) > 14 * gun);
+  const feedOpen = (admUi.feed || []).filter(f => !f.durum || f.durum === 'yeni');
+  const feedHigh = feedOpen.filter(f => f.oncelik === 'kritik' || f.oncelik === 'yuksek');
+  if (oldUsers.length) items.push({ sev: 'red', text: oldUsers.length + ' kullanıcı eski sürüm kullanıyor', sub: latest ? 'Bilinen son sürüm: v' + latest : 'Sürüm bildirimi bekleniyor', tab: 'users', filter: 'oldver', go: 'Kullanıcılar' });
+  if (feedHigh.length) items.push({ sev: 'red', text: feedHigh.length + ' yüksek öncelikli öneri bekliyor', sub: 'Kritik / yüksek öncelikli istekler', tab: 'feed', filter: '', go: 'Öneriler' });
+  else if (feedOpen.length) items.push({ sev: 'amber', text: feedOpen.length + ' yeni öneri bekliyor', sub: 'İstek / öneri kutusunda açık kayıtlar', tab: 'feed', filter: '', go: 'Öneriler' });
+  if (silentUsers.length) items.push({ sev: 'amber', text: silentUsers.length + ' kullanıcı 14+ gündür sessiz', sub: 'Son girişleri eski', tab: 'users', filter: 'silent', go: 'Kullanıcılar' });
+  return items;
+}
+function admRetentionStats() {
+  const gun = 86400000, now = Date.now();
+  const users = admUi.all;
+  const active7 = users.filter(u => u.lastLogin && (now - u.lastLogin) <= 7 * gun).length;
+  const active30 = users.filter(u => u.lastLogin && (now - u.lastLogin) <= 30 * gun).length;
+  const noRec = users.filter(u => !(u.recCount > 0)).length;
+  const cut = new Date(now - 30 * gun).toISOString().slice(0, 10);
+  let rec30 = 0;
+  Object.keys(adminDataState).forEach(uid => {
+    let recs = adminDataState[uid] && adminDataState[uid].kayitlar;
+    if (!recs) return;
+    if (!Array.isArray(recs)) recs = Object.values(recs);
+    if (Array.isArray(recs) && recs.some(r => String(r.tarih || '') >= cut)) rec30++;
+  });
+  const baglilik = active30 ? Math.round(rec30 / active30 * 100) : 0;
+  return { total: users.length, active7: active7, active30: active30, noRec: noRec, rec30: rec30, baglilik: baglilik };
+}
+function admFeatureUsage() {
+  const uids = Object.keys(adminDataState);
+  const n = uids.length || 1;
+  const has = { kayit: 0, garaj: 0, bonus: 0, hedef: 0 };
+  uids.forEach(uid => {
+    const d = adminDataState[uid] || {};
+    let recs = d.kayitlar;
+    if (recs && !Array.isArray(recs)) recs = Object.values(recs);
+    if (Array.isArray(recs) && recs.length) has.kayit++;
+    const g = d.garaj || {};
+    const araclar = g.vehicles ? (Array.isArray(g.vehicles) ? g.vehicles : Object.values(g.vehicles)) : [];
+    if ((araclar || []).some(v => v && (v.model || (v.bakimlar || []).length))) has.garaj++;
+    if (g.bonusMode) has.bonus++;
+    if (g.goals && (Object.keys(g.goals.weekly || {}).length || Object.keys(g.goals.monthly || {}).length)) has.hedef++;
+  });
+  return [
+    { ad: 'Günlük kayıt', pct: Math.round(has.kayit / n * 100) },
+    { ad: 'Garaj', pct: Math.round(has.garaj / n * 100) },
+    { ad: 'Bonus', pct: Math.round(has.bonus / n * 100) },
+    { ad: 'Hedef', pct: Math.round(has.hedef / n * 100) }
+  ];
+}
+/* İşlem geçmişi: bu cihazda yapılan yönetici işlemleri. */
+const ADM_LOG_KEY = 'kurye_admin_log_v1';
+function admLog(act, detail) {
+  try {
+    let arr = JSON.parse(localStorage.getItem(ADM_LOG_KEY) || '[]');
+    if (!Array.isArray(arr)) arr = [];
+    arr.unshift({ at: Date.now(), act: String(act || ''), detail: String(detail || '') });
+    localStorage.setItem(ADM_LOG_KEY, JSON.stringify(arr.slice(0, 100)));
+  } catch (e) {}
+}
+function renderAdminLog() {
+  const box = document.getElementById('admLogBody');
+  if (!box) return;
+  let arr = [];
+  try { arr = JSON.parse(localStorage.getItem(ADM_LOG_KEY) || '[]'); if (!Array.isArray(arr)) arr = []; } catch (e) {}
+  if (!arr.length) { box.innerHTML = '<div class="adm-hint">Henüz işlem kaydı yok.</div>'; return; }
+  box.innerHTML = arr.slice(0, 12).map(e => {
+    const d = new Date(e.at);
+    const p = x => String(x).padStart(2, '0');
+    return '<div class="al"><i>' + p(d.getDate()) + '.' + p(d.getMonth() + 1) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + '</i><span><b>' + escapeHtml(e.act) + '</b>' + (e.detail ? ' · ' + escapeHtml(e.detail) : '') + '</span></div>';
+  }).join('');
+}
+/* Dikkat öğesinden / kapı etkisinden sekme + filtreye geçiş. */
+function admShowAdminTab(key, filter) {
+  const nav = document.getElementById('admNav');
+  if (nav) {
+    nav.querySelectorAll('.adm-tab').forEach(b => {
+      const on = b.getAttribute('data-adm') === key;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+  }
+  document.querySelectorAll('.adm-pane').forEach(p => p.classList.toggle('active', p.id === 'adm-' + key));
+  if (filter != null) {
+    admUi.f = filter;
+    const chips = document.getElementById('admUserFilters');
+    if (chips) chips.querySelectorAll('.adm-chip').forEach(b => b.classList.toggle('active', b.getAttribute('data-uf') === filter));
+  }
+  if (key === 'users') { try { renderAdminUsers(); } catch (e) {} }
+  if (key === 'feed') { try { renderAdminInbox(); } catch (e) {} }
+  if (key === 'dash') { try { renderAdminDash(); } catch (e) {} }
+  if (key === 'store') { try { window.admPaintStoreImpact && window.admPaintStoreImpact(); } catch (e) {} }
+  try { window.scrollTo({ top: 0, behavior: 'instant' }); } catch (e) { try { window.scrollTo(0, 0); } catch (e2) {} }
 }
 
 /* ---- YÖNETİCİ NOTU (usersList/$uid/adminNote) ---- */
@@ -10696,6 +11336,7 @@ window.adminSaveUserNote = function (uid, text) {
   patch[uid + '/adminNote'] = v ? { text: v, at: Date.now(), by: ADMIN_EMAIL } : null;
   return db.ref('usersList').update(patch).then(() => {
     toast(v ? 'Not kaydedildi.' : 'Not silindi.', true);
+    admLog(v ? 'Kullanıcı notu eklendi' : 'Kullanıcı notu silindi', uid.slice(0, 8));
   }).catch(err => { toast('Not kaydedilemedi. ' + friendlyError(err), false); throw err; });
 };
 
@@ -10776,7 +11417,8 @@ function admBuildInbox() {
         ad: it.ad || '', metin: String(it.metin || it.message || ''), tarih: Number(it.tarih) || 0,
         durum: it.durum || 'yeni', durumAt: Number(it.durumAt) || 0, durumKim: it.durumKim || '',
         yanit: it.yanit || '', yanitAt: Number(it.yanitAt) || 0,
-        goruldu: !!it.goruldu, gorulduAt: Number(it.gorulduAt) || 0
+        goruldu: !!it.goruldu, gorulduAt: Number(it.gorulduAt) || 0,
+        oncelik: it.oncelik || 'normal'
       });
     });
   });
@@ -10786,7 +11428,8 @@ function admBuildInbox() {
       uid: f.uid || '', oid: fid, kaynak: 'eski',
       email: f.email || '', ad: f.name || '', metin: String(f.message || ''), tarih: Number(f.createdAt) || 0,
       durum: f.durum || 'yeni', durumAt: Number(f.durumAt) || 0, durumKim: f.durumKim || '',
-      yanit: f.yanit || '', yanitAt: Number(f.yanitAt) || 0, goruldu: false, gorulduAt: 0
+      yanit: f.yanit || '', yanitAt: Number(f.yanitAt) || 0, goruldu: false, gorulduAt: 0,
+      oncelik: f.oncelik || 'normal'
     });
   });
   admUi.feed = out;
@@ -10798,7 +11441,9 @@ function admFeedSayilar(list) {
   return {
     toplam: l.length,
     acik: l.filter(x => !x.durum || x.durum === 'yeni').length,
-    okunmamis: l.filter(x => !x.goruldu && (x.yanitAt || x.durumAt)).length
+    okunmamis: l.filter(x => !x.goruldu && (x.yanitAt || x.durumAt)).length,
+    kritik: l.filter(x => x.oncelik === 'kritik' && (!x.durum || x.durum === 'yeni')).length,
+    yuksek: l.filter(x => x.oncelik === 'yuksek' && (!x.durum || x.durum === 'yeni')).length
   };
 }
 
@@ -10812,7 +11457,15 @@ function admFilteredFeed() {
   if (admUi.ff === 'open') list = list.filter(f => !f.durum || f.durum === 'yeni');
   else if (admUi.ff === 'answered') list = list.filter(f => f.durum && f.durum !== 'yeni');
   else if (admUi.ff === 'unread') list = list.filter(f => !f.goruldu && (f.yanitAt || f.durumAt));
-  list.sort((a, b) => (b.tarih || 0) - (a.tarih || 0));
+  else if (admUi.ff === 'kritik') list = list.filter(f => f.oncelik === 'kritik');
+  else if (admUi.ff === 'yuksek') list = list.filter(f => f.oncelik === 'yuksek');
+  list.sort((a, b) => {
+    const po = (FBX_ONCELIK_SIRA[a.oncelik] != null ? FBX_ONCELIK_SIRA[a.oncelik] : 2) - (FBX_ONCELIK_SIRA[b.oncelik] != null ? FBX_ONCELIK_SIRA[b.oncelik] : 2);
+    if (po !== 0) return po;
+    const da = (!a.durum || a.durum === 'yeni' ? 0 : 1) - (!b.durum || b.durum === 'yeni' ? 0 : 1);
+    if (da !== 0) return da;
+    return (b.tarih || 0) - (a.tarih || 0);
+  });
   return list;
 }
 
@@ -10859,6 +11512,9 @@ function renderAdminInbox() {
           <select class="adm-chip fbx-durum" aria-label="Durum">
             ${secenekler.map(x => `<option value="${x}"${x === (f.durum || 'yeni') ? ' selected' : ''}>${FBX_DURUM[x] ? FBX_DURUM[x].ad : x}</option>`).join('')}
           </select>
+          <select class="adm-chip fbx-oncelik" aria-label="Öncelik">
+            ${Object.keys(FBX_ONCELIK).map(x => `<option value="${x}"${x === (f.oncelik || 'normal') ? ' selected' : ''}>${FBX_ONCELIK[x].ad}</option>`).join('')}
+          </select>
           <span class="adm-hint">“Kaydet ve bildirir” kullanıcının ekranında bildirim açar.</span>
         </div>
         <textarea class="fbx-yanit-inp" rows="2" maxlength="500" placeholder="İstersen kısa bir yanıt yaz (örn. “6.0.8 ile eklendi, mağazaya yüklendi”).">${escapeHtml(f.yanit || '')}</textarea>
@@ -10881,7 +11537,7 @@ function renderAdminInbox() {
         <span class="adm-avatar${f.durum && f.durum !== 'yeni' ? ' b-green' : ' b-amber'}" aria-hidden="true">${escapeHtml(admInitials(f.email || f.ad))}</span>
         <div class="adm-who">
           <b>${f.ad ? escapeHtml(f.ad) : (f.email ? escapeHtml(f.email) : 'İsimsiz')}</b>
-          <span>${escapeHtml(admAbsTime(f.tarih))}${f.email && f.ad ? ' · ' + escapeHtml(f.email) : ''} · ${escapeHtml(etiket)}</span>
+          <span>${escapeHtml(admAbsTime(f.tarih))}${f.email && f.ad ? ' · ' + escapeHtml(f.email) : ''} · ${escapeHtml(etiket)}${f.oncelik && f.oncelik !== 'normal' ? ' · ' + (FBX_ONCELIK[f.oncelik] ? FBX_ONCELIK[f.oncelik].ad : f.oncelik) : ''}</span>
           <div style="margin-top:.3rem;font-size:.79rem;line-height:1.55;color:var(--sec);white-space:pre-wrap;overflow-wrap:anywhere;">${escapeHtml(f.metin)}</div>
           ${yanitSatiri}
           ${goruldu ? '<div class="fbx-tags">' + goruldu + (f.durumKim ? '<span class="fbx-tag">imza: ' + escapeHtml(f.durumKim) + '</span>' : '') + '</div>' : ''}
@@ -10914,12 +11570,14 @@ function adminFeedSave(box, btn) {
   const uid = box.dataset.uid, oid = box.dataset.oid;
   if (!uid || !oid) { toast('Hedef öneri bulunamadı.', false); return; }
   const sel = box.querySelector('.fbx-durum');
+  const prioSel = box.querySelector('.fbx-oncelik');
   const yanitEl = box.querySelector('.fbx-yanit-inp');
   const durum = sel ? sel.value : 'yeni';
+  const oncelik = prioSel ? prioSel.value : 'normal';
   const yanit = ((yanitEl && yanitEl.value) || '').trim().slice(0, 500);
   const bildir = btn.classList.contains('fbx-save');
   const TS = firebase.database.ServerValue.TIMESTAMP;
-  const patch = { durum: durum, durumAt: TS, durumKim: ADMIN_EMAIL || '', goruldu: bildir ? false : true };
+  const patch = { durum: durum, durumAt: TS, durumKim: ADMIN_EMAIL || '', goruldu: bildir ? false : true, oncelik: oncelik };
   if (yanit) { patch.yanit = yanit; patch.yanitAt = TS; }
   else { patch.yanit = null; patch.yanitAt = null; }
   btn.disabled = true;
@@ -10928,6 +11586,7 @@ function adminFeedSave(box, btn) {
     const st = box.querySelector('.fbx-status');
     if (st) st.textContent = bildir ? 'kaydedildi · kullanıcıya bildirildi ✓' : 'kaydedildi · bildirim gönderilmedi';
     toast(bildir ? 'İşaretlendi ve kullanıcıya bildirildi.' : 'İşaretlendi (bildirim yok).', true);
+    admLog('Öneri durumu: ' + (FBX_DURUM[durum] ? FBX_DURUM[durum].ad : durum), (FBX_ONCELIK[oncelik] ? FBX_ONCELIK[oncelik].ad : oncelik) + ' öncelik · ' + uid.slice(0, 8));
     try { admBuildInbox(); renderAdminInbox(); } catch (e) {}
   }).catch(err => {
     btn.disabled = false;
@@ -10939,7 +11598,7 @@ function adminFeedDelete(uid, oid) {
   if (!uid || !oid) return;
   showConfirm('Bu öneri kullanıcının kaydından kalıcı olarak silinecek.', () => {
     db.ref('kullanicilar/' + uid + '/oneriler/' + oid).remove()
-      .then(() => { toast('Öneri silindi.', true); try { mergeAndRenderAdmin(); } catch (e) {} })
+      .then(() => { toast('Öneri silindi.', true); admLog('Öneri silindi', uid.slice(0, 8)); try { mergeAndRenderAdmin(); } catch (e) {} })
       .catch(err => toast('Silinemedi. ' + friendlyError(err), false));
   }, { title: 'Öneriyi Sil', icon: '💬', okText: 'Sil' });
 }
@@ -10956,6 +11615,7 @@ function adminFeedMigrateOne(fid) {
     durum: 'yeni'
   }).then(() => {
     toast('Taşındı. Eski kopyayı istersen “Sil” ile temizleyebilirsin.', true);
+    admLog('Öneri taşındı (eski kutu → kullanıcı)', it.uid.slice(0, 8));
     try { admBuildInbox(); renderAdminInbox(); } catch (e) {}
   }).catch(err => toast('Taşınamadı. ' + friendlyError(err), false));
 }
@@ -11019,15 +11679,20 @@ function renderAdminAnnouncementsList() {
     return;
   }
   const now = Date.now();
+  const TIP = { info: 'Bilgi', feature: 'Yeni özellik', warning: 'Uyarı', critical: 'Kritik', success: 'Başarı' };
+  const HEDEF = { all: 'Herkes', oldver: 'Eski sürüm', newusers: 'Yeni kullanıcılar', selected: 'Seçili' };
+  const GOSTERIM = { once: 'Bir kez', always: 'Her açılışta', until: 'Tarihe kadar' };
   box.innerHTML = items.map(it => {
     const expired = it.expiresAt && Date.parse(it.expiresAt + 'T23:59:59') < now;
-    const typeLabel = it.type === 'warning' ? 'Uyarı' : it.type === 'success' ? 'Başarı' : 'Bilgi';
-    const badgeClass = it.type === 'warning' ? 'b-amber' : it.type === 'success' ? 'b-green' : '';
+    const typeLabel = TIP[it.type] || 'Bilgi';
+    const hedefLabel = HEDEF[it.target] || 'Herkes';
+    const gosterimLabel = GOSTERIM[it.display] || 'Bir kez';
+    const badgeClass = it.type === 'critical' ? 'b-red' : it.type === 'warning' ? 'b-amber' : it.type === 'feature' ? 'b-green' : '';
     return `<div class="adm-row" style="align-items:flex-start;">
       <span class="adm-avatar ${badgeClass}" aria-hidden="true">${escapeHtml(typeLabel[0])}</span>
       <div class="adm-who">
         <b>${escapeHtml(it.title || '')}</b>
-        <span>${escapeHtml(typeLabel)} · ${escapeHtml(admAbsTime(it.createdAt))}${it.expiresAt ? ' · bitiş: ' + escapeHtml(it.expiresAt) : ''}${expired ? ' (süresi doldu)' : ''}</span>
+        <span>${escapeHtml(typeLabel)} · ${escapeHtml(hedefLabel)} · ${escapeHtml(gosterimLabel)} · ${escapeHtml(admAbsTime(it.createdAt))}${it.expiresAt ? ' · bitiş: ' + escapeHtml(it.expiresAt) : ''}${expired ? ' (süresi doldu)' : ''}</span>
         <div style="margin-top:.3rem;font-size:.79rem;line-height:1.55;color:var(--sec);white-space:pre-wrap;overflow-wrap:anywhere;">${escapeHtml(it.body || '')}</div>
       </div>
       <div class="adm-act">
@@ -11044,17 +11709,28 @@ function publishAdminAnnouncement() {
   const title = document.getElementById('admAnnTitle').value.trim();
   const body = document.getElementById('admAnnBody').value.trim();
   const type = document.getElementById('admAnnType').value || 'info';
+  const target = document.getElementById('admAnnTarget').value || 'all';
+  const display = document.getElementById('admAnnDisplay').value || 'once';
+  const targetUidsRaw = document.getElementById('admAnnTargetUids').value || '';
   const expires = document.getElementById('admAnnExpires').value || null;
   if (!title) { admAnnStatus('Başlık girin.', false); return; }
   if (!body) { admAnnStatus('Mesaj girin.', false); return; }
   if (title.length > 120) { admAnnStatus('Başlık en fazla 120 karakter olabilir.', false); return; }
   if (body.length > 500) { admAnnStatus('Mesaj en fazla 500 karakter olabilir.', false); return; }
+  if (display === 'until' && !expires) { admAnnStatus('"Tarihe kadar" seçtiyseniz bitiş tarihi girmelisiniz.', false); return; }
+  if (target === 'selected' && !targetUidsRaw.trim()) { admAnnStatus('"Seçili kullanıcılar" için en az bir uid girin.', false); return; }
+  const targetUids = target === 'selected'
+    ? targetUidsRaw.split(',').map(s => s.trim()).filter(Boolean).slice(0, 100).join(',')
+    : null;
   const btn = document.getElementById('btnAdmAnnPublish');
   if (btn) btn.disabled = true;
   const data = {
     title: title,
     body: body,
     type: type,
+    target: target,
+    display: display,
+    targetUids: targetUids,
     createdAt: firebase.database.ServerValue.TIMESTAMP,
     createdBy: ADMIN_EMAIL || currentUser.email || currentUser.uid,
     expiresAt: expires
@@ -11063,8 +11739,14 @@ function publishAdminAnnouncement() {
     document.getElementById('admAnnTitle').value = '';
     document.getElementById('admAnnBody').value = '';
     document.getElementById('admAnnType').value = 'info';
+    document.getElementById('admAnnTarget').value = 'all';
+    document.getElementById('admAnnDisplay').value = 'once';
+    document.getElementById('admAnnTargetUids').value = '';
     document.getElementById('admAnnExpires').value = '';
+    const wrap = document.getElementById('admAnnTargetUidsWrap');
+    if (wrap) wrap.style.display = 'none';
     admAnnStatus('Duyuru yayınlandı.', true);
+    admLog('Duyuru yayınlandı', title + ' (' + type + ' · ' + target + ')');
     loadAdminAnnouncements();
   }).catch(err => {
     admAnnStatus('Yayınlanamadı: ' + friendlyError(err), false);
@@ -11075,7 +11757,7 @@ function deleteAdminAnnouncement(key) {
   if (!key) return;
   showConfirm('Bu duyuru kalıcı olarak silinsin mi?', () => {
     db.ref('announcements/' + key).remove()
-      .then(() => { toast('Duyuru silindi.', true); loadAdminAnnouncements(); })
+      .then(() => { toast('Duyuru silindi.', true); admLog('Duyuru silindi', key); loadAdminAnnouncements(); })
       .catch(err => toast('Silinemedi: ' + friendlyError(err), false));
   }, { title: 'Duyuruyu Sil', icon: '📢', okText: 'Sil' });
 }
@@ -11083,10 +11765,14 @@ function deleteAdminAnnouncement(key) {
 (function initAdminAnnouncements(){
   const btn = document.getElementById('btnAdmAnnPublish');
   if (btn) btn.addEventListener('click', publishAdminAnnouncement);
+  const targetSel = document.getElementById('admAnnTarget');
+  const uidsWrap = document.getElementById('admAnnTargetUidsWrap');
+  const syncTarget = () => { if (uidsWrap) uidsWrap.style.display = targetSel && targetSel.value === 'selected' ? '' : 'none'; };
+  if (targetSel) { targetSel.addEventListener('change', syncTarget); syncTarget(); }
 })();
 
 window.viewUserStats = function(uid, email, focusNote) {
-    document.getElementById('adminStatsTitle').textContent = (email || uid) + ' — İstatistikler';
+    document.getElementById('adminStatsTitle').textContent = (email || uid) + ' — Profil';
     document.getElementById('adminStatsContent').innerHTML = '<div class="adm-empty">Yükleniyor…</div>';
     document.getElementById('adminStatsOverlay').classList.add('show');
     admStatsUid = uid;
@@ -11174,7 +11860,21 @@ window.viewUserStats = function(uid, email, focusNote) {
               + (m.kalan == null ? '—' : (m.kalan <= 0 ? 'geri kaldı' : fmtInt(m.kalan) + ' km')) + '</b>').join(' · ') : '<span style="color:var(--muted)">bakım tanımlı değil</span>') + '</td></tr>';
         }).join('');
 
+        const metaU = admUi.all.filter(u => u.uid === uid)[0] || {};
+        const saglikU = admUserHealth(metaU);
+        const sonAktifU = metaU.lastLogin ? admAbsTime(metaU.lastLogin) : 'hiç giriş yok';
         document.getElementById('adminStatsContent').innerHTML = `
+            <div class="adm-profile">
+              <div class="ap-avatar">${escapeHtml(admInitials(email || metaU.email || uid))}</div>
+              <div class="ap-who">
+                <b>${escapeHtml(email || metaU.email || uid)}</b>
+                <span>🟢 Son aktif: ${escapeHtml(sonAktifU)}</span>
+                <span>📱 Native: ${metaU.nativeVersion ? 'v' + escapeHtml(metaU.nativeVersion) : '—'} · 🌐 Web: ${metaU.webVersion ? 'v' + escapeHtml(metaU.webVersion) : '—'}</span>
+              </div>
+              <span class="adm-health ${escapeHtml(saglikU.key)}">${escapeHtml(saglikU.label)}</span>
+            </div>
+            <div class="adm-sec">Son 30 gün aktivite</div>
+            ${admBarsHtml(admLastDays(userRecs, 30), 'n')}
             <div class="metrics" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
                 <div class="metric cyan"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M6 9v6a3 3 0 0 0 3 3h6m3-12h-5m2-2 3 2-3 2"/></svg></div><div class="metric-label">Toplam KM</div><div class="metric-value">${fmtInt(km)}</div></div>
                 <div class="metric"><div class="metric-ico"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8zm-9 5 9 5 9-5m-9 5v9M7 5.8l9 5V15"/></svg></div><div class="metric-label">Toplam Paket</div><div class="metric-value">${fmtInt(tes)}</div></div>
@@ -11255,6 +11955,7 @@ window.adminDeleteUserRecord = function(uid, key, tarih, email) {
   showConfirm(String(email || uid) + ' kullanıcısının ' + (tarih || '') + ' tarihli kaydı silinecek. Bu işlem geri alınamaz.', () => {
     db.ref('kullanicilar/' + uid + '/kayitlar/' + key).remove().then(() => {
       toast('Kayıt silindi.', true);
+      admLog('Kullanıcı kaydı silindi', (email || uid) + ' · ' + (tarih || ''));
       try { viewUserStats(uid, email); } catch (e) {}
     }).catch(err => toast('Silinemedi. ' + friendlyError(err), false));
   }, { title: 'Kaydı sil', icon: '🗑️', okText: 'Sil' });
@@ -11339,7 +12040,9 @@ window.admStoreImpact = function (minVer) {
     startTime: null,
     active: false,
     fixCount: 0,      // alınan konum noktası sayısı
-    lowAccCount: 0    // düşük doğruluklu (atılan) nokta sayısı
+    lowAccCount: 0,   // düşük doğruluklu (atılan) nokta sayısı
+    movingMs: 0,      // hareket halinde geçen süre (vardiya özeti için)
+    lastFixAt: null   // son geçerli konum zamanı
   };
 
   const MIN_ACCURACY_METERS = 200; // şehir içi binalar arasında 45m çok katıydı, ölçümler atılıp KM eksik çıkıyordu
@@ -11372,7 +12075,9 @@ window.admStoreImpact = function (minVer) {
           startTime: parsed.startTime || null,
           active: !!parsed.active,
           fixCount: parsed.fixCount || 0,
-          lowAccCount: parsed.lowAccCount || 0
+          lowAccCount: parsed.lowAccCount || 0,
+          movingMs: parsed.movingMs || 0,
+          lastFixAt: parsed.lastFixAt || null
         };
       }
     } catch (e) {}
@@ -11560,8 +12265,19 @@ window.admStoreImpact = function (minVer) {
         }
         if (session.lastLat != null && session.lastLon != null) {
           const deltaKm = haversineKm(session.lastLat, session.lastLon, location.latitude, location.longitude);
-          if (deltaKm > 0.008 && deltaKm <= MAX_JUMP_KM) {
+          // 15 m eşiği: distanceFilter zaten 10 m'nin altını native tarafa göndermiyor;
+          // JS tarafındaki 8 m çok sıkıydı ve şehir içi gürültüyü de sayıyordu.
+          if (deltaKm > 0.015 && deltaKm <= MAX_JUMP_KM) {
             session.totalKm += deltaKm;
+            // Hareket süresi: bir önceki fix'ten bu fix'e kadar geçen süre hareket sayılır.
+            const nowMs = Date.now();
+            if (session.lastFixAt) {
+              const dt = nowMs - session.lastFixAt;
+              if (dt > 0 && dt < 5 * 60 * 1000) {   // > 5 dk boşluk sayılmaz (tünel/durma)
+                session.movingMs = (session.movingMs || 0) + dt;
+              }
+            }
+            session.lastFixAt = nowMs;
           }
         }
         session.lastLat = location.latitude;
@@ -11739,7 +12455,7 @@ window.admStoreImpact = function (minVer) {
     },
 
     resetSession: function () {
-      session = { totalKm: 0, lastLat: null, lastLon: null, startTime: null, active: false, fixCount: 0, lowAccCount: 0 };
+      session = { totalKm: 0, lastLat: null, lastLon: null, startTime: null, active: false, fixCount: 0, lowAccCount: 0, movingMs: 0, lastFixAt: null };
       saveSession(session, true);
       notify();
     },
@@ -11958,10 +12674,16 @@ window.admStoreImpact = function (minVer) {
           setTrackingVisual(true);
           startUiTicker();
           refreshGpsWidget();
+          // SENKRON: GPS açılınca vardiya da otomatik başlar (aktif değilse).
+          const autoVardiya = (typeof window.vardiyaActive === 'function' && !window.vardiyaActive()
+                              && typeof window.startVardiyaFromGps === 'function');
+          if (autoVardiya) window.startVardiyaFromGps();
           if (tracker.isUsingWebFallback()) {
             toast('Takip başladı. Arka plan için uygulamayı Play Store’dan güncelleyin.', true);
           } else {
-            toast('GPS takibi başladı. Bildirim ve sayaç senkronize edildi.', true);
+            toast(autoVardiya
+              ? 'GPS takibi başladı · vardiya da otomatik başladı'
+              : 'GPS takibi başladı. Bildirim ve sayaç senkronize edildi.', true);
           }
         }
       } catch (e) {
@@ -12205,14 +12927,24 @@ window.admStoreImpact = function (minVer) {
         return;
       }
       try {
-        const resumed = await tracker.restore();
-        if (resumed) {
-          isTracking = true;
-          setTrackingVisual(true);
-          startUiTicker();
-          const s = tracker.getSession();
-          if (liveLabel) liveLabel.textContent = (s.totalKm || 0).toFixed(2) + ' km';
-          if (sureLabel) sureLabel.textContent = s && s.startTime ? formatElapsed(s.startTime) : '00:00:00';
+        // GPS + vardiya geri yükleme tek elden (restoreSessionSync).
+        if (typeof window.restoreSessionSync === 'function') {
+          const resumed = await window.restoreSessionSync();
+          if (resumed) {
+            const s = tracker.getSession();
+            if (liveLabel) liveLabel.textContent = (s.totalKm || 0).toFixed(2) + ' km';
+            if (sureLabel) sureLabel.textContent = s && s.startTime ? formatElapsed(s.startTime) : '00:00:00';
+          }
+        } else {
+          const resumed = await tracker.restore();
+          if (resumed) {
+            isTracking = true;
+            setTrackingVisual(true);
+            startUiTicker();
+            const s = tracker.getSession();
+            if (liveLabel) liveLabel.textContent = (s.totalKm || 0).toFixed(2) + ' km';
+            if (sureLabel) sureLabel.textContent = s && s.startTime ? formatElapsed(s.startTime) : '00:00:00';
+          }
         }
         refreshGpsWidget();
       } catch (e) {
@@ -12281,7 +13013,7 @@ window.admStoreImpact = function (minVer) {
     // Yüklü native sürümü bağımsız oku: checkForcedUpdate() yalnızca
     // appUpdate/store varsa çalışıyor, panel ise ilk kurulumda da uyarmalı.
     try{
-      getNativeAppVersion().then(v => { if(v) _installedNativeVersion = v; });
+      getNativeAppVersion().then(v => { if(v) _installedNativeVersion = v; }).catch(() => {});
     }catch(e){}
 
     // Mevcut ayarı yükle
@@ -12538,6 +13270,7 @@ window.admStoreImpact = function (minVer) {
      2000 karakteri aşan notu Firebase kuralı reddeder (zip yüklenmiş ama sürüm
      yazılamamış olur → yarım yayın). */
   let _otaLatestVersion = '';
+  let _otaStoreMin = '';
   function renderOtaChecks(){
     const box = document.getElementById('otaChecks');
     if(!box) return;
@@ -12556,7 +13289,10 @@ window.admStoreImpact = function (minVer) {
       + chip(paths.length > 0, paths.length + ' dosya · ' + kb + ' KB')
       + chip(bicim, ver ? ('sürüm ' + ver) : 'sürüm girilmedi')
       + (yeni === null ? '' : chip(yeni, yeni ? 'v' + _otaLatestVersion + '\'den yeni' : 'v' + _otaLatestVersion + ' ile aynı/eski'))
-      + chip(notes.length <= 2000, notes.length <= 2000 ? notes.length + '/2000 not karakteri' : 'not ' + notes.length + ' karakter — kural 2000 ile sınırlı');
+      + chip(notes.length <= 2000, notes.length <= 2000 ? notes.length + '/2000 not karakteri' : 'not ' + notes.length + ' karakter — kural 2000 ile sınırlı')
+      + (window.admStoreImpact && _otaStoreMin
+          ? chip(true, 'Mağaza kapısı v' + _otaStoreMin + ': ' + window.admStoreImpact(_otaStoreMin).list.length + ' kullanıcı altta, ' + window.admStoreImpact(_otaStoreMin).unknown + ' sürümü bilinmiyor')
+          : '');
   }
 
   function renderOtaFileList(){
@@ -12665,6 +13401,14 @@ window.admStoreImpact = function (minVer) {
     }
     refreshCurrentInfo();
     try{ renderOtaChecks(); }catch(e){}
+    /* Mağaza kapısı (minVersion) etki göstergesi için: checklist yayın öncesi
+       kapının kaç kullanıcıyı kilitleyeceğini gösterir. */
+    try {
+      firebase.database().ref('appUpdate/store/minVersion').once('value').then(s => {
+        _otaStoreMin = s.val() ? String(s.val()) : '';
+        renderOtaChecks();
+      }).catch(() => { _otaStoreMin = ''; });
+    } catch (e) {}
     /* Yayın bilgisini CANLI izle: başka bir sekmeden/cihazdan yayın yapıldığında
        panel eski sürümü göstermeye devam ediyordu; kontroller de yanılıyordu. */
     try {
@@ -12762,6 +13506,7 @@ window.admStoreImpact = function (minVer) {
 
         statusEl.textContent = '';
         toast('v' + version + ' başarıyla yayınlandı!', true);
+        admLog('OTA yayınlandı', 'v' + version + (release.silent ? ' (sessiz)' : ''));
         _otaFiles = [];
         try{ renderOtaFileList(); }catch(e){}
         if(fileInput) fileInput.value = '';
@@ -12895,6 +13640,7 @@ var _exitPromptOpen = false;    // android geri -> çıkış onayı açık mı
 var _saveThenNew = false;       // "Kaydet + Yeni" modu
 var _filterVehicle = '';        // günlük filtre: araç
 var _filterSort = 'date-desc';  // günlük filtre: sıralama
+var _dcPeriod = 'all';          // günlük dönem filtresi: all | today | week
 var _lastSavedVehicle = null;   // son kaydedilen aracı hatırla (Yeni Kayıt için)
 var DRAFT_KEY = 'kurye_form_draft_v1';
 
@@ -12919,23 +13665,54 @@ function lastRecord(){
   return [...records].sort((a,b)=>b.tarih.localeCompare(a.tarih))[0];
 }
 
-/* ---------- 1. AKILLI KAYIT (ön doldurma + son kaydı kullan) ---------- */
-function smartPrefill(){
+/* ---------- 1. AKILLI KAYIT (son kaydı ÖNERİ olarak göster) ---------- */
+/* YENİ DAVRANIŞ: form sessizce doldurulmaz. Her alanın altına "X Son kayıt"
+   rozeti konur; kullanıcı dokunarak YALNIZCA o alanı doldurabilir. Böylece
+   "uygulama bunu benim yerime mi yazdı?" kafa karışıklığı olmaz. */
+function smartSuggestions(){
   const last = lastRecord();
-  if(!last) return;
-  const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.value = v; };
-  set('fKm', last.km||0); set('fTes', last.teslimat||0); set('fGelir', last.gelir||0);
-  set('fYakit', last.yakit||0); set('fDiger', last.diger||0); set('fYakitLitre', last.yakitLitre||0);
+  if(!last) return [];
+  const s = [];
+  if((last.km||0) > 0)        s.push({id:'fKm', unit:'km', value:last.km});
+  if((last.teslimat||0) > 0)  s.push({id:'fTes', unit:'', value:last.teslimat});
+  if((last.gelir||0) > 0)     s.push({id:'fGelir', unit:'₺', value:last.gelir});
+  if((last.yakit||0) > 0)     s.push({id:'fYakit', unit:'₺', value:last.yakit});
+  if((last.diger||0) > 0)     s.push({id:'fDiger', unit:'₺', value:last.diger});
+  if((last.yakitLitre||0) > 0) s.push({id:'fYakitLitre', unit:'L', value:last.yakitLitre});
+  return s;
 }
+function clearSmartSuggestions(){
+  try{ document.querySelectorAll('.suggest-badge').forEach(function(el){ el.remove(); }); }catch(e){}
+}
+function renderSmartSuggestions(){
+  clearSmartSuggestions();
+  smartSuggestions().forEach(function(s){
+    const input = document.getElementById(s.id);
+    if(!input || !input.parentElement) return;
+    const badge = document.createElement('button');
+    badge.type = 'button';
+    badge.className = 'suggest-badge';
+    badge.setAttribute('data-fill', s.id);
+    badge.setAttribute('data-value', String(s.value));
+    badge.innerHTML = '<b>' + escapeHtml(String(s.value)) + (s.unit ? ' ' + escapeHtml(s.unit) : '') + '</b> Son kayıt';
+    badge.title = 'Bu alanı son kayıttan doldur';
+    input.parentElement.appendChild(badge);
+  });
+}
+function smartPrefill(){ renderSmartSuggestions(); }   // geriye dönük uyumlu giriş noktası
 function useLastRecordFill(){
   const last = lastRecord();
   if(!last){ toast('Henüz kullanılabilecek eski bir kayıt yok.', false); return; }
-  smartPrefill();
+  const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.value = v; };
+  set('fKm', last.km||0); set('fTes', last.teslimat||0); set('fGelir', last.gelir||0);
+  set('fYakit', last.yakit||0); set('fDiger', last.diger||0); set('fYakitLitre', last.yakitLitre||0);
   const shifts = (last.shifts && last.shifts.length) ? last.shifts
     : (last.baslangic || last.bitis ? [{baslangic:last.baslangic||'', bitis:last.bitis||'', molaDk:last.molaDk||0}] : null);
   if(shifts && typeof renderShiftEditor==='function') renderShiftEditor(shifts);
   if(typeof populateAracSelect==='function') populateAracSelect(last.arac || (typeof fallbackVehicleId==='function'?fallbackVehicleId():''));
   const n = document.getElementById('fNote'); if(n && last.aciklama) n.value = last.aciklama;
+  clearSmartSuggestions();
+  markFormDirty();
   updateAdvBadge();
   toast('Son kayıt değerleri dolduruldu · istediğinizi değiştirebilirsiniz', true);
 }
@@ -12945,14 +13722,21 @@ function updateUseLastRow(){
   const draft = readDraft();
   const lbl = document.getElementById('useLastLabel');
   const btn = document.getElementById('btnUseLast');
+  const disc = document.getElementById('btnDiscardDraft');
   // Düzenleme modunda bu satır gösterilmez.
   if(typeof editingIndex!=='undefined' && editingIndex!=null){ row.style.display='none'; return; }
   if(draft){
+    // Taslak varken "Son kaydı kullan" GİZLENİR; yerine taslak devam/sil gelir.
     row.style.display = '';
     if(lbl) lbl.textContent = 'Taslak bulundu · kaldığınız yerden devam edin';
     if(btn){ btn.textContent='Devam Et'; btn.onclick = function(){ restoreDraft(); }; }
+    if(disc){
+      disc.style.display = '';
+      disc.onclick = function(){ discardDraftWithUndo(); updateUseLastRow(); };
+    }
     return;
   }
+  if(disc) disc.style.display = 'none';
   const last = lastRecord();
   if(last){
     row.style.display = '';
@@ -13006,6 +13790,17 @@ function openNewRecordForm(opts){
   updateUseLastRow();
   updateAdvBadge();
   document.getElementById('overlay').classList.add('show');
+}
+
+/* ---------- 1b. YAKIT LİTRE ↔ TUTAR OTOMATİK HESAP ----------
+   En az 3 yakıt verisi varsa ortalama ₺/L fiyatından biri girilince diğerini
+   doldurur (yalnızca boş olan alan; iki alan doluysa dokunmaz). */
+function fuelAvgPrice(){
+  try{
+    const samples = records.filter(r => (r.yakitLitre||0) > 0 && (r.yakit||0) > 0).map(r => r.yakit / r.yakitLitre);
+    if(samples.length < 3) return null;
+    return samples.reduce((a,b)=>a+b,0) / samples.length;
+  }catch(e){ return null; }
 }
 
 /* ---------- 2. AKILLI KAYDET (başarı özeti + Kaydet+Yeni) ---------- */
@@ -13140,10 +13935,10 @@ var vardiya = (function(){
   try{
     const p = JSON.parse(localStorage.getItem(VARD_KEY)||'null');
     if(p && p.active && p.start){
-      return { active:true, start:p.start, tes0:p.tes0||0, gelir0:p.gelir0||0, km0:p.km0||0, startedGps:!!p.startedGps };
+      return { active:true, start:p.start, tes0:p.tes0||0, gelir0:p.gelir0||0, km0:p.km0||0, movingMs0:p.movingMs0||0, startedGps:!!p.startedGps };
     }
   }catch(e){}
-  return { active:false, start:null, tes0:0, gelir0:0, km0:0, startedGps:false };
+  return { active:false, start:null, tes0:0, gelir0:0, km0:0, movingMs0:0, startedGps:false };
 })();
 var vardiyaTicker = null;
 function saveVardiya(){ try{ localStorage.setItem(VARD_KEY, JSON.stringify(vardiya)); }catch(e){} }
@@ -13153,6 +13948,16 @@ function gpsKmNow(){
     if(T && typeof T.getSession==='function'){
       const s = T.getSession();
       if(s && (s.active || (s.totalKm||0) > 0)) return +s.totalKm || 0;
+    }
+  }catch(e){}
+  return 0;
+}
+function gpsMovingNow(){
+  try{
+    const T = window.BackgroundTracker;
+    if(T && typeof T.getSession==='function'){
+      const s = T.getSession();
+      if(s) return +(s.movingMs||0) || 0;
     }
   }catch(e){}
   return 0;
@@ -13167,7 +13972,17 @@ function vardiyaTick(){
   const km = Math.max(0, gpsKmNow() - vardiya.km0);
   if(elKm) elKm.textContent = km > 0 ? (Math.round(km*10)/10) : '0';
   // Bu vardiyada girilen paket: başlangıçtaki gün toplamından fark.
-  if(elPkg) elPkg.textContent = fmtInt(Math.max(0, todayTes() - vardiya.tes0));
+  const pkg = Math.max(0, todayTes() - vardiya.tes0);
+  if(elPkg) elPkg.textContent = fmtInt(pkg);
+  // Canlı mini bar (ekranın altında ince şerit)
+  const mb = document.getElementById('vardiyaMiniBar');
+  if(mb){
+    mb.classList.add('show');
+    const tEl=document.getElementById('vmbTime'), kEl=document.getElementById('vmbKm'), pEl=document.getElementById('vmbPkg');
+    if(tEl) tEl.textContent = fmtDurLong(ms);
+    if(kEl) kEl.textContent = km > 0 ? String(Math.round(km*10)/10) : '0';
+    if(pEl) pEl.textContent = fmtInt(pkg);
+  }
 }
 function renderVardiya(){
   const card = document.getElementById('vardiyaCard');
@@ -13192,14 +14007,19 @@ function renderVardiya(){
     if(stats) stats.style.display='none';
     if(btn){ btn.textContent='🟢 Vardiya Başlat'; btn.className='btn btn-primary btn-sm'; }
     if(vardiyaTicker){ clearInterval(vardiyaTicker); vardiyaTicker=null; }
+    const mb = document.getElementById('vardiyaMiniBar');
+    if(mb) mb.classList.remove('show');
   }
 }
 
 // Vardiya başlat: bugünün anlık görüntüsünü al, GPS'i senkron başlat.
-async function startVardiya(){
+// silent=true: GPS tarafından otomatik başlatıldığında toast gösterme
+// (toast'ı çağıran taraf kendi mesajını gösterir).
+async function startVardiya(silent){
   if(vardiya.active) return;
   vardiya.active = true; vardiya.start = Date.now();
   vardiya.tes0 = todayTes(); vardiya.gelir0 = todayGelir(); vardiya.km0 = gpsKmNow();
+  vardiya.movingMs0 = gpsMovingNow();
   vardiya.startedGps = false;
   saveVardiya(); renderVardiya();
   const T = window.BackgroundTracker;
@@ -13211,15 +14031,15 @@ async function startVardiya(){
       if(ok){
         vardiya.startedGps = true; saveVardiya();
         if(bridge) bridge.setUi(true);
-        toast('🟢 Vardiya başladı · GPS takibi de açıldı', true);
+        if(!silent) toast('🟢 Vardiya başladı · GPS takibi de açıldı', true);
       } else {
-        toast('🟢 Vardiya başladı (GPS başlatılamadı)', true);
+        if(!silent) toast('🟢 Vardiya başladı (GPS başlatılamadı)', true);
       }
     }catch(e){
-      toast('🟢 Vardiya başladı (GPS başlatılamadı: konum izni gerekebilir)', true);
+      if(!silent) toast('🟢 Vardiya başladı (GPS başlatılamadı: konum izni gerekebilir)', true);
     }
   } else {
-    toast('🟢 Vardiya başladı · GPS zaten açık', true);
+    if(!silent) toast('🟢 Vardiya başladı · GPS zaten açık', true);
   }
 }
 
@@ -13228,25 +14048,30 @@ async function startVardiya(){
 async function finishVardiya(forceGpsStop){
   if(!vardiya.active) return;
   const startedAt = vardiya.start;
-  const tes1 = todayTes(), gelir1 = todayGelir(), km1 = gpsKmNow();
+  const tes1 = todayTes(), gelir1 = todayGelir(), km1 = gpsKmNow(), moving1 = gpsMovingNow();
   const dTes = Math.max(0, tes1 - vardiya.tes0);
   const dGelir = Math.max(0, gelir1 - vardiya.gelir0);
   const dKm = Math.max(0, Math.round((km1 - vardiya.km0) * 10) / 10);
+  const dMoving = Math.max(0, Math.round(moving1 - (vardiya.movingMs0||0)));
   const startedGps = vardiya.startedGps;
+  const gpsTracked = !!startedGps || dKm > 0;
   vardiya.active = false; vardiya.start = null;
-  vardiya.tes0 = 0; vardiya.gelir0 = 0; vardiya.km0 = 0; vardiya.startedGps = false;
+  vardiya.tes0 = 0; vardiya.gelir0 = 0; vardiya.km0 = 0; vardiya.movingMs0 = 0; vardiya.startedGps = false;
   saveVardiya(); renderVardiya();
-  const shouldStopGps = !!forceGpsStop || !!startedGps;
+  // TAM SENKRON: vardiya bittiğinde GPS de durur — ister vardiya GPS'i
+  // başlatmış olsun (startedGps), ister GPS vardiyayı otomatik başlatmış olsun.
+  const T = window.BackgroundTracker;
+  const bridge = window.GpsBridge;
+  const gpsRunning = (bridge && bridge.running()) || (T && typeof T.isActive==='function' && T.isActive());
+  const shouldStopGps = !!forceGpsStop || !!startedGps || gpsRunning;
   if(shouldStopGps){
-    const T = window.BackgroundTracker;
     if(T){
       try{ await T.stop(); }catch(e){}
       try{ T.resetSession(); }catch(e){}
     }
-    const bridge = window.GpsBridge;
     if(bridge){ bridge.setUi(false); bridge.resetLabels(); }
   }
-  showVardiyaSummary({ startedAt: startedAt, km: dKm, tes: dTes, gelir: dGelir });
+  showVardiyaSummary({ startedAt: startedAt, km: dKm, tes: dTes, gelir: dGelir, movingMs: dMoving, gpsTracked: gpsTracked });
 }
 
 function toggleVardiya(){
@@ -13254,42 +14079,78 @@ function toggleVardiya(){
   else finishVardiya(false);
 }
 window.vardiyaActive = function(){ return vardiya.active; };
+window.startVardiyaFromGps = function(){ return startVardiya(true); };
 window.endVardiyaFromGps = function(){ finishVardiya(true); };
+
+/* ---------- SESSION RESTORE (GPS + vardiya tek elden) ----------
+   Uygulama öldürülüp yeniden açıldığında GPS ve vardiya durumunu TEK noktada
+   uzlaştırır; "vardiya açık görünüyor ama GPS kapalı" çelişkisi oluşmaz. */
+window.endVardiyaAfterFailedRestore = function(){
+  if(!vardiya.active) return;
+  vardiya.active = false; vardiya.start = null;
+  vardiya.tes0 = 0; vardiya.gelir0 = 0; vardiya.km0 = 0; vardiya.movingMs0 = 0; vardiya.startedGps = false;
+  saveVardiya(); renderVardiya();
+  toast('GPS takibi geri yüklenemedi; vardiya kapatıldı.', false);
+};
+async function restoreSessionSync(){
+  const tracker = window.BackgroundTracker;
+  let gpsOn = false;
+  if (tracker && typeof tracker.restore === 'function') {
+    try { gpsOn = !!await tracker.restore(); } catch(e){ gpsOn = false; }
+  }
+  const bridge = window.GpsBridge;
+  if (gpsOn) {
+    if (bridge && typeof bridge.setUi === 'function') bridge.setUi(true);
+    if (!vardiya.active) await startVardiya(true);      // GPS varsa vardiya senkron
+  } else if (vardiya.active) {
+    window.endVardiyaAfterFailedRestore();               // GPS yoksa vardiya da yok
+  }
+  return gpsOn;
+}
+window.restoreSessionSync = restoreSessionSync;
 
 function showVardiyaSummary(opt){
   // Geriye dönük uyum: eski çağrılar sadece başlangıç zamanını geçebilir.
   if(typeof opt === 'number') opt = { startedAt: opt, km:0, tes:0, gelir:0 };
   const startedAt = opt.startedAt;
   const ms = Date.now() - startedAt;
-  const h = ms/3600000;
   const km = opt.km || 0;
   const tes = opt.tes || 0;
   const gelir = opt.gelir || 0;
+  const gpsTracked = !!opt.gpsTracked;
+  const movingMs = Math.max(0, Math.min(opt.movingMs || 0, ms));
+  const parkedMs = Math.max(0, ms - movingMs);
+  const tooShort = ms < 60000;
   const d = new Date(startedAt);
-  const tooShort = ms < 60000;   // 1 dakikadan kısa: saatlik değerler anlamsız olur
-  const saatUcret = (!tooShort && h>0 && gelir>0) ? gelir/h : null;
-  const pkgSaat = (!tooShort && h>0 && tes>0) ? tes/h : null;
-  const kmSaat = (!tooShort && h>0 && km>0) ? km/h : null;
+  // Ortalama hareket hızı: yalnızca HAREKET süresine göre.
+  const kmSaat = (!tooShort && gpsTracked && movingMs > 60000 && km > 0) ? km / (movingMs / 3600000) : null;
   function r(v){ return v==null ? '—' : fmt(v,1); }
+  function dur(v){ return v==null || v <= 0 ? '—' : fmtDurLong(v); }
+  const met = function(icon, label, value, sub, page){
+    return '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'' + page + '\')" title="İlgili bölüme git">'
+      + '<div class="metric-value">' + value + '</div>'
+      + '<div class="metric-label">' + icon + ' ' + label + '</div>'
+      + '<div class="metric-sub">' + sub + '</div></div>';
+  };
   const html =
     '<div style="text-align:center;padding:.1rem .1rem 0;">' +
-    '<div style="font-size:1.9rem;margin-bottom:.15rem;">🏁</div>' +
-    '<div style="font-weight:800;font-size:1.05rem;margin-bottom:.2rem;">Vardiya Özeti</div>' +
     '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem;">Yalnızca bu vardiya boyunca oluşan değerler</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.9rem;">' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük kayıtlara git"><div class="metric-value">'+fmtDurLong(ms)+'</div><div class="metric-label">Çalışma süresi</div><div class="metric-sub">'+HHMM(d)+' başladı</div></div>' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük paket detayına git"><div class="metric-value">'+fmtInt(tes)+'</div><div class="metric-label">Paket</div><div class="metric-sub">bu vardiya</div></div>' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'garage\')" title="GPS / araç detayına git"><div class="metric-value">'+fmt(km,1)+' km</div><div class="metric-label">Mesafe</div><div class="metric-sub">GPS'+(km>0?' ile ölçüldü':' (takip kapalıydı)')+'</div></div>' +
-    '<div class="metric" style="margin:0;cursor:pointer;" onclick="openFromDialog(\'daily\')" title="Günlük kazanç detayına git"><div class="metric-value">'+fmt(gelir)+' ₺</div><div class="metric-label">Net kazanç</div><div class="metric-sub">bu vardiya</div></div>' +
+    met('⏱️','Toplam süre', dur(ms), HHMM(d)+' başladı', 'daily') +
+    met('🚗','Hareket süresi', gpsTracked ? dur(movingMs) : '—', gpsTracked ? 'GPS ile' : 'takip kapalıydı', 'garage') +
+    met('🅿️','Duraklama süresi', gpsTracked ? dur(parkedMs) : '—', gpsTracked ? 'GPS ile' : 'takip kapalıydı', 'garage') +
+    met('📍','Toplam KM', fmt(km,1)+' km', gpsTracked ? 'GPS ile ölçüldü' : 'takip kapalıydı', 'garage') +
+    met('📦','Paket', fmtInt(tes), 'bu vardiya', 'daily') +
+    met('💰','Net kazanç', fmt(gelir)+' ₺', 'bu vardiya', 'daily') +
     '</div>' +
     '<div style="font-size:.78rem;color:var(--muted);line-height:1.8;margin-bottom:.5rem;">' +
-    '📈 <b>'+r(saatUcret)+' ₺/saat</b> &nbsp;·&nbsp; 📦 '+r(pkgSaat)+' paket/saat &nbsp;·&nbsp; 🛣 '+r(kmSaat)+' km/saat' +
+    '⚡ Ortalama hareket hızı: <b>' + r(kmSaat) + ' km/saat</b>' +
     '</div>' +
-    (tooShort ? '<div style="font-size:.72rem;color:var(--amber);margin-bottom:.6rem;">⚠️ Vardiya 1 dakikadan kısa; saatlik değerler hesaplanmadı.</div>' : '') +
+    (tooShort ? '<div style="font-size:.72rem;color:var(--amber);margin-bottom:.6rem;">⚠️ Vardiya 1 dakikadan kısa; ortalama hız hesaplanmadı.</div>' : '') +
     '<div style="font-size:.72rem;color:var(--muted);margin-bottom:.8rem;">Değerlere dokunarak ilgili bölüme gidebilirsiniz</div></div>';
   showConfirm(html, function(){
     openNewRecordForm({ prefillShift: { baslangic: HHMM(d), bitis: HHMM(new Date()), molaDk: 0 }, km: Math.round(km), tes: tes, gelir: gelir });
-  }, {title:'Vardiya Özeti', icon:'🏁', warn:true, okText:'📝 Kayda Ekle', cancelText:'Kapat', html:true});
+  }, {title:'Vardiya Özeti', icon:'🏁', warn:true, okText:'📥 Bugünkü Kayda Ekle', cancelText:'Kapat', html:true});
 }
 
 /* ---------- 18. ARAÇ MALİYET MERKEZİ ---------- */
@@ -13616,8 +14477,48 @@ scheduleDraftOffer();
   const form = document.getElementById('form');
   if(form){
     let tmr = null;
-    form.addEventListener('input', function(){ markFormDirty(); updateAdvBadge(); clearTimeout(tmr); tmr = setTimeout(captureDraft, 400); });
-    form.addEventListener('change', function(){ markFormDirty(); updateAdvBadge(); clearTimeout(tmr); tmr = setTimeout(captureDraft, 300); });
+    // Taslak kaydı: her tuşta değil, 1500 ms sonra tek yazım (localStorage senkron).
+    // visibilitychange'de zaten son bir kayıt atılır, veri kaybı riski yoktur.
+    const scheduleDraft = function(){
+      markFormDirty(); updateAdvBadge();
+      clearTimeout(tmr);
+      tmr = setTimeout(function(){
+        if (typeof requestIdleCallback === 'function') requestIdleCallback(captureDraft, { timeout: 2000 });
+        else captureDraft();
+      }, 1500);
+    };
+    form.addEventListener('input', scheduleDraft);
+    form.addEventListener('change', scheduleDraft);
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) captureDraft(); });
+    // Akıllı kayıt: "Son kayıt" öneri rozetine dokununca yalnızca o alanı doldur.
+    form.addEventListener('click', function(e){
+      const b = e.target && e.target.closest ? e.target.closest('.suggest-badge') : null;
+      if(!b) return;
+      const input = document.getElementById(b.getAttribute('data-fill'));
+      if(input){ input.value = b.getAttribute('data-value'); markFormDirty(); updateAdvBadge(); clearSmartSuggestions(); toast('Son kayıttan dolduruldu', true); }
+    });
+    // Yakıt litre ↔ tutar otomatik hesap (ortalama ₺/L ile, boş alanı doldurur).
+    (function(){
+      const fY = document.getElementById('fYakit'), fL = document.getElementById('fYakitLitre');
+      if(!fY || !fL) return;
+      let guard = false;
+      const sync = function(selfIsLitre){
+        if(guard) return;
+        const self = selfIsLitre ? fL : fY;
+        const other = selfIsLitre ? fY : fL;
+        const selfVal = parseFloat(self.value);
+        if(!(selfVal > 0)) return;
+        if(parseFloat(other.value) > 0) return;   // ikisi de dolu → karışma
+        const avg = fuelAvgPrice();
+        if(!avg || avg <= 0) return;
+        guard = true;
+        other.value = (selfIsLitre ? selfVal * avg : selfVal / avg).toFixed(2);
+        guard = false;
+        markFormDirty(); updateAdvBadge();
+      };
+      fL.addEventListener('input', function(){ sync(true); });
+      fY.addEventListener('input', function(){ sync(false); });
+    })();
   }
   // Kurulum ilerlemesi
   const spList = document.getElementById('setupProgressList');
@@ -13634,6 +14535,13 @@ scheduleDraftOffer();
   // Vardiya
   const vt = document.getElementById('vardiyaToggle');
   if(vt) vt.addEventListener('click', toggleVardiya);
+  // Vardiya mini bar: dokununca ana sayfadaki vardiya kartına götür.
+  const vmb = document.getElementById('vardiyaMiniBar');
+  if(vmb) vmb.addEventListener('click', function(){
+    if(typeof switchToPage === 'function') switchToPage('dashboard');
+    const card = document.getElementById('vardiyaCard');
+    if(card && typeof card.scrollIntoView === 'function') setTimeout(function(){ card.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
+  });
   // Maliyet merkezi
   const costSel = document.getElementById('costVehicleSelect');
   if(costSel) costSel.addEventListener('change', renderCost);
@@ -13656,13 +14564,23 @@ scheduleDraftOffer();
   });
   const fc = document.getElementById('btnFilterClear');
   if(fc) fc.addEventListener('click', function(){
-    _filterVehicle=''; _filterSort='date-desc';
+    _filterVehicle=''; _filterSort='date-desc'; _dcPeriod='all';
     if(fv) fv.value=''; if(fs) fs.value='date-desc';
     renderDaily();
   });
+  // Günlük dönem chip'leri: Bugün · Bu hafta · Tümü
+  document.querySelectorAll('.dc-chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      _dcPeriod = c.getAttribute('data-dc') || 'all';
+      renderDaily();
+    });
+  });
+  // Maliyet merkezi → Garaja git
+  const btnGarage = document.getElementById('btnCostToGarage');
+  if(btnGarage) btnGarage.addEventListener('click', function(){ switchToPage('garage'); });
   // İlk yükleme: vardiya durumu + kurulum kartı
   renderVardiya();
 })();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37fe264bb062ff7',t:'MTc4ODg5MDc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a391c9da7ab1e34b',t:'MTc4OTA3ODQ5Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a34c793cfe78f681',t:'MTc4ODM1MTY3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a373f4be2f76e325',t:'MTc4ODc2NTY4MA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a37fe264bb062ff7',t:'MTc4ODg5MDc1Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a396c645ea5ecdd4',t:'MTc4OTEzMDc3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

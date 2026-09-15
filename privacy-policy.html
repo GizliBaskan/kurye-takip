@@ -4,119 +4,291 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Gizlilik Politikası — Kurye OS</title>
-  <meta name="description" content="Kurye OS gizlilik politikası: hangi veriler toplanır, nerede saklanır ve hesap silme haklarınız."/>
+  <meta name="description" content="Kurye OS gizlilik politikası: hangi veriler toplanır, nerede saklanır, üçüncü taraf hizmetler ve hesap silme haklarınız."/>
   <style>
     :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #0f172a;
-      --muted: #475569;
-      --line: #e2e8f0;
-      --accent: #0284c7;
-      --red: #b91c1c;
+      --bg: #0a0e14;
+      --card: #131920;
+      --card-border: #1e2a36;
+      --text: #e2e8f0;
+      --muted: #8b9cb5;
+      --heading: #f1f5f9;
+      --accent: #38bdf8;
+      --accent-dim: rgba(56,189,248,.12);
+      --green: #4ade80;
+      --red: #f87171;
+      --note-bg: #0f1820;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; }
     body {
-      margin: 0;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.65;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
     .wrap {
-      max-width: 760px;
+      max-width: 740px;
       margin: 0 auto;
-      padding: 2.2rem 1.2rem 4rem;
+      padding: 2rem 1.2rem 4rem;
     }
+
+    /* Header */
     header {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 1.4rem 1.35rem;
-      margin-bottom: 1.4rem;
+      background: linear-gradient(135deg, #131920 0%, #0f1820 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.6rem 1.5rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      overflow: hidden;
     }
-    .kicker { color: var(--accent); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    h1 { margin: .25rem 0 .35rem; font-size: 1.7rem; letter-spacing: -.03em; }
-    .updated { color: var(--muted); font-size: .88rem; }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .kicker {
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    h1 {
+      color: var(--heading);
+      margin: .3rem 0 .4rem;
+      font-size: 1.65rem;
+      letter-spacing: -.03em;
+      font-weight: 800;
+    }
+    .updated { color: var(--muted); font-size: .82rem; }
+
+    /* Article card */
     article {
       background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 1.5rem 1.35rem 1.8rem;
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.6rem 1.5rem 2rem;
     }
-    h2 { font-size: 1.08rem; margin: 1.5rem 0 .45rem; }
-    p, li { color: #1e293b; font-size: .95rem; }
-    ul { padding-left: 1.15rem; }
-    li { margin: .28rem 0; }
-    a { color: var(--accent); }
+    .intro {
+      color: var(--muted);
+      font-size: .93rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    h2 {
+      color: var(--heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 1.6rem 0 .5rem;
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+    }
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.55rem; height: 1.55rem;
+      background: var(--accent-dim);
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 800;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+    p { font-size: .92rem; margin: .35rem 0; }
+    ul { padding-left: 1.1rem; margin: .3rem 0; }
+    li { font-size: .92rem; margin: .3rem 0; color: var(--text); }
+    li strong { color: var(--heading); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Note / callout */
     .note {
-      background: #f8fafc;
-      border: 1px solid var(--line);
+      background: var(--note-bg);
+      border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: .85rem 1rem;
       color: var(--muted);
-      font-size: .88rem;
+      font-size: .84rem;
+      margin-top: 1.2rem;
+      line-height: 1.6;
     }
-    footer { margin-top: 1.2rem; color: var(--muted); font-size: .82rem; text-align: center; }
+    .note strong { color: var(--accent); }
+
+    /* Table */
+    .svc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: .6rem 0;
+      font-size: .85rem;
+    }
+    .svc-table th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      padding: .45rem .5rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .svc-table td {
+      padding: .5rem .5rem;
+      border-bottom: 1px solid rgba(30,42,54,.5);
+      vertical-align: top;
+    }
+    .svc-table tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 600;
+      padding: .15rem .45rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .badge-green { background: rgba(74,222,128,.12); color: var(--green); }
+    .badge-blue  { background: var(--accent-dim); color: var(--accent); }
+
+    /* Footer */
+    footer {
+      margin-top: 1.2rem;
+      color: var(--muted);
+      font-size: .78rem;
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 520px) {
+      .wrap { padding: 1rem .75rem 3rem; }
+      header, article { padding: 1.2rem 1rem; border-radius: 14px; }
+      h1 { font-size: 1.4rem; }
+      .svc-table { font-size: .8rem; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
+
     <header>
       <div class="kicker">Kurye OS</div>
       <h1>Gizlilik Politikası</h1>
-      <div class="updated">Son güncelleme: 31 Ağustos 2026</div>
+      <div class="updated">Son güncelleme: 12 Temmuz 2025</div>
     </header>
-    <article>
-      <p>Kurye OS (“Uygulama”), motokurye olarak çalışan kullanıcıların günlük teslimat, gelir, gider, mesai ve araç bakım verilerini takip etmelerini sağlayan kişisel bir yönetim aracıdır. Bu sayfa, uygulamayı kullanırken hangi verilerin toplandığını, nasıl saklandığını ve haklarınızı açıklar.</p>
 
-      <h2>1. Topladığımız veriler</h2>
+    <article>
+      <p class="intro">Kurye OS ("Uygulama"), motokurye olarak çalışan kullanıcıların vardiya, teslimat, gelir, gider ve araç bakım verilerini takip etmesini sağlayan kişisel bir çalışma asistanıdır. Bu sayfa hangi verilerin toplandığını, nerede saklandığını, hangi üçüncü taraf hizmetlerin kullanıldığını ve haklarınızı açıklar.</p>
+
+      <h2><span class="num">1</span> Topladığımız veriler</h2>
       <ul>
-        <li><strong>Hesap bilgisi:</strong> Kayıt olurken verdiğiniz e-posta adresi. Şifreniz Firebase Authentication tarafından şifrelenmiş şekilde saklanır; uygulama geliştiricisi şifrenizi göremez.</li>
-        <li><strong>Çalışma kayıtlarınız:</strong> Sizin girdiğiniz tarih, kilometre, paket/teslimat sayısı, gelir, yakıt ve diğer giderler, mesai saatleri, mola ve serbest metin notlar.</li>
-        <li><strong>Garaj bilgileri:</strong> Eklediğiniz araç adı, bakım periyotları ve bakım kayıtları.</li>
-        <li><strong>Hedef ve ayarlar:</strong> Haftalık/aylık kazanç veya paket hedefleri ile bonus barajı tercihleri.</li>
-        <li><strong>İstek / öneri:</strong> Gönüllü olarak gönderdiğiniz geri bildirim (isim vermeniz opsiyoneldir).</li>
-        <li><strong>Teknik veri:</strong> Son giriş zamanı (oturum ve destek amaçlı).</li>
+        <li><strong>Hesap bilgisi:</strong> Kayıt sırasında verdiğiniz e-posta adresi. Şifreniz Firebase Authentication tarafından şifrelenerek saklanır; uygulama geliştiricisi şifrenizi göremez.</li>
+        <li><strong>Çalışma kayıtları:</strong> Tarih, mesafe (km), paket/teslimat sayısı, gelir, bahşiş, yakıt tutarı ve litresi, diğer giderler, KDV, mesai süresi, mola süresi ve serbest metin notlar.</li>
+        <li><strong>Vardiya verileri:</strong> Vardiya başlangıç/bitiş zamanı, toplam süre, duraklama süreleri ve GPS ile ölçülen mesafe. Paket, gelir ve yakıt gibi detaylar vardiya bittikten sonra girilir.</li>
+        <li><strong>Garaj bilgileri:</strong> Araç adı/modeli, fiziksel kilometre sayacı, bakım türleri, periyotları ve bakım geçmişi.</li>
+        <li><strong>Bonus ayarları:</strong> Günlük/haftalık bonus barajları ve kademe tercihleri.</li>
+        <li><strong>Hedefler:</strong> Haftalık/aylık kazanç, paket ve mesafe hedefleri.</li>
+        <li><strong>Olay/Kaza raporu:</strong> Olay türü, tarih/saat, konum açıklaması, karşı taraf bilgisi, detay metni ve isteğe bağlı fotoğraf. Fotoğraf yalnızca cihazınızda (localStorage) saklanır, sunucuya gönderilmez.</li>
+        <li><strong>Acil durum kişileri:</strong> SOS özelliği için girdiğiniz telefon numaraları ve özel mesaj metni. Bu bilgiler yalnızca cihazınızda saklanır.</li>
+        <li><strong>Hatırlatıcılar:</strong> Vardiya bitiş ve slot seçim hatırlatıcı tercihleri (saat ve gün). Yerel bildirim olarak çalışır; sunucuya gönderilmez.</li>
+        <li><strong>İstek / öneri:</strong> Gönüllü olarak gönderdiğiniz geri bildirim mesajları (isim vermeniz isteğe bağlıdır).</li>
+        <li><strong>Teknik veri:</strong> Son giriş zamanı (oturum yönetimi), uygulama sürümü ve cihazda tutulan anonim hata logları (son 50 kayıt).</li>
       </ul>
 
-      <h2>2. Konum (GPS)</h2>
-      <p>Uygulama varsayılan olarak konumunuza erişmez. GPS mesafe sayacı yalnızca siz “Takibi Başlat” dediğinizde çalışır; ölçülen kilometre, sizin onayınızla günlük kayda eklenebilir. Konum verisi reklam veya profilleme için kullanılmaz, üçüncü taraflarla satılmaz. Takibi durdurduğunuzda sayaç durur.</p>
-      <p>Kamera, mikrofon, rehber veya galeri erişimi talep edilmez.</p>
+      <h2><span class="num">2</span> Konum (GPS)</h2>
+      <p>Uygulama varsayılan olarak konumunuza erişmez. GPS mesafe takibi yalnızca siz bir vardiya başlattığınızda veya GPS sayacını manuel başlattığınızda çalışır. Ölçülen mesafe vardiya sonunda onayınızla günlük kayda eklenir.</p>
+      <p>GPS verisi yalnızca toplam mesafe ve hareket süresi olarak işlenir. Rota, koordinat veya adres bilgisi kaydedilmez, sunucuya gönderilmez, reklam veya profilleme için kullanılmaz.</p>
+      <p>SOS özelliğini kullandığınızda, anlık konumunuz yalnızca sizin belirlediğiniz acil durum kişilerine SMS veya WhatsApp ile gönderilir.</p>
 
-      <h2>3. Veriler nerede saklanır?</h2>
-      <p>Verileriniz Google Firebase (Authentication ve Realtime Database) altyapısında, Avrupa bölgesinde (europe-west1) saklanır. İletim HTTPS ile şifrelenir.</p>
+      <h2><span class="num">3</span> Kamera ve fotoğraf</h2>
+      <p>Kamera izni yalnızca Olay/Kaza Raporu sırasında fotoğraf çekmek için talep edilir. Çekilen fotoğraf yalnızca cihazınızda saklanır (base64 olarak localStorage'da). Sunucuya veya üçüncü taraflara yüklenmez. Maksimum dosya boyutu 1,5 MB ile sınırlıdır. Mikrofon, rehber veya galeri erişimi talep edilmez.</p>
 
-      <h2>4. Verilere kim erişebilir?</h2>
+      <h2><span class="num">4</span> Veriler nerede saklanır?</h2>
+      <ul>
+        <li><strong>Sunucu:</strong> Hesap bilgileri, çalışma kayıtları, garaj verileri ve geri bildirimler Google Firebase (Authentication + Realtime Database) altyapısında, Avrupa bölgesinde (europe-west1) saklanır. Tüm iletişim HTTPS ile şifrelenir.</li>
+        <li><strong>Cihaz:</strong> Çevrimdışı çalışma desteği için verilerinizin bir kopyası cihazınızdaki localStorage'da tutulur. Olay fotoğrafları, SOS kişileri, hatırlatıcı ayarları ve hata logları yalnızca cihazda kalır.</li>
+      </ul>
+
+      <h2><span class="num">5</span> Üçüncü taraf hizmetler</h2>
+      <p>Uygulama reklam ağı, analitik SDK'sı veya kullanıcı takip aracı içermez. Kullandığı dış hizmetler:</p>
+      <table class="svc-table">
+        <thead>
+          <tr>
+            <th>Hizmet</th>
+            <th>Amaç</th>
+            <th>Veri</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Google Firebase</td>
+            <td>Kimlik doğrulama ve veri tabanı</td>
+            <td>E-posta, kayıtlar</td>
+          </tr>
+          <tr>
+            <td>Open-Meteo API</td>
+            <td>Mevsimsel çalışma ipuçları</td>
+            <td><span class="badge badge-green">Anonim</span> Konum gönderilmez</td>
+          </tr>
+          <tr>
+            <td>Google Maps</td>
+            <td>SOS'ta yakın çekici/tamirci arama</td>
+            <td><span class="badge badge-blue">Kullanıcı tetikler</span></td>
+          </tr>
+          <tr>
+            <td>Google Fonts</td>
+            <td>Yazı tipi (UI)</td>
+            <td><span class="badge badge-green">Anonim</span></td>
+          </tr>
+          <tr>
+            <td>JSZip (CDN)</td>
+            <td>OTA güncelleme paketleri</td>
+            <td><span class="badge badge-green">Anonim</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2><span class="num">6</span> Verilere kim erişebilir?</h2>
       <ul>
         <li>Yalnızca siz, kendi hesabınızla giriş yaptığınızda kendi kayıtlarınıza erişebilirsiniz.</li>
         <li>Uygulama geliştiricisi (yönetici), teknik destek ve hata giderme amacıyla sınırlı erişime sahip olabilir.</li>
-        <li>Verileriniz reklam ağıyla paylaşılmaz, satılmaz veya pazarlama profili için kullanılmaz.</li>
+        <li>Verileriniz reklam ağlarıyla paylaşılmaz, satılmaz veya pazarlama profili oluşturmak için kullanılmaz.</li>
       </ul>
 
-      <h2>5. Hesap, şifre ve silme</h2>
+      <h2><span class="num">7</span> Hesap, veri aktarımı ve silme</h2>
       <p>Uygulama içindeki <strong>Hesabım</strong> ekranından:</p>
       <ul>
         <li>Mevcut şifrenizi doğrulayarak şifrenizi değiştirebilirsiniz.</li>
-        <li>Hesabınızı ve ilişkili tüm kayıtlarınızı silebilirsiniz. Silme işlemi onay kutusu ve ikinci bir onay penceresi ile korunur; geri alınamaz.</li>
-        <li>Ayarlar ekranından verilerinizin bir kopyasını JSON olarak indirebilirsiniz.</li>
+        <li>Çalışma kayıtlarınızı <strong>CSV</strong> dosyası olarak dışa aktarabilir, aylık özetleri PDF olarak kaydedebilirsiniz.</li>
+        <li>Hesabınızı ve ilişkili tüm verilerinizi kalıcı olarak silebilirsiniz. Silme işlemi onay kutusu ve ikinci bir onay adımı ile korunur; geri alınamaz.</li>
       </ul>
-      <p>İsterseniz silme talebinizi e-posta ile de iletebilirsiniz; makul süre içinde yerine getirilir.</p>
+      <p>Silme talebinizi e-posta ile de iletebilirsiniz; makul süre içinde yerine getirilir.</p>
 
-      <h2>6. Haklarınız (KVKK)</h2>
-      <p>6698 sayılı KVKK kapsamında verilerinize erişme, düzelttirme, silinmesini isteme ve işlenmesine itiraz etme haklarına sahipsiniz. Bu hakları uygulama içinden veya aşağıdaki iletişim adresinden kullanabilirsiniz.</p>
+      <h2><span class="num">8</span> Haklarınız (KVKK)</h2>
+      <p>6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında verilerinize erişme, düzeltme, silinmesini isteme ve işlenmesine itiraz etme haklarına sahipsiniz. Bu hakları uygulama içinden veya aşağıdaki iletişim adresinden kullanabilirsiniz.</p>
 
-      <h2>7. Çocukların gizliliği</h2>
-      <p>Uygulama, motokurye olarak çalışan yetişkin kullanıcılara yöneliktir ve bilerek 13 yaşından küçüklerden veri toplamaz.</p>
+      <h2><span class="num">9</span> Çocukların gizliliği</h2>
+      <p>Uygulama, motokurye olarak çalışan yetişkin kullanıcılara yöneliktir ve bilerek 13 yaşından küçük kişilerden veri toplamaz.</p>
 
-      <h2>8. Politika güncellemeleri</h2>
-      <p>Bu politika zaman zaman güncellenebilir. Önemli değişiklikler bu sayfada yayınlanır. Sayfanın üstündeki “Son güncelleme” tarihi geçerlidir.</p>
+      <h2><span class="num">10</span> Politika güncellemeleri</h2>
+      <p>Bu politika zaman zaman güncellenebilir. Önemli değişiklikler bu sayfada yayınlanır; sayfanın üstündeki "Son güncelleme" tarihi geçerlidir.</p>
 
-      <h2>9. İletişim</h2>
-      <p>Gizlilik soruları, KVKK talepleri veya hesap silme için: <a href="/cdn-cgi/l/email-protection#bed8cbccd5dfd0cddc8f8e8a8efed9d3dfd7d290ddd1d3"><span class="__cf_email__" data-cfemail="2d4b585f464c435e4f1c1d191d6d4a404c4441034e4240">[email&#160;protected]</span></a></p>
-      <p class="note">Play Store Data safety formu ve uygulama içi “Hesabım” ekranı bu politika ile uyumludur. Konum izni yalnızca GPS sayacını sizin başlatmanız halinde istenir.</p>
+      <h2><span class="num">11</span> İletişim</h2>
+      <p>Gizlilik soruları, KVKK talepleri veya hesap silme için:<br/>
+        <a href="mailto:furkansb1040@gmail.com">furkansb1040@gmail.com</a>
+      </p>
+
+      <p class="note"><strong>Play Store uyumu:</strong> Data Safety formu ve uygulama içi "Hesabım" ekranı bu politika ile uyumludur. Konum izni yalnızca GPS sayacını sizin başlatmanız halinde istenir. Kamera izni yalnızca olay raporu fotoğrafı için talep edilir. Toplanan veriler reklam amacıyla kullanılmaz.</p>
     </article>
-    <footer>© 2026 Kurye OS</footer>
+
+    <footer>&copy; 2025 Kurye OS</footer>
+
   </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</body>
 </html>

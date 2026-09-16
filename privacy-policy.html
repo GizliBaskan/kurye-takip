@@ -203,7 +203,8 @@
 
       <h2><span class="num">2</span> Konum (GPS)</h2>
       <p>Uygulama varsayılan olarak konumunuza erişmez. GPS mesafe takibi yalnızca siz bir vardiya başlattığınızda veya GPS sayacını manuel başlattığınızda çalışır. Ölçülen mesafe vardiya sonunda onayınızla günlük kayda eklenir.</p>
-      <p>GPS verisi yalnızca toplam mesafe ve hareket süresi olarak işlenir. Rota, koordinat veya adres bilgisi kaydedilmez, sunucuya gönderilmez, reklam veya profilleme için kullanılmaz.</p>
+      <p>GPS verisi yalnızca toplam mesafe ve hareket süresi olarak işlenir. Rota veya adres bilgisi kaydedilmez, reklam veya profilleme için kullanılmaz.</p>
+      <p>Hava durumu tahmini için son bilinen konum koordinatlarınız Open-Meteo API'sine gönderilir. SOS yakın çekici/tamirci aramasında anlık koordinatlarınız Google Maps'e iletilir. Bu paylaşımlar yalnızca ilgili özellik kullanıldığında gerçekleşir; koordinatlar sunucuda saklanmaz.</p>
       <p>SOS özelliğini kullandığınızda, anlık konumunuz yalnızca sizin belirlediğiniz acil durum kişilerine SMS veya WhatsApp ile gönderilir.</p>
 
       <h2><span class="num">3</span> Kamera ve fotoğraf</h2>
@@ -234,12 +235,12 @@
           <tr>
             <td>Open-Meteo API</td>
             <td>Mevsimsel çalışma ipuçları</td>
-            <td><span class="badge badge-green">Anonim</span> Konum gönderilmez</td>
+            <td><span class="badge badge-blue">Konum (koordinat)</span> Hava durumu tahmini için son GPS koordinatları gönderilir</td>
           </tr>
           <tr>
             <td>Google Maps</td>
             <td>SOS'ta yakın çekici/tamirci arama</td>
-            <td><span class="badge badge-blue">Kullanıcı tetikler</span></td>
+            <td><span class="badge badge-blue">Kullanıcı tetikler</span> Yakın çekici/tamirci aramasında anlık konum Google Maps'e iletilir</td>
           </tr>
           <tr>
             <td>Google Fonts</td>

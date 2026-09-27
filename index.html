@@ -104,7 +104,7 @@
   --amber:#f7c36b;--amber-dim:rgba(233,175,70,.12);
   --violet:#c0a4ff;--violet-dim:rgba(166,123,245,.13);
   --orange:#ffb47b;--cyan:#6edbe4;--cyan-dim:rgba(72,193,205,.12);
-  --r:18px;--rs:11px;
+  --r:var(--r-lg);--rs:var(--r-md);         /* 8.12.0: sistem jetonlarına bağlandı */
   --shadow:0 10px 32px rgba(0,0,0,.06);
   --font:'DM Sans',system-ui,sans-serif;
   --mono:'JetBrains Mono',ui-monospace,monospace;
@@ -128,7 +128,7 @@
 html,body,.app-container{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 input,textarea,[contenteditable="true"]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 button,input,select,textarea,a{font-family:inherit;touch-action:manipulation}
-select{appearance:none;-webkit-appearance:none;background-color:var(--bg)!important;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%)!important;background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%!important;background-size:5px 5px,5px 5px!important;background-repeat:no-repeat!important;border:1px solid var(--border2)!important;border-radius:var(--rs)!important;color:var(--text)!important;cursor:pointer;min-height:42px;padding-right:2.35rem!important;box-shadow:0 1px 0 rgba(255,255,255,.025),inset 0 1px 0 rgba(255,255,255,.02);transition:border-color .15s,box-shadow .15s,background-color .4s ease!important}
+select{appearance:none;-webkit-appearance:none;background-color:var(--bg)!important;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%)!important;background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%!important;background-size:5px 5px,5px 5px!important;background-repeat:no-repeat!important;border:1px solid var(--border2)!important;border-radius:var(--rs)!important;color:var(--text)!important;cursor:pointer;min-height:42px;padding-right:2.35rem!important;box-shadow:0 1px 0 rgba(255,255,255,.025),inset 0 1px 0 rgba(255,255,255,.02);transition:border-color var(--m-hizli),box-shadow var(--m-hizli),background-color var(--m-normal)!important}
 select:hover{border-color:var(--accent)!important;background-color:var(--card)!important}
 select:focus{border-color:var(--accent)!important;box-shadow:0 0 0 3px var(--accent-dim)!important}
 select:disabled{cursor:not-allowed;opacity:.5}
@@ -407,7 +407,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .auth-legal{margin:.15rem 0 .2rem;font-size:.72rem;color:var(--muted);line-height:1.45}
 .auth-legal a{color:var(--accent)}
 .bn-item.active{color:var(--accent)}
-.bn-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:18px;height:2px;border-radius:99px;background:var(--accent)}
+.bn-item.active::before{display:none}
+/* --- Liquid bottom-nav indicator (damla) --- */
+.bn-liquid{position:absolute;top:-3px;left:0;width:42px;height:6px;border-radius:0 0 12px 12px;
+  background:var(--accent);transform:translateX(var(--bnx,0));
+  transition:transform .42s cubic-bezier(.4,.9,.3,1.06)!important;pointer-events:none;filter:blur(.3px);z-index:3}
+.bn-item[data-page="weekly"].active ~ .bn-liquid,
+.bn-item[data-page="monthly"].active ~ .bn-liquid{background:var(--violet)}
+.bn-item[data-page="garage"].active ~ .bn-liquid{background:var(--amber)}
 /* --- Ortadaki hızlı işlem: ＋ Kayıt (docked FAB) --- */
 .bn-fab{flex:0 0 auto;width:56px;height:56px;margin-top:-22px;border-radius:50%;border:4px solid var(--elev);background:linear-gradient(135deg,var(--accent),#0284c7);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 22px rgba(14,165,233,.4);z-index:2;transition:transform .15s cubic-bezier(.22,1,.36,1)}
 .bn-fab:active{transform:scale(.92)}
@@ -1327,7 +1334,7 @@ select.adm-chip{border-radius:10px;padding:.45rem .5rem;min-height:36px}
 .bottom-nav{background:var(--card);box-shadow:0 -6px 24px rgba(0,0,0,.06)}
 .bn-item{font-size:.7rem;min-height:58px;gap:.3rem;padding:.55rem .15rem}
 .bn-item.active{background:var(--accent-dim)}
-.bn-item.active::before{width:24px;height:3px}
+.bn-item.active::before{display:none}
 .bn-item[data-page="weekly"].active,.bn-item[data-page="monthly"].active{color:var(--violet);background:var(--violet-dim)}
 .bn-item[data-page="garage"].active{color:var(--amber);background:var(--amber-dim)}
 .metric,.insight,.best-card,.daily-card{border-radius:var(--r);min-width:0;transform:none;transition:border-color .15s}
@@ -2016,17 +2023,41 @@ body.no-scroll{overflow:hidden !important}
   --accent:#5cc8ff; --accent-dim:rgba(92,200,255,.14);
   --orange:#ff9a3c; --orange-dim:rgba(255,138,30,.14);
   --energy:var(--orange); --energy-dim:var(--orange-dim);
-  --brand-grad:linear-gradient(120deg,#0284c7,#0ea5e9);
   --brand-navy:#0a1830;
+  /* ================= TASARIM JETONLARI (8.12.0) =================
+     Kaynak: TASARIM-ONERILERI.md · ölçüm: v8-test/tasarim-olcum.mjs
+     Kural: yarıçap/gölge/süre/yazı boyutu artık bu jetonlardan yazılır. */
+  /* 1) Birincil marka — beyaz yazı kontrastı her iki uçta da ≥4,5 */
+  --primary-1:#075985; --primary-2:#0369a1;
+  --brand-grad:linear-gradient(120deg,var(--primary-1),var(--primary-2));
+  /* 2) Yazı ölçeği: 7 kademe (eski: 20 kademe) · taban 11 px */
+  --t-2xs:11px; --t-xs:12px; --t-sm:13px; --t-md:15px; --t-lg:17px; --t-xl:22px; --t-2xl:28px;
+  /* 3) Yarıçap ölçeği */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:22px; --r-pill:999px;
+  /* 4) Yükselti (gölge) ölçeği + odak ışıması */
+  --e0:none;
+  --e1:0 1px 2px rgba(0,0,0,.28),0 1px 3px rgba(0,0,0,.14);
+  --e2:0 10px 24px rgba(0,0,0,.36),0 2px 6px rgba(0,0,0,.22);
+  --e3:0 8px 22px rgba(7,89,133,.38);
+  --glow:0 0 0 3px color-mix(in srgb,var(--accent) 34%,transparent);
+  --inset:inset 0 -3px 0 rgba(255,255,255,.06);
+  /* 5) Hareket: 3 süre + 2 eğri */
+  --m-hizli:120ms; --m-normal:200ms; --m-yavas:320ms;
+  --m-cikis:cubic-bezier(.2,.8,.2,1); --m-giris:ease-out;
 }
 :root[data-theme="light"]{
   --accent:#0369a1; --accent-dim:rgba(3,105,161,.10);
   --orange:#d96a06; --orange-dim:rgba(217,106,6,.12);
+  --primary-1:#075985; --primary-2:#0369a1;
+  --e1:0 1px 2px rgba(15,23,42,.08),0 1px 3px rgba(15,23,42,.06);
+  --e2:0 10px 24px rgba(15,23,42,.16),0 2px 6px rgba(15,23,42,.10);
+  --e3:0 8px 22px rgba(7,89,133,.26);
+  --inset:inset 0 -3px 0 rgba(15,23,42,.05);
 }
-/* Birincil buton + FAB: indigo -> marka gradienti */
-.btn-primary,.auth-login-btn{background:linear-gradient(120deg,#0284c7,#0ea5e9)!important;color:#fff;box-shadow:0 6px 18px rgba(14,165,233,.35)}
+/* Birincil buton + FAB: indigo -> marka gradienti (kontrast için koyulaştırıldı) */
+.btn-primary,.auth-login-btn{background:linear-gradient(120deg,var(--primary-1),var(--primary-2))!important;color:#fff;box-shadow:0 6px 18px rgba(3,105,161,.35)}
 .btn-primary:hover,.auth-login-btn:hover{filter:brightness(1.08)}
-.bn-fab{background:linear-gradient(135deg,#0284c7,#0ea5e9)!important;box-shadow:0 10px 24px rgba(14,165,233,.45)}
+.bn-fab{background:linear-gradient(135deg,var(--primary-1),var(--primary-2))!important;box-shadow:0 10px 24px rgba(3,105,161,.45)}
 .auth-box::before{background:linear-gradient(90deg,#0ea5e9,#22d3ee,#ff8a1e)!important}
 
 /* ---------- 2. SVG İKON SİSTEMİ ---------- */
@@ -2199,8 +2230,7 @@ button .v8svg,.btn .v8svg{width:17px;height:17px}
 /* 860B: Garaj bakım işlem çubuğu — uzun bakım listesinde kaydırırken üstte kalır
    (8.0.4'teki davranış; sonraki sürümlerde kaldırılmıştı). Sayfa arka planıyla
    aynı zeminde durur, altına ince gölge düşer, içerik arkasından kaymaz. */
-#page-garage .toolbar.toolbar-sticky{position:sticky;top:0;z-index:6;background:var(--bg);border:none;padding:.55rem 0;margin-bottom:1.1rem!important;box-shadow:0 12px 14px -14px rgba(0,0,0,.6)}
-@media(max-width:768px){#page-garage .toolbar.toolbar-sticky{top:calc(env(safe-area-inset-top,0px) + 3.55rem)}}
+#page-garage .toolbar.toolbar-sticky{position:static;z-index:auto;background:var(--bg);border:none;padding:.55rem 0;margin-bottom:1.1rem!important;box-shadow:none}
 /* 850B: yakıt satırı — öneri rozetleri inputları sıkıştırmasın (değer görünür kalsın) */
 .fuel-input-row{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
 .fuel-input-row>input[type=number]{flex:1 1 84px;min-width:84px}
@@ -2398,6 +2428,7 @@ button.v8-lrow:active{background:var(--hover)}
 .splash-logo-wrap img{width:100%;height:100%;object-fit:cover}
 .splash-title{font-size:1.7rem}
 .auth-box .logo-i{width:76px!important;height:76px!important;border-radius:50%!important;overflow:hidden;border:2px solid rgba(56,189,248,.45)!important}
+.auth-box.v8-giris .logo-i{display:none}
 .sidebar .logo-i{border-radius:10px!important;overflow:hidden}
 .sidebar .logo-i img{border-radius:8px!important}
 
@@ -2527,6 +2558,389 @@ function v8dlgIcon(n, dflt){
 </script>
 
 
+<style>
+/* ================================================================================
+   05-2 · TASARIM SİSTEMİ (8.12.0)
+   --------------------------------------------------------------------------------
+   Kaynak: TASARIM-ONERILERI.md · 8 madde · ölçüm: v8-test/tasarim-olcum.mjs
+   Kural: bu parça EKLEMELİDİR — mevcut kurallar silinmez, jetonlara bağlanır.
+     Bölüm 1 · dokunma alanı 48 px (öneri 2)
+     Bölüm 2 · hareket sistemi (öneri 5)
+     Bölüm 3 · durum bileşeni (öneri 6)
+     Bölüm 4 · grafik dokunma balonu / boş gün (öneri 7)
+     Bölüm 5 · üretilmiş jeton normalizasyonu (öneri 3-4) — ELLE DÜZENLEME
+   ================================================================================ */
+
+/* ---------- 1 · DOKUNMA ALANI (48 px · "eldiven modu") --------------------------
+   GÖRÜNÜM DEĞİŞMEZ: kutu aynı kalır, ::after ile görünmez dokunma alanı genişler.
+   Kurallar yalnızca position:static olan öğelere dokunur (fixed/absolute korunur). */
+.hero-chips{gap:.5rem;padding:9px 0;margin:-9px 0}   /* ::after alanı kırpılmasın */
+.hero-chip,.more-dev,.sb-x,.v8-live-btn,.btn,.btn-sm,.btn-ghost,.btn-danger,.chip,.q-tag,.ct,
+.goal-seg,.goal-type-btn,.nav-arrow,.period-jump-btn,.icon-btn,.ota-tag-btn{position:relative}
+.hero-chip::after,.sb-x::after,.v8-live-btn::after,.btn::after,.chip::after,.q-tag::after,
+.ct::after,.goal-seg::after,.goal-type-btn::after,.nav-arrow::after,.period-jump-btn::after,
+.icon-btn::after,.ota-tag-btn::after{content:"";position:absolute;inset:-8px;border-radius:inherit}
+.v8-bell::after{content:"";position:absolute;inset:-6px;border-radius:inherit}
+.more-dev::after{content:"";position:absolute;inset:-12px}
+.menu-btn::after{content:"";position:absolute;inset:-4px;border-radius:inherit}
+
+/* ---------- 2 · HAREKET SİSTEMİ ------------------------------------------------
+   Tek temel hız (200 ms) + iki rol (dokunma 120 ms · sayfa/panel 320 ms).
+   Böylece yeni eklenen bir animasyon da sisteme kendiliğinden uyar. */
+*,*::before,*::after{transition-duration:var(--m-normal)!important}
+.btn,.bn-fab,.bn-item,.nav-item,.hero-chip,.chip,.q-tag,.ct,.goal-seg,.goal-type-btn,
+.nav-arrow,.period-jump-btn,.icon-btn,.sb-item,.menu-btn,.v8-bell,.v8-live-btn,
+.sw,.tab,.page-btn{transition-duration:var(--m-hizli)!important}
+.page,.sheet,.modal,.overlay,.bottom-sheet,.drawer{transition-duration:var(--m-yavas)!important}
+/* Tek küresel "hareketi azalt" kuralı: yeni animasyon ekleyen kimse bunu unutamaz. */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+  /* rol kuralları daha yüksek özgüllükte olduğu için burada da yazılır:
+     yoksa "basılı tut" gibi geri bildirimler hareket azaltmada da oynar. */
+  .btn,.bn-fab,.bn-item,.nav-item,.hero-chip,.chip,.q-tag,.ct,.goal-seg,.goal-type-btn,
+  .nav-arrow,.period-jump-btn,.icon-btn,.sb-item,.menu-btn,.v8-bell,.v8-live-btn,
+  .sw,.tab,.page-btn,.page,.sheet,.modal,.overlay,.bottom-sheet,.drawer{
+    transition-duration:.01ms!important;
+  }
+}
+
+/* ---------- 3 · DURUM BİLEŞENİ (boş / yükleniyor / hata) ----------------------
+   Tek bileşen: ikon + tek cümle + tek eylem. Kartlar arası tutarsızlık biter.
+   Kullanım: v8Durum('bos', {ikon:'package', metin:'…', alt:'…', eylem:'…'}) */
+.v8durum{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+  text-align:center;padding:1.6rem 1rem;color:var(--muted);font-size:var(--t-sm);line-height:1.5;
+  grid-column:1/-1}
+.v8durum .v8svg{width:34px;height:34px;opacity:.9;margin-bottom:.1rem}
+.v8durum strong{color:var(--text);font-size:var(--t-md);font-weight:650;line-height:1.35}
+.v8durum .v8durum-alt{font-size:var(--t-xs);max-width:34ch}
+.v8durum .btn{margin-top:.55rem}
+.v8durum[data-durum="hata"] strong{color:var(--red)}
+.v8durum[data-durum="hata"] .v8svg{color:var(--red)}
+.v8durum-iskelet{display:flex;flex-direction:column;gap:.5rem;align-items:stretch;
+  width:100%;padding:1.5rem 1.1rem}
+.v8durum-iskelet i{display:block;height:13px;border-radius:var(--r-sm);
+  background:linear-gradient(90deg,var(--elev),var(--hover),var(--elev));
+  background-size:200% 100%;animation:skeletonShimmer 1.15s ease-in-out infinite}
+.v8durum-iskelet i:nth-child(2){height:22px;width:52%}
+.v8durum-iskelet i:nth-child(3){width:74%}
+
+/* ---------- 4 · GRAFİK: dokunma balonu · boş gün · kalıcı değer --------------- */
+.ana-chart{touch-action:pan-x}
+.ana-bar{cursor:pointer}
+.ana-bar.son .ana-bar-lb,.ana-chart.many .ana-bar.son .ana-bar-lb{display:block}
+.ana-bar-v{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(100% + 3px);
+  font-size:var(--t-2xs);font-weight:700;color:var(--text);white-space:nowrap;
+  font-variant-numeric:tabular-nums}
+.ana-bos{flex:1 1 0;min-width:8px;align-self:flex-end;height:4px;border:1px dashed var(--border2);
+  border-radius:var(--r-sm);opacity:.8}
+.ana-balon{display:flex;align-items:center;gap:.5rem;margin-top:.55rem;padding:.5rem .65rem;
+  border:1px solid var(--border2);border-radius:var(--r-md);background:var(--elev);
+  color:var(--sec);font-size:var(--t-xs);line-height:1.45;animation:v8BalonGir var(--m-normal) var(--m-cikis)}
+.ana-balon b{color:var(--text)}
+.ana-balon-x{margin-left:auto;border:0;background:transparent;color:var(--muted);
+  font-size:var(--t-lg);line-height:1;cursor:pointer;padding:0 .25rem}
+@keyframes v8BalonGir{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ana-bar:focus-visible,.ana-bar:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+/* ---------- 4b · YÜKSEK ÖZGÜLLÜKLÜ DÜZELTMELER --------------------------------
+   Uygulamadaki !important'lı özel kurallar jetonlara bağlanır (marka tutarlılığı). */
+.sidebar .logo-i{border-radius:var(--r-md)!important}
+.toast{border-radius:var(--r-md)!important}
+.ana-bar{border-radius:var(--r-sm) var(--r-sm) 2px 2px!important}
+
+/* ---------- 5 · JETON NORMALİZASYONU (üretilmiş) -------------------------------
+   v8-test/tasarim-uret.mjs ekranda ölçülen metin/kart/gölgeleri jetonlara bağlar. */
+/* >>> ÜRETİLMİŞ BLOK BAŞLANGIÇ >>> */
+/* --- YAZI ÖLÇEĞİ (ölçüldü · 202 sınıf) --- */
+/* --t-2xs · 62 sınıf */
+.action-box-sub,.ana-bar-lb,.ana-bar-v,.ana-hero-top span,.badge-category-title small,.badge-desc,.badge-state,.badge-title,.bn-item span,.bonus-pill,.count,.cr-kpi small,.dashboard-period,.dashboard-range,.dashboard-section-title span,.delta-chip,.detail-fcard-label,.detail-fcard-sub,.detail-fcard-sub span,.detail-section-head span,.eng-level-badge,.eng-sub,.fg span,.form-details-body pre,.fuel-seg-k,.goal-mini-label,.goal-mini-sub,.gps-hint,.gps-meta,.inc-chip,.izin-note,.karne-hero-cell-k,.karne-hero-net span,.karne-score-desc,.kiyas-head small,.kiyas-tbl th,.metric-sub,.metric-sub span,.metrics-hint,.mh-stat span,.mk-head,.more-dev,.ns small,.panel span,.period-badge,.period-chip,.rec-net small,.record-modal-head p,.record-modal-head span,.record-section-title,.record-source-tag,.rem-time-cap,.sadel-hint,.sadel-hint b,.sadel-row span,.sb-user-cap,.step-hint,.step-k,.today-stat-k,.v8-live-tx span,.v8-mgroup,.v8-qabtn small{font-size:var(--t-2xs)!important}
+/* --t-xs · 76 sınıf */
+.ack-row span,.action-box-title,.ana-avg,.ana-avg b,.ana-hero-sub,.ana-tab,.badges-summary span,.bmo-desc,.bmo-desc b,.btn,.btn-reset,.cr-sub,.daily-card-day,.daily-card-expand-btn,.daily-card-stats span,.dashboard-breakdown dt,.dashboard-hero-head h2,.dashboard-note,.date,.dc-chip,.deg,.desc,.empty-period p,.eng-collapse-arrow,.eng-task,.eng-task span,.form-details span,.form-details summary,.form-details-body p,.goal-days,.goal-seg,.hc-item-name,.hc-sub,.head-date,.hero-chip,.info-block b,.info-block p,.info-block strong,.insight h4,.izin-chip,.karne-cmp-k,.karne-compare-title,.karne-explain b,.karne-explain p,.karne-score-name,.kiyas-head b,.kiyas-tbl td,.kiyas-yorum,.link-btn,.menu-cip span,.metric-label,.mw-cap,.mw-chip,.page p,.page-head p,.panel p,.period-jump-btn span,.period-nav-sub,.rem-body p,.rem-chip,.rem-head-text p,.rem-status,.rem-time-edit,.sb-user-mail,.sc-go,.sc-item span,.seg-btn,.tag,.today-date,.today-hero-sub,.trend-summary,.trend-summary b,.v8-greet-tx span,.v8-ltx span,.v8-qabtn span,.v8durum-alt{font-size:var(--t-xs)!important}
+/* --t-sm · 13 sınıf */
+.account-email,.ana-chart-title,.badge-category-title span,.bonus-preview,.bonus-preview b,.eng-collapse-summary,.eng-head b,.fg label,.lbl,.rem-body b,.sadel-row b,.setup-alert-body b,.v8-live-tx b{font-size:var(--t-sm)!important}
+/* --t-md · 14 sınıf */
+.cr-name,.daily-card-date,.dashboard-section-title h2,.fuel-seg-head span,.gi-toggle span,.mh-stat b,.nav-item span,.ns b,.panel h3,.rem-head-text h3,.sc-title,.section-divider h2,.v8-ltx b,.v8durum strong{font-size:var(--t-md)!important}
+/* --t-lg · 18 sınıf */
+.bmo-title,.cr-kpi,.dashboard-breakdown dd,.eng-head span,.eq,.hc-title,.karne-hero-cell-v,.karne-hero-month,.karne-score-val,.logo span,.panel strong,.period-nav-title,.period-nav-title span,.sc-pct,.step-btn,.v-sub,.v8-avatar,.v8-greet-tx b{font-size:var(--t-lg)!important}
+/* --t-xl · 15 sınıf */
+.big,.daily-card-net,.detail-fcard-value,.eng-kpi,.fuel-seg-v,.gps-live,.info-block h3,.metric-value,.page-head h1,.rec-net b,.record-modal-head h2,.rem-time-val,.step-v,.today-stat-v,.val{font-size:var(--t-xl)!important}
+/* --t-2xl · 4 sınıf */
+.ana-hero-val,.dashboard-net,.hc-ring-empty,.karne-hero-net{font-size:var(--t-2xl)!important}
+
+/* --- YARIÇAP (ölçüldü · 105 sınıf) --- */
+/* --r-sm · 12 sınıf */
+.action-box-ico,.ana-bar,.btn-reset,.daily-card-stats span,.dashboard-period,.delta-chip,.detail-fcard-ico,.earn-day,.eng-collapse-ico,.eng-level-badge,.goal-seg,.sc-check{border-radius:var(--r-sm)!important}
+/* --r-md · 24 sınıf */
+.account-email,.badge-card,.btn,.cr-ico,.form-details-body pre,.goal-seg-row,.insight-icon,.karne-hero-cell,.kiyas-yorum,.logo-i,.menu-btn,.mh-stat,.nav-arrow,.nav-item,.period-jump-btn,.rem-ico,.rem-time-edit,.sb-x,.sc-ico,.seg-btn,.step-btn,.today-stat,.v8-live-btn,.v8-tldot{border-radius:var(--r-md)!important}
+/* --r-lg · 35 sınıf */
+.action-box-item,.badge-category,.best-card,.bonus-mode-opt,.bonus-preview,.cost-row,.daily-card,.detail-fcard,.eng-card,.eng-collapse-toggle,.form-details,.fuel-seg-cell,.gps-box,.health-card,.info-block,.insight,.karne-compare,.karne-hero,.karne-score,.kiyas,.metric,.panel,.period-nav,.record-modal-icon,.record-section,.rem-card,.setup-alert-banner,.setup-card,.step-card,.trend-summary,.v8-card,.v8-live,.v8-netstrip,.v8-qabtn,.v8-tile{border-radius:var(--r-lg)!important}
+/* --r-xl · 32 sınıf */
+.ana-avg,.ana-chart-card,.ana-hero,.ana-switch,.ana-tab,.badge-progress,.badge-progress-bar,.bonus-pill,.count,.dashboard-hero,.dc-chip,.eng-progress,.eng-progress span,.fuel-seg-card,.goal-card,.hero-chip,.inc-chip,.izin-chip,.karne-score-bar,.karne-score-fill,.menu-cip,.modal,.mw-chip,.panel span,.period-badge,.period-chip,.record-source-tag,.rem-chip,.rem-slider,.sc-bar,.sc-fill,.today-hero{border-radius:var(--r-xl)!important}
+/* --r-pill · 2 sınıf */
+.metric-ico,.v8-bell{border-radius:var(--r-pill)!important}
+
+/* --- GÖLGE (ölçüldü · 28 sınıf) --- */
+/* --e1 · 18 sınıf */
+.badge-card,.best-card,.daily-card,.detail-fcard,.eng-card,.goal-card,.info-block,.insight,.metric,.modal,.panel,.period-nav,.record-section,.rem-card,.setup-alert-banner,.today-hero,.toolbar,.v8-card{box-shadow:var(--e1)!important}
+/* --e2 · 3 sınıf */
+.bottom-nav,.menu-btn,.sidebar{box-shadow:var(--e2)!important}
+/* --e3 · 7 sınıf */
+.ana-hero,.bn-fab,.btn,.logo-i,.record-modal-icon,.v8-live,.v8-qabtn{box-shadow:var(--e3)!important}
+/* <<< ÜRETİLMİŞ BLOK BİTİŞ <<< */
+</style>
+<style>
+/* ================================================================================
+   05-3 · GÖRSEL KİMLİK (8.13.0)
+   --------------------------------------------------------------------------------
+   Kaynak: GORSEL-ONERILERI-8.12.0.md (V1-V7) + auth sahnesi animasyonu
+   Kural: eklemeli katman; davranış part 42'de, çizimler satır içi SVG (tek dosya).
+     V1 karşılama kartı · V2 takvim ısı haritası · V3 illüstrasyon · V4 rozet kademesi
+     V5 şablon seçimi · V6 arka plan derinliği · V7 kutlama paylaşımı
+     S1 auth sahnesi (motosiklet) · S2 giriş alanları sıralı giriş
+   ================================================================================ */
+
+/* ---------- V6 · ARKA PLAN DERİNLİĞİ ---------------------------------------- */
+body{
+  background-image:
+    radial-gradient(1200px 640px at 12% -8%, rgba(3,105,161,.30), transparent 62%),
+    radial-gradient(900px 520px at 108% 4%, rgba(56,189,248,.16), transparent 60%),
+    linear-gradient(180deg, #0d1320 0%, var(--bg) 42%, #080c14 100%);
+  background-color:var(--bg); background-repeat:no-repeat; background-attachment:scroll;
+}
+html::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:
+    linear-gradient(rgba(148,163,184,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148,163,184,.055) 1px, transparent 1px);
+  background-size:44px 44px, 44px 44px;
+  mask-image:radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 78%);
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 78%);
+}
+:root[data-theme="light"] body{
+  background-image:
+    radial-gradient(1100px 620px at 10% -10%, rgba(3,105,161,.13), transparent 62%),
+    radial-gradient(900px 520px at 106% 2%, rgba(56,189,248,.14), transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, var(--bg) 46%, #eaeef7 100%);
+}
+:root[data-theme="light"] html::before{opacity:.75;
+  background-image:
+    linear-gradient(rgba(15,23,42,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,23,42,.045) 1px, transparent 1px);}
+
+/* ---------- V1 · KARŞILAMA KARTI (saate göre) ------------------------------- */
+.v8-greet{
+  position:relative; overflow:hidden; padding:.75rem .85rem; border-radius:var(--r-lg);
+  border:1px solid var(--border); background:linear-gradient(120deg,#12253c,#0f1b2c);
+  box-shadow:var(--e1);
+}
+.v8-greet::after{content:""; position:absolute; right:-30px; top:-40px; width:150px; height:150px;
+  border-radius:50%; background:radial-gradient(circle,var(--greet-glow,rgba(56,189,248,.30)),transparent 70%); pointer-events:none}
+.v8-greet .v8-avatar{box-shadow:0 0 0 2px var(--greet-ring,rgba(56,189,248,.5)), 0 6px 16px rgba(0,0,0,.3)}
+.v8-greet-ikon{display:grid; place-items:center; width:34px; height:34px; border-radius:var(--r-md);
+  background:var(--greet-dim,rgba(56,189,248,.16)); color:var(--greet-ink,#7dd3fc); flex:0 0 34px}
+.v8-greet-ikon .v8svg{width:19px; height:19px}
+.v8-greet{box-shadow:var(--e1), inset 0 1px 0 rgba(255,255,255,.05)}
+.v8-greet.sabah{--greet-1:#2f2413; --greet-2:#141a26; --greet-ink:#f0b64a; --greet-dim:rgba(240,182,74,.14);
+  --greet-glow:rgba(240,182,74,.22); --greet-ring:rgba(240,182,74,.45)}
+.v8-greet.gunduz{--greet-1:#0e3350; --greet-2:#101d33; --greet-ink:#7dd3fc; --greet-dim:rgba(56,189,248,.16);
+  --greet-glow:rgba(56,189,248,.20); --greet-ring:rgba(56,189,248,.5)}
+.v8-greet.aksam{--greet-1:#3a1f34; --greet-2:#171a2e; --greet-ink:#f0a97c; --greet-dim:rgba(244,114,182,.16);
+  --greet-glow:rgba(244,114,182,.20); --greet-ring:rgba(244,114,182,.5)}
+.v8-greet.gece{--greet-1:#131c3a; --greet-2:#0a1020; --greet-ink:#a5b4fc; --greet-dim:rgba(129,140,248,.16);
+  --greet-glow:rgba(129,140,248,.20); --greet-ring:rgba(129,140,248,.5)}
+.v8-greet[class*="v8-greet"]{
+  background-image:linear-gradient(120deg,var(--greet-1),var(--greet-2));
+  transition:background-image var(--m-yavas) var(--m-cikis);
+}
+.v8-greet .v8-greet-tx b{color:#fff; text-shadow:0 1px 8px rgba(0,0,0,.35)}
+
+/* ---------- V2 · KAZANÇ TAKVİMİ ISINMA HARİTASI ----------------------------- */
+.earn-day{position:relative; font-variant-numeric:tabular-nums}
+.earn-day.d1{background:rgba(16,185,129,.18); color:#a7f3d0}
+.earn-day.d2{background:rgba(16,185,129,.34); color:#d1fae5}
+.earn-day.d3{background:rgba(16,185,129,.52); color:#ecfdf5}
+.earn-day.d4{background:rgba(16,185,129,.72); color:#ffffff}
+.earn-day.d5{background:linear-gradient(160deg,#34d399,#059669); color:#04231a; font-weight:800}
+.earn-day.d5::after{content:""; position:absolute; inset:0; border-radius:inherit; box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.earn-day.best{box-shadow:0 0 0 2px #fbbf24, inset 0 0 0 1px rgba(0,0,0,.25)}
+.earn-day.best::before{content:"★"; position:absolute; top:-5px; right:-4px; font-size:.62rem; color:#fbbf24;
+  text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.earn-day.d0{background:var(--hover); color:var(--muted); opacity:.75}
+.earn-legend{display:flex; align-items:center; gap:.4rem; margin-top:.55rem; font-size:var(--t-2xs); color:var(--muted)}
+.earn-legend i{width:13px; height:13px; border-radius:4px; display:inline-block}
+.earn-legend b{margin-left:.35rem; color:var(--sec)}
+
+/* ---------- V3 · BOŞ DURUM İLLÜSTRASYONU ------------------------------------ */
+.v8durum .v8durum-ill{width:104px; height:78px; margin:0 0 .35rem; color:var(--accent)}
+.v8durum .v8durum-ill .v8ill-cizgi{fill:none; stroke:currentColor; stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; opacity:.92}
+.v8durum .v8durum-ill .v8ill-dolu{fill:currentColor; opacity:.14}
+.v8durum .v8durum-ill .v8ill-vurgu{fill:none; stroke:var(--orange); stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round}
+.v8durum .v8durum-ill .v8ill-kok{opacity:.35}
+@keyframes v8illNefes{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.v8durum .v8durum-ill{animation:v8illNefes 4.2s var(--m-cikis) infinite}
+
+/* ---------- V4 · ROZET KADEMESİ --------------------------------------------- */
+.badge-card{position:relative}
+.badge-card.t-bronz{--tier-1:#a8633a; --tier-2:#6d3a1f; --tier-ink:#ffd3ae}
+.badge-card.t-gumus{--tier-1:#cdd7e3; --tier-2:#8b98a9; --tier-ink:#f2f6fb}
+.badge-card.t-altin{--tier-1:#f7cf5a; --tier-2:#b8860b; --tier-ink:#ffe9a3}
+.badge-card.unlocked.t-altin{background:linear-gradient(160deg,rgba(247,207,90,.20),transparent 72%)}
+.badge-card.unlocked.t-gumus{background:linear-gradient(160deg,rgba(205,215,227,.16),transparent 72%)}
+.badge-card.unlocked.t-bronz{background:linear-gradient(160deg,rgba(168,99,58,.18),transparent 72%)}
+.badge-card.unlocked{border-color:var(--tier-1,var(--accent)); background:linear-gradient(160deg,color-mix(in srgb,var(--tier-1) 14%,transparent),transparent 70%)}
+.badge-card.unlocked .badge-ico{filter:none}
+.badge-card .badge-kademe{position:absolute; top:.35rem; left:.4rem; font-size:var(--t-2xs); font-weight:800;
+  letter-spacing:.04em; color:var(--tier-ink); opacity:.85}
+.badge-card.locked .badge-ico{filter:grayscale(100%) opacity(.45)}
+.badge-card.locked .badge-kademe{opacity:.5}
+.badge-card.shine::after{content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.55) 48%,transparent 64%);
+  background-size:260% 100%; animation:v8RozetParla .95s var(--m-cikis) 1 both}
+@keyframes v8RozetParla{from{background-position:180% 0; opacity:1}to{background-position:-60% 0; opacity:0}}
+.badge-ozet{display:flex; flex-wrap:wrap; gap:.4rem .7rem; align-items:center; margin:.1rem 0 .7rem;
+  font-size:var(--t-xs); color:var(--muted)}
+.badge-ozet span{display:inline-flex; align-items:center; gap:.3rem}
+.badge-ozet i{width:10px; height:10px; border-radius:50%; display:inline-block}
+.badge-ozet b{color:var(--text)}
+
+/* ---------- V5 · ŞABLON SEÇİMİ (görsel kart) -------------------------------- */
+.sablon-secim{display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; text-align:left}
+.sablon-kart{border:1px solid var(--border); border-radius:var(--r-md); padding:.5rem .45rem; cursor:pointer;
+  background:var(--elev); color:var(--text); font-family:inherit; transition:transform var(--m-hizli) var(--m-cikis),border-color var(--m-hizli)}
+.sablon-kart:active{transform:scale(.97)}
+.sablon-kart[aria-pressed="true"]{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-dim)}
+.sablon-kart b{display:block; font-size:var(--t-xs); margin-bottom:.3rem}
+.sablon-onizle{height:46px; border-radius:var(--r-sm); margin-bottom:.3rem}
+.sablon-onizle.klasik{background:linear-gradient(150deg,#0b1220,#111c33); border-top:4px solid #0369a1}
+.sablon-onizle.gece{background:linear-gradient(150deg,#0a1430,#101a3a); border-top:4px solid #818cf8;
+  background-image:linear-gradient(150deg,#0a1430,#101a3a),linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px);
+  background-size:auto,100% 9px}
+.sablon-onizle.muhur{background:linear-gradient(150deg,#122033,#1b2b45); border-top:4px solid #f7cf5a}
+.sablon-kart small{font-size:var(--t-2xs); color:var(--muted)}
+
+/* ---------- V7 · KUTLAMA PAYLAŞIMI ----------------------------------------- */
+.kutla-card .kutla-paylas{display:inline-flex; align-items:center; gap:.35rem; margin-top:.55rem;
+  border:1px solid var(--accent); border-radius:var(--pill,999px); background:var(--accent-dim);
+  color:var(--accent); font-family:inherit; font-size:var(--t-xs); font-weight:650; padding:.3rem .7rem; cursor:pointer}
+.kutla-card .kutla-paylas:active{transform:scale(.97)}
+
+/* ---------- SIDEBAR RAIL (daraltılabilir masaüstü kenar çubuğu) -------------- */
+body.sb-rail .sidebar{width:76px}
+body.sb-rail .sidebar .nav-item>span:last-child,
+body.sb-rail .sidebar .brand .logo span,
+body.sb-rail .sidebar .sb-user,
+body.sb-rail .sidebar .foot .btn-reset span,
+body.sb-rail .sidebar .more-dev{display:none}
+body.sb-rail .sidebar .brand{padding-left:.95rem;padding-right:.95rem}
+body.sb-rail .sidebar .nav{padding:.9rem .45rem}
+body.sb-rail .sidebar .nav-item{justify-content:center;padding:.7rem 0;position:relative}
+body.sb-rail .sidebar .nav-item .nv-ico{margin:0}
+body.sb-rail .sidebar .foot{padding:.7rem .45rem;align-items:center}
+body.sb-rail .sidebar .foot .btn-reset{display:flex;align-items:center;justify-content:center;padding:.55rem}
+body.sb-rail .sidebar .foot .logout-btn{font-size:0;gap:0}
+body.sb-rail .sidebar .foot .logout-btn::before{content:'';display:block;width:18px;height:18px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%23ef4444' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4'/%3E%3Cpolyline points='16 17 21 12 16 7'/%3E%3Cline x1='21' y1='12' x2='9' y2='12'/%3E%3C/svg%3E") center/contain no-repeat}
+body.sb-rail .main{margin-left:76px!important}
+@media(max-width:768px){body.sb-rail .sidebar{width:min(280px,86vw)} body.sb-rail .main{margin-left:0!important}}
+/* rail tooltip */
+body.sb-rail .sidebar .nav-item[data-label]:hover::after{content:attr(data-label);
+  position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%);
+  background:var(--card);color:var(--text);font-size:.75rem;font-weight:600;
+  padding:.3rem .65rem;border-radius:8px;white-space:nowrap;box-shadow:var(--shadow);
+  z-index:200;pointer-events:none;border:1px solid var(--border)}
+/* rail toggle button */
+.sb-rail-btn{display:none;width:28px;height:28px;border-radius:8px;border:1px solid var(--border);
+  background:var(--bg);color:var(--muted);cursor:pointer;align-items:center;justify-content:center;
+  font-size:.8rem;margin-left:auto;transition:color .15s}
+.sb-rail-btn:hover{color:var(--accent);border-color:var(--accent)}
+@media(min-width:769px){.sb-rail-btn{display:flex}}
+/* sidebar active pill */
+.sb-pill{position:absolute;left:.45rem;right:.45rem;height:46px;border-radius:12px;
+  background:var(--accent-dim);opacity:0;transform:translateY(var(--sby,0));
+  transition:transform .38s cubic-bezier(.4,.9,.3,1.06)!important,opacity .2s!important,background .2s!important;
+  pointer-events:none;z-index:0}
+.sb-pill.vis{opacity:1}
+body.sb-rail .sb-pill{left:.25rem;right:.25rem}
+
+/* ---------- S1 · AUTH SAHNESİ (motosiklet) ---------------------------------- */
+.v8-sahne{position:relative; height:132px; margin:-.2rem 0 .55rem; border-radius:var(--r-lg); overflow:hidden;
+  border:1px solid var(--border); background:linear-gradient(180deg,#0c1830 0%,#0a1424 62%,#070c17 100%);
+  isolation:isolate}
+.v8-sahne *{will-change:transform}
+.v8-sahne-sky{position:absolute; left:0; right:0; bottom:34px; height:64px; opacity:.55}
+.v8-sahne-sky .b{fill:rgba(148,197,255,.10)}
+.v8-sahne-sky .pencere{fill:rgba(125,211,252,.22)}
+.v8-sahne-zemin{position:absolute; left:0; right:0; bottom:0; height:34px;
+  background:linear-gradient(180deg,#131c2b,#0a0f19); border-top:1px solid rgba(148,163,184,.22)}
+.v8-sahne-yol{position:absolute; left:0; right:0; bottom:16px; height:2px;
+  background:repeating-linear-gradient(90deg,rgba(226,232,240,.55) 0 14px,transparent 14px 30px);
+  animation:v8YolAk 1.1s linear infinite; opacity:.5}
+@keyframes v8YolAk{from{background-position-x:0}to{background-position-x:-30px}}
+.v8-sahne.park .v8-sahne-yol{animation:none; opacity:.35}          /* park edince yol durur */
+.v8-sahne.mini .v8-sahne-yol{animation:v8YolAk 1.6s linear infinite; opacity:.45}  /* splash: seyir sürer */
+.v8-sahne-sky{transition:transform var(--m-yavas) var(--m-cikis)}
+@keyframes v8FarFlash{0%{opacity:1;filter:brightness(1.8)}100%{opacity:.8;filter:none}}
+.v8-sahne.flash .v8-sahne-far{animation:v8FarFlash .8s var(--m-cikis) 1 both}
+.v8-sahne-far{position:absolute; left:0; right:0; bottom:0; height:100%; pointer-events:none; opacity:0;
+  background:radial-gradient(220px 90px at 72% 72%,rgba(125,211,252,.34),transparent 72%)}
+.v8-sahne.park .v8-sahne-far{opacity:1; animation:v8FarNefes 3.6s ease-in-out infinite}
+@keyframes v8FarNefes{0%,100%{opacity:.75}50%{opacity:1}}
+.v8-sahne-bisiklet{position:absolute; left:0; right:0; bottom:6px; height:96px;
+  transform:translate3d(var(--sahne-x,120%),0,0)}
+.v8-sahne-bisiklet svg{position:absolute; right:24px; bottom:1px; width:218px; height:118px; overflow:visible}
+.v8-sahne .v8-bk-cizgi{fill:none; stroke:#e7eefc; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+.v8-sahne .v8-bk-kalin{fill:none; stroke:#e7eefc; stroke-width:3.4; stroke-linecap:round; stroke-linejoin:round}
+.v8-sahne .v8-bk-dolu{fill:#0f1a2c; stroke:#e7eefc; stroke-width:2}
+.v8-sahne .v8-bk-marka{fill:var(--primary-2)}
+.v8-sahne .v8-bk-vurgu{fill:none; stroke:var(--orange); stroke-width:2.4; stroke-linecap:round}
+.v8-sahne .v8-bk-teker{transform-box:fill-box; transform-origin:center}
+.v8-sahne .v8-bk-jant{fill:none; stroke:#cfe0f7; stroke-width:1.6; opacity:.85}
+.v8-sahne-govde{transform-box:fill-box; transform-origin:50% 100%}
+.v8-sahne.park .v8-sahne-govde{animation:v8BkSallan 3.1s ease-in-out infinite}
+@keyframes v8BkSallan{0%,100%{transform:translateY(0) rotate(0)}45%{transform:translateY(-1.6px) rotate(-.5deg)}70%{transform:translateY(0) rotate(0)}}
+.v8-sahne-hiz{position:absolute; right:180px; bottom:44px; display:flex; flex-direction:column; gap:5px; opacity:0}
+.v8-sahne-hiz i{display:block; height:2px; border-radius:2px; background:linear-gradient(90deg,transparent,rgba(226,232,240,.85))}
+.v8-sahne-hiz i:nth-child(1){width:54px} .v8-sahne-hiz i:nth-child(2){width:34px} .v8-sahne-hiz i:nth-child(3){width:68px}
+.v8-sahne-toz{position:absolute; right:196px; bottom:26px; width:8px; height:8px; border-radius:50%;
+  background:rgba(203,213,225,.5); opacity:0}
+.v8-sahne-lamba{position:absolute; top:9px; right:12px; display:flex; gap:4px}
+.v8-sahne-lamba i{width:5px; height:5px; border-radius:50%; background:rgba(148,163,184,.4)}
+.v8-sahne-lamba i:first-child{background:var(--orange)}
+.v8-sahne.park .v8-sahne-lamba i:first-child{animation:v8FarNefes 2.4s ease-in-out infinite}
+
+/* ---------- S1b · AUTH HATA SARSINTISI ---------------------------------------- */
+@keyframes v8Shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-8px)}30%{transform:translateX(7px)}45%{transform:translateX(-5px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+.auth-box.v8-shake{animation:v8Shake .42s var(--m-cikis) 1 both}
+
+/* ---------- S2 · GİRİŞ ALANLARININ SIRALI GİRİŞİ ---------------------------- */
+@keyframes v8GirYumus{from{opacity:0; transform:translateY(12px) scale(.985); filter:blur(6px)}
+  to{opacity:1; transform:none; filter:blur(0)}}
+.auth-box.v8-giris .logo-i,
+.auth-box.v8-giris h2,
+.auth-box.v8-giris > p,
+.auth-box.v8-giris .auth-input,
+.auth-box.v8-giris > div,
+.auth-box.v8-giris .auth-btn,
+.auth-box.v8-giris .auth-legal{animation:v8GirYumus .62s var(--m-cikis) both}
+.auth-box.v8-giris .logo-i{animation-delay:.05s}
+.auth-box.v8-giris h2{animation-delay:.13s}
+.auth-box.v8-giris > p{animation-delay:.19s}
+.auth-box.v8-giris .auth-input{animation-delay:.25s}
+.auth-box.v8-giris .auth-input + .auth-input{animation-delay:.31s}
+.auth-box.v8-giris > div{animation-delay:.37s}
+.auth-box.v8-giris .auth-btn{animation-delay:.43s}
+.auth-box.v8-giris #btnRegister{animation-delay:.49s}
+.auth-box.v8-giris .auth-legal{animation-delay:.55s}
+.auth-box.v8-giris .v8-sahne{animation:v8GirYumus .7s var(--m-cikis) both}
+@media (prefers-reduced-motion: reduce){
+  .v8-sahne-yol,.v8-sahne.park .v8-sahne-far,.v8-sahne.park .v8-sahne-govde,
+  .v8durum .v8durum-ill,.badge-card.shine::after{animation:none!important}
+  .auth-box.v8-giris *{animation:none!important}
+}
+</style>
 <!-- #region 02-HTML-AUTH ==================================================
      [02-HTML-AUTH]  GİRİŞ / KAYIT / SPLASH EKRANLARI
      ====================================================================== -->
@@ -2606,6 +3020,7 @@ function v8dlgIcon(n, dflt){
     <button class="bn-fab" id="bnFab" type="button" aria-label="Yeni kayıt"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
     <button class="bn-item" data-page="weekly" id="bnAnaliz"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg><span>Analiz</span></button>
     <button class="bn-item" data-page="garage"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linejoin="round" stroke-linecap="round"></path></svg><span>Garaj</span></button>
+    <div class="bn-liquid" id="bnLiquid"></div>
   </nav>
 
   <button class="menu-btn" id="menuBtn" type="button" aria-label="Menüyü aç/kapat">
@@ -2615,6 +3030,9 @@ function v8dlgIcon(n, dflt){
   <aside class="sidebar" id="sidebar" role="dialog" aria-label="Menü">
     <div class="brand">
       <div class="logo"><span class="logo-i"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCABgAGADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD4tqxb2kk6mQskUQ4MshIGfQY5J9hRZ26zzsZSwhjXzJCvXGcYHuSQB9farEszSuCQFCjaqL91B6D2r6CEOY8qc+UZJbWijEdxPI397ywo/LJNReRF/fk/IVJRW3somXtJEfkRf35PyFHkRf35PyFSUZHrR7KIe0kR+RF/fk/IUeRF/fk/IVJketFHsoh7SRH5EX9+T8hUkdtZsuJLieM/3vLDj8sg0UUeyiCqSI7izkt1EgdJoScCWMkjPoQeVPsR+dV6vxStExIAZWG1kb7rj0PtUF5brBOpi3GGRfMjLdcZxg+4II/D3rGcOU1hPmJLaQLp80YzueRSfoAcfqaKjg/1R/3v6VKqO5ISN3I5woJral8JjVeolPgia4mEUbICRn5mxx6+9aZ8OzyWyGDUdPnklKIIIpHMgLkKBgoBkEjPNfWC+DPE8mg3FpZ3Oma3pOkwpG8eq6XG6QxL8i5ZSAB8uOENeHnvEFPKJU1OPM530u07LfZP8bep7nD+QzzqNWVKfKoW1tpd7LVr8LnytDpEEQBmBkb34H5VbSGFBhIUH0UV7rqfw9skKHVfhglt5i71m0K/a3Min+JY5PLUj6A14jGgubuVbBJWiDyOhnZVKRByFaRuFXjaCe5OBknFdeScQ4bNOZUouLja9+V7+jf42ODP+HcVlCjOvNNSva11tvul+FxqWUdzBvlaygDcotyWUyD+8MIQFODgkjOKo3miJHO8LRm2nTGVyGXkZBBBIIIIIIOCCKztQttQhmOk3sskF5GA9s82QJo+ilWI+7gDB9sV0MypGlpD51xLNDaRRXHndUlBdmQcdAHUd+c8168JucrNHgWlD3lI5a4t5baTZKuM9GHQ1DXTzQxzxGOVcqf09xXO3MD21w0T845B9R61U4cp1UqvPo9yKi5kDafFGfvJI2PoQM/qKKjn/wBSv+9/Suer8J00/iCD/VH/AHv6VctL+/0+RpLC+ubR2G1mt5WjLD0JUjNU4P8AUt/vf0qQ9KKXwk1YqTaaPWPAV9P4j8d+HrSWO6WP7aLyRZb+e4DLArS/dkYjqg6etfafw68ReF/DvhG7XXkt76XUNTt4ZbNzykKfN5zLj5lDEnHcivz6hUrDEkbSLIiBlaPduTjG4FeR9a6nwh4/tEvYdIvviN4n0mQhVGoTpDqVpvPBEiPhkUH+INjHULzXyPEPD2KxOKp4jCTXuxaSnd6vd313TtZ6H1PD/EuBwOBrYfF0pWlJSbppJ2W3uq2zXTX8T6c+Muq6pos/inUdY1N76aygmkguNwKshUmLYBwB8y8DjNfGOq6jBp2hf2Tb3MbXMQR5zEd4eUYABI42oMqPcuf4q9D+MPiDxx4c0258G6/caRfWWoRxy2mqWlo8IvIw4LqFLEKysMMvpgjIYGvL49PtdWgSKPVkhgAzsSDgN23Kpz+IB+hp8LZLiMtjXliV705X3vottfVvcji7iDBZzHCTwkr0oR35bJt26K/RLT/I6K1aDxD4VtDZwiS8tpXBgaVS08Un30jUgco6K20E53NgZ4qp8samKNQpj+UxkEFPXK4yMdSMZ/GvVPA/hH4VajpYstZsdTW58sNLqMV+I/KQcbwnEZjBzznI6NzxXI+JNG0tPETaZ4C1PWPGtmCzXgh0r7TcRIW5dJAvPHQ5xkDmvs1J01c/NcPjqdavLDwUlZ9Vp33V/lexc8beDbTQ10u+8HXuo+J9HmsojeapDCjQRXbSMrRgJ8yDaFIByR3znjgdUhEtiJ1wSnII7qf8g16F8LNLubb4pRNdaeunaEAsj2lxOWnWdNrwybCfMEiSAncQBy2AAdteh/GT4JJ4VgfxFayWv9naujXVulsQERiMuqr/AAjJDBe24gcAVi8TGmlGo/i2OrDVpSryofE4JNyVkrPo1fR6a9Ntm7Hy/Uc/+pX/AHv6VIwKuV9DUc/+pX/e/pRU+E9un8QQf6o/739KeelRwf6o/wC9/StfSjo4kQ3x1H7QJR5fkCEx9sbvM469c8YopfDqTWk4u6Vye4txfra7ztt1USSODgt6J+f9KffajZacGjnVFYfK1upXeB7pnj6NitPUr1579bMSiEQssaTQpbK0YKNI7A242FgsbBe4LZ6ir134a1aw8L6bf6de29mLm2e/mtI43EdlaCXyUmd1PzF5Q6gHLHbuJGcDT2yfvQej6nDaUbRrKzXTt+H6f8Ho5b3xvpvwxs/7R1XRbrw/fIjadZ6xFDexXMQTJMO4eZ8p2xhQN24OCUCE15rNaaOunwF9Cl06aQ+d9qa5dvPTOAsMeBtGcg/ePA2kg5rqPDvga/8AFlvql34R0G01y4sY43uWk8oSSEkkJDBuAJbYxKpliM85OKxPEUN3bX0k9/JBesFKl45CULJguh4VoztGwqyqy4xgCsOa71epNKnCL5aK5Ve7tpq+6X6+tj0n4WfDe08b6GNa1zUsaTb3MkMel2TZnkcbdxml5EY+VcAAsQM5XrXZ6ZNer8SNQ8F/D2+uPDOm6UEu9QEo+0W+XPAiifJLEZO5pMAA9eleU6PL4+0vxBYatoWia5pd38r26rp7Qw3qsQRFKRhVjAzy3K7s8AV6v8Qtdhg+Guq+ONDX7LqetLBa3MwUBonj3JhgP41LMD6lQfr00kmr9V/Wh8dm7xDxKpuSlGp7sI292Mm1rJfa0u03fVbK1hPiD8SBdXUfhrR7Cy1zUC4iM+pIrxQsSq5DMPvAsvCkEZBOB14bxp/wnmj+HktvEXi/S7zyIS39mR6sklxbKwyR5DBWx0yVDYA9BXE6H4vjtYtIn8TaXDqmlQH7QbFP3RSMlo22OPmLsN7lmJ+YIxB2kHofEFvF4jt9b8Tyy3NtrOm3FmdStpYgrLFNHHEl7C/XcZNrMh4KuOuTjKcozd2j2cty2eXclKOsVe71bvdJW10Tu9LW6a3ueXZJOT1NRz/6lf8Ae/pVm6AFy2ERGP30QYVXBKsAOw3KcDsCKrT/AOpX/e/pUzd4H1VPdBB/qj/vf0qSm28ZNm8uRgSBSPqCf6GnU6fwjqL3iSC7axdZ1iEojdZPLPRsAqVPsVZh7ZBrvNK8e2cOj6fb3Fl4a1g6cWfTrjWYv39hlt5XaWCuA3zbWEibskDkivPWQMPmz+BxUYtYA2THnnoSeabRhOjGer3Ojh13V5fFK3+h6pdR3Ucrz3GpoSvmu3O0cDKZ5wQMkscDivRIfiIn2uTUtT0D+1NWnKSXGpXv2eWeR1UAEM0eVAAAUDGMevNeUQW+iyKFkjmhPp5rbatLoukOMo7t9JzW0IddH/XocGLwtGslGd7L5fe01f8AI9Um+JcVwrifQLpzIcuftoBY+pIwc/jXOXmv27+GNU8PabpV3b6fqDrcvHcX3n+XchwTIpbLAMBhhk8gH1rjm0TSEGWaRfrOaqTW2ixAiJJ5W9pWA/Orlfr/AF+By0MowtNr2ae6fW11qn8VtDf8I65p3h3UJLDxBo9lqNs1vJZvDeHyhPbu24GKbB8mVW6N0IOD3B0dU8UeF9K8M3OieFtHl0+3u54ri8a81JL+7vjEd0MGY1CRQq3zH+JsD0AHAtbQseQ2OwLk4/OkFrCpyqYPrk1zON9j13Ri3dvf+v6/AdH5rAvO26V2LsfcnJ/Umif/AFK/739KeAAMCkuEIsklzwZCoH0AP9RU1PhOmHxBZTojSQTMFimAUseiMDlW/mD7E1LJE8UjRyKVdeo/z296oVagvmSNYZ4luIlGFDMVZB/ssOn0OR7VlTny6M1nDmHUUklxbFsxxzgejMp/kBTPPi/uSfmK29pEz5JElGBUfnx/3JPzFHnxf3JPzFHtI9xezkSYoqPz4/7kn5ijz4v7kn5ij2kQ5JElFR/aI/7kn5inx3FsD+9jnI9FZR+pBo9pEfs5D443llWONSzN0H+f51HezI7xwQsGihBUOOjsTlm+nQD2ApZr5niaG3iW3iYYYKxZnH+0x6j2GB7VUrGc+bRGkIcp/9k=" alt="Kurye OS logosu"></span><span>Kurye OS</span></div>
+      <button type="button" class="sb-rail-btn" id="sidebarRail" aria-label="Daralt" title="Daralt">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
       <button type="button" class="sb-x" id="sidebarClose" aria-label="Kapat">✕</button>
     </div>
     <div class="sb-user">
@@ -2624,16 +3042,17 @@ function v8dlgIcon(n, dflt){
         <div class="sb-user-cap">Hesabınız</div>
       </div>
     </div>
-    <nav class="nav" aria-label="Ana menü">
-      <button type="button" class="nav-item" data-page="dashboard" data-qa="nav-dashboard"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-grid"/></svg></span><span>Ana Sayfa</span></button>
-      <button type="button" class="nav-item" data-page="daily" data-qa="nav-daily"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-receipt"/></svg></span><span>Kayıtlar</span></button>
-      <button type="button" class="nav-item" data-page="weekly" data-qa="nav-weekly"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-chart"/></svg></span><span>Analiz</span></button>
-      <button type="button" class="nav-item" data-page="garage" data-qa="nav-garage"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-wrench"/></svg></span><span>Garaj</span></button>
-      <button type="button" class="nav-item" data-page="menu" data-qa="nav-menu"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-menu"/></svg></span><span>Menü</span></button>
+    <nav class="nav" aria-label="Ana menü" style="position:relative;overflow:visible">
+      <div class="sb-pill" id="sbPill"></div>
+      <button type="button" class="nav-item" data-page="dashboard" data-qa="nav-dashboard" data-label="Ana Sayfa"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-grid"/></svg></span><span>Ana Sayfa</span></button>
+      <button type="button" class="nav-item" data-page="daily" data-qa="nav-daily" data-label="Kayıtlar"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-receipt"/></svg></span><span>Kayıtlar</span></button>
+      <button type="button" class="nav-item" data-page="weekly" data-qa="nav-weekly" data-label="Analiz"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-chart"/></svg></span><span>Analiz</span></button>
+      <button type="button" class="nav-item" data-page="garage" data-qa="nav-garage" data-label="Garaj"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-wrench"/></svg></span><span>Garaj</span></button>
+      <button type="button" class="nav-item" data-page="menu" data-qa="nav-menu" data-label="Menü"><span class="nv-ico"><svg class="v8svg" aria-hidden="true"><use href="#v8i-menu"/></svg></span><span>Menü</span></button>
       </nav>
     <div class="foot">
       <button class="btn-reset" id="btnThemeToggle"><svg class="v8svg" aria-hidden="true"><use href="#v8i-sun"/></svg> Aydınlık Mod</button>
-      <button class="btn-reset logout-btn" id="btnLogout">Çıkış Yap</button>
+      <button class="btn-reset logout-btn" id="btnLogout"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <span>Çıkış Yap</span></button>
       <a class="more-dev" href="https://www.instagram.com/furkann.sb" target="_blank" rel="noopener noreferrer">Developed by @furkann.sb</a>
     </div>
     </aside>
@@ -5397,7 +5816,7 @@ const auth = firebase.auth();
 let currentUser = null;
 let _onboardingOwner = null;
 let _onboardingShownStep = '';
-const CURRENT_APP_VERSION = "8.5.0";
+const CURRENT_APP_VERSION = "8.8.5";
 
 /* ============================================================
    ZORUNLU GÜNCELLEME (Play Store / native sürüm)
@@ -5907,7 +6326,16 @@ const errorMsg = document.getElementById('auth-error');
    [07-AUTH]  KİMLİK DOĞRULAMA
    Giriş/kayıt/şifre sıfırlama, Firebase hata mesajı çevirisi.
    ====================================================================== */
-function showAuthError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; toast(msg, false); }
+function showAuthError(msg) {
+  errorMsg.textContent = msg; errorMsg.style.display = 'block'; toast(msg, false);
+  /* sarsıntı + haptic */
+  try{
+    var box = document.querySelector('.auth-box');
+    if(box){ box.classList.remove('v8-shake'); void box.offsetWidth; box.classList.add('v8-shake');
+      setTimeout(function(){ box.classList.remove('v8-shake'); }, 500); }
+    if(typeof haptic==='function') haptic('error');
+  }catch(e){}
+}
 
 function translateAuthError(err){ return friendlyError(err); }
 
@@ -7268,7 +7696,7 @@ function updateOfflineBadge(){
   if(n && _syncState.error){ el.textContent = '⚠ ' + n + ' kayıt bekliyor · senkron hatası'; el.title = _syncState.error; el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; return; }
   if(off){ el.textContent = 'Çevrimdışı' + (n ? ' · ' + n + ' kayıt bekliyor' : ''); el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; return; }
   var _parkN806 = (_syncState && _syncState._parked) ? Object.keys(_syncState._parked).length : 0;
-  if(_parkN806 && !n){ el.textContent = 'Senkron duraklatıldı · ' + _parkN806 + ' yol (bulut izni)'; el.title = (_syncState && _syncState.error) || ''; el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; return; }
+  if(_parkN806 && !n){ el.textContent = 'Senkron duraklatıldı · ' + _parkN806 + ' bölüm (bulut izni)'; el.title = (_syncState && _syncState.error) || ''; el.style.background = 'var(--red,#f87171)'; el.style.color = '#fff'; el.style.display = ''; return; }
   if(n){ el.textContent = 'Senkron bekliyor · ' + n + ' kayıt'; el.style.background = 'var(--amber,#f59e0b)'; el.style.display = ''; return; }
   // Senkronize: kısa süre yeşil onay göster, sonra gizle.
   if(_syncState && _syncState.lastSyncAt && Date.now() < _syncedFlashUntil){
@@ -7364,6 +7792,62 @@ function _syncIsPermErr(e){
     return c.indexOf('permission') >= 0 || m.indexOf('permission') >= 0 || m.indexOf('yetkin') >= 0;
   }catch(_){ return false; }
 }
+/* 8.10.0: Bulut izni reddi mesajlarında teknik yol adı yerine kullanıcı dili.
+   Örn. "garaj/goals" → "Hedef ayarları". Destek yazışmalarında da bu ad kullanılır. */
+function _syncYolAdi(sub){
+  const s = String(sub || '');
+  const K = {
+    'garaj/goals': 'Hedef ayarları',
+    'garaj/izinGunleri': 'İzin/rapor günleri',
+    'garaj/hedefGunSayisi': 'Çalışma planı (haftalık gün)',
+    'garaj/vehicleDocs': 'Muayene & sigorta tarihleri',
+    'garaj/fuelPrice': 'Yakıt fiyatı',
+    'garaj/gizliModuller': 'Görünüm sadeleştirme ayarları',
+    'garaj/vehicles': 'Araç bilgileri',
+    'garaj/activeVehicleId': 'Aktif araç seçimi',
+    'garaj/bonusMode': 'Bonus modu',
+    'garaj/bonusEnabled': 'Bonus sistemi',
+    'garaj/bonusTiers': 'Bonus barajları',
+    'garaj/dailyBonusTiers': 'Günlük bonus barajları',
+    'garaj/weeklyTiers': 'Haftalık bonus barajları',
+    'garaj/kdvEnabled': 'KDV ayarı',
+    'garaj/kdvRate': 'KDV oranı',
+    'garaj/onboarding': 'Kurulum adımları',
+    'garaj/dailyGoal': 'Günlük hedef'
+  };
+  if(K[s]) return K[s];
+  if(s.indexOf('kayitlar/') === 0) return 'Günlük kayıtlar';
+  if(s.indexOf('garaj/') === 0) return 'Garaj ayarları';
+  return 'Verileriniz';
+}
+/* Park edilen yolları otomatik dene: kural/bulut tarafı düzeldiğinde kullanıcı
+   hiçbir şey yapmadan senkron kendiliğinden devam eder. */
+var _OTOMATIK_TOPARLANMA_MS = 5 * 60 * 1000;
+var _sonToparlanma = 0;
+function _syncOtomatikToparlanma(zorla){
+  try{
+    if(!_syncState || !_syncState._parked) return 0;
+    var anahtarlar = Object.keys(_syncState._parked);
+    if(!anahtarlar.length) return 0;
+    var simdi = Date.now();
+    if(!zorla){
+      if(simdi - _sonToparlanma < _OTOMATIK_TOPARLANMA_MS) return 0;
+      // çevrimdışıysa boşuna denemeyelim
+      try{ if(typeof navigator !== 'undefined' && navigator.onLine === false) return 0; }catch(e){}
+    }
+    _sonToparlanma = simdi;
+    var n = _syncUnparkAll(_syncState);
+    if(n > 0){
+      try{ appLog.info('Bekleyen ' + n + ' yol yeniden denenecek:', anahtarlar.join(', ')); }catch(e){}
+      setTimeout(function(){ try{ flushOfflineQueue(); }catch(e){} }, 800);
+    }
+    return n;
+  }catch(e){ return 0; }
+}
+setInterval(function(){ try{ _syncOtomatikToparlanma(false); }catch(e){} }, 60000);
+document.addEventListener('visibilitychange', function(){ try{ if(document.visibilityState === 'visible') _syncOtomatikToparlanma(false); }catch(e){} });
+window.addEventListener('online', function(){ try{ _syncOtomatikToparlanma(true); }catch(e){} });
+
 function _syncUnparkAll(state){
   if(!state || !state._parked) return 0;
   var n = 0;
@@ -7467,7 +7951,14 @@ function flushOfflineQueue(){
         var _fe = fresh.length ? fresh[0][1] : error;
         state.error = friendlyError(_fe);
         var _subs = res.bad.filter(function(b){ return b[1] !== 'parked'; }).map(function(b){ return b[0]; }).join(', ');
-        if(parkedNow.length){ var _ps806 = parkedNow.map(function(b){ return b[0]; }).join(', '); state.error = 'Bulut izni reddedildi (' + _ps806 + '). Veriler cihazda güvende.'; toast('Senkron duraklatıldı (' + _ps806 + '). Bulut izni reddedildi; verileriniz cihazda güvende.', false, function(){ if(_syncState){ try{ _syncUnparkAll(_syncState); }catch(_){} } flushOfflineQueue(); }); }
+        if(parkedNow.length){
+          // 8.10.0: kullanıcı dili + kendiliğinden toparlanma. Veri kaybı yok; bekleyen
+          // yazım cihazda durur ve izin/bulut düzelince otomatik gönderilir.
+          var _ps806 = parkedNow.map(function(b){ return _syncYolAdi(b[0]); }).join(', ');
+          state.error = 'Bulut izni reddedildi (' + _ps806 + '). Veriler cihazda güvende ve otomatik gönderilecek.';
+          toast('Senkron duraklatıldı (' + _ps806 + '). Verileriniz cihazda güvende; izin verilince kendiliğinden gönderilecek.', false, function(){ if(_syncState){ try{ _syncUnparkAll(_syncState); }catch(_){} } flushOfflineQueue(); });
+          try{ appLog.warn('Bulut izni reddedildi, park edilen yollar:', parkedNow.map(function(b){ return b[0]; }).join(', ')); }catch(e){}
+        }
         else if(fresh.length) toast('Senkronizasyon başarısız (' + _subs + '). ' + state.error, false, function(){ if(_syncState) _syncState._pathFails = {}; flushOfflineQueue(); });
       }
       saveLocalCache();
@@ -7653,6 +8144,9 @@ function switchToPage(pageName, dir){
   // Sekme başlığı: kullanıcı hangi bölümde olduğunu dışarıdan da görsün.
   const _titles = { dashboard:'İş Merkezi', menu:'Menü', daily:'Günlük Kayıtlar', weekly:'Analiz', monthly:'Analiz', tumu:'Analiz', karne:'Karnem', garage:'Araç Sağlık', settings:'Bonus', cost:'Araç Maliyetleri', calc:'Hesaplayıcı', account:'Hesabım', instructions:'Talimatlar', changelog:'Güncellemeler', feedback:'Geri Bildirim', badges:'Rozetlerim', admin:'Admin' };
   try{ document.title = 'Kurye OS · ' + (_titles[pageName] || 'Kurye OS'); }catch(e){}
+  // Liquid nav & sidebar pill güncelle
+  try{ if(typeof bnLiquidGuncelle==='function') bnLiquidGuncelle(); }catch(e){}
+  try{ if(typeof sbPillGuncelle==='function') sbPillGuncelle(); }catch(e){}
 }
 
 var _NAV_ORDER = ['dashboard','daily','weekly','monthly','tumu','garage','karne','cost','calc','settings','account'];
@@ -7676,6 +8170,82 @@ const _sbBackdrop = document.getElementById('sidebarBackdrop');
 if(_sbBackdrop) _sbBackdrop.addEventListener('click', closeSidebar);
 const _sidebarClose = document.getElementById('sidebarClose');
 if(_sidebarClose) _sidebarClose.addEventListener('click', closeSidebar);
+
+/* ---------- Liquid bottom-nav indicator --------------------------------- */
+function bnLiquidGuncelle(){
+  var liq = document.getElementById('bnLiquid');
+  var bar = document.getElementById('bottomNav');
+  if(!liq || !bar || bar.offsetHeight===0) return;
+  var aktif = bar.querySelector('.bn-item.active');
+  if(!aktif){ liq.style.opacity='0'; return; }
+  var bRect = bar.getBoundingClientRect();
+  var aRect = aktif.getBoundingClientRect();
+  var cx = aRect.left - bRect.left + aRect.width/2 - 21;
+  liq.style.setProperty('--bnx', cx+'px');
+  liq.style.opacity='1';
+  // liquid renk sınıfları otomatik CSS ile zaten çalışıyor
+}
+
+/* ---------- Sidebar active pill ----------------------------------------- */
+function sbPillGuncelle(){
+  var pill = document.getElementById('sbPill');
+  var nav = pill && pill.parentElement;
+  if(!pill || !nav) return;
+  var aktif = nav.querySelector('.nav-item.active');
+  if(!aktif){ pill.classList.remove('vis'); return; }
+  var navRect = nav.getBoundingClientRect();
+  var aRect = aktif.getBoundingClientRect();
+  var oy = aRect.top - navRect.top;
+  pill.style.setProperty('--sby', oy+'px');
+  pill.style.height = aRect.height+'px';
+  // renk uyumu
+  var pg = aktif.dataset.page;
+  var isBg = (pg==='weekly'||pg==='monthly'||pg==='changelog');
+  var isAmber = (pg==='garage'||pg==='settings');
+  pill.style.background = isBg ? 'var(--violet-dim)' : isAmber ? 'var(--amber-dim)' : 'var(--accent-dim)';
+  pill.classList.add('vis');
+}
+
+/* ---------- Sidebar rail toggle ----------------------------------------- */
+function sbRailUygula(kaydet){
+  var isRail = document.body.classList.toggle('sb-rail');
+  var btn = document.getElementById('sidebarRail');
+  if(btn){
+    var svg = btn.querySelector('svg');
+    if(svg) svg.style.transform = isRail ? 'rotate(180deg)' : '';
+    btn.title = isRail ? 'Genişlet' : 'Daralt';
+    btn.setAttribute('aria-label', isRail ? 'Genişlet' : 'Daralt');
+  }
+  if(kaydet !== false){
+    try{ localStorage.setItem('kurye_sidebar_rail', isRail ? '1' : ''); }catch(e){}
+  }
+  setTimeout(function(){ try{ sbPillGuncelle(); }catch(e){} }, 320);
+}
+// Rail restore
+(function(){
+  try{
+    if(localStorage.getItem('kurye_sidebar_rail')==='1' && window.innerWidth > 768){
+      document.body.classList.add('sb-rail');
+      var btn = document.getElementById('sidebarRail');
+      if(btn){ var svg=btn.querySelector('svg'); if(svg) svg.style.transform='rotate(180deg)'; btn.title='Genişlet'; }
+    }
+  }catch(e){}
+})();
+var _railBtn = document.getElementById('sidebarRail');
+if(_railBtn) _railBtn.addEventListener('click', function(){ sbRailUygula(true); });
+
+/* ---------- Resize / orientation listeners ------------------------------ */
+var _indicatorRaf = 0;
+function _indicatorYenile(){
+  cancelAnimationFrame(_indicatorRaf);
+  _indicatorRaf = requestAnimationFrame(function(){ bnLiquidGuncelle(); sbPillGuncelle(); });
+}
+window.addEventListener('resize', _indicatorYenile);
+window.addEventListener('orientationchange', function(){ setTimeout(_indicatorYenile, 200); });
+// İlk yükleme
+requestAnimationFrame(function(){ bnLiquidGuncelle(); sbPillGuncelle(); });
+// Font yüklenince tekrar ölç
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(_indicatorYenile, 100); });
 
 // v8: sbMoreToggle/sbMore kaldırıldı (Menü hub sayfasına taşındı).
 // Ortadaki ＋ Kayıt butonu: hangi sayfadaysak oradan kayıt formunu açar.
@@ -8019,7 +8589,7 @@ function renderWeeklyDetail(){
   const weeks=weeksList(); const content=document.getElementById('wContent'),nav=document.querySelector('#page-weekly .period-nav');
   if(!weeks.length){
     if(nav) nav.style.display='none';
-    {const _h=document.getElementById('wHero');if(_h)_h.innerHTML='';const _c=document.getElementById('wChartCard');if(_c)_c.style.display='none';} const wm=document.getElementById('wMetrics'); if(wm) wm.innerHTML='<div class="empty" style="grid-column:1/-1;padding:2rem 1rem;text-align:center;line-height:1.6}">'+ v8icon('receipt') + ' Henüz kayıt yok.<br><span style="font-size:.75rem;">Kayıt sayfasından gün eklediğinizde haftalık özetiniz burada oluşur.</span><br><button type="button" class="btn btn-primary btn-sm" onclick="openFirstRecord()" style="margin-top:.7rem;">+ İlk kaydını ekle</button></div>';
+    {const _h=document.getElementById('wHero');if(_h)_h.innerHTML='';const _c=document.getElementById('wChartCard');if(_c)_c.style.display='none';} const wm=document.getElementById('wMetrics'); if(wm) wm.innerHTML=v8BosDurum({ill:'kayit',ikon:'receipt',metin:'Henüz kayıt yok',alt:'Kayıt sayfasından gün eklediğinizde haftalık özetiniz burada oluşur.',eylem:'+ İlk kaydını ekle',onclick:'openFirstRecord()'});
     const wi=document.getElementById('wInsights'); if(wi) wi.innerHTML='';
     const wb=document.getElementById('wBest'); if(wb) wb.innerHTML='';
     return;
@@ -8084,7 +8654,7 @@ function renderMonthlyDetail(){
   const months=monthsList(); const content=document.getElementById('mContent'),nav=document.querySelector('#page-monthly .period-nav');
   if(!months.length){
     if(nav) nav.style.display='none';
-    {const _h=document.getElementById('mHero');if(_h)_h.innerHTML='';const _c=document.getElementById('mChartCard');if(_c)_c.style.display='none';} const mm=document.getElementById('mMetrics'); if(mm) mm.innerHTML='<div class="empty" style="grid-column:1/-1;padding:2rem 1rem;text-align:center;line-height:1.6}">'+ v8icon('receipt') + ' Henüz kayıt yok.<br><span style="font-size:.75rem;">Kayıt sayfasından gün eklediğinizde aylık özetiniz burada oluşur.</span><br><button type="button" class="btn btn-primary btn-sm" onclick="openFirstRecord()" style="margin-top:.7rem;">+ İlk kaydını ekle</button></div>';
+    {const _h=document.getElementById('mHero');if(_h)_h.innerHTML='';const _c=document.getElementById('mChartCard');if(_c)_c.style.display='none';} const mm=document.getElementById('mMetrics'); if(mm) mm.innerHTML=v8BosDurum({ill:'kayit',ikon:'receipt',metin:'Henüz kayıt yok',alt:'Kayıt sayfasından gün eklediğinizde aylık özetiniz burada oluşur.',eylem:'+ İlk kaydını ekle',onclick:'openFirstRecord()'});
     const mi=document.getElementById('mInsights'); if(mi) mi.innerHTML='';
     const mb=document.getElementById('mBest'); if(mb) mb.innerHTML='';
     return;
@@ -8949,7 +9519,7 @@ function renderDashboardOverview(t){
   const range = dates.length ? escapeHtml(dates[0]) + ' – ' + escapeHtml(dates[dates.length - 1]) + ' · ' : '';
   const incomeExtras = [t.totalBonus > 0 ? fmt(t.totalBonus) + ' ₺ bonus' : '', t.totalKdv > 0 ? fmt(t.totalKdv) + ' ₺ KDV geliri' : '', t.bahsis > 0 ? fmt(t.bahsis) + ' ₺ bahşiş' : ''].filter(Boolean);
   document.getElementById('dashboardSummary').innerHTML =
-    (!records.length ? '<div class="dashboard-empty"><strong>Bugününü kaydetmeye başla.</strong>Yeni kayıt eklediğinde kazancın ve performansın burada görünecek.<button type="button" class="btn btn-primary btn-sm" onclick="openFirstRecord()" style="margin-top:.75rem;">+ İlk kaydını ekle</button></div>' : '') +
+    (!records.length ? v8BosDurum({ill:'kayit',ikon:'spark',metin:'Bugününü kaydetmeye başla',alt:'Yeni kayıt eklediğinde kazancın ve performansın burada görünecek.',eylem:'+ İlk kaydını ekle',onclick:'openFirstRecord()'}) : '') +
     `<section class="dashboard-hero" aria-labelledby="dashboardEarningsTitle">
       <div class="dashboard-hero-head"><h2 id="dashboardEarningsTitle">${uiIcon('wallet')}Toplam net kazanç</h2><span class="dashboard-period">Tüm zamanlar</span></div>
       <div class="dashboard-net${t.net < 0 ? ' loss' : ''}" id="dashboardNet">${fmt(t.net)} ₺</div>
@@ -9227,7 +9797,7 @@ function renderEngagementHub(){
 }
 function renderEngagementCalendar(){
   const box=document.getElementById('engCalendarCard');if(!box)return;const now=new Date(),y=now.getFullYear(),m=now.getMonth(),days=new Date(y,m+1,0).getDate(),map={};records.filter(r=>monthKey(r.tarih)===y+'-'+String(m+1).padStart(2,'0')).forEach(r=>map[+r.tarih.slice(8)]=r);
-  let html='<div class="eng-head"><b>Kazanç takvimi</b><span>'+MONTHS[m]+' '+y+'</span></div><div class="earn-calendar">';for(let d=1;d<=days;d++){const r=map[d],c=r?calc(r):null;html+='<button type="button" class="earn-day '+(r?'work ':'')+(r&&recordHealth(r).key!=='complete'?'incomplete ':'')+(c&&(c.bonus>0||c.kdv>0)?'auto':'')+'" '+(r?'onclick="openEditModalById(\''+escapeHtml(r.id)+'\')"':'')+'>'+d+'</button>';}box.innerHTML=html+'</div><div class="eng-sub" style="margin-top:.5rem;">Yeşil: kayıt · amber: eksik · mor çizgi: bonus/KDV</div>';
+  let html='<div class="eng-head"><b>Kazanç takvimi</b><span>'+MONTHS[m]+' '+y+'</span></div><div class="earn-calendar" data-ay="'+y+'-'+String(m+1).padStart(2,'0')+'">';for(let d=1;d<=days;d++){const r=map[d],c=r?calc(r):null;html+='<button type="button" class="earn-day '+(r?'work ':'')+(r&&recordHealth(r).key!=='complete'?'incomplete ':'')+(c&&(c.bonus>0||c.kdv>0)?'auto':'')+'" '+(r?'onclick="openEditModalById(\''+escapeHtml(r.id)+'\')"':'')+'>'+d+'</button>';}box.innerHTML=html+'</div><div class="eng-sub" style="margin-top:.5rem;">Yeşil: kayıt · amber: eksik · mor çizgi: bonus/KDV</div>';
 }
 function openEngagementSettings(){const p=engagementPrefs(),ov=document.getElementById('engagementSettingsOverlay');document.getElementById('engWorkDays').value=p.workDays;document.getElementById('engGoalType').value=p.goalType;document.getElementById('engGoalValue').value=p.goalValue;document.getElementById('engMonthlyGoal').value=p.monthlyGoal;document.getElementById('engFocus').value=p.focus;document.getElementById('engShowInsight').checked=p.showInsight!==false;document.getElementById('engShowMissions').checked=p.showMissions!==false;document.getElementById('engShowCalendar').checked=p.showCalendar!==false;ov.classList.add('show');activateAccessibleModal(ov,document.getElementById('engWorkDays'));}
 function closeEngagementSettings(){const ov=document.getElementById('engagementSettingsOverlay');ov.classList.remove('show');deactivateAccessibleModal(ov);}
@@ -9831,44 +10401,101 @@ function periodCardLabel(kind, opts){
   const info = periodCardInfo(kind, opts);
   return info ? info.title : '';
 }
+/* 8.13.0 · V5: kart şablonları. Renkler tasarım jetonlarından okunur —
+   böylece marka/tema değişince paylaşılan kart da kendiliğinden değişir. */
+const KART_SABLONLARI = {
+  klasik: { ust:['#0b1220','#111c33'], serit:'token:--primary-2', metin:'#ffffff', soluk:'#7d8aa5',
+            kutu:'rgba(255,255,255,.05)', vurgular:['#22d3ee','#a78bfa','#34d399','#fbbf24'], izgara:false, madalyon:false, cerceve:null },
+  gece:   { ust:['#0a1430','#101a3a'], serit:'#818cf8', metin:'#ffffff', soluk:'#93a5c8',
+            kutu:'rgba(148,163,246,.10)', vurgular:['#93c5fd','#c4b5fd','#6ee7b7','#fcd34d'], izgara:true, madalyon:false, cerceve:null },
+  muhur:  { ust:['#122033','#1b2b45'], serit:'#f7cf5a', metin:'#ffffff', soluk:'#a9b6ce',
+            kutu:'rgba(247,207,90,.10)', vurgular:['#f7cf5a','#f2c14e','#ffd97a','#e0ab2a'], izgara:false, madalyon:true, cerceve:'#f7cf5a' }
+};
+function kartJeton(ad, varsayilan){
+  try{
+    const v = getComputedStyle(document.documentElement).getPropertyValue(ad);
+    if(v && v.trim()) return v.trim();
+  }catch(e){}
+  return varsayilan;
+}
+function kartSablon(opts){
+  let hatirlanan = '';
+  try{ hatirlanan = (typeof v8SablonOku === 'function') ? v8SablonOku() : (localStorage.getItem('kurye_kart_sablon_v1') || ''); }catch(e){}
+  const ad = (opts && opts.sablon) || hatirlanan || 'klasik';
+  return KART_SABLONLARI[ad] ? Object.assign({ ad }, KART_SABLONLARI[ad]) : Object.assign({ ad:'klasik' }, KART_SABLONLARI.klasik);
+}
 function periodCardCanvas(kind, opts){
   const info = periodCardInfo(kind, opts);
   if(!info) return null;
+  const SB = kartSablon(opts);
   const W = 1080, H = 1350;
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const x = cv.getContext('2d');
   const t = totalsOf(info.recs);
-  const bg = x.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#0b1220'); bg.addColorStop(1, '#111c33');
+  const bg = x.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, SB.ust[0]); bg.addColorStop(1, SB.ust[1]);
   x.fillStyle = bg; x.fillRect(0, 0, W, H);
-  x.fillStyle = '#22d3ee'; x.fillRect(0, 0, W, 14);
+  if(SB.izgara){
+    x.strokeStyle = 'rgba(255,255,255,.05)'; x.lineWidth = 1;
+    for(let gy = 60; gy < H; gy += 74){ x.beginPath(); x.moveTo(0, gy); x.lineTo(W, gy); x.stroke(); }
+  }
+  if(SB.cerceve){
+    x.strokeStyle = SB.cerceve; x.lineWidth = 6;
+    if(x.roundRect){ x.beginPath(); x.roundRect(34, 34, W - 68, H - 68, 40); x.stroke(); }
+    else x.strokeRect(34, 34, W - 68, H - 68);
+  }
+  const seritRenk = SB.serit.indexOf('token:') === 0 ? kartJeton(SB.serit.slice(6), '#0369a1') : SB.serit;
+  x.fillStyle = seritRenk; x.fillRect(0, 0, W, 14);
   x.textAlign = 'center';
-  x.fillStyle = '#7d8aa5'; x.font = '700 44px system-ui, sans-serif';
-  x.fillText('K U R Y E   O S', W / 2, 130);
-  x.fillStyle = '#ffffff'; x.font = '800 96px system-ui, sans-serif';
-  x.fillText(info.title, W / 2, 250);
-  x.fillStyle = '#7d8aa5'; x.font = '500 40px system-ui, sans-serif';
-  x.fillText(info.sub, W / 2, 320);
+  if(SB.madalyon){
+    x.beginPath(); x.arc(W / 2, 210, 62, 0, Math.PI * 2);
+    const mg = x.createLinearGradient(W / 2 - 62, 148, W / 2 + 62, 272);
+    mg.addColorStop(0, '#f7cf5a'); mg.addColorStop(1, '#c98f18');
+    x.fillStyle = mg; x.fill();
+    x.fillStyle = '#1a1206'; x.font = '800 60px system-ui, sans-serif';
+    x.fillText('★', W / 2, 232);
+  }
+  const dy = SB.madalyon ? 250 : 0;
+  x.fillStyle = SB.soluk; x.font = '700 44px system-ui, sans-serif';
+  x.fillText('K U R Y E   O S', W / 2, 130 + dy);
+  x.fillStyle = SB.metin; x.font = '800 96px system-ui, sans-serif';
+  x.fillText(info.title, W / 2, 250 + dy);
+  x.fillStyle = SB.soluk; x.font = '500 40px system-ui, sans-serif';
+  x.fillText(info.sub, W / 2, 320 + dy);
   const g = (opts && opts.gizle) || {};
   const stats = [
-    { v: g.tes ? GIZLI_MASK : fmtInt(t.tes), b: 'paket', c: '#22d3ee' },
-    { v: g.saat ? GIZLI_MASK : fmt(t.hours, 1), b: 'saat', c: '#a78bfa' },
-    { v: g.net ? GIZLI_MASK : (fmt(t.net, 0) + ' ₺'), b: 'net kazanç', c: '#34d399' },
-    { v: g.km ? GIZLI_MASK : (fmtInt(t.km) + ' km'), b: 'yol', c: '#fbbf24' }
+    { v: g.tes ? GIZLI_MASK : fmtInt(t.tes), b: 'paket', c: SB.vurgular[0] },
+    { v: g.saat ? GIZLI_MASK : fmt(t.hours, 1), b: 'saat', c: SB.vurgular[1] },
+    { v: g.net ? GIZLI_MASK : (fmt(t.net, 0) + ' ₺'), b: 'net kazanç', c: SB.vurgular[2] },
+    { v: g.km ? GIZLI_MASK : (fmtInt(t.km) + ' km'), b: 'yol', c: SB.vurgular[3] }
   ];
-  stats.forEach((s, i) => {
-    const y = 470 + i * 200;
-    x.fillStyle = 'rgba(255,255,255,.05)';
-    x.beginPath();
-    if(x.roundRect) x.roundRect(90, y - 84, W - 180, 168, 28); else x.rect(90, y - 84, W - 180, 168);
-    x.fill();
-    x.fillStyle = s.c; x.font = '800 76px system-ui, sans-serif';
-    x.fillText(s.v, W / 2, y + 8);
-    x.fillStyle = '#94a3b8'; x.font = '500 38px system-ui, sans-serif';
-    x.fillText(s.b, W / 2, y + 58);
-  });
-  x.fillStyle = '#5b6b88'; x.font = '500 34px system-ui, sans-serif';
-  x.fillText('Kurye OS ile takip edildi', W / 2, H - 70);
+  if(SB.ad === 'gece'){                       /* satır düzeni: rapor havası */
+    stats.forEach((s, i) => {
+      const y = 470 + i * 190;
+      x.fillStyle = SB.kutu;
+      if(x.roundRect){ x.beginPath(); x.roundRect(90, y - 78, W - 180, 156, 22); x.fill(); }
+      x.fillStyle = s.c; x.font = '800 72px system-ui, sans-serif';
+      x.fillText(s.v, W / 2, y + 6);
+      x.fillStyle = SB.soluk; x.font = '500 36px system-ui, sans-serif';
+      x.fillText(s.b, W / 2, y + 52);
+      x.strokeStyle = 'rgba(255,255,255,.10)'; x.lineWidth = 2;
+      x.beginPath(); x.moveTo(190, y + 96); x.lineTo(W - 190, y + 96); x.stroke();
+    });
+  } else {
+    stats.forEach((s, i) => {
+      const y = 470 + i * 200;
+      x.fillStyle = SB.kutu;
+      x.beginPath();
+      if(x.roundRect) x.roundRect(90, y - 84, W - 180, 168, SB.ad === 'muhur' ? 34 : 28); else x.rect(90, y - 84, W - 180, 168);
+      x.fill();
+      x.fillStyle = s.c; x.font = '800 76px system-ui, sans-serif';
+      x.fillText(s.v, W / 2, y + 8);
+      x.fillStyle = SB.soluk; x.font = '500 38px system-ui, sans-serif';
+      x.fillText(s.b, W / 2, y + 58);
+    });
+  }
+  x.fillStyle = SB.soluk; x.font = '500 34px system-ui, sans-serif';
+  x.fillText('Kurye OS ile takip edildi', W / 2, H - (SB.cerceve ? 96 : 70));
   return cv;
 }
 function periodCardFileName(kind, opts){
@@ -10098,8 +10725,12 @@ function todayTaskItems(){
     const nPark = (typeof _syncState !== 'undefined' && _syncState && _syncState._parked)
       ? Object.keys(_syncState._parked).length : 0;
     if(nPark > 0){
+      const _parkYollar = (function(){
+        try{ return Object.keys(_syncState._parked || {}).map(function(k){ return _syncYolAdi(k); }).slice(0, 3).join(', '); }catch(e){ return ''; }
+      })();
       items.push({ico:v8icon('bell'), title:'Senkron duraklatıldı',
-        sub: nPark + ' yol bulut izni bekliyor · dokunarak yeniden dene', act:'syncPause'});
+        sub: (nPark + ' bölüm bulut izni bekliyor' + (_parkYollar ? ' (' + _parkYollar + ')' : '') + ' · dokunarak yeniden dene · kendiliğinden de denenecek'),
+        act:'syncPause'});
     }
   }catch(e){}
   // 6) Muayene / sigorta / kasko bitişi yaklaşıyor (880D · B2)
@@ -10143,6 +10774,7 @@ function runTodayTask(act){
     switchToPage('dashboard'); return;
   }
   if(act === 'syncPause'){                                     // duraklatılmış senkronu aç
+    try{ if(typeof _syncOtomatikToparlanma === 'function') _syncOtomatikToparlanma(true); }catch(e){}
     try{ if(typeof _syncUnparkAll === 'function' && typeof _syncState !== 'undefined' && _syncState){ _syncUnparkAll(_syncState); } }catch(e){}
     try{ if(typeof flushOfflineQueue === 'function') flushOfflineQueue(); }catch(e){}
     toast('Senkron yeniden denenecek', true); return;
@@ -11173,7 +11805,7 @@ function _renderDailyIc(mode){
     const filtered = records.length > 0;
     const msg = filtered
       ? 'Bu filtreye uyan kayıt yok. Arama veya ay seçimini değiştirin.'
-      : 'Henüz kayıt yok. İlk gününüzü ekleyerek başlayın.<br><button type="button" class="btn btn-primary btn-sm" onclick="openFirstRecord()" style="margin-top:.6rem;">+ İlk kaydını ekle</button>';
+      : v8BosDurum({ill:'kayit',ikon:'receipt',metin:'Henüz kayıt yok',alt:'İlk gününüzü ekleyerek başlayın.',eylem:'+ İlk kaydını ekle',onclick:'openFirstRecord()'});
     if(_dm){ renderDailyCardsView(list); return }
     tbody.innerHTML = '<tr><td colspan="16" class="empty">' + msg + '</td></tr>'; return}
   var _goster=list.slice(0,_dailyLimit);
@@ -11260,12 +11892,10 @@ function renderDailyCardsView(list,toplam){
   toplam=(typeof toplam==='number')?toplam:list.length;
   if(!list.length){
     const filtered = records.length > 0;
-    const icon = filtered ? v8icon('info') : v8icon('receipt');
-    const msg = filtered
-      ? 'Bu filtreye uyan kayıt yok.<br><span style="font-size:.75rem;">Arama veya ay seçimini değiştirin.</span>'
-      : 'Henüz kayıt yok.<br><span style="font-size:.75rem;">İlk gününüzü ekleyerek başlayın.</span><br><button type="button" class="btn btn-primary btn-sm" onclick="openFirstRecord()" style="margin-top:.7rem;">+ İlk kaydını ekle</button>';
+    if(!filtered){ container.innerHTML = v8BosDurum({ill:'kayit',ikon:'receipt',metin:'Henüz kayıt yok',alt:'İlk gününüzü ekleyerek başlayın.',eylem:'+ İlk kaydını ekle',onclick:'openFirstRecord()'}); return; }
     container.innerHTML = '<div class="empty" style="text-align:center;padding:2.4rem 1rem;color:var(--muted);line-height:1.6;">'
-      + '<div style="font-size:2rem;margin-bottom:.5rem;opacity:.5;">' + icon + '</div>' + msg + '</div>';
+      + '<div style="font-size:2rem;margin-bottom:.5rem;opacity:.5;">' + v8icon('info') + '</div>'
+      + 'Bu filtreye uyan kayıt yok.<br><span style="font-size:.75rem;">Arama veya ay seçimini değiştirin.</span></div>';
     return; }
 
   container.innerHTML = list.map(r => {
@@ -14505,10 +15135,7 @@ function renderGarage() {
 
   const list = document.getElementById('maintenanceList');
   const bakimlar = av.bakimlar || [];
-  if(!bakimlar.length) { list.innerHTML = '<div class="empty-period" style="grid-column:1/-1;text-align:center;padding:2rem 1rem;line-height:1.6;">'
-    + '<div class="v8-big-ico" style="opacity:.7;margin-bottom:.4rem;">' + v8icon('wrench') + '</div>Henüz bakım hedefi yok.'
-    + '<br><span style="font-size:.75rem;">Yağ, zincir gibi periyodik bakımları ekleyin; km dolunca sizi uyaralım.</span>'
-    + '<br><button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById(\'btnAddMaintenance\').click()" style="margin-top:.7rem;">＋ İlk bakım hedefini ekle</button></div>'; }
+  if(!bakimlar.length) { list.innerHTML = v8BosDurum({ill:'bakim',ikon:'wrench',metin:'Henüz bakım hedefi yok',alt:'Yağ, zincir gibi periyodik bakımları ekleyin; km dolunca sizi uyaralım.',eylem:'＋ İlk bakım hedefini ekle',onclick:"document.getElementById('btnAddMaintenance').click()"}); }
   else { list.innerHTML = bakimlar.map((b, i) => {
     const remaining = maintenanceState(b, totalKm).remaining;
     let statusClass = 'green', statusText = fmtInt(remaining) + ' km kaldı', statusIco = v8icon('check');
@@ -22292,6 +22919,1745 @@ function incPdfLayout(o, medya, fileName){
   } };
 }
 
+/* ================================================================================
+   8110 · YENİ ÖZELLİKLER PAKETİ (parça 40)
+   --------------------------------------------------------------------------------
+   Bu parça, mevcut koda DOKUNMADAN eklenen özellikleri taşır:
+     B1 · Canlı sayım (+1 paket)          C3 · Dönem kıyas tablosu
+     D2 · Donanım geri tuşu + kenar kaydırma
+     D3 · Kaza anı adım rehberi           E1 · Spotlight tanıtım turu
+     E4 · Hedef anı kutlaması
+
+   YÖNTEM: Hiçbir mevcut fonksiyon değiştirilmedi. Kod, ilgili fonksiyonları
+   "sarmalar" (wrapper) — orijinal çalışır, sonra bizim adımımız devreye girer.
+   Yeni veri YALNIZCA cihazda saklanır (localStorage); buluta yeni alan
+   yazılmadığı için veritabanı kuralı değişikliği GEREKMEZ.
+   ================================================================================ */
+
+/* ---------- 0 · STİLLER (yeni bileşenler; mevcut tokenlarla uyumlu) ---------- */
+(function v8YeniStil(){
+  var css = ''
+  /* --- canlı sayım --- */
+  + '.cnt-wrap{margin-top:.55rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:.6rem .7rem}'
+  + '.cnt-top{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.45rem}'
+  + '.cnt-lbl{font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}'
+  + '.cnt-hint{font-size:.62rem;color:var(--muted)}'
+  + '.cnt-row{display:flex;align-items:center;gap:.5rem}'
+  + '.cnt-mid{flex:1;display:flex;flex-direction:column;align-items:center;line-height:1.1}'
+  + '.cnt-mid b{font-size:2rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--text)}'
+  + '.cnt-mid span{font-size:.62rem;color:var(--muted)}'
+  + '.cnt-b{min-width:56px;min-height:52px;border-radius:14px;border:1px solid var(--border);background:var(--elev);color:var(--text);font-size:1.15rem;font-weight:800;font-family:inherit;cursor:pointer;touch-action:manipulation}'
+  + '.cnt-b:active{transform:scale(.96)}'
+  + '.cnt-b.plus{background:linear-gradient(140deg,var(--accent),#0ea5e9);border-color:transparent;color:#04121f;min-width:96px;font-size:1.05rem}'
+  + '.cnt-b:focus-visible,.cnt-b.plus:focus-visible{outline:2px solid var(--accent);outline-offset:2px}'
+  + '.cnt-mid b.bump{animation:cntBump .32s cubic-bezier(.34,1.56,.64,1)}'
+  + '@keyframes cntBump{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}'
+  + '.vmb-pkg{font-variant-numeric:tabular-nums}'
+  /* --- dönem kıyas tablosu --- */
+  + '.kiyas{margin-top:.9rem;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}'
+  + '.kiyas-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.7rem .85rem;border-bottom:1px solid var(--border)}'
+  + '.kiyas-head b{font-size:.8rem}'
+  + '.kiyas-head small{display:block;font-size:.62rem;color:var(--muted);font-weight:400;margin-top:.1rem}'
+  + '.kiyas-tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}'
+  + '.kiyas-tbl th,.kiyas-tbl td{padding:.5rem .6rem;font-size:.74rem;text-align:right;border-bottom:1px solid var(--border)}'
+  + '.kiyas-tbl th{color:var(--muted);font-weight:600;font-size:.64rem;text-transform:uppercase;letter-spacing:.05em}'
+  + '.kiyas-tbl td:first-child,.kiyas-tbl th:first-child{text-align:left;color:var(--muted);font-weight:600}'
+  + '.kiyas-tbl td.deg{width:74px}'
+  + '.kiyas-tbl tr:last-child td{border-bottom:none}'
+  + '.kiyas-tbl .pos{color:var(--green,#34d399)}.kiyas-tbl .neg{color:var(--red,#f87171)}'
+  + '.kiyas-yorum{margin:.1rem .85rem .7rem;font-size:.74rem;line-height:1.55;color:var(--text);background:var(--elev);border:1px solid var(--border);border-radius:12px;padding:.55rem .65rem}'
+  + '.kiyas-yorum b{color:var(--accent)}'
+  + '.kiyas-act{display:flex;gap:.5rem;padding:.65rem .85rem .8rem}'
+  + '.kiyas-act .btn{flex:1;font-size:.74rem}'
+  + '.kiyas-bos{padding:1rem .85rem;font-size:.74rem;color:var(--muted);line-height:1.6}'
+  /* --- geri tuşu / kenar kaydırma görsel geri bildirimi --- */
+  + '.v8-edge{position:fixed;top:0;bottom:0;width:3px;background:var(--accent);opacity:0;pointer-events:none;z-index:80;transition:opacity .15s}'
+  + '.v8-edge.show{opacity:.85}'
+  /* --- kaza adım rehberi --- */
+  + '.inc-steps{border:1px solid var(--border);border-radius:14px;padding:.6rem .65rem;background:var(--elev);margin-bottom:.9rem}'
+  + '.inc-steps-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}'
+  + '.inc-steps-head b{font-size:.76rem}'
+  + '.inc-steps-mode{display:flex;gap:.35rem}'
+  + '.inc-chip{border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:99px;font-size:.63rem;padding:.24rem .55rem;font-family:inherit;cursor:pointer}'
+  + '.inc-chip.on{background:var(--accent);border-color:transparent;color:#04121f;font-weight:700}'
+  + '.inc-bar{height:4px;border-radius:99px;background:var(--card);margin:.45rem 0 .5rem;overflow:hidden}'
+  + '.inc-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}'
+  + '.inc-step{display:flex;align-items:flex-start;gap:.5rem;padding:.42rem .3rem;border-radius:10px;cursor:pointer;text-align:left;background:none;border:none;width:100%;font-family:inherit;color:var(--text)}'
+  + '.inc-step:active{background:var(--hover,rgba(255,255,255,.04))}'
+  + '.inc-step .bx{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);display:grid;place-items:center;font-size:.7rem;margin-top:.05rem}'
+  + '.inc-step.done .bx{background:var(--accent);border-color:transparent;color:#04121f;font-weight:800}'
+  + '.inc-step .tx{flex:1;min-width:0}'
+  + '.inc-step .tx b{display:block;font-size:.75rem;font-weight:700}'
+  + '.inc-step .tx small{display:block;font-size:.64rem;color:var(--muted);line-height:1.45;margin-top:.1rem}'
+  + '.inc-step.done .tx b{color:var(--muted);text-decoration:line-through}'
+  + '.inc-sos{flex:none;border:1px solid var(--red,#f87171);color:var(--red,#f87171);background:transparent;border-radius:9px;font-size:.62rem;padding:.25rem .45rem;font-family:inherit;font-weight:700;cursor:pointer}'
+  /* --- spotlight tur --- */
+  + '.tur-dim{position:fixed;inset:0;z-index:200;background:transparent}'
+  + '.tur-ring{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px rgba(4,8,14,.78),0 0 0 2px var(--accent);pointer-events:none;transition:all .22s cubic-bezier(.4,0,.2,1);z-index:201}'
+  + '@media(prefers-reduced-motion:reduce){.tur-ring{transition:none}}'
+  + '.tur-card{position:fixed;left:50%;transform:translateX(-50%);bottom:1.1rem;width:min(420px,calc(100vw - 1.6rem));background:var(--elev);border:1px solid var(--border);border-radius:16px;padding:.85rem .9rem;z-index:202;box-shadow:0 18px 40px rgba(0,0,0,.45)}'
+  + '.tur-card .tur-cnt{font-size:.62rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}'
+  + '.tur-card b{display:block;font-size:.95rem;margin:.2rem 0 .3rem}'
+  + '.tur-card p{font-size:.76rem;color:var(--muted);line-height:1.55;margin:0 0 .7rem}'
+  + '.tur-acts{display:flex;gap:.5rem}'
+  + '.tur-acts .btn{flex:1;font-size:.76rem}'
+  + '.tur-dots{display:flex;gap:.28rem;justify-content:center;margin:.55rem 0 0}'
+  + '.tur-dots i{width:6px;height:6px;border-radius:99px;background:var(--border)}'
+  + '.tur-dots i.on{background:var(--accent);width:16px}'
+  /* --- hedef kutlaması --- */
+  + '.kutla{position:fixed;left:50%;transform:translateX(-50%);bottom:1.1rem;width:min(400px,calc(100vw - 1.6rem));z-index:190;pointer-events:none}'
+  + '.kutla-card{pointer-events:auto;background:linear-gradient(140deg,var(--elev),var(--card));border:1px solid var(--accent);border-radius:16px;padding:.85rem .9rem;box-shadow:0 16px 36px rgba(0,0,0,.4);animation:kutlaIn .35s cubic-bezier(.34,1.56,.64,1)}'
+  + '@keyframes kutlaIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}'
+  + '.kutla-card b{display:block;font-size:.95rem;margin-bottom:.25rem}'
+  + '.kutla-card p{margin:0;font-size:.76rem;color:var(--muted);line-height:1.55}'
+  + '.kutla-x{position:absolute;top:.5rem;right:.6rem;background:none;border:none;color:var(--muted);font-size:1rem;cursor:pointer;font-family:inherit}'
+  + '.onerilen{border-color:var(--accent)!important;box-shadow:0 0 0 3px rgba(56,189,248,.18)}'
+  + '.kutla-p{position:absolute;width:7px;height:7px;border-radius:2px;top:0;left:50%;opacity:0}'
+  + '.kutla.run .kutla-p{animation:kutlaDus 1.5s ease-out forwards}'
+  + '@keyframes kutlaDus{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(420deg)}}'
+  + '@media(prefers-reduced-motion:reduce){.kutla-card{animation:none}.kutla.run .kutla-p{display:none}}'
+  + '';
+  var s = document.createElement('style');
+  s.id = 'v8YeniStil8110';
+  s.textContent = css;
+  document.head.appendChild(s);
+})();
+
+/* ================================================================================
+   B1 · CANLI SAYIM — vardiya sürerken "+1 paket"
+   Paket sayısı bugün yalnızca vardiya bitişinde giriliyordu; bu sayaç gün içinde
+   saymayı sağlar. Veri CİHAZDA tutulur; buluta yazılmaz (kural değişikliği yok).
+   Vardiya bitişinde mevcut "Paket Sayısı" alanı bu sayıyla ÖN-DOLDURULUR;
+   kullanıcı isterse düzeltir — otomatik kayıt oluşmaz.
+   ================================================================================ */
+var CANLI_KEY = 'kurye_canli_sayim_v1';
+function canliSayimOku(){
+  try{
+    var o = JSON.parse(localStorage.getItem(CANLI_KEY) || 'null');
+    if(o && typeof o === 'object'){
+      if(o.tarih !== todayISO()) return { tarih: todayISO(), paket: 0 };
+      return { tarih: o.tarih, paket: Math.max(0, Number(o.paket) || 0) };
+    }
+  }catch(e){}
+  return { tarih: todayISO(), paket: 0 };
+}
+function canliSayimYaz(o){ try{ localStorage.setItem(CANLI_KEY, JSON.stringify(o)); }catch(e){} }
+function canliSayimOneri(tarih){
+  var o = canliSayimOku();
+  if(o.paket > 0 && (!tarih || tarih === o.tarih)) return o.paket;
+  return null;
+}
+function canliSayimCiz(vurgu){
+  var wrap = document.getElementById('cntWrap');
+  if(!wrap) return;
+  var o = canliSayimOku();
+  var acik = (typeof vardiya !== 'undefined' && vardiya.active) || o.paket > 0;
+  wrap.hidden = !acik;
+  var val = document.getElementById('cntVal');
+  if(val){
+    val.textContent = String(o.paket);
+    if(vurgu){ val.classList.remove('bump'); void val.offsetWidth; val.classList.add('bump'); }
+  }
+  var hint = document.getElementById('cntHint');
+  if(hint) hint.textContent = (typeof vardiya !== 'undefined' && vardiya.active)
+    ? 'Vardiya bitince kayda geçer · uzun bas: sıfırla'
+    : 'Vardiya kapalı · sayı kayda geçmeyi bekliyor';
+  var mb = document.getElementById('vmbPkg');
+  if(mb) mb.textContent = String(o.paket);
+}
+function canliSayimEkle(n){
+  var o = canliSayimOku();
+  o.paket = Math.max(0, o.paket + n);
+  o.tarih = todayISO();
+  canliSayimYaz(o);
+  canliSayimCiz(true);
+  try{ haptic(n > 0 ? 'success' : 'warning'); }catch(e){}
+  try{ if(typeof usageBump === 'function' && n > 0) usageBump('vardiya'); }catch(e){}
+}
+function canliSayimSifirla(sessiz){
+  canliSayimYaz({ tarih: todayISO(), paket: 0 });
+  canliSayimCiz();
+  if(!sessiz) toast('Canlı sayım sıfırlandı', true);
+}
+function canliSayimKur(){
+  if(document.getElementById('cntWrap')) return;
+  var stats = document.getElementById('vardiyaStats');
+  if(!stats || !stats.parentNode) return;
+  var el = document.createElement('div');
+  el.className = 'cnt-wrap';
+  el.id = 'cntWrap';
+  el.hidden = true;
+  el.innerHTML =
+    '<div class="cnt-top"><span class="cnt-lbl">Canlı sayım</span><span class="cnt-hint" id="cntHint">+1 ile paket ekle</span></div>' +
+    '<div class="cnt-row">' +
+      '<button type="button" class="cnt-b" id="cntMinus" data-qa="canli-eksi" aria-label="Bir paket eksilt">−</button>' +
+      '<div class="cnt-mid"><b id="cntVal">0</b><span>paket · bugün</span></div>' +
+      '<button type="button" class="cnt-b plus" id="cntPlus" data-qa="canli-arti" aria-label="Bir paket ekle">+1</button>' +
+    '</div>';
+  stats.parentNode.insertBefore(el, stats.nextSibling);
+  var plus = document.getElementById('cntPlus');
+  var minus = document.getElementById('cntMinus');
+  if(plus){
+    var uzunBasti = false, zamanlayici = null;
+    var basla = function(){
+      uzunBasti = false;
+      zamanlayici = setTimeout(function(){
+        uzunBasti = true;
+        if(typeof haptic === 'function') haptic('warning');
+        showConfirm('Canlı sayım sıfırlanacak.<br>Bugün için saydığın paket sayısı 0 olur (kayıtlar etkilenmez).', function(){
+          canliSayimSifirla();
+        }, { title:'Canlı sayımı sıfırla', icon:'alert', warn:true, okText:'Sıfırla', cancelText:'Vazgeç', html:true });
+      }, 650);
+    };
+    var bitir = function(){
+      if(zamanlayici){ clearTimeout(zamanlayici); zamanlayici = null; }
+      if(!uzunBasti) canliSayimEkle(1);
+      uzunBasti = false;
+    };
+    plus.addEventListener('pointerdown', basla);
+    plus.addEventListener('pointerup', bitir);
+    plus.addEventListener('pointerleave', function(){ if(zamanlayici){ clearTimeout(zamanlayici); zamanlayici = null; } uzunBasti = false; });
+    plus.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); canliSayimEkle(1); } });
+  }
+  if(minus) minus.addEventListener('click', function(){ canliSayimEkle(-1); });
+  // mini bar'a paket göstergesi
+  var mb = document.getElementById('vardiyaMiniBar');
+  if(mb && !document.getElementById('vmbPkg')){
+    var sp = document.createElement('span');
+    sp.className = 'vmb-pkg';
+    sp.innerHTML = '· <b id="vmbPkg">0</b> paket';
+    mb.appendChild(sp);
+  }
+  canliSayimCiz();
+}
+/* Sayım, kayıt oluşunca sıfırlanır (sayı kayda geçti). */
+function canliSayimKaydaGecti(){
+  var o = canliSayimOku();
+  if(o.paket > 0) canliSayimYaz({ tarih: todayISO(), paket: 0 });
+  canliSayimCiz();
+}
+
+/* ================================================================================
+   C3 · DÖNEM KIYAS TABLOSU — "bu hafta ↔ geçen hafta" satır satır
+   Mevcut dönem sekmeleri (Haftalık/Aylık) korunur; altına karşılaştırma kartı
+   eklenir. Satırlar ▲▼ yüzde ve 1-2 cümlelik otomatik yorum içerir.
+   ================================================================================ */
+function kiyasKartKapla(hedefId, anahtar){
+  var kap = document.getElementById(anahtar);
+  if(kap) return kap;
+  var referans = document.getElementById(hedefId);
+  if(!referans || !referans.parentNode) return null;
+  kap = document.createElement('div');
+  kap.className = 'kiyas';
+  kap.id = anahtar;
+  referans.parentNode.insertBefore(kap, referans.nextSibling);
+  return kap;
+}
+function kiyasYuzde(yeni, eski){
+  if(eski === null || eski === undefined) return null;
+  if(!eski) return (yeni ? 100 : 0);
+  return ((yeni - eski) / Math.abs(eski)) * 100;
+}
+function kiyasChip(oran, ters){
+  if(oran === null || oran === undefined) return '<span class="deg" style="color:var(--muted)">—</span>';
+  var p = Math.abs(oran);
+  if(p < 0.5) return '<span class="deg" style="color:var(--muted)">aynı</span>';
+  var iyi = ters ? (oran < 0) : (oran > 0);
+  return '<span class="deg ' + (iyi ? 'pos' : 'neg') + '">' + (oran > 0 ? '▲ %' : '▼ %') + fmt(p, 1) + '</span>';
+}
+function kiyasSatirlar(t, p){
+  return [
+    { ad:'Paket', a:t.tes, b:p.tes, bf:'int' },
+    { ad:'Kilometre', a:t.km, b:p.km, bf:'int' },
+    { ad:'Net kazanç', a:t.net, b:p.net, bf:'money' },
+    { ad:'Saf gelir', a:t.safGelir, b:p.safGelir, bf:'money' },
+    { ad:'Çalışma saati', a:t.hours, b:p.hours, bf:'saat' },
+    { ad:'Paket başı net', a:t.perPkg, b:p.perPkg, bf:'money' },
+    { ad:'Kilometre başı gider', a:t.giderKm, b:p.giderKm, bf:'money2', ters:true },
+    { ad:'Yakıt gideri', a:t.yakit, b:p.yakit, bf:'money', ters:true },
+    { ad:'Günlük ortalama net', a:t.gunOrt, b:p.gunOrt, bf:'money' }
+  ];
+}
+function kiyasDeger(v, bf){
+  if(v === null || v === undefined) return '—';
+  if(bf === 'int') return fmtInt(v);
+  if(bf === 'saat') return (Math.round(v * 10) / 10) + ' sa';
+  if(bf === 'money2') return fmt(v, 2);
+  return fmt(v) + ' ₺';
+}
+function kiyasYorum(t, p, adA, adB){
+  var out = [];
+  var pkg = kiyasYuzde(t.tes, p.tes), net = kiyasYuzde(t.net, p.net), ppk = kiyasYuzde(t.perPkg, p.perPkg);
+  if(pkg !== null && Math.abs(pkg) >= 1){
+    out.push('Paket ' + (pkg > 0 ? '+' : '−') + '%' + fmt(Math.abs(pkg), 0) + ' (' + adA + ' ' + fmtInt(t.tes) + ' · ' + adB + ' ' + fmtInt(p.tes) + ').');
+    if(ppk !== null && Math.abs(ppk) >= 1 && pkg > 1 && ppk < -1){
+      out.push('Daha çok paket yaptın ama <b>paket başı net düştü</b> — yoğunluk ya da kısa mesafe etkisi olabilir.');
+    } else if(ppk !== null && Math.abs(ppk) >= 1 && pkg > 1 && ppk > 1){
+      out.push('Hem daha çok paket hem <b>daha yüksek paket başı net</b>: verimli bir dönem.');
+    }
+  }
+  if(net !== null && Math.abs(net) >= 1){
+    out.push('Net kazanç ' + (net > 0 ? '+' : '−') + '%' + fmt(Math.abs(net), 0) + '.');
+  }
+  if(!out.length) out.push('İki dönem birbirine çok yakın; belirgin bir değişim yok.');
+  return out.join(' ');
+}
+function kiyasCiz(tip){
+  var kap = null, t = null, p = null, etiketA = '', etiketB = '', aciklama = '';
+  try{
+    if(tip === 'week'){
+      if(typeof weeksList !== 'function') return;
+      var weeks = weeksList();
+      if(!weeks.length) return;
+      if(typeof wIdx !== 'number' || wIdx === null) wIdx = weeks.length - 1;
+      wIdx = Math.max(0, Math.min(wIdx, weeks.length - 1));
+      var cur = weeks[wIdx], prev = wIdx > 0 ? weeks[wIdx - 1] : null;
+      t = totalsOf(cur.recs);
+      p = prev ? totalsOf(prev.recs) : null;
+      kap = kiyasKartKapla('wMetrics', 'kiyasWeek');
+      etiketA = 'Bu hafta'; etiketB = prev ? 'Geçen hafta' : '—';
+      aciklama = (typeof weekLabelParts === 'function' ? weekLabelParts(cur.w).title : '') || '';
+    } else {
+      if(typeof monthsList !== 'function') return;
+      var months = monthsList();
+      if(!months.length) return;
+      if(typeof mIdx !== 'number' || mIdx === null) mIdx = months.length - 1;
+      mIdx = Math.max(0, Math.min(mIdx, months.length - 1));
+      var curM = months[mIdx], prevM = mIdx > 0 ? months[mIdx - 1] : null;
+      t = totalsOf(curM.recs);
+      p = prevM ? totalsOf(prevM.recs) : null;
+      kap = kiyasKartKapla('mMetrics', 'kiyasMonth');
+      etiketA = 'Bu ay'; etiketB = prevM ? 'Geçen ay' : '—';
+      aciklama = (typeof monthLabel === 'function' ? monthLabel(curM.key) : '') || '';
+    }
+  }catch(e){ return; }
+  if(!kap) return;
+  if(!t || !p){
+    kap.innerHTML = '<div class="kiyas-head"><b>Dönem karşılaştırması</b><small>' + escapeHtml(aciklama) + '</small></div>' +
+      '<div class="kiyas-bos">Karşılaştırma için önceki dönemde kayıt yok. Bir dönem daha kayıt girdiğinizde burada satır satır kıyas çıkar.</div>';
+    return;
+  }
+  var satirlar = kiyasSatirlar(t, p);
+  var govde = satirlar.map(function(s){
+    var oran = kiyasYuzde(s.a, s.b);
+    return '<tr><td>' + s.ad + '</td><td>' + kiyasDeger(s.a, s.bf) + '</td><td>' + kiyasDeger(s.b, s.bf) + '</td><td>' + kiyasChip(oran, s.ters) + '</td></tr>';
+  }).join('');
+  kap.innerHTML = '<div class="kiyas-head"><div><b>Dönem karşılaştırması</b><small>' + escapeHtml(aciklama) + '</small></div>' +
+      '<button type="button" class="inc-chip" id="kiyasPaylas' + tip + '" data-qa="kiyas-paylas">Metin olarak paylaş</button></div>' +
+    '<div style="overflow-x:auto"><table class="kiyas-tbl"><thead><tr><th>Ölçüt</th><th>' + etiketA + '</th><th>' + etiketB + '</th><th>Değişim</th></tr></thead><tbody>' + govde + '</tbody></table></div>' +
+    '<div class="kiyas-yorum">' + kiyasYorum(t, p, etiketA, etiketB) + '</div>';
+  var btn = document.getElementById('kiyasPaylas' + tip);
+  if(btn) btn.addEventListener('click', function(){ kiyasPaylas(tip, etiketA, etiketB, satirlar); });
+}
+function kiyasPaylas(tip, etiketA, etiketB, satirlar){
+  var satir = ['Kurye OS · dönem karşılaştırması', etiketA + ' ↔ ' + etiketB, ''];
+  (satirlar || []).forEach(function(s){
+    var oran = kiyasYuzde(s.a, s.b);
+    satir.push('• ' + s.ad + ': ' + kiyasDeger(s.a, s.bf) + ' (' + etiketB + ': ' + kiyasDeger(s.b, s.bf) + ')' +
+      (oran === null ? '' : ' → ' + (oran > 0 ? '+' : '') + fmt(oran, 1) + '%'));
+  });
+  var metin = satir.join('\n');
+  try{
+    if(navigator.share){ navigator.share({ title:'Dönem karşılaştırması', text:metin }).catch(function(){}); return; }
+  }catch(e){}
+  try{
+    navigator.clipboard.writeText(metin).then(function(){ toast('Karşılaştırma kopyalandı', true); },
+      function(){ toast('Kopyalanamadı', false); });
+  }catch(e){ toast('Paylaşım bu cihazda desteklenmiyor', false); }
+}
+
+/* ================================================================================
+   D2 · DONANIM GERİ TUŞU + KENAR KAYDIRMA
+   Önceden popstate yalnızca güncelleme kapısı için kullanılıyordu; açık bir form
+   veya alt sayfa varken Android geri tuşu uygulamayı kapatıyordu.
+   Sıra: güncelleme kapısı > tur > alt sayfa > modal > sayfa > çıkış onayı.
+   ================================================================================ */
+var V8G = { sonCikis: 0, kuruldu: false };
+function v8GeriSentinel(){
+  try{ history.pushState({ v8geri: 1 }, ''); }catch(e){}
+}
+function v8AktifSayfa(){
+  var it = document.querySelector('.nav-item.active');
+  return (it && it.dataset && it.dataset.page) || 'dashboard';
+}
+function v8SayfaSirasi(){
+  var liste = [];
+  document.querySelectorAll('#bottomNav .bn-item').forEach(function(b){
+    if(b.dataset && b.dataset.page) liste.push(b.dataset.page);
+  });
+  return liste;
+}
+function v8KapatDugmesiBul(kapsayici){
+  try{
+    var kapali = ['confirmBtnCancel', 'infoBtnOk', 'shiftCompleteCancel', 'ssBtnBugun', 'ssBtnToday'];
+    for(var i = 0; i < kapali.length; i++){
+      var b = document.getElementById(kapali[i]);
+      if(b && kapsayici && kapsayici.contains(b) && b.offsetParent !== null) return b;
+    }
+    var aday = kapsayici.querySelector('[aria-label="Kapat"],[data-qa="onay-iptal"]');
+    if(aday) return aday;
+    var dugmeler = kapsayici.querySelectorAll('button');
+    for(var j = 0; j < dugmeler.length; j++){
+      var t = (dugmeler[j].textContent || '').trim().toLocaleLowerCase('tr');
+      if(/^(vazgeç|iptal|kapat|çık|geri)$/.test(t)) return dugmeler[j];
+    }
+  }catch(e){}
+  return null;
+}
+function v8GeriAdim(){
+  // 1) Tanıtım turu
+  if(typeof turAcik === 'function' && turAcik()){ turKapat(false); return true; }
+  // 2) Alt sayfa (bottom sheet)
+  var sheets = document.querySelectorAll('.bottom-sheet.show');
+  if(sheets.length){
+    var sh = sheets[sheets.length - 1];
+    try{
+      if(sh.id === 'incidentSheet' && typeof closeIncidentSheet === 'function'){ closeIncidentSheet(); return true; }
+      var sc = document.getElementById(sh.id + 'Close') || v8KapatDugmesiBul(sh);
+      if(sc){ sc.click(); return true; }
+      sh.classList.remove('show');
+      var mask = document.getElementById(sh.id.replace('Sheet', 'Mask'));
+      if(mask) mask.classList.remove('show');
+      return true;
+    }catch(e){}
+  }
+  // 3) Modal / örtü katmanı (kayıt formu, onay, bilgi, hedef, araç…)
+  var ovs = document.querySelectorAll('.overlay.show');
+  for(var i = ovs.length - 1; i >= 0; i--){
+    var ov = ovs[i];
+    if(ov.id === 'otaUpdateOverlay' || ov.id === 'forceGateOverlay') continue;   // güncelleme kapısı: geri ile kapanmaz
+    try{
+      // Kayıt formu: uygulamanın kendi kapatma yolu (kirli form ise veri kaybı onayı sorar)
+      if(ov.id === 'overlay' && typeof tryCloseRecordForm === 'function'){ tryCloseRecordForm(null); return true; }
+      if(ov.id === 'confirmOverlay'){
+        var v = document.getElementById('confirmBtnCancel');
+        if(v){ v.click(); return true; }
+        var v2 = document.getElementById('confirmBtnOk');
+        if(v2){ v2.click(); return true; }
+      }
+      var b = v8KapatDugmesiBul(ov);
+      if(b){
+        b.click();
+        if(!ov.classList.contains('show')) return true;          // gerçekten kapandı
+      }
+      ov.classList.remove('show');                                // kapatan düğme bulunamadı: görünümü kapat
+      if(typeof deactivateAccessibleModal === 'function') deactivateAccessibleModal(ov);
+      return true;
+    }catch(e){}
+  }
+  // 4) Alt sayfa (bölüm) → ana sayfa
+  var sayfa = v8AktifSayfa();
+  if(sayfa !== 'dashboard'){
+    var sira = v8SayfaSirasi();
+    var hedef = sayfa === 'garage' ? 'garage' : 'dashboard';
+    try{ switchToPage('dashboard'); }catch(e){}
+    return true;
+  }
+  return false;
+}
+/* Geri rutini: donanım geri tuşu ve sağ kenar hareketi aynı yolu kullanır. */
+function v8GeriBasildi(){
+  if(v8GeriAdim()){ v8GeriSentinel(); return true; }
+  var simdi = Date.now();
+  if(simdi - V8G.sonCikis < 2000) return false;      // ikinci basış: gerçekten çık
+  V8G.sonCikis = simdi;
+  toast('Çıkmak için tekrar bas', true);
+  v8GeriSentinel();
+  return false;
+}
+function v8GeriKur(){
+  if(V8G.kuruldu) return;
+  V8G.kuruldu = true;
+  v8GeriSentinel();
+  window.addEventListener('popstate', function(){
+    try{
+      if(typeof _forceGateActive !== 'undefined' && _forceGateActive){
+        try{ history.pushState({ forceGate: 1 }, ''); }catch(e){}
+        return;
+      }
+      v8GeriBasildi();
+    }catch(e){}
+  });
+}
+function v8KenarKaydirmaKur(){
+  /* Sağ kenardan içe kaydırma = Android "geri" hareketi.
+     Sol kenar uygulamanın kendi menü açma bölgesi; oraya dokunulmaz.
+     Jest, uygulamanın sayfa-kaydırma sistemine sızmaz (yakalama fazında kesilir). */
+  var KENAR = 36, x0 = null, y0 = null, sag = false;
+  var nokta = function(x, y){ return { clientX: x, clientY: y }; };
+  document.addEventListener('touchstart', function(e){
+    try{
+      if(!e.touches || e.touches.length !== 1){ sag = false; return; }
+      var t = e.touches[0];
+      sag = t.clientX > window.innerWidth - KENAR;
+      if(sag){ x0 = t.clientX; y0 = t.clientY; e.stopPropagation(); }
+    }catch(err){}
+  }, { passive: true, capture: true });
+  document.addEventListener('touchmove', function(e){
+    if(sag) e.stopPropagation();
+  }, { passive: true, capture: true });
+  document.addEventListener('touchend', function(e){
+    if(!sag) return;
+    sag = false;
+    try{ e.stopPropagation(); }catch(err){}
+    if(x0 === null) return;
+    var t = e.changedTouches && e.changedTouches[0];
+    if(!t) return;
+    var dx = t.clientX - x0, dy = t.clientY - y0;
+    x0 = null; y0 = null;
+    if(dx > -70 || Math.abs(dy) > 55) return;          // yalnızca içe (sola) kaydırma
+    v8GeriBasildi();
+    if(typeof haptic === 'function') haptic('light');
+  }, { passive: true, capture: true });
+}
+/* ================================================================================
+   D3 · KAZA ANI ADIM REHBERİ
+   Olay formunun üstüne 6 adımlık kontrol listesi ekler. Adımlar forma bağlanır:
+   karşı taraf bilgisi girilince, fotoğraf eklenince, dosya no yazılınca ilgili
+   adım kendiliğinden işaretlenir. Eksik adımlar kayıtta saklanır ve uyarılır.
+   ================================================================================ */
+var INC_ADIMLAR = [
+  { id:'guvenlik', baslik:'Güvenlik ve 112', aciklama:'Önce sen ve trafik güvenliği. Yaralı varsa 112’yi ara.', sos:true },
+  { id:'karsitaraf', baslik:'Karşı taraf bilgisi', aciklama:'Plaka, isim, telefon ve sigorta bilgisini al.' },
+  { id:'foto', baslik:'Fotoğraf / video', aciklama:'Araç, hasar, plaka ve konum kareleri çek.' },
+  { id:'tutanak', baslik:'Tutanak / servis kararı', aciklama:'Anlaşmalı tutanak mı, servis mi? Kararını not et.' },
+  { id:'sigorta', baslik:'Sigortaya bildir', aciklama:'Dosya numarasını buraya yaz; takip 7 gün sonra hatırlatılır.' },
+  { id:'haber', baslik:'İşverene / platforma haber ver', aciklama:'Vardiya ve teslimat planını güncelle.' }
+];
+var _incAdim = {};
+function incAdimDepo(){ try{ return JSON.parse(localStorage.getItem('kurye_olay_adim_v1') || '{}'); }catch(e){ return {}; } }
+function incAdimKaydet(){ try{ localStorage.setItem('kurye_olay_adim_v1', JSON.stringify(_incAdim)); }catch(e){} }
+function incAdimOtomatik(){
+  var o = (document.getElementById('incOther') || {}).value || '';
+  var d = (document.getElementById('incDosya') || {}).value || '';
+  var fotoVar = false;
+  try{ fotoVar = (_incYeni.length + _incMevcut.length) > 0; }catch(e){ fotoVar = false; }
+  if(o.trim()) _incAdim.karsitaraf = true;
+  if(d.trim()) _incAdim.sigorta = true;
+  if(fotoVar) _incAdim.foto = true;
+  incAdimCiz();
+}
+function incAdimEksikler(){
+  return INC_ADIMLAR.filter(function(a){ return !_incAdim[a.id]; }).map(function(a){ return a.baslik; });
+}
+function incAdimCiz(){
+  var kap = document.getElementById('incStepsList');
+  if(!kap) return;
+  var bar = document.getElementById('incStepsBar');
+  var sayac = document.getElementById('incStepsCount');
+  var tamam = INC_ADIMLAR.filter(function(a){ return !!_incAdim[a.id]; }).length;
+  if(bar) bar.style.width = Math.round(tamam / INC_ADIMLAR.length * 100) + '%';
+  if(sayac) sayac.textContent = tamam + '/' + INC_ADIMLAR.length + ' adım';
+  kap.innerHTML = INC_ADIMLAR.map(function(a){
+    var on = !!_incAdim[a.id];
+    return '<button type="button" class="inc-step' + (on ? ' done' : '') + '" data-adim="' + a.id + '" role="checkbox" aria-checked="' + (on ? 'true' : 'false') + '">' +
+      '<span class="bx" aria-hidden="true">' + (on ? '✓' : '') + '</span>' +
+      '<span class="tx"><b>' + a.baslik + '</b><small>' + a.aciklama + '</small></span>' +
+      (a.sos ? '<span class="inc-sos" role="button" tabindex="0" data-sos="1">112 / SOS</span>' : '') +
+      '</button>';
+  }).join('');
+}
+function incAdimlarKur(){
+  var body = document.querySelector('#incidentSheet .sheet-body');
+  if(!body || document.getElementById('incSteps')) return;
+  _incAdim = incAdimDepo();
+  var el = document.createElement('div');
+  el.className = 'inc-steps';
+  el.id = 'incSteps';
+  el.innerHTML =
+    '<div class="inc-steps-head"><b>Sırayla ne yapmalıyım?</b>' +
+      '<div class="inc-steps-mode">' +
+        '<button type="button" class="inc-chip on" id="incModeAdim" data-qa="olay-adim-modu">Adım adım</button>' +
+        '<button type="button" class="inc-chip" id="incModeHizli">Hızlı form</button>' +
+      '</div></div>' +
+    '<div class="inc-bar"><i id="incStepsBar"></i></div>' +
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.25rem;">' +
+      '<span class="cnt-lbl" id="incStepsCount">0/6 adım</span>' +
+      '<span style="font-size:.62rem;color:var(--muted)">Dokun: tamamlandı işaretle</span></div>' +
+    '<div id="incStepsList"></div>';
+  body.insertBefore(el, body.firstChild);
+  el.addEventListener('click', function(e){
+    var sos = e.target && e.target.closest ? e.target.closest('[data-sos]') : null;
+    if(sos){
+      e.stopPropagation();
+      try{ openSosPanel(); }catch(err){ toast('Acil kişiler Ayarlar’dan tanımlanır', false); }
+      return;
+    }
+    var b = e.target && e.target.closest ? e.target.closest('[data-adim]') : null;
+    if(!b) return;
+    var id = b.getAttribute('data-adim');
+    _incAdim[id] = !_incAdim[id];
+    incAdimKaydet(); incAdimCiz();
+    if(typeof haptic === 'function') haptic('light');
+  });
+  var hizli = document.getElementById('incModeHizli');
+  var adim = document.getElementById('incModeAdim');
+  var modAyarla = function(adimModu){
+    var liste = document.getElementById('incStepsList');
+    var barWrap = el.querySelector('.inc-bar');
+    if(liste) liste.style.display = adimModu ? '' : 'none';
+    if(barWrap) barWrap.style.display = adimModu ? '' : 'none';
+    if(adim) adim.classList.toggle('on', adimModu);
+    if(hizli) hizli.classList.toggle('on', !adimModu);
+  };
+  if(adim) adim.addEventListener('click', function(){ modAyarla(true); });
+  if(hizli) hizli.addEventListener('click', function(){ modAyarla(false); });
+  ['incOther', 'incDosya'].forEach(function(id){
+    var f = document.getElementById(id);
+    if(f && !f.dataset.adimBound){ f.dataset.adimBound = '1'; f.addEventListener('input', incAdimOtomatik); }
+  });
+  var foto = document.getElementById('incPhoto');
+  if(foto && !foto.dataset.adimBound){ foto.dataset.adimBound = '1'; foto.addEventListener('change', function(){ setTimeout(incAdimOtomatik, 60); }); }
+  incAdimCiz();
+}
+/* 7 günlük takip hatırlatması: açık dosyalar (günde bir kez) */
+function incTakipKontrol(sessiz){
+  try{
+    var list = incidentStore();
+    var bugun = todayISO();
+    var bekleyen = list.filter(function(o){
+      return o && o.durum === 'acik' && o.takipTarihi && o.takipTarihi <= bugun && !o.takipBildirildi;
+    });
+    if(!bekleyen.length) return;
+    bekleyen.forEach(function(o){ o.takipBildirildi = true; });
+    writeIncidentStore(list);
+    if(!sessiz){
+      var ilk = bekleyen[0];
+      toast(bekleyen.length + ' kaza/hasar dosyasında sigorta takibi zamanı · Olay Raporu’na bak', true);
+    }
+  }catch(e){}
+}
+
+/* ================================================================================
+   E1 · SPOTLIGHT TANITIM TURU (6 adım)
+   Kurulum tamamlandığında bir kez önerilir; Kılavuz'dan istenirse tekrar oynatılır.
+   Hedef öğe vurgulanır (spotlight), altında tek cümlelik açıklama çıkar.
+   ================================================================================ */
+var TUR_KEY = 'kurye_tur_v1';
+var TUR_ADIMLARI = [
+  { sel:'#bottomNav', baslik:'Alt menü', metin:'Ana Sayfa · Kayıtlar · ＋ · Analiz · Garaj. Bölümler arasında buradan geçersin.' },
+  { sel:'#bnFab', baslik:'＋ düğmesi', metin:'Kısa dokun: yeni kayıt. Uzun bas: KM gir, yakıt gir, vardiyayı bitir.' },
+  { sel:'#todayHero', baslik:'BUGÜN kartı', metin:'Paket, KM ve net kazancın. Kartı yana kaydır: hafta · ay · tümü. Değerlere dokununca ilgili bölüm açılır.' },
+  { sel:'#actionBoxWrap', baslik:'Yapılacaklar', metin:'Günün görevleri ve akıllı uyarılar (bakım, bildirim, senkron) tek kutuda. Dokun ve tamamla.' },
+  { sel:'#page-weekly .ana-switch', git:'weekly', baslik:'Analiz sekmeleri', metin:'Haftalık · Aylık · Tümü. “Görsel Kart” ile özetini PNG olarak paylaşabilirsin.' },
+  { sel:'#page-menu', baslik:'Menü ve kısayollar', metin:'Tüm bölümler burada. Sık kullandığını ★ ile sabitle; menünün üstünde kısa yol olarak durur.', git:'menu' }
+];
+var _tur = { acik: false, i: 0, donusSayfa: null };
+function turGoruldu(){ try{ return localStorage.getItem(TUR_KEY) === '1'; }catch(e){ return true; } }
+function turIsaretle(){ try{ localStorage.setItem(TUR_KEY, '1'); }catch(e){} }
+function turAcik(){ return !!_tur.acik; }
+function turKapat(tamam){
+  _tur.acik = false;
+  var d = document.getElementById('turDim'), r = document.getElementById('turRing'), c = document.getElementById('turCard');
+  if(d) d.remove();
+  if(r) r.remove();
+  if(c) c.remove();
+  if(_tur.donusSayfa){ try{ switchToPage(_tur.donusSayfa); }catch(e){} _tur.donusSayfa = null; }
+  if(tamam) turIsaretle();
+}
+function turAdimGoster(i){
+  var adim = TUR_ADIMLARI[i];
+  if(!adim){ turKapat(true); return; }
+  _tur.i = i;
+  if(adim.git){
+    if(!_tur.donusSayfa) _tur.donusSayfa = v8AktifSayfa();
+    try{ switchToPage(adim.git); }catch(e){}
+  }
+  var hedef = document.querySelector(adim.sel);
+  if(!hedef){                                  // hedef yoksa adımı atla
+    if(i + 1 < TUR_ADIMLARI.length) turAdimGoster(i + 1); else turKapat(true);
+    return;
+  }
+  try{ hedef.scrollIntoView({ block:'center', behavior: (i === 0 ? 'auto' : 'smooth') }); }catch(e){}
+  setTimeout(function(){
+    var r = hedef.getBoundingClientRect();
+    var pad = 6;
+    var ring = document.getElementById('turRing');
+    if(!ring){
+      ring = document.createElement('div'); ring.className = 'tur-ring'; ring.id = 'turRing';
+      document.body.appendChild(ring);
+    }
+    ring.style.left = Math.max(4, r.left - pad) + 'px';
+    ring.style.top = Math.max(4, r.top - pad) + 'px';
+    ring.style.width = Math.min(window.innerWidth - 8, r.width + pad * 2) + 'px';
+    ring.style.height = Math.max(28, r.height + pad * 2) + 'px';
+    var card = document.getElementById('turCard');
+    var noktalar = TUR_ADIMLARI.map(function(_, k){ return '<i class="' + (k === i ? 'on' : '') + '"></i>'; }).join('');
+    var son = (i === TUR_ADIMLARI.length - 1);
+    card.innerHTML =
+      '<div class="tur-cnt">Tanıtım · ' + (i + 1) + '/' + TUR_ADIMLARI.length + '</div>' +
+      '<b>' + escapeHtml(adim.baslik) + '</b>' +
+      '<p>' + escapeHtml(adim.metin) + '</p>' +
+      '<div class="tur-acts">' +
+        '<button type="button" class="btn btn-ghost" id="turAtla" data-qa="tur-atla">Atla</button>' +
+        '<button type="button" class="btn btn-primary" id="turIleri" data-qa="tur-ileri">' + (son ? 'Bitir' : 'İleri') + '</button>' +
+      '</div>' +
+      '<div class="tur-dots" aria-hidden="true">' + noktalar + '</div>';
+    var atla = document.getElementById('turAtla');
+    var ileri = document.getElementById('turIleri');
+    if(atla) atla.addEventListener('click', function(){ turIsaretle(); turKapat(false); toast('Tanıtımı Kılavuz’dan tekrar açabilirsin', true); });
+    if(ileri) ileri.addEventListener('click', function(){
+      if(son){ turKapat(true); toast('Hazırsın! İyi çalışmalar 🚀', true); }
+      else turAdimGoster(i + 1);
+    });
+    var c = document.getElementById('turCard');
+    if(c) c.setAttribute('aria-live', 'polite');
+  }, 220);
+}
+function turBasla(){
+  if(_tur.acik) return;
+  _tur.acik = true;
+  if(!document.getElementById('turDim')){
+    var d = document.createElement('div'); d.className = 'tur-dim'; d.id = 'turDim';
+    document.body.appendChild(d);
+  }
+  if(!document.getElementById('turCard')){
+    var c = document.createElement('div'); c.className = 'tur-card'; c.id = 'turCard';
+    document.body.appendChild(c);
+  }
+  turAdimGoster(0);
+}
+function turDavetGoster(){
+  if(turGoruldu() || document.getElementById('turDavet')) return;
+  var el = document.createElement('div');
+  el.className = 'setup-card';
+  el.id = 'turDavet';
+  el.style.marginTop = '.7rem';
+  el.innerHTML =
+    '<div class="sc-head"><span class="sc-ico">🎯</span><div><div class="sc-title">30 saniyelik tanıtım</div>' +
+    '<div class="v-sub">Uygulamanın 6 püf noktasını arayüzün üzerinde göstereyim.</div></div></div>' +
+    '<div style="display:flex;gap:.5rem;margin-top:.6rem;">' +
+      '<button type="button" class="btn btn-ghost btn-sm" id="turDavetYok" style="flex:1">Şimdi değil</button>' +
+      '<button type="button" class="btn btn-primary btn-sm" id="turDavetBasla" data-qa="tur-davet" style="flex:1">Turunu başlat</button>' +
+    '</div>';
+  var hedef = document.getElementById('setupProgressCard') || document.getElementById('vardiyaStats');
+  if(hedef && hedef.parentNode && hedef.id === 'setupProgressCard') hedef.parentNode.insertBefore(el, hedef);
+  else if(hedef && hedef.parentNode) hedef.parentNode.insertBefore(el, hedef.nextSibling);
+  var b = document.getElementById('turDavetBasla');
+  var y = document.getElementById('turDavetYok');
+  if(b) b.addEventListener('click', function(){ el.remove(); turBasla(); });
+  if(y) y.addEventListener('click', function(){ el.remove(); turIsaretle(); });
+}
+/* Kılavuz sayfasına "tekrar oynat" düğmesi */
+function turDugmesiEkle(){
+  var sayfa = document.getElementById('page-instructions');
+  if(!sayfa || document.getElementById('turTekrar')) return;
+  var basliklar = sayfa.querySelectorAll('.dashboard-section-title h2, .gd-title, h2');
+  var hedef = null;
+  for(var i = 0; i < basliklar.length; i++){
+    if(/hızlı ipuçları/i.test(basliklar[i].textContent || '')){ hedef = basliklar[i].parentNode; break; }
+  }
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'btn btn-ghost btn-sm'; btn.id = 'turTekrar';
+  btn.setAttribute('data-qa', 'tur-tekrar');
+  btn.textContent = '🎯 Tanıtımı tekrar oynat';
+  btn.style.marginTop = '.5rem';
+  btn.addEventListener('click', function(){ try{ window.scrollTo(0, 0); }catch(e){} turBasla(); });
+  if(hedef && hedef.parentNode) hedef.parentNode.insertBefore(btn, hedef.nextSibling);
+  else sayfa.appendChild(btn);
+}
+
+/* ================================================================================
+   E4 · HEDEF ANI KUTLAMASI
+   Günlük/haftalık hedef İLK kez tuttuğunda kısa bir kutlama. Günde en fazla bir
+   kez; sessiz mod ve "hareketi azalt" tercihine saygılı.
+   ================================================================================ */
+var KUTLA_KEY = 'kurye_kutlama_v1';          // '0' → kapalı
+var KUTLA_SON = 'kurye_kutlama_son_v1';
+function kutlamaKapali(){ try{ return localStorage.getItem(KUTLA_KEY) === '0'; }catch(e){ return false; } }
+function kutlamaSonOku(){ try{ return JSON.parse(localStorage.getItem(KUTLA_SON) || '{}') || {}; }catch(e){ return {}; } }
+function kutlamaSonYaz(o){ try{ localStorage.setItem(KUTLA_SON, JSON.stringify(o)); }catch(e){} }
+function kutlamaCiz(baslik, metin){
+  var eski = document.getElementById('kutlaWrap');
+  if(eski) eski.remove();
+  var azHareket = false;
+  try{ azHareket = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){}
+  var w = document.createElement('div');
+  w.className = 'kutla' + (azHareket ? '' : ' run');
+  w.id = 'kutlaWrap';
+  w.setAttribute('role', 'status');
+  var parcalar = '';
+  if(!azHareket){
+    var renkler = ['#38bdf8', '#34d399', '#fbbf24', '#f472b6', '#a78bfa'];
+    for(var i = 0; i < 22; i++){
+      var dx = Math.round(Math.random() * 220 - 110);
+      var dy = Math.round(120 + Math.random() * 160);
+      parcalar += '<i class="kutla-p" style="--dx:' + dx + 'px;--dy:' + dy + 'px;left:' + (20 + Math.random() * 60) + '%;background:' + renkler[i % renkler.length] + ';animation-delay:' + (i * 22) + 'ms"></i>';
+    }
+  }
+  w.innerHTML = parcalar +
+    '<div class="kutla-card" style="position:relative">' +
+      '<button type="button" class="kutla-x" id="kutlaKapat" aria-label="Kapat">✕</button>' +
+      '<b>' + baslik + '</b><p>' + metin + '</p>' +
+    '</div>';
+  document.body.appendChild(w);
+  var k = document.getElementById('kutlaKapat');
+  if(k) k.addEventListener('click', function(){ w.remove(); });
+  if(typeof haptic === 'function') haptic('success');
+  setTimeout(function(){ try{ w.remove(); }catch(e){} }, 7000);
+}
+function hedefKutlamaKontrol(){
+  try{
+    if(kutlamaKapali() || typeof totalsOf !== 'function') return;
+    var hedefler = (typeof garageData !== 'undefined' && garageData.goals) || {};
+    var hafta = hedefler.weekly || {};
+    var ay = hedefler.monthly || {};
+    var bugun = todayISO();
+    var haftaKey = String(typeof currentWeekKey === 'function' ? currentWeekKey() : '');
+    var ayKey = (typeof monthKey === 'function') ? monthKey(bugun) : '';
+    var son = kutlamaSonOku();
+    var bugunT = totalsOf(records.filter(function(r){ return r && r.tarih === bugun; }));
+    var haftaT = totalsOf(records.filter(function(r){ return r && weekOf(r.tarih) === haftaKey; }));
+    var planliGun = (typeof hedefGunSayisi === 'function') ? Math.max(1, hedefGunSayisi()) : 7;
+    var mesaj = [];
+
+    // Günlük hedef: haftalık hedefin planlanan güne bölümü
+    var hw = hafta[haftaKey] || {};
+    var haftalikNet = 0;
+    try{ haftalikNet = (typeof efektifHedef === 'function' ? efektifHedef(hw.money || 0, haftaKey).deger : (hw.money || 0)); }catch(e){ haftalikNet = hw.money || 0; }
+    var gunlukNet = haftalikNet > 0 ? haftalikNet / planliGun : 0;
+    if(gunlukNet > 0 && bugunT.net >= gunlukNet && son.gun !== bugun){
+      mesaj.push('Bugün hedefini tuttun: <b>' + fmt(bugunT.net) + ' ₺</b> (hedef ' + fmt(gunlukNet) + ' ₺).');
+      son = Object.assign({}, son, { gun: bugun });
+    }
+    // Haftalık hedef
+    if((hw.money || 0) > 0 && haftalikNet > 0 && haftaT.net >= haftalikNet && son.hafta !== haftaKey){
+      mesaj.push('Haftalık hedef tamam: <b>' + fmt(haftaT.net) + ' ₺</b> · planlanan ' + fmt(haftalikNet) + ' ₺.');
+      son = Object.assign({}, son, { hafta: haftaKey });
+    }
+    // Aylık hedef (bilgi olarak, kutlama metnine eklenir)
+    var am = ay[ayKey] || {};
+    if((am.money || 0) > 0 && son.ay !== ayKey){
+      var ayT = totalsOf(records.filter(function(r){ return r && monthKey(r.tarih) === ayKey; }));
+      if(ayT.net >= (am.money || 0)){ mesaj.push('Ay hedefi de tamam: <b>' + fmt(ayT.net) + ' ₺</b>.'); son = Object.assign({}, son, { ay: ayKey }); }
+    }
+    if(!mesaj.length) return;
+    kutlamaSonYaz(son);
+    kutlamaCiz('Hedef tamam 🎉', mesaj.join('<br>') + '<br><span style="font-size:.7rem">Kutlamayı Ayarlar’dan kapatabilirsin.</span>');
+    try{ if(typeof usageBump === 'function') usageBump('rozet'); }catch(e){}
+  }catch(e){}
+}
+
+/* ================================================================================
+   8110 · KANCA BAĞLAMA (mevcut fonksiyonları sarmalama)
+   Hiçbir mevcut fonksiyonun gövdesi değiştirilmedi; yalnızca sarmalandı.
+   Orijinal davranış korunur, bizim adımımız sonra çalışır.
+   ================================================================================ */
+(function v8Kancalar(){
+  function sarmala(ad, ek, secenek){
+    try{
+      var orijinal = window[ad];
+      if(typeof orijinal !== 'function' || orijinal.__v8sar) return false;
+      var yeni = function(){
+        var args = arguments;
+        if(secenek && typeof secenek.once === 'function'){
+          try{ args = secenek.once.apply(this, args) || args; }catch(e){}
+        }
+        var sonuc = orijinal.apply(this, args);
+        try{ ek.apply(this, args); }catch(e){}
+        return sonuc;
+      };
+      yeni.__v8sar = 1;
+      window[ad] = yeni;
+      return true;
+    }catch(e){ return false; }
+  }
+
+  /* B1 · vardiya kartı çizilince sayaç kurulur; vardiya başlarken görünür olur */
+  sarmala('renderVardiya', function(){ canliSayimKur(); canliSayimCiz(); });
+  sarmala('startVardiya', function(){ canliSayimKur(); canliSayimCiz(); });
+  /* B1 · vardiya bitiş formu: paket alanı canlı sayımdan ön-doldurulur */
+  sarmala('showShiftCompletionForm', function(){}, {
+    once: function(onComplete, initial){
+      initial = initial || {};
+      if(initial.mode === 'record') return arguments;                 // düzenleme: dokunma
+      if(Number(initial.teslimat) > 0) return arguments;              // zaten değer var
+      var sayi = canliSayimOneri(initial.date);
+      if(sayi){
+        initial.teslimat = sayi;
+        setTimeout(function(){
+          var f = document.getElementById('shiftCompletePackages');
+          if(f){
+            f.classList.add('onerilen');
+            var ip = document.getElementById('canliSayimIpu');
+            if(!ip){
+              ip = document.createElement('div');
+              ip.id = 'canliSayimIpu';
+              ip.className = 'v-sub';
+              ip.style.marginTop = '.25rem';
+              ip.textContent = 'Canlı sayımdan geldi (' + sayi + ' paket) · gerekirse düzelt.';
+              if(f.parentNode) f.parentNode.appendChild(ip);
+            } else { ip.textContent = 'Canlı sayımdan geldi (' + sayi + ' paket) · gerekirse düzelt.'; }
+          }
+        }, 260);
+      }
+      return [onComplete, initial];
+    }
+  });
+  /* B1 + E4 · kayıt başarıyla eklendiğinde: sayım sıfırlanır, hedef kutlaması bakılır */
+  sarmala('showSaveSuccess', function(){ canliSayimKaydaGecti(); setTimeout(hedefKutlamaKontrol, 700); });
+
+  /* C3 · analiz ekranları çizildikten sonra kıyas tablosu */
+  sarmala('renderWeeklyDetail', function(){ kiyasCiz('week'); });
+  sarmala('renderMonthlyDetail', function(){ kiyasCiz('month'); });
+
+  /* D3 · olay formu açıldığında adım rehberi kurulur */
+  sarmala('openIncidentSheet', function(){ setTimeout(incAdimlarKur, 60); });
+  /* D3 · kayıt sırasında adım durumu rapora yazılır + eksikler bildirilir */
+  sarmala('saveIncidentReport', function(){
+    try{
+      var eksik = incAdimEksikler();
+      var list = incidentStore();
+      var rec = list[list.length - 1];
+      if(rec){
+        rec.adimlar = Object.assign({}, _incAdim);
+        rec.adimEksik = eksik;
+        if(rec.durum === 'acik' && !rec.takipTarihi){
+          var t = new Date(); t.setDate(t.getDate() + 7);
+          rec.takipTarihi = t.toISOString().slice(0, 10);
+        }
+        writeIncidentStore(list);
+      }
+      if(eksik.length) setTimeout(function(){ toast(eksik.length + ' adım işaretlenmedi: ' + eksik.join(' · '), false); }, 400);
+    }catch(e){}
+  });
+  /* D3 · açık dosya takibi (günde bir kez, sessiz uyarı) */
+  sarmala('renderIncidentList', function(){ setTimeout(function(){ incTakipKontrol(false); }, 400); });
+
+  /* E1 · kurulum tamamlandığında tur daveti */
+  sarmala('renderSetupProgress', function(){
+    try{
+      var items = (typeof setupProgressItems === 'function') ? setupProgressItems() : [];
+      var tamam = items.length && items.every(function(i){ return i.done; });
+      if(tamam && !turGoruldu()) turDavetGoster();
+    }catch(e){}
+  });
+  /* E4 · ana sayfa çizildiğinde hedef kutlaması + D2 · geri tuşu tam etkin */
+  sarmala('renderDash', function(){ v8GeriKur(); setTimeout(hedefKutlamaKontrol, 900); });
+
+
+  /* Açılış hazırlıkları */
+  function baslat(){
+    try{ canliSayimKur(); canliSayimCiz(); }catch(e){}
+    try{ turDugmesiEkle(); }catch(e){}
+    try{ v8KenarKaydirmaKur(); }catch(e){}
+    /* D2 · geri tuşu: uygulama ekranı görünür görünmez kurulur (oturum açılışını beklemez) */
+    try{ v8GeriKur(); }catch(e){}
+    try{
+      var zaman = setInterval(function(){
+        var c = document.getElementById('app-container');
+        if(c && c.classList.contains('show')){ v8GeriKur(); clearInterval(zaman); }
+      }, 800);
+      setTimeout(function(){ clearInterval(zaman); }, 30000);
+    }catch(e){}
+    try{ setTimeout(hedefKutlamaKontrol, 2500); }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', baslat);
+  else baslat();
+})();
+/* ================================================================================
+   41 · TASARIM ETKİLEŞİMİ (8.12.0)
+   --------------------------------------------------------------------------------
+   TASARIM-ONERILERI.md uygulamasının davranış tarafı. Mevcut fonksiyonların
+   GÖVDESİ değiştirilmez; yalnızca sarmalanır (part 40 ile aynı yöntem).
+     G1 · grafikte dokunma balonu + boş gün işareti + son çubuk değer etiketi
+     G2 · durum bileşeni: veri var / yükleniyor / veri yok / hata  (v8Durum)
+     G3 · ilk açılışta iskelet (v8VeriYukleniyor bayrağı)
+   Bu parça 33'te açılan son <script> bloğunun içinde yer alır (script etiketi YOK).
+   ================================================================================ */
+(function () {
+  'use strict';
+  var TARIH_G = /^\d{4}-\d{2}-\d{2}$/, TARIH_A = /^\d{4}-\d{2}$/;
+
+  /* ---------------- yardımcılar ---------------- */
+  function gunPaket(tarih) {
+    try {
+      var recs = (typeof records !== 'undefined' && records) ? records : [];
+      var t = 0, var_mi = false;
+      for (var i = 0; i < recs.length; i++) {
+        var r = recs[i];
+        if (r && r.tarih === tarih) { var_mi = true; t += Number(r.teslimat || 0); }
+      }
+      return var_mi ? t : null;
+    } catch (e) { return null; }
+  }
+  function tarihYaz(s) {
+    s = String(s || '');
+    var p;
+    if (TARIH_G.test(s)) { p = s.split('-'); return String(+p[2]) + ' ' + (MONTHS_SHORT[(+p[1]) - 1] || ''); }
+    if (TARIH_A.test(s)) { p = s.split('-'); return (MONTHS[(+p[1]) - 1] || '') + ' ' + p[0]; }
+    return s;
+  }
+  function gunFarki(a, b) {
+    var x = Date.parse(a + 'T00:00:00Z'), y = Date.parse(b + 'T00:00:00Z');
+    if (!isFinite(x) || !isFinite(y)) return 0;
+    return Math.round((y - x) / 86400000);
+  }
+
+  /* ---------------- G3 · ilk açılışta "yükleniyor" bayrağı ---------------- */
+  window.v8VeriYukleniyor = true;
+  try {
+    if (typeof window.renderDash === 'function' && !window.renderDash.__v8tasarimSar) {
+      var _rd = window.renderDash;
+      var _rdYeni = function () { var c = _rd.apply(this, arguments); window.v8VeriYukleniyor = false; return c; };
+      if (_rd.__v8sar) _rdYeni.__v8sar = true;   /* 8110 kancası görünür kalsın (üst üste sarma) */
+      _rdYeni.__v8tasarimSar = true;
+      window.renderDash = _rdYeni;
+    }
+    setTimeout(function () { window.v8VeriYukleniyor = false; }, 10000); // emniyet
+  } catch (e) { }
+
+  /* ---------------- G2 · durum bileşeni ---------------- */
+  window.v8Durum = function (tur, s) {
+    s = s || {};
+    if (tur === 'yukleniyor') {
+      return '<div class="v8durum v8durum-iskelet" data-durum="yukleniyor" role="status" aria-label="Yükleniyor">' +
+        '<i></i><i></i><i></i></div>';
+    }
+    var hata = (tur === 'hata');
+    var html = '<div class="v8durum" data-durum="' + (hata ? 'hata' : 'bos') + '" role="status">' +
+      v8icon(s.ikon || (hata ? 'alert' : 'package'));
+    if (s.metin) html += '<strong>' + escapeHtml(String(s.metin)) + '</strong>';
+    if (s.alt) html += '<span class="v8durum-alt">' + escapeHtml(String(s.alt)) + '</span>';
+    if (s.eylem) {
+      html += '<button type="button" class="btn btn-primary btn-sm"' +
+        (hata ? ' data-v8durum-retry="1"' : '') +
+        (s.onclick ? ' onclick="' + String(s.onclick).replace(/"/g, '&quot;') + '"' : '') +
+        '>' + escapeHtml(String(s.eylem)) + '</button>';
+    }
+    return html + '</div>';
+  };
+  /* Kısayol: boş kart (yükleniyorsa iskelet gösterir) */
+  window.v8BosDurum = function (s) {
+    if (window.v8VeriYukleniyor) return window.v8Durum('yukleniyor');
+    return window.v8Durum('bos', s);
+  };
+
+  /* ---------------- G1 · grafik sarmalayıcı ---------------- */
+  if (typeof window.anaBarChart === 'function' && !window.anaBarChart.__v8tasarimSar) {
+    var _orij = window.anaBarChart;
+    var _gelismis = function (bars, hedef) {
+      bars = bars || [];
+      var ham = _orij(bars, hedef), n = bars.length;
+
+      /* boş gün işaretleri: günlük grafiklerde, aralık iki çubuktan büyükse.
+         Ölçü: toplam boşluk, çubuk sayısını aşarsa işaret eklenmez (özet grafikler sade kalır). */
+      var isaret = {};
+      if (n > 1 && TARIH_G.test(String(bars[0].sub || ''))) {
+        var toplam = 0, ekle = {}, k;
+        for (k = 1; k < n; k++) {
+          var fark = gunFarki(String(bars[k - 1].sub), String(bars[k].sub));
+          if (fark > 1 && fark < 40) { ekle[k] = fark - 1; toplam += fark - 1; }
+        }
+        if (toplam > 0 && toplam <= n) {
+          for (k in ekle) {
+            var parca = '';
+            for (var t = 0; t < ekle[k]; t++) parca += '<div class="ana-bos" data-v8bos="1" title="Kayıt yok"></div>';
+            isaret[k] = parca;
+          }
+        }
+      }
+
+      /* çubuklara veri öznitelikleri + son 3 gün işareti */
+      var i = 0;
+      var cikti = ham.replace(/<div class="ana-bar/g, function () {
+        var b = bars[i] || {};
+        var idx = i; i++;
+        return (isaret[idx] || '') + '<div data-v8bar="1"' +
+          ' data-tarih="' + escapeHtml(String(b.sub || '')) + '"' +
+          ' data-net="' + Number(b.net || 0) + '"' +
+          ' tabindex="0" role="button"' +
+          ' aria-label="' + escapeHtml(tarihYaz(b.sub) + ', ' + fmt(b.net) + ' ₺') + '"' +
+          ' class="ana-bar' + (idx >= n - 3 ? ' son' : '');
+      });
+
+      /* son çubuğa kalıcı değer etiketi (telefonda kaydırmadan okunur) */
+      var j = 0;
+      cikti = cikti.replace(/<span class="ana-bar-lb">/g, function (mm) {
+        j++;
+        return (j === n ? '<span class="ana-bar-v">' + fmtInt((bars[j - 1] || {}).net) + ' ₺</span>' : '') + mm;
+      });
+
+      /* balon için hedef bilgisi (gizli taşıyıcı) */
+      return cikti + '<span class="ana-bilgi" data-hedef="' + (Number(hedef) || 0) + '" hidden></span>';
+    };
+    _gelismis.__v8tasarimSar = true;
+    window.anaBarChart = _gelismis;
+  }
+
+  /* balon aç/kapat */
+  function balonKapat() {
+    var acik = document.querySelectorAll('.ana-balon');
+    for (var i = 0; i < acik.length; i++) if (acik[i].parentNode) acik[i].parentNode.removeChild(acik[i]);
+  }
+  function balonAc(bar) {
+    var kap = bar.closest ? bar.closest('.ana-chart') : null; if (!kap) return null;
+    var kok = kap.parentNode; if (!kok) return null;
+    var mevcut = kok.querySelector('.ana-balon');
+    var ayni = mevcut && mevcut.getAttribute('data-bar') === bar.getAttribute('data-tarih');
+    balonKapat();
+    if (ayni) return null;                       /* aynı çubuğa ikinci dokunuş → kapanır */
+    var bilgi = kap.querySelector('.ana-bilgi');
+    var hedef = bilgi ? Number(bilgi.getAttribute('data-hedef') || 0) : 0;
+    var net = Number(bar.getAttribute('data-net') || 0), tarih = bar.getAttribute('data-tarih') || '';
+    var paket = TARIH_G.test(tarih) ? gunPaket(tarih) : null;
+    var s = '<b>' + tarihYaz(tarih) + '</b> · <b>' + fmt(net) + ' ₺</b>';
+    if (paket != null) s += ' · ' + fmtInt(paket) + ' paket';
+    if (hedef > 0) {
+      var f = net - hedef;
+      s += ' · ' + (f >= 0 ? 'hedefin <b>' + fmt(Math.abs(f)) + ' ₺ üstünde</b>'
+        : 'hedefin <b>' + fmt(Math.abs(f)) + ' ₺ altında</b>');
+    }
+    var b = document.createElement('div');
+    b.className = 'ana-balon';
+    b.setAttribute('data-bar', tarih);
+    b.setAttribute('role', 'status');
+    b.innerHTML = s + '<button type="button" class="ana-balon-x" aria-label="Kapat">×</button>';
+    kok.insertBefore(b, kap.nextSibling);
+    return b;
+  }
+  document.addEventListener('click', function (e) {
+    var hedef = e.target;
+    if (hedef && hedef.classList && hedef.classList.contains('ana-balon-x')) { balonKapat(); return; }
+    var bar = (hedef && hedef.closest) ? hedef.closest('.ana-bar[data-v8bar]') : null;
+    if (!bar) { if (!(hedef && hedef.closest && hedef.closest('.ana-balon'))) balonKapat(); return; }
+    balonAc(bar);
+  }, true);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var bar = (e.target && e.target.classList && e.target.classList.contains('ana-bar')) ? e.target : null;
+    if (!bar) return;
+    e.preventDefault(); balonAc(bar);
+  });
+
+  /* test/teşhis kancası */
+  window.v8TasarimSistem = { surum: '8.12.0', grafik: true, durum: true, balonAc: balonAc, balonKapat: balonKapat };
+})();
+/* ================================================================================
+   42 · GÖRSEL KİMLİK (8.13.0)
+   --------------------------------------------------------------------------------
+   Davranış tarafı (stil: parça 05-3). Kaynak: GORSEL-ONERILERI-8.12.0.md
+     V1 karşılama kartı (saate göre 4 tema)
+     V2 kazanç takvimi ısı haritası
+     V3 boş durum illüstrasyonları (özgün satır içi SVG)
+     V4 rozet kademeleri + ilk açılışta parlama
+     V5 görsel kart şablonları (klasik / gece / mühür)
+     V7 kutlamayı paylaşılabilir görsele çevirme
+     S1 auth sahnesi: motosiklet süzülerek gelir, park eder; rAF ile fizik
+   Bu parça 33'te açılan son <script> bloğunda yer alır (script etiketi YOK).
+   ================================================================================ */
+(function () {
+  'use strict';
+  var AZ_HAREKET = false;
+  try { AZ_HAREKET = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
+
+  /* =============================== V1 · KARŞILAMA =============================== */
+  function greetTema(saat) {
+    var h = Number(saat);
+    if (!isFinite(h)) h = new Date().getHours();
+    if (h >= 5 && h < 12) return { ad: 'sabah', ikon: 'sun' };
+    if (h >= 12 && h < 18) return { ad: 'gunduz', ikon: 'sun' };
+    if (h >= 18 && h < 23) return { ad: 'aksam', ikon: 'moon' };
+    return { ad: 'gece', ikon: 'moon' };
+  }
+  window.v8GreetTema = greetTema;
+  function greetTemaUygula() {
+    try {
+      var t = document.getElementById('v8GreetTitle');
+      if (!t) return null;
+      var kutu = t.closest('.v8-greet'); if (!kutu) return null;
+      var tema = greetTema();
+      ['sabah', 'gunduz', 'aksam', 'gece'].forEach(function (a) { kutu.classList.remove(a); });
+      kutu.classList.add(tema.ad);
+      if (!kutu.querySelector('.v8-greet-ikon')) {
+        var i = document.createElement('span');
+        i.className = 'v8-greet-ikon';
+        i.setAttribute('aria-hidden', 'true');
+        kutu.insertBefore(i, kutu.firstChild);
+      }
+      var ik = kutu.querySelector('.v8-greet-ikon');
+      if (ik && ik.getAttribute('data-tema') !== tema.ikon) {
+        ik.setAttribute('data-tema', tema.ikon);
+        ik.innerHTML = (typeof v8icon === 'function') ? v8icon(tema.ikon) : '';
+      }
+      return tema.ad;
+    } catch (e) { return null; }
+  }
+  /* mevcut karşılama tazeleyicisini sarmala: metin her yenilendiğinde tema da yenilenir */
+  try {
+    if (typeof window.v8GreetUpd === 'function' && !window.v8GreetUpd.__v8gorselSar) {
+      var _g = window.v8GreetUpd;
+      var _gY = function () { var r = _g.apply(this, arguments); greetTemaUygula(); return r; };
+      _gY.__v8gorselSar = true; if (_g.__v8sar) _gY.__v8sar = true;
+      window.v8GreetUpd = _gY;
+    }
+  } catch (e) { }
+  setInterval(function () {
+    try { var t = document.getElementById('v8GreetTitle'); if (t) greetTemaUygula(); } catch (e) { }
+  }, 300000);                                                     /* 5 dk: saat dilimi geçişi */
+
+  /* =============================== V3 · İLLÜSTRASYONLAR ========================= */
+  var ILL = {
+    /* kayıt yok: park hâlinde motosiklet + boş paket kutusu */
+    kayit: '<svg class="v8durum-ill" viewBox="0 0 140 100" role="img" aria-hidden="true">' +
+      '<path class="v8ill-dolu" d="M6 84h128v3H6z"/>' +
+      '<circle class="v8ill-cizgi" cx="34" cy="70" r="15"/><circle class="v8ill-cizgi" cx="34" cy="70" r="4"/>' +
+      '<circle class="v8ill-cizgi" cx="96" cy="70" r="15"/><circle class="v8ill-cizgi" cx="96" cy="70" r="4"/>' +
+      '<path class="v8ill-cizgi" d="M34 70h20l14-14h20l8 14"/><path class="v8ill-cizgi" d="M68 56 54 40h16"/>' +
+      '<path class="v8ill-cizgi" d="M34 70 48 50h18"/>' +
+      '<rect class="v8ill-cizgi" x="72" y="24" width="34" height="24" rx="5"/>' +
+      '<path class="v8ill-cizgi v8ill-kok" d="M79 24v-5h20v5M89 24v24"/>' +
+      '<path class="v8ill-vurgu" d="M52 44h9"/><path class="v8ill-cizgi v8ill-kok" d="M104 40h12"/>' +
+      '<path class="v8ill-cizgi v8ill-kok" d="M18 88h44M64 88h60"/></svg>',
+    /* bakım yok: anahtar + dişli */
+    bakim: '<svg class="v8durum-ill" viewBox="0 0 140 100" role="img" aria-hidden="true">' +
+      '<circle class="v8ill-cizgi" cx="86" cy="52" r="22"/><circle class="v8ill-cizgi" cx="86" cy="52" r="7"/>' +
+      '<path class="v8ill-cizgi" d="M86 22v-8M86 90v-8M116 52h8M56 52h-8M107 31l6-6M65 73l-6 6M107 73l6 6M65 31l-6-6"/>' +
+      '<path class="v8ill-vurgu" d="M24 78 44 58"/>' +
+      '<path class="v8ill-cizgi" d="M18 72a10 10 0 0 1 12-12l6 6-8 8z"/>' +
+      '<path class="v8ill-cizgi v8ill-kok" d="M112 84h20"/></svg>',
+    /* rozet yok: madalya */
+    rozet: '<svg class="v8durum-ill" viewBox="0 0 140 100" role="img" aria-hidden="true">' +
+      '<path class="v8ill-cizgi" d="M56 14 66 46M84 14 74 46"/>' +
+      '<circle class="v8ill-cizgi" cx="70" cy="62" r="20"/><path class="v8ill-cizgi" d="M70 50l4 8 9 1-6 6 2 9-9-4-9 4 2-9-6-6 9-1z"/>' +
+      '<path class="v8ill-vurgu" d="M104 30c3 0 5 2 5 5"/>' +
+      '<path class="v8ill-cizgi v8ill-kok" d="M28 78h84"/></svg>',
+    /* bağlantı yok: kopmuş halka */
+    baglanti: '<svg class="v8durum-ill" viewBox="0 0 140 100" role="img" aria-hidden="true">' +
+      '<path class="v8ill-cizgi" d="M60 38h-8a14 14 0 0 0 0 28h14"/><path class="v8ill-cizgi" d="M80 38h8a14 14 0 0 1 0 28h-4"/>' +
+      '<path class="v8ill-vurgu" d="M78 28l8-8"/>' +
+      '<path class="v8ill-cizgi v8ill-kok" d="M30 84h80M36 78v6M104 78v6"/>' +
+      '<path class="v8ill-cizgi" d="M62 66l16-32"/></svg>',
+    /* eylem yok: hedef */
+    hedef: '<svg class="v8durum-ill" viewBox="0 0 140 100" role="img" aria-hidden="true">' +
+      '<circle class="v8ill-cizgi" cx="70" cy="52" r="30"/><circle class="v8ill-cizgi" cx="70" cy="52" r="18"/>' +
+      '<circle class="v8ill-vurgu" cx="70" cy="52" r="5"/>' +
+      '<path class="v8ill-cizgi" d="M70 16V6M120 52h10M70 98V88M20 52H10"/>' +
+      '<path class="v8ill-cizgi v8ill-kok" d="M104 34l8-8"/></svg>'
+  };
+  window.v8Illustrasyon = function (ad) { return ILL[ad] || ILL.kayit; };
+
+  /* v8Durum'u genişlet: s.ill verilirse ikon yerine illüstrasyon */
+  try {
+    if (typeof window.v8Durum === 'function' && !window.v8Durum.__v8illSar) {
+      var _d = window.v8Durum;
+      var _dY = function (tur, s) {
+        if (s && s.ill && tur !== 'yukleniyor') {
+          var kopya = Object.assign({}, s); delete kopya.ill;
+          var html = _d.apply(this, [tur, kopya]);
+          return html.replace(/<svg class="v8svg[^"]*"[^>]*>.*?<\/svg>/,
+            window.v8Illustrasyon(s.ill));
+        }
+        return _d.apply(this, arguments);
+      };
+      _dY.__v8illSar = true;
+      window.v8Durum = _dY;
+    }
+    if (typeof window.v8BosDurum === 'function') {
+      var _bd = window.v8BosDurum;
+      window.v8BosDurum = function (s) {
+        if (window.v8VeriYukleniyor) return window.v8Durum('yukleniyor');
+        return window.v8Durum('bos', s);
+      };
+    }
+  } catch (e) { }
+
+  /* =============================== V2 · TAKVİM ISI HARİTASI ===================== */
+  function gunKademeleri(recs) {
+    try {
+      var m = {};
+      (recs || []).forEach(function (r) {
+        if (!r || !r.tarih) return;
+        var n = 0; try { n = calc(r).net; } catch (e) { n = 0; }
+        if (n > 0 && (!m[r.tarih] || n > m[r.tarih])) m[r.tarih] = n;
+      });
+      var en = 0; Object.keys(m).forEach(function (k) { if (m[k] > en) en = m[k]; });
+      var sonuc = {};
+      Object.keys(m).forEach(function (k) {
+        var o = en > 0 ? m[k] / en : 0;
+        sonuc[k] = o >= 0.8 ? 5 : o >= 0.6 ? 4 : o >= 0.4 ? 3 : o >= 0.2 ? 2 : 1;
+      });
+      var enIyi = '';
+      Object.keys(m).forEach(function (k) { if (!enIyi || m[k] > m[enIyi]) enIyi = k; });
+      return { kademe: sonuc, enIyi: enIyi, enYuksek: en };
+    } catch (e) { return { kademe: {}, enIyi: '', enYuksek: 0 }; }
+  }
+  window.v8GunKademeleri = gunKademeleri;
+
+  /* takvim hücresi bağlantısı: renderEarnCalendar'ın ürettiği kutuları zenginleştir */
+  function takvimZenginlestir() {
+    try {
+      var kap = document.querySelector('.earn-calendar'); if (!kap) return 0;
+      var d = gunKademeleri((typeof records !== 'undefined') ? records : []);
+      var n = 0;
+      kap.querySelectorAll('.earn-day').forEach(function (el) {
+        var gun = String(el.textContent || '').trim();
+        if (!/^\d+$/.test(gun)) return;
+        for (var i = 1; i <= 5; i++) el.classList.remove('d' + i);
+        el.classList.remove('best');
+        var ay = kap.getAttribute('data-ay');
+        var iso = ay ? (ay + '-' + (gun.length < 2 ? '0' + gun : gun)) : '';
+        if (iso && d.kademe[iso]) { el.classList.add('d' + d.kademe[iso]); n++; }
+        else el.classList.add('d0');
+        if (iso && d.enIyi === iso) el.classList.add('best');
+        var r = (typeof records !== 'undefined' ? records : []).filter(function (x) { return x && x.tarih === iso; })[0];
+        if (r) { try { el.setAttribute('title', iso + ' · net ' + fmt(calc(r).net) + ' ₺ · ' + fmtInt(r.teslimat || 0) + ' paket'); } catch (e) { } }
+      });
+      /* lejant (bir kez) */
+      if (!kap.parentNode.querySelector('.earn-legend')) {
+        var l = document.createElement('div');
+        l.className = 'earn-legend';
+        l.innerHTML = '<span>az</span>' +
+          [1, 2, 3, 4, 5].map(function (k) { return '<i class="d' + k + '"></i>'; }).join('') +
+          '<span>çok</span><b>★ ayın en iyi günü</b>';
+        kap.parentNode.insertBefore(l, kap.nextSibling);
+      }
+      return n;
+    } catch (e) { return 0; }
+  }
+  window.v8TakvimZenginlestir = takvimZenginlestir;
+  try {
+    var _tk = window.renderEngagementCalendar;
+    if (typeof _tk === 'function' && !_tk.__v8isiSar) {
+      var _tkY = function () { var r = _tk.apply(this, arguments); try { takvimZenginlestir(); } catch (e) { } return r; };
+      _tkY.__v8isiSar = true;
+      window.renderEngagementCalendar = _tkY;
+    }
+  } catch (e) { }
+  setTimeout(function () { try { takvimZenginlestir(); } catch (e) { } }, 1800);
+
+  /* =============================== V4 · ROZET KADEMELERİ ======================== */
+  function rozetKademe(b) {
+    var s = Number(b && b.threshold) || 0;
+    if (b && b.custom) return 'altin';
+    if (s < 5000) return 'bronz';
+    if (s < 50000) return 'gumus';
+    return 'altin';
+  }
+  window.v8RozetKademe = rozetKademe;
+  var ROZET_GORULEN = 'kurye_rozet_gorulen_v1';
+  function gorulenOku() { try { return JSON.parse(localStorage.getItem(ROZET_GORULEN) || '[]') || []; } catch (e) { return []; } }
+  function gorulenYaz(l) { try { localStorage.setItem(ROZET_GORULEN, JSON.stringify(l.slice(-200))); } catch (e) { } }
+
+  function rozetSayfaUygula() {
+    try {
+      var kartlar = document.querySelectorAll('#page-badges .badge-card');
+      if (!kartlar.length) return 0;
+      var gorulen = gorulenOku(), yeni = [], sayim = { bronz: 0, gumus: 0, altin: 0 }, toplam = { bronz: 0, gumus: 0, altin: 0 };
+      kartlar.forEach(function (k, i) {
+        var baslik = (k.querySelector('.badge-title') || {}).textContent || '';
+        var tanim = (typeof BADGE_DEFINITIONS !== 'undefined' ? BADGE_DEFINITIONS : []).find(function (b) { return b.title === baslik; });
+        var kademe = rozetKademe(tanim || { threshold: 0 });
+        k.classList.remove('t-bronz', 't-gumus', 't-altin');
+        k.classList.add('t-' + kademe);
+        toplam[kademe]++;
+        if (!k.querySelector('.badge-kademe')) {
+          var s = document.createElement('span');
+          s.className = 'badge-kademe';
+          s.textContent = kademe === 'altin' ? 'ALTIN' : (kademe === 'gumus' ? 'GÜMÜŞ' : 'BRONZ');
+          k.appendChild(s);
+        }
+        var acik = k.classList.contains('unlocked');
+        if (acik) {
+          sayim[kademe]++;
+          var anahtar = (tanim && tanim.id) || baslik;
+          if (gorulen.indexOf(anahtar) < 0) { yeni.push(anahtar); if (!AZ_HAREKET) k.classList.add('shine'); }
+        }
+        k.classList.remove('locked-sayac');
+      });
+      if (yeni.length) gorulenYaz(gorulen.concat(yeni));
+      /* vitrin özeti */
+      var sayfa = document.getElementById('page-badges');
+      var ilk = sayfa && sayfa.querySelector('.badge-category');
+      if (sayfa && ilk && !sayfa.querySelector('.badge-ozet')) {
+        var o = document.createElement('div');
+        o.className = 'badge-ozet';
+        o.innerHTML = '<span><i style="background:#b06a3b"></i> Bronz <b>' + sayim.bronz + '/' + toplam.bronz + '</b></span>' +
+          '<span><i style="background:#c7d2dd"></i> Gümüş <b>' + sayim.gumus + '/' + toplam.gumus + '</b></span>' +
+          '<span><i style="background:#f7cf5a"></i> Altın <b>' + sayim.altin + '/' + toplam.altin + '</b></span>' +
+          '<span style="margin-left:auto;color:var(--muted)">Kazanılan: <b>' + (sayim.bronz + sayim.gumus + sayim.altin) + '</b></span>';
+        ilk.parentNode.insertBefore(o, ilk);
+      }
+      return kartlar.length;
+    } catch (e) { return 0; }
+  }
+  window.v8RozetSayfaUygula = rozetSayfaUygula;
+  ['renderBadges', 'renderBadgePage', 'renderBadgeSistemi'].forEach(function (ad) {
+    try {
+      if (typeof window[ad] === 'function' && !window[ad].__v8rozetSar) {
+        var _r = window[ad];
+        var _rY = function () { var r = _r.apply(this, arguments); try { rozetSayfaUygula(); } catch (e) { } return r; };
+        _rY.__v8rozetSar = true;
+        window[ad] = _rY;
+      }
+    } catch (e) { }
+  });
+  setTimeout(function () { try { rozetSayfaUygula(); } catch (e) { } }, 2200);
+
+  /* =============================== V5 · KART ŞABLONLARI ========================= */
+  var SABLON_KEY = 'kurye_kart_sablon_v1';
+  function sablonOku() { try { return localStorage.getItem(SABLON_KEY) || ''; } catch (e) { return ''; } }
+  function sablonYaz(a) { try { localStorage.setItem(SABLON_KEY, a); } catch (e) { } }
+  window.v8SablonOku = sablonOku;
+
+  /* Şablon seçimi, mevcut "gizlenecek alanlar" diyaloğunun İÇİNE eklenir:
+     ek diyalog yok (tek soru akışı korunur), seçim hatırlanır. */
+  function sablonSatiriEkle() {
+    try {
+      var kutu = document.getElementById('confirmMessage');
+      if (!kutu || kutu.querySelector('.sablon-secim')) return false;
+      var secili = sablonOku() || 'klasik';
+      var sar = document.createElement('div');
+      sar.style.marginTop = '.8rem';
+      sar.innerHTML = '<div style="font-size:.78rem;color:var(--muted);margin-bottom:.4rem;">Kart görünümü</div>' +
+        '<div class="sablon-secim">' +
+        ['klasik|Klasik|Marka mavisi şerit', 'gece|Gece|Lacivert + ızgara', 'muhur|Mühür|Altın çerçeve']
+          .map(function (x) {
+            var a = x.split('|');
+            return '<button type="button" class="sablon-kart" data-sablon="' + a[0] + '" aria-pressed="' + (secili === a[0]) + '">' +
+              '<div class="sablon-onizle ' + a[0] + '"></div><b>' + a[1] + '</b><small>' + a[2] + '</small></button>';
+          }).join('') + '</div>';
+      kutu.appendChild(sar);
+      sar.querySelectorAll('.sablon-kart').forEach(function (b) {
+        b.addEventListener('click', function () {
+          sar.querySelectorAll('.sablon-kart').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+          b.setAttribute('aria-pressed', 'true');
+          sablonYaz(b.getAttribute('data-sablon'));
+        });
+      });
+      return true;
+    } catch (e) { return false; }
+  }
+  window.v8SablonSatiriEkle = sablonSatiriEkle;
+  try {
+    if (typeof window.kartSecenekleriSor === 'function' && !window.kartSecenekleriSor.__v8sablonSar) {
+      var _ks = window.kartSecenekleriSor;
+      var _ksY = function () {
+        var r = _ks.apply(this, arguments);
+        setTimeout(function () { sablonSatiriEkle(); }, 30);   /* diyalog çizildikten hemen sonra */
+        return r;
+      };
+      _ksY.__v8sablonSar = true;
+      window.kartSecenekleriSor = _ksY;
+    }
+  } catch (e) { }
+
+  /* haftalık kartın hızlı yolu da şablonu kullanır */
+  try {
+    if (typeof window.weeklyCardCanvas === 'function' && !window.weeklyCardCanvas.__v8sablonSar) {
+      var _w = window.weeklyCardCanvas;
+      window.weeklyCardCanvas = function () { return _w(Object.assign({ current: true }, { sablon: sablonOku() || 'klasik' })); };
+      window.weeklyCardCanvas.__v8sablonSar = true;
+    }
+  } catch (e) { }
+
+  /* =============================== V7 · KUTLAMA PAYLAŞIMI ======================= */
+  function kutlamaKartCanvas(baslik, metin) {
+    var W = 1080, H = 1350;
+    var cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    var x = cv.getContext('2d');
+    var bg = x.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#0b1220'); bg.addColorStop(1, '#132038');
+    x.fillStyle = bg; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#f7cf5a'; x.fillRect(0, 0, W, 16);
+    x.textAlign = 'center';
+    x.fillStyle = '#7d8aa5'; x.font = '700 44px system-ui, sans-serif';
+    x.fillText('K U R Y E   O S', W / 2, 150);
+    /* rozet madalyonu */
+    x.beginPath(); x.arc(W / 2, 420, 128, 0, Math.PI * 2);
+    var mg = x.createLinearGradient(W / 2 - 128, 292, W / 2 + 128, 548);
+    mg.addColorStop(0, '#f7cf5a'); mg.addColorStop(1, '#c98f18');
+    x.fillStyle = mg; x.fill();
+    x.fillStyle = '#1a1206'; x.font = '800 118px system-ui, sans-serif';
+    x.fillText('★', W / 2, 462);
+    x.fillStyle = '#ffffff'; x.font = '800 82px system-ui, sans-serif';
+    x.fillText(baslik, W / 2, 700);
+    x.fillStyle = '#94a3b8'; x.font = '500 46px system-ui, sans-serif';
+    var satirlar = String(metin).replace(/<[^>]+>/g, '').split(/\. /);
+    satirlar.slice(0, 4).forEach(function (s, i) { x.fillText(s.replace(/\.$/, ''), W / 2, 790 + i * 62); });
+    x.fillStyle = '#5b6b88'; x.font = '500 34px system-ui, sans-serif';
+    x.fillText('Kurye OS ile takip edildi', W / 2, H - 80);
+    return cv;
+  }
+  window.v8KutlamaKartCanvas = kutlamaKartCanvas;
+
+  window.v8KutlamaPaylas = async function () {
+    try {
+      var w = document.getElementById('kutlaWrap'); if (!w) return false;
+      var b = (w.querySelector('.kutla-card b') || {}).textContent || 'Hedef tutuldu';
+      var m = (w.querySelector('.kutla-card p') || {}).textContent || '';
+      var cv = kutlamaKartCanvas(b.trim(), m.trim());
+      var blob = await new Promise(function (res) { try { cv.toBlob(res, 'image/png'); } catch (e) { res(null); } });
+      if (!blob) { try { toast('Görsel oluşturulamadı', false); } catch (e) { } return false; }
+      try { if (typeof usageBump === 'function') usageBump('kart'); } catch (e) { }
+      var dosya = 'kurye-os-hedef-' + (typeof todayISO === 'function' ? todayISO() : 'kart') + '.png';
+      /* 1) dosya olarak indir (masaüstü/web) 2) paylaşım varsa paylaş */
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a'); a.href = url; a.download = dosya; a.rel = 'noopener';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { try { URL.revokeObjectURL(url); } catch (e) { } }, 8000);
+      try { if (typeof toast === 'function') toast('Kutlama kartı indirildi', true); } catch (e) { }
+      return true;
+    } catch (e) { return false; }
+  };
+  try {
+    if (typeof window.kutlamaCiz === 'function' && !window.kutlamaCiz.__v8paylasSar) {
+      var _k = window.kutlamaCiz;
+      var _kY = function (baslik, metin) {
+        var r = _k.apply(this, arguments);
+        try {
+          var kart = document.querySelector('#kutlaWrap .kutla-card');
+          if (kart && !kart.querySelector('.kutla-paylas')) {
+            var btn = document.createElement('button');
+            btn.type = 'button'; btn.className = 'kutla-paylas';
+            btn.textContent = 'Kart olarak paylaş';
+            btn.addEventListener('click', function () { window.v8KutlamaPaylas(); });
+            kart.appendChild(btn);
+          }
+        } catch (e) { }
+        return r;
+      };
+      _kY.__v8paylasSar = true;
+      window.kutlamaCiz = _kY;
+    }
+  } catch (e) { }
+
+  /* =============================== S1 · AUTH SAHNESİ ============================ */
+  var SAHNE_HTML =
+    '<div class="v8-sahne-lamba" aria-hidden="true"><i></i><i></i><i></i></div>' +
+    '<svg class="v8-sahne-sky" viewBox="0 0 420 64" preserveAspectRatio="none" aria-hidden="true">' +
+    '<rect class="b" x="6" y="30" width="30" height="34" rx="2"/><rect class="b" x="40" y="20" width="22" height="44" rx="2"/>' +
+    '<rect class="b" x="66" y="36" width="34" height="28" rx="2"/><rect class="b" x="104" y="14" width="26" height="50" rx="2"/>' +
+    '<rect class="b" x="134" y="32" width="40" height="32" rx="2"/><rect class="b" x="178" y="22" width="24" height="42" rx="2"/>' +
+    '<rect class="b" x="206" y="38" width="30" height="26" rx="2"/><rect class="b" x="240" y="16" width="28" height="48" rx="2"/>' +
+    '<rect class="b" x="272" y="34" width="36" height="30" rx="2"/><rect class="b" x="312" y="24" width="22" height="40" rx="2"/>' +
+    '<rect class="b" x="338" y="38" width="34" height="26" rx="2"/><rect class="b" x="376" y="28" width="30" height="36" rx="2"/>' +
+    '<rect class="pencere" x="110" y="22" width="4" height="5"/><rect class="pencere" x="120" y="22" width="4" height="5"/>' +
+    '<rect class="pencere" x="246" y="26" width="4" height="5"/><rect class="pencere" x="256" y="26" width="4" height="5"/>' +
+    '<rect class="pencere" x="46" y="30" width="4" height="5"/><rect class="pencere" x="56" y="30" width="4" height="5"/></svg>' +
+    '<div class="v8-sahne-zemin" aria-hidden="true"></div>' +
+    '<div class="v8-sahne-yol" aria-hidden="true"></div>' +
+    '<div class="v8-sahne-far" aria-hidden="true"></div>' +
+    '<div class="v8-sahne-hiz" aria-hidden="true"><i></i><i></i><i></i></div>' +
+    '<i class="v8-sahne-toz" aria-hidden="true"></i>' +
+    '<div class="v8-sahne-bisiklet">' +
+    '<svg viewBox="0 0 240 130" role="img" aria-label="Kurye motosikleti">' +
+    /* --- TEKERLEKLER (büyük, kalın lastik: motosiklet oranı) --- */
+    '<g class="v8-bk-teker" data-teker="arka">' +
+      '<circle class="v8-bk-kalin" cx="52" cy="88" r="26"/>' +
+      '<circle class="v8-bk-jant" cx="52" cy="88" r="16"/>' +
+      '<circle class="v8-bk-dolu" cx="52" cy="88" r="4.5"/>' +
+      '<path class="v8-bk-jant" d="M52 72v32M36 88h32M41 77l22 22M63 77l-22 22"/></g>' +
+    '<g class="v8-bk-teker" data-teker="on">' +
+      '<circle class="v8-bk-kalin" cx="176" cy="88" r="26"/>' +
+      '<circle class="v8-bk-jant" cx="176" cy="88" r="16"/>' +
+      '<circle class="v8-bk-dolu" cx="176" cy="88" r="4.5"/>' +
+      '<path class="v8-bk-jant" d="M176 72v32M160 88h32M165 77l22 22M187 77l-22 22"/></g>' +
+    /* --- GÖVDE --- */
+    '<g class="v8-sahne-govde">' +
+      /* çamurluklar (lastiği 4 birim sarar) */
+      '<path class="v8-bk-cizgi" d="M29 69A30 30 0 0 1 75 69"/>' +
+      '<path class="v8-bk-cizgi" d="M153 69A30 30 0 0 1 199 69"/>' +
+      /* ön çatal (çift) + mesnet + gidon + elcik */
+      '<path class="v8-bk-kalin" d="M170 60 176 88"/>' +
+      '<path class="v8-bk-kalin" d="M180 60 182 86"/>' +
+      '<path class="v8-bk-cizgi" d="M166 58h18"/>' +
+      '<path class="v8-bk-kalin" d="M168 56 150 45"/>' +
+      '<path class="v8-bk-kalin" d="M150 45 139 43"/>' +
+      /* far + ampul + dikiz aynası */
+      '<circle class="v8-bk-dolu" cx="181" cy="50" r="8"/>' +
+      '<path class="v8-bk-vurgu" d="M177 47a5 5 0 0 1 7 3"/>' +
+      '<path class="v8-bk-cizgi" d="M152 45 149 36"/><circle class="v8-bk-cizgi" cx="148" cy="33" r="3"/>' +
+      /* motor bloğu + soğutma kanalları */
+      '<path class="v8-bk-dolu" d="M100 70h40a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6h-40a6 6 0 0 1-6-6V76a6 6 0 0 1 6-6z"/>' +
+      '<path class="v8-bk-cizgi" d="M112 74v16M120 74v16M128 74v16"/>' +
+      /* egzoz: boru + susturucu + uç */
+      '<path class="v8-bk-kalin" d="M98 94c-16 0-26 2-34 6"/>' +
+      '<rect class="v8-bk-dolu" x="34" y="93" width="34" height="12" rx="6"/>' +
+      '<path class="v8-bk-cizgi" d="M34 99h-6"/>' +
+      /* salıncak + amortisör + ayaklık */
+      '<path class="v8-bk-kalin" d="M98 92 54 88"/>' +
+      '<path class="v8-bk-cizgi" d="M92 70 62 88"/>' +
+      '<path class="v8-bk-cizgi v8-bk-kok" d="M62 104 74 114"/>' +
+      /* depo (üstte kütle) + marka şeridi */
+      '<path class="v8-bk-dolu" d="M94 66v-4c0-8 7-14 18-14h20c11 0 18 6 18 14v4z"/>' +
+      '<rect class="v8-bk-marka" x="98" y="61" width="48" height="5" rx="2"/>' +
+      /* sele */
+      '<path class="v8-bk-dolu" d="M72 66v-3c0-5 4-9 10-9h14v12z"/>' +
+      /* kurye üst çantası (arkada, çamurluğun üstünde) */
+      '<rect class="v8-bk-dolu" x="50" y="30" width="28" height="28" rx="5"/>' +
+      '<rect class="v8-bk-marka" x="50" y="44" width="28" height="5" rx="2"/>' +
+      '<path class="v8-bk-cizgi" d="M54 58l3 8M74 58l-3 8"/>' +
+      /* stop lambası */
+      '<rect class="v8-bk-vurgu" x="24" y="61" width="7" height="8" rx="2" fill="none"/>' +
+      /* sürücü: bacak · gövde (dolgulu) · kol · kask */
+      '<path class="v8-bk-kalin" d="M90 62 104 73 108 87"/>' +
+      '<path class="v8-bk-dolu" d="M92 63 113 35 121 37 100 66z"/>' +
+      '<path class="v8-bk-marka" d="M99 56 112 43 115 46 102 59z"/>' +
+      '<path class="v8-bk-kalin" d="M113 38 140 43"/>' +
+      '<path class="v8-bk-cizgi" d="M116 34 120 31"/>' +
+      '<circle class="v8-bk-dolu" cx="124" cy="25" r="7.5"/>' +
+      '<path class="v8-bk-cizgi" d="M122 22h8"/>' +
+      '<path class="v8-bk-cizgi v8-bk-kok" d="M102 88h14"/>' +
+      /* şasi alt borusu: ön takımı motor bloğuna bağlar */
+      '<path class="v8-bk-cizgi" d="M167 62 142 74"/>' +
+      /* zemin gölgesi */
+      '<path class="v8-bk-cizgi v8-bk-kok" d="M18 116h206"/>' +
+    '</g></svg></div>';
+
+  /* kritik sönümlemeli yay: hedefe doğru doğal yavaşlama */
+  function sahneKur(kap, mini) {
+    if (!kap || kap.__v8sahne) return null;
+    kap.__v8sahne = true;
+    kap.classList.add('v8-sahne');
+    kap.innerHTML = SAHNE_HTML;
+    if (mini) kap.classList.add('mini');
+    var bike = kap.querySelector('.v8-sahne-bisiklet');
+    var on = kap.querySelector('[data-teker="on"]'), arka = kap.querySelector('[data-teker="arka"]');
+    var hiz = kap.querySelector('.v8-sahne-hiz'), toz = kap.querySelector('.v8-sahne-toz');
+    var durum = { x: mini ? 1.35 : 1.15, v: mini ? -0.9 : -0.75, aci: 0, t: 0, park: false, kayma: 0 };
+
+    var gokyuzu = kap.querySelector('.v8-sahne-sky');
+    function ciz() {
+      bike.style.setProperty('--sahne-x', (durum.x * 100).toFixed(3) + '%');
+      if (gokyuzu) gokyuzu.style.transform = 'translate3d(' + (-durum.x * 14).toFixed(2) + 'px,0,0)';  /* paralaks */
+      on.style.transform = 'rotate(' + durum.aci.toFixed(1) + 'deg)';
+      arka.style.transform = 'rotate(' + (durum.aci * 0.95).toFixed(1) + 'deg)';
+      durum.kayma = Math.min(14, Math.abs(durum.v) * 900 * (1 / 60));
+      var h = Math.min(1, Math.abs(durum.v) / 0.9);
+      hiz.style.opacity = (h * 0.85).toFixed(3);
+      toz.style.opacity = (h * 0.7).toFixed(3);
+      toz.style.transform = 'translate3d(' + (-h * 26).toFixed(1) + 'px,' + (-h * 10).toFixed(1) + 'px,0) scale(' + (0.6 + h).toFixed(2) + ')';
+    }
+    function park() {
+      if (durum.park) return;
+      durum.park = true;
+      durum.x = 0; durum.v = 0; ciz();
+      kap.classList.add('park');
+      /* far bir kez parlar: "geldim" hissi */
+      if (!AZ_HAREKET) { kap.classList.add('flash'); setTimeout(function () { kap.classList.remove('flash'); }, 850); }
+      kap.dispatchEvent(new CustomEvent('v8sahne-park', { bubbles: true }));
+      if (!AZ_HAREKET) requestAnimationFrame(tekerlekSonumle);
+      if (mini) seyir();                       /* splash: motosiklet yavaşça seyretmeye devam eder */
+    }
+    /* splash için hafif seyir döngüsü: tekerlekler döner, gövde usulca salınır */
+    function seyir() {
+      var t0 = 0;
+      function dongu(ts) {
+        if (!kap.isConnected) return;
+        if (!t0) t0 = ts;
+        var e = (ts - t0) / 1000;
+        durum.x = -0.045 + 0.045 * Math.cos(e * 1.15);
+        durum.aci += 190 * (1 / 60);
+        ciz();
+        requestAnimationFrame(dongu);
+      }
+      requestAnimationFrame(dongu);
+    }
+    kap.__v8durum = durum;   /* teşhis/test kancası */
+    var gorunur = function () {
+      try { return kap.offsetParent !== null && kap.getBoundingClientRect().width > 0; } catch (e) { return false; }
+    };
+    if (AZ_HAREKET) { ciz(); park(); return durum; }
+
+    /* Animasyon YALNIZ görünürken oynar; giriş ekranı tekrar açıldığında yeniden oynar. */
+    (function gozetle() {
+      var onceki = gorunur();
+      /* açılış sahnesi (mini) zaten uygulamanın ilk anı: hemen başlar.
+         giriş ekranındaki sahne ise GÖRÜNÜR OLDUĞU anda oynar (kullanıcı kaçırmasın). */
+      if (onceki || mini) { setTimeout(function () { requestAnimationFrame(adim); }, 220); }
+      var sayac = setInterval(function () {
+        if (!kap.isConnected) { clearInterval(sayac); return; }
+        var g = gorunur();
+        if (g && !onceki) {                          /* gizliydi, şimdi göründü → baştan oyna */
+          durum.x = mini ? 1.35 : 1.15; durum.v = mini ? -0.9 : -0.75;
+          durum.t = 0; durum.park = false; durum.kayma = 0; son = 0;
+          kap.classList.remove('park', 'flash');
+          ciz(); setTimeout(function () { requestAnimationFrame(adim); }, 220);
+        }
+        onceki = g;
+      }, 260);
+    })();
+
+    var son = 0;
+    function adim(ts) {
+      if (!kap.isConnected) return;                        /* ekrandan çıktıysa dur */
+      if (durum.park) return;
+      if (!ts) ts = (window.performance && performance.now) ? performance.now() : Date.now();
+      if (!son) son = ts;
+      var dt = Math.min(0.032, (ts - son) / 1000); son = ts;
+      durum.t += dt;
+      /* yay: a = -k*x - c*v  (k=13, c=5.4 → sönümlü, hafif yerleşme salınımlı iniş) */
+      var a = -13 * durum.x - 5.4 * durum.v;
+      durum.v += a * dt;
+      durum.x += durum.v * dt;
+      durum.aci += durum.v * 900 * dt;
+      ciz();
+      if (Math.abs(durum.x) < 0.004 && Math.abs(durum.v) < 0.03) { park(); return; }
+      if (durum.t > 9) { park(); return; }
+      requestAnimationFrame(adim);
+    }
+    /* 2) YUMUŞAK DURUŞ: park ederken tekerlek bir süre daha yavaşlayarak döner */
+    function tekerlekSonumle() {
+      if (durum.kayma <= 0.02) return;
+      durum.kayma *= 0.94;
+      durum.aci += durum.kayma;
+      on.style.transform = 'rotate(' + durum.aci.toFixed(1) + 'deg)';
+      arka.style.transform = 'rotate(' + (durum.aci * 0.95).toFixed(1) + 'deg)';
+      requestAnimationFrame(tekerlekSonumle);
+    }
+    return durum;
+  }
+  window.v8SahneKur = sahneKur;
+
+  function authSahnesi() {
+    try {
+      var kutu = document.querySelector('#auth-screen .auth-box');
+      if (!kutu) return false;
+      var kap = kutu.querySelector('#v8Sahne');
+      if (!kap) {
+        kap = document.createElement('div');
+        kap.id = 'v8Sahne';
+        kutu.insertBefore(kap, kutu.firstChild);
+      }
+      sahneKur(kap, false);
+      kutu.classList.add('v8-giris');
+      return true;
+    } catch (e) { return false; }
+  }
+  window.v8AuthSahnesi = authSahnesi;
+
+  function splashSahnesi() {
+    try {
+      var s = document.getElementById('splash-screen');
+      if (!s || s.querySelector('#v8SplashSahne')) return false;
+      var kap = document.createElement('div');
+      kap.id = 'v8SplashSahne';
+      kap.style.cssText = 'width:min(300px,80vw);margin:1.1rem 0 .2rem';
+      s.insertBefore(kap, s.querySelector('.splash-loader') || null);
+      sahneKur(kap, true);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  function basla() {
+    authSahnesi();
+    splashSahnesi();
+    /* auth ekranı sonradan görünür olduğunda sahneyi kur (tekrar açılışlar) */
+    var kok = document.getElementById('auth-screen');
+    if (kok && window.MutationObserver) {
+      var mo = new MutationObserver(function () {
+        if (getComputedStyle(kok).display !== 'none' && !kok.querySelector('#v8Sahne')) authSahnesi();
+      });
+      mo.observe(kok, { attributes: true, attributeFilter: ['style', 'class'] });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', basla);
+  else basla();
+  setTimeout(basla, 900);
+
+  window.v8GorselKimlik = { surum: '8.13.0', ill: Object.keys(ILL), sahne: true, sablon: true, rozet: true, takvim: true };
+})();
 /* ---------- canvas sayfalarını PDF görüntü akışına çevir ----------
    870C: NEDEN SADECE JPEG?
    Kayıpsız yol (PDF /FlateDecode) tarayıcının CompressionStream API'sine

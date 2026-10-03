@@ -19,7 +19,7 @@
     <header class="hero">
       <div class="brand">Kurye OS</div>
       <h1>Gizlilik Politikası</h1>
-      <div class="updated">Son güncelleme: 29 Eylül 2026</div>
+      <div class="updated">Son güncelleme: 3 Ekim 2026</div>
     </header>
 
     <article class="article">
@@ -28,7 +28,7 @@
       <div class="callout"><strong>Kısa özet:</strong> Hesap ve çalışma verileri Firebase hesabınızla ilişkilendirilir. Arkadaş paylaşımında hangi istatistikleri ve konumu paylaşacağınızı ayarlayabilirsiniz. Olay raporları ve medya ekleri uygulama tarafından otomatik olarak buluta yüklenmez; cihazda tutulur. Uygulama ayrıca kullanıcı hesabıyla ilişkilendirilen sınırlı kullanım, hata ve performans ölçümleri gönderir.</div>
 
       <h2><span class="n">01</span> Veri sorumlusu ve iletişim</h2>
-      <p>Veri sorumlusu, Kurye OS uygulamasının yayımlayıcısıdır. Gizlilik, KVKK başvuruları ve hesap silme talepleri için <a href="mailto:furkansb1040@gmail.com">furkansb1040@gmail.com</a> adresinden iletişime geçebilirsiniz. Başvuruda hangi hakkınızı kullanmak istediğinizi belirtmeniz ve talebin size ait olduğunu doğrulamamız istenebilir.</p>
+      <p>Veri sorumlusu, Kurye OS uygulamasının yayımlayıcısıdır. Gizlilik, KVKK başvuruları ve hesap silme talepleri için <a href="/cdn-cgi/l/email-protection#1375666178727d60712223272353747e727a7f3d707c7e"><span class="__cf_email__" data-cfemail="b3d5c6c1d8d2ddc0d182838783f3d4ded2dadf9dd0dcde">[email&#160;protected]</span></a> adresinden iletişime geçebilirsiniz. Başvuruda hangi hakkınızı kullanmak istediğinizi belirtmeniz ve talebin size ait olduğunu doğrulamamız istenebilir.</p>
       <p class="small">Uygulama kaynaklarında yayımlayıcının tam ticari/kimlik unvanı ve posta adresi belirtilmediğinden bu bilgiler burada uydurulmamıştır. Yayımlayıcı, gerekli görüyorsa bu iletişim bölümünü resmî unvan ve tebligat adresiyle tamamlamalıdır.</p>
 
       <h2><span class="n">02</span> İşlenen veri türleri</h2>
@@ -49,11 +49,12 @@
       </div>
 
       <h2><span class="n">03</span> Konum, arkadaş paylaşımı ve dışa aktarılan konum</h2>
+      <div class="callout"><strong>Arka plan konumu:</strong> Kurye OS, vardiya/GPS kilometre ve hareket süresini hesaplamak; ayrıca yalnızca siz Arkadaşlarım bölümünde konum paylaşımını açtıysanız konumunuzu bağlı arkadaşlarınıza iletmek için konum verisi kullanır. Vardiya/GPS takibi sürerken konum, uygulama arka plandayken veya kapalıyken/etkin kullanılmıyorken de alınabilir (Android’in arka plan hizmeti çalıştığı sürece). Uygulama içindeki ayrı açıklama ve “Onayla ve devam et” eylemi, Android izin isteminden önce gösterilir.</div>
       <ul>
-        <li><strong>Vardiya ve GPS sayacı:</strong> Konum, ilgili vardiya/GPS ölçümünü siz başlattığınızda cihaz izinleri kapsamında kullanılabilir. İşletim sistemi konum iznini reddedebilir veya sonradan kapatabilirsiniz.</li>
-        <li><strong>Arkadaş konumu:</strong> Uygulamanın ilk kullanım varsayılanlarında konum paylaşımı açıktır. Oturum açık, en az bir arkadaş bağlı, cihaz çevrimiçi ve konum izni kullanılabilir durumdaysa uygulama güncel koordinatı ve zamanını arkadaş konumu kaydına gönderebilir. Arkadaşlarım → Paylaşım Ayarları bölümünden kapatabilirsiniz. Kapatma, çevrimdışıyken cihazda bekletilir ve bağlantı geldiğinde eşitlenir; kapatıldığında sunucudaki konum kaydı silinmek üzere güncellenir. Uygulama açılışında 30 dakikadan eski konum kaydı temizlenebilir; eski konum yakınlık hesabında güncel sayılmaz.</li>
+        <li><strong>Vardiya ve GPS sayacı (arka plan):</strong> Kurye OS, kullanıcı tarafından başlatılan vardiya/GPS kilometre ve hareket süresi takibi için konum verisi kullanır; takip açıkken bu özellik uygulama arka plandayken, uygulama kapalıyken veya kullanılmıyorken de (Android’in arka plan hizmeti çalıştığı sürece) devam edebilir. Hassas GPS konumu ve zaman damgalı ölçümler mesafeyi ve hareket süresini hesaplamak için cihazda işlenir; ölçüm siz GPS takibini durdurana ya da vardiyayı bitirene kadar sürer. İşletim sistemi izni reddedilirse veya kapatılırsa yeni konum ölçümü yapılamaz.</li>
+        <li><strong>Arkadaş konumu:</strong> Kendi konum paylaşımınız varsayılan olarak kapalıdır. Arkadaşlarım/yakınlık özelliğini uygulama ön plandayken kullanırken konumunuz, arkadaşlarınızın paylaştığı konumlarla mesafe ve yakınlık hesabı için cihazda işlenebilir. Arkadaşlarım → Paylaşım Ayarları bölümünde kendi paylaşımınızı açarsanız, oturum açıkken ve en az bir arkadaş bağlıyken uygulama ön plandayken güncel koordinat ve zaman Firebase Realtime Database’e gönderilebilir; bağlı arkadaşlarınız bu konumu görebilir. Uygulama arka plandayken arkadaş konum takibi, yakınlık kontrolü ve arkadaşlara konum gönderimi çalışmaz; arka plan GPS’i yalnızca vardiya mesafesi/hareket süresi hesabı için kullanılır. Arkadaş konumu paylaşımını kapattığınızda arkadaşlara yönelik konum yayımı durur ve sunucudaki konum kaydı silinmek üzere güncellenir; çevrimdışı değişiklik bağlantı gelince eşitlenir. Bu tercih, siz ayrıca durdurana kadar devam eden vardiya GPS kilometre takibini kapatmaz. Uygulama açılışında 30 dakikadan eski konum kaydı temizlenebilir.</li>
         <li><strong>Paylaşılan istatistikler:</strong> Çalışma, paket, kilometre, gelir ve gider alanlarının her biri ayrı tercihle yönetilir. İlk kullanım varsayılanlarında çalışma/paket/km paylaşımı açıktır; gelir ve gider paylaşımı kapalıdır. Tercihler değiştirilebilir. Arkadaşlık bağlantısı, bu paylaşım ayarlarının yerine geçmez.</li>
-        <li><strong>Hava durumu:</strong> Gün sonu hava bilgisi istendiğinde uygulama Open-Meteo’ya son bilinen GPS koordinatını gönderebilir. Konum yoksa uygulamadaki varsayılan koordinat kullanılır. Open-Meteo bu isteği kendi gizlilik koşullarına göre işler.</li>
+        <li><strong>Hava durumu:</strong> Gün sonu hava bilgisi istendiğinde ve uygulama içi konum onayınız varsa uygulama Open-Meteo’ya son bilinen GPS koordinatını gönderebilir. Onay yoksa veya kayıtlı konum bulunmuyorsa uygulamadaki varsayılan koordinat kullanılır. Open-Meteo bu isteği kendi gizlilik koşullarına göre işler.</li>
         <li><strong>SOS ve harita:</strong> SOS mesajı oluştururken cihazdan anlık konum istenebilir; konumlu mesajı SMS veya WhatsApp ile gönderme kararı sizdedir. Mesaj, Google Maps bağlantısı içerebilir. Olay raporundaki Haritada Aç ya da paylaşılan harita bağlantısını seçtiğinizde konum/adres ilgili harita hizmetine iletilir. Bu bağlantılar siz açmadıkça harita hizmetine otomatik gönderilmez.</li>
       </ul>
       <div class="callout warn"><strong>Önemli:</strong> Konum paylaşımını kapatma isteği cihaz çevrimdışıyken sunucuya anında ulaşamaz. Uygulama tercihi yerelde saklayıp bağlantı geldiğinde eşitler. Acil durumda uygulama özellikleri yerine resmî acil yardım kanallarını kullanın.</div>
@@ -92,7 +93,7 @@
       </ul>
 
       <h2><span class="n">07</span> Haklarınız ve başvuru</h2>
-      <p>Yürürlükteki mevzuat kapsamında, kişisel verileriniz hakkında bilgi alma, işleme amacını öğrenme, düzeltme veya silme talep etme ve mevzuatta tanınan diğer haklarınız için <a href="mailto:furkansb1040@gmail.com">furkansb1040@gmail.com</a> adresine başvurabilirsiniz. Başvurular, kimlik doğrulaması ve uygulanabilir yasal süreler gözetilerek yanıtlanır.</p>
+      <p>Yürürlükteki mevzuat kapsamında, kişisel verileriniz hakkında bilgi alma, işleme amacını öğrenme, düzeltme veya silme talep etme ve mevzuatta tanınan diğer haklarınız için <a href="/cdn-cgi/l/email-protection#dabcafa8b1bbb4a9b8ebeaeeea9abdb7bbb3b6f4b9b5b7"><span class="__cf_email__" data-cfemail="264053544d474855441716121666414b474f4a0845494b">[email&#160;protected]</span></a> adresine başvurabilirsiniz. Başvurular, kimlik doğrulaması ve uygulanabilir yasal süreler gözetilerek yanıtlanır.</p>
 
       <h2><span class="n">08</span> Çocuklar ve politika değişiklikleri</h2>
       <p>Kurye OS mesleki çalışma takibi için tasarlanmıştır; çocuklara yönelik bir hizmet değildir. Politika uygulama özellikleri veya veri akışları değiştiğinde güncellenebilir. En son yayımlanan bu sayfanın tarihi güncel sürümü gösterir.</p>
@@ -100,5 +101,5 @@
       <div class="foot">Bu politika, uygulama kaynaklarında 29 Eylül 2026 tarihinde görülen akışlara göre hazırlanmıştır. Firebase, Google, Open-Meteo, Cloudflare ve cihazınızdaki mesaj/harita uygulamalarının kendi gizlilik metinleri ayrıca geçerlidir.<br>© 2026 Kurye OS</div>
     </article>
   </main>
-</body>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a44abda908cde325',t:'MTc5MTAxNzg2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
